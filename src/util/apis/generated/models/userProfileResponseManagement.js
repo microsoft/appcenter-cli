@@ -10,15 +10,29 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a UserProfileResponseManagement.
- * @extends models['UserProfileResponseInternal']
  */
-class UserProfileResponseManagement extends models['UserProfileResponseInternal'] {
+class UserProfileResponseManagement {
   /**
    * Create a UserProfileResponseManagement.
+   * @property {uuid} id The unique id (UUID) of the user
+   * @property {string} [avatarUrl] The avatar URL of the user
+   * @property {boolean} [canChangePassword] User is required to send an old
+   * password in order to change the password.
+   * @property {string} displayName The full name of the user. Might for
+   * example be first and last name
+   * @property {string} email The email address of the user
+   * @property {string} name The unique name that is used to identify the user.
+   * @property {array} [permissions] The permissions the user has for the app
+   * @property {string} origin The creation origin of this user. Possible
+   * values include: 'appcenter', 'hockeyapp', 'codepush'
+   * @property {array} [featureFlags] The feature flags that are enabled for
+   * this app
+   * @property {string} [adminRole] The new admin_role. Possible values
+   * include: 'superAdmin', 'admin', 'devOps', 'customerSupport', 'notAdmin'
+   * @property {object} [settings] The user's settings
+   * @property {string} [settings.marketingOptIn] The marketing opt-in setting
    * @property {string} [updatedAt] The date when the app was last updated
    * @property {boolean} [verified] A boolean flag that indicates if the user
    * is already verified
@@ -26,7 +40,6 @@ class UserProfileResponseManagement extends models['UserProfileResponseInternal'
    * with the user's account
    */
   constructor() {
-    super();
   }
 
   /**
@@ -132,7 +145,7 @@ class UserProfileResponseManagement extends models['UserProfileResponseInternal'
             serializedName: 'settings',
             type: {
               name: 'Composite',
-              className: 'UserProfileResponseInternalSettings'
+              className: 'UserProfileResponseManagementSettings'
             }
           },
           updatedAt: {

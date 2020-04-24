@@ -51,10 +51,10 @@ class EventPropertyValues {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'EventPropertyValueElementType',
+                  serializedName: 'EventPropertyValuesValuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'EventPropertyValue'
+                    className: 'EventPropertyValuesValuesItem'
                   }
               }
             }

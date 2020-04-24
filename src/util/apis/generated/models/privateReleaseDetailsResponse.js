@@ -71,6 +71,8 @@ class PrivateReleaseDetailsResponse {
    * <b>store</b>: The release distributed to external stores and
    * distribution_stores details will be returned. <br>
    * . Possible values include: 'group', 'store', 'tester'
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -255,6 +257,13 @@ class PrivateReleaseDetailsResponse {
             serializedName: 'destination_type',
             type: {
               name: 'String'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
+            type: {
+              name: 'Boolean'
             }
           }
         }

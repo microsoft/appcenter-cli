@@ -51,10 +51,10 @@ class Places {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'PlaceElementType',
+                  serializedName: 'PlacesPlacesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Place'
+                    className: 'PlacesPlacesItem'
                   }
               }
             }

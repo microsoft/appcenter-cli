@@ -32,7 +32,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link StoreNotification} for more information.
+ *                      See {@link GetNotificationByAppIdOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -103,7 +104,7 @@ function _getNotificationByAppId(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetNotificationByAppIdErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -123,7 +124,7 @@ function _getNotificationByAppId(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['StoreNotification']().mapper();
+          let resultMapper = new client.models['GetNotificationByAppIdOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -163,7 +164,7 @@ class StoreNotifications {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<StoreNotification>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetNotificationByAppIdOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -200,7 +201,7 @@ class StoreNotifications {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {StoreNotification} - The deserialized result object.
+   *                      @resolve {GetNotificationByAppIdOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -209,7 +210,8 @@ class StoreNotifications {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link StoreNotification} for more information.
+   *                      See {@link GetNotificationByAppIdOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

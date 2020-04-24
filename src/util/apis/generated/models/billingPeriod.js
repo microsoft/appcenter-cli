@@ -19,10 +19,10 @@ class BillingPeriod {
    * Create a BillingPeriod.
    * @property {string} [startTime] Inclusive start of the period
    * @property {string} [endTime] Exclusive end of the period.
-   * @property {object} [byAccount]
+   * @property {object} [byAccount] Selection of a billing plan
    * @property {number} [byAccount.count] Number of instances of the billing
    * plan.
-   * @property {object} [byAccount.plan]
+   * @property {object} [byAccount.plan] Billing Plan
    * @property {string} [byAccount.plan.id] The Billing Plan ID
    * @property {string} [byAccount.plan.version] Version of the Billing Plan
    * schema
@@ -32,8 +32,10 @@ class BillingPeriod {
    * 'AppCenter', 'GitHub', 'Xtc'
    * @property {string} [byAccount.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Test'
-   * @property {object} [byAccount.plan.limits]
-   * @property {object} [byAccount.plan.attributes]
+   * @property {object} [byAccount.plan.limits] A collection of named numeric
+   * values
+   * @property {object} [byAccount.plan.attributes] Collection of attribute
+   * values.
    * @property {string} [byAccount.plan.parentId]
    */
   constructor() {
@@ -72,7 +74,7 @@ class BillingPeriod {
             serializedName: 'byAccount',
             type: {
               name: 'Composite',
-              className: 'BillingPlanSelection'
+              className: 'BillingPeriodByAccount'
             }
           }
         }

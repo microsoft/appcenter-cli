@@ -19,8 +19,9 @@ class UsagePeriod {
    * Create a UsagePeriod.
    * @property {string} [startTime] Inclusive start time of the usage period
    * @property {string} [endTime] Exclusive end time of the usage period.
-   * @property {object} [byAccount]
-   * @property {object} [byApp]
+   * @property {object} [byAccount] A collection of named numeric values
+   * @property {object} [byApp] A collection of  named numeric values grouped
+   * by app
    */
   constructor() {
   }

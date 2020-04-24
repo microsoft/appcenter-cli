@@ -10,20 +10,25 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Google Play credentials non-secret details
  *
- * @extends models['GooglePlayConnectionNonSecretResponse']
  */
-class GooglePlayCredentialNonSecretDetailsResponse extends models['GooglePlayConnectionNonSecretResponse'] {
+class GooglePlayCredentialNonSecretDetailsResponse {
   /**
    * Create a GooglePlayCredentialNonSecretDetailsResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira. Possible values include: 'apple', 'jira',
+   * 'googleplay', 'gitlab'
+   * @property {string} credentialType the type of the credential. Possible
+   * values include: 'credentials', 'certificate'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data Google Play credentials non-secret details
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,11 +43,6 @@ class GooglePlayCredentialNonSecretDetailsResponse extends models['GooglePlayCon
       serializedName: 'credentials',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'SharedConnectionResponse',
         className: 'GooglePlayCredentialNonSecretDetailsResponse',
         modelProperties: {
           id: {
@@ -55,6 +55,13 @@ class GooglePlayCredentialNonSecretDetailsResponse extends models['GooglePlayCon
           displayName: {
             required: false,
             serializedName: 'displayName',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
@@ -78,14 +85,6 @@ class GooglePlayCredentialNonSecretDetailsResponse extends models['GooglePlayCon
             serializedName: 'is2FA',
             type: {
               name: 'Boolean'
-            }
-          },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
-            type: {
-              name: 'String'
             }
           },
           data: {

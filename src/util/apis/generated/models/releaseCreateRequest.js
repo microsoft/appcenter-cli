@@ -31,7 +31,7 @@ class ReleaseCreateRequest {
    * Limited to 510 characters in a serialized array.
    * @property {string} fingerprint MD5 checksum of the release binary.
    * @property {number} size The release's size in bytes.
-   * @property {string} packageUrl The URL to the release's binary.
+   * @property {string} [packageUrl] The URL to the release's binary.
    * @property {string} [fileExtension] The file extension of the asset. Does
    * not include the initial period.
    * @property {string} uploadId The upload id associated with the release, to
@@ -40,7 +40,8 @@ class ReleaseCreateRequest {
    * uploaded to app center file upload service.
    * @property {array} [ipaUuids] A list of UUIDs for architectures for an iOS
    * app.
-   * @property {object} [provision]
+   * @property {object} [provision] An object containing information about an
+   * iOS provisioning profile.
    * @property {string} [provision.name] The name of the provisioning profile.
    * @property {string} [provision.applicationIdentifier] The application
    * identifier.
@@ -52,6 +53,8 @@ class ReleaseCreateRequest {
    * @property {array} [provision.udids]
    * @property {array} [appexProvisioningProfiles] iOS app extension
    * provisioning profiles included in the release.
+   * @property {boolean} [proxyFlow] If true this release was uploaded to the
+   * AKS upload proxy
    */
   constructor() {
   }
@@ -134,7 +137,7 @@ class ReleaseCreateRequest {
             }
           },
           packageUrl: {
-            required: true,
+            required: false,
             serializedName: 'package_url',
             type: {
               name: 'String'
@@ -168,10 +171,10 @@ class ReleaseCreateRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ArchIdentifierElementType',
+                  serializedName: 'ReleaseCreateRequestIpaUuidsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ArchIdentifier'
+                    className: 'ReleaseCreateRequestIpaUuidsItem'
                   }
               }
             }
@@ -181,7 +184,7 @@ class ReleaseCreateRequest {
             serializedName: 'provision',
             type: {
               name: 'Composite',
-              className: 'ProvisioningProfile'
+              className: 'ReleaseCreateRequestProvision'
             }
           },
           appexProvisioningProfiles: {
@@ -191,12 +194,19 @@ class ReleaseCreateRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ProvisioningProfileElementType',
+                  serializedName: 'ReleaseCreateRequestAppexProvisioningProfilesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ProvisioningProfile'
+                    className: 'ReleaseCreateRequestAppexProvisioningProfilesItem'
                   }
               }
+            }
+          },
+          proxyFlow: {
+            required: false,
+            serializedName: 'proxy_flow',
+            type: {
+              name: 'Boolean'
             }
           }
         }

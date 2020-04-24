@@ -10,19 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Broadcast notification to all the devices
  *
- * @extends models['NotificationTarget']
  */
-class NotificationTargetBroadcast extends models['NotificationTarget'] {
+class NotificationTargetBroadcast {
   /**
    * Create a NotificationTargetBroadcast.
+   * @property {string} type Possible values include: 'audiences_target',
+   * 'devices_target', 'user_ids_target', 'account_ids_target',
+   * 'broadcast_target'
    */
   constructor() {
-    super();
   }
 
   /**
@@ -37,17 +36,11 @@ class NotificationTargetBroadcast extends models['NotificationTarget'] {
       serializedName: 'broadcast_target',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationTarget',
         className: 'NotificationTargetBroadcast',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

@@ -17,21 +17,24 @@
 class BillingInformationPlans {
   /**
    * Create a BillingInformationPlans.
-   * @property {object} [buildService]
+   * @property {object} [buildService] Billing Plans for a single service
    * @property {boolean} [buildService.canSelectTrialPlan] Can customer select
    * trial plan for that service (if it exists)?
    * @property {string} [buildService.lastTrialPlanExpirationTime] Expiration
    * time of the last selected trial plan. Will be null if trial plan was not
    * used.
-   * @property {object} [buildService.currentBillingPeriod]
+   * @property {object} [buildService.currentBillingPeriod] Billing plans for a
+   * given period
    * @property {string} [buildService.currentBillingPeriod.startTime] Inclusive
    * start of the period
    * @property {string} [buildService.currentBillingPeriod.endTime] Exclusive
    * end of the period.
-   * @property {object} [buildService.currentBillingPeriod.byAccount]
+   * @property {object} [buildService.currentBillingPeriod.byAccount] Selection
+   * of a billing plan
    * @property {number} [buildService.currentBillingPeriod.byAccount.count]
    * Number of instances of the billing plan.
    * @property {object} [buildService.currentBillingPeriod.byAccount.plan]
+   * Billing Plan
    * @property {string} [buildService.currentBillingPeriod.byAccount.plan.id]
    * The Billing Plan ID
    * @property {string}
@@ -48,26 +51,31 @@ class BillingInformationPlans {
    * [buildService.currentBillingPeriod.byAccount.plan.service] Name of the
    * service that the plan applies to. Possible values include: 'Build', 'Test'
    * @property {object}
-   * [buildService.currentBillingPeriod.byAccount.plan.limits]
+   * [buildService.currentBillingPeriod.byAccount.plan.limits] A collection of
+   * named numeric values
    * @property {object}
-   * [buildService.currentBillingPeriod.byAccount.plan.attributes]
+   * [buildService.currentBillingPeriod.byAccount.plan.attributes] Collection
+   * of attribute values.
    * @property {string}
    * [buildService.currentBillingPeriod.byAccount.plan.parentId]
-   * @property {object} [testService]
+   * @property {object} [testService] Billing Plans for a single service
    * @property {boolean} [testService.canSelectTrialPlan] Can customer select
    * trial plan for that service (if it exists)?
    * @property {string} [testService.lastTrialPlanExpirationTime] Expiration
    * time of the last selected trial plan. Will be null if trial plan was not
    * used.
-   * @property {object} [testService.currentBillingPeriod]
+   * @property {object} [testService.currentBillingPeriod] Billing plans for a
+   * given period
    * @property {string} [testService.currentBillingPeriod.startTime] Inclusive
    * start of the period
    * @property {string} [testService.currentBillingPeriod.endTime] Exclusive
    * end of the period.
-   * @property {object} [testService.currentBillingPeriod.byAccount]
+   * @property {object} [testService.currentBillingPeriod.byAccount] Selection
+   * of a billing plan
    * @property {number} [testService.currentBillingPeriod.byAccount.count]
    * Number of instances of the billing plan.
    * @property {object} [testService.currentBillingPeriod.byAccount.plan]
+   * Billing Plan
    * @property {string} [testService.currentBillingPeriod.byAccount.plan.id]
    * The Billing Plan ID
    * @property {string}
@@ -83,9 +91,11 @@ class BillingInformationPlans {
    * [testService.currentBillingPeriod.byAccount.plan.service] Name of the
    * service that the plan applies to. Possible values include: 'Build', 'Test'
    * @property {object}
-   * [testService.currentBillingPeriod.byAccount.plan.limits]
+   * [testService.currentBillingPeriod.byAccount.plan.limits] A collection of
+   * named numeric values
    * @property {object}
-   * [testService.currentBillingPeriod.byAccount.plan.attributes]
+   * [testService.currentBillingPeriod.byAccount.plan.attributes] Collection of
+   * attribute values.
    * @property {string}
    * [testService.currentBillingPeriod.byAccount.plan.parentId]
    */
@@ -111,7 +121,7 @@ class BillingInformationPlans {
             serializedName: 'buildService',
             type: {
               name: 'Composite',
-              className: 'ServiceBillingPlans'
+              className: 'BillingInformationPlansBuildService'
             }
           },
           testService: {
@@ -119,7 +129,7 @@ class BillingInformationPlans {
             serializedName: 'testService',
             type: {
               name: 'Composite',
-              className: 'ServiceBillingPlans'
+              className: 'BillingInformationPlansTestService'
             }
           }
         }

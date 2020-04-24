@@ -80,7 +80,8 @@ class ReleaseDetailsResponse {
    * query string, this value determines if a release can be re-signed. When
    * true, after a re-sign, the tester will be able to install the release from
    * his registered devices. Will not be returned for non-iOS platforms.
-   * @property {object} [build]
+   * @property {object} [build] Contains metadata about the build that produced
+   * the release being uploaded
    * @property {string} [build.branchName] The branch name of the build
    * producing the release
    * @property {string} [build.commitHash] The commit hash of the build
@@ -90,6 +91,8 @@ class ReleaseDetailsResponse {
    * @property {boolean} enabled This value determines the whether a release
    * currently is enabled or disabled.
    * @property {string} [status] Status of the release.
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -290,10 +293,10 @@ class ReleaseDetailsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupWithoutIsLatestElementType',
+                  serializedName: 'ReleaseDetailsResponseDistributionGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupWithoutIsLatest'
+                    className: 'ReleaseDetailsResponseDistributionGroupsItem'
                   }
               }
             }
@@ -305,10 +308,10 @@ class ReleaseDetailsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionStoreWithoutIsLatestElementType',
+                  serializedName: 'ReleaseDetailsResponseDistributionStoresItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionStoreWithoutIsLatest'
+                    className: 'ReleaseDetailsResponseDistributionStoresItem'
                   }
               }
             }
@@ -320,10 +323,10 @@ class ReleaseDetailsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DestinationElementType',
+                  serializedName: 'ReleaseDetailsResponseDestinationsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Destination'
+                    className: 'ReleaseDetailsResponseDestinationsItem'
                   }
               }
             }
@@ -347,7 +350,7 @@ class ReleaseDetailsResponse {
             serializedName: 'build',
             type: {
               name: 'Composite',
-              className: 'BuildInfo'
+              className: 'ReleaseDetailsResponseBuild'
             }
           },
           enabled: {
@@ -362,6 +365,13 @@ class ReleaseDetailsResponse {
             serializedName: 'status',
             type: {
               name: 'String'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
+            type: {
+              name: 'Boolean'
             }
           }
         }

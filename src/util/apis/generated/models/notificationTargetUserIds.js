@@ -10,20 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Notification per User IDs
  *
- * @extends models['NotificationTarget']
  */
-class NotificationTargetUserIds extends models['NotificationTarget'] {
+class NotificationTargetUserIds {
   /**
    * Create a NotificationTargetUserIds.
+   * @property {string} type Possible values include: 'audiences_target',
+   * 'devices_target', 'user_ids_target', 'account_ids_target',
+   * 'broadcast_target'
    * @property {array} userIds List of user IDs to target
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,17 +37,11 @@ class NotificationTargetUserIds extends models['NotificationTarget'] {
       serializedName: 'user_ids_target',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationTarget',
         className: 'NotificationTargetUserIds',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

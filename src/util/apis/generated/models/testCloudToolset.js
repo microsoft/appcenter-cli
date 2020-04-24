@@ -42,10 +42,10 @@ class TestCloudToolset {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TestCloudProjectElementType',
+                  serializedName: 'TestCloudToolsetProjectsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TestCloudProject'
+                    className: 'TestCloudToolsetProjectsItem'
                   }
               }
             }

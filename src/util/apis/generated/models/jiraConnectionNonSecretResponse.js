@@ -10,19 +10,23 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Jira non-secret data
  *
- * @extends models['SharedConnectionResponse']
  */
-class JiraConnectionNonSecretResponse extends models['SharedConnectionResponse'] {
+class JiraConnectionNonSecretResponse {
   /**
    * Create a JiraConnectionNonSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira. Possible values include: 'apple', 'jira',
+   * 'googleplay', 'gitlab'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
+   * @property {string} credentialType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,10 +42,10 @@ class JiraConnectionNonSecretResponse extends models['SharedConnectionResponse']
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
+          serializedName: 'credentialType',
+          clientName: 'credentialType'
         },
-        uberParent: 'SharedConnectionResponse',
+        uberParent: 'JiraConnectionNonSecretResponse',
         className: 'JiraConnectionNonSecretResponse',
         modelProperties: {
           id: {
@@ -58,9 +62,9 @@ class JiraConnectionNonSecretResponse extends models['SharedConnectionResponse']
               name: 'String'
             }
           },
-          credentialType: {
+          serviceType: {
             required: true,
-            serializedName: 'credentialType',
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
@@ -79,9 +83,9 @@ class JiraConnectionNonSecretResponse extends models['SharedConnectionResponse']
               name: 'Boolean'
             }
           },
-          serviceType: {
+          credentialType: {
             required: true,
-            serializedName: 'serviceType',
+            serializedName: 'credentialType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'

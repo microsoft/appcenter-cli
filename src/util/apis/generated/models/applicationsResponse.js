@@ -42,10 +42,10 @@ class ApplicationsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ApplicationResponseElementType',
+                  serializedName: 'ApplicationsResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ApplicationResponse'
+                    className: 'ApplicationsResponseValueItem'
                   }
               }
             }

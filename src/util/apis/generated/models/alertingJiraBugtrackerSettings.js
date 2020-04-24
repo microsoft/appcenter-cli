@@ -10,21 +10,21 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Jira bugtracker specific settings
  *
- * @extends models['AlertingBugtrackerSettings']
  */
-class AlertingJiraBugtrackerSettings extends models['AlertingBugtrackerSettings'] {
+class AlertingJiraBugtrackerSettings {
   /**
    * Create a AlertingJiraBugtrackerSettings.
+   * @property {string} [callbackUrl]
+   * @property {string} ownerName
+   * @property {string} type type of bugtracker. Possible values include:
+   * 'github', 'vsts', 'jira'
    * @property {number} jiraProjectId
    * @property {string} jiraProjectName
    */
   constructor() {
-    super();
   }
 
   /**
@@ -39,11 +39,6 @@ class AlertingJiraBugtrackerSettings extends models['AlertingBugtrackerSettings'
       serializedName: 'jira',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'AlertingBugtrackerSettings',
         className: 'AlertingJiraBugtrackerSettings',
         modelProperties: {
           callbackUrl: {
@@ -63,7 +58,6 @@ class AlertingJiraBugtrackerSettings extends models['AlertingBugtrackerSettings'
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

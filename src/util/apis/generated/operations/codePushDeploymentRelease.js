@@ -36,7 +36,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CodePushRelease} for more information.
+ *                      See {@link RollbackCreatedResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -72,7 +73,7 @@ function _rollback(deploymentName, ownerName, appName, options, callback) {
   }
   let releaseLabel;
   if (label !== null && label !== undefined) {
-    releaseLabel = new client.models['CodePushReleaseLabel']();
+    releaseLabel = new client.models['ReleaseLabel']();
     releaseLabel.label = label;
   }
 
@@ -102,7 +103,7 @@ function _rollback(deploymentName, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (releaseLabel !== null && releaseLabel !== undefined) {
-      let requestModelMapper = new client.models['CodePushReleaseLabel']().mapper();
+      let requestModelMapper = new client.models['ReleaseLabel']().mapper();
       requestModel = client.serialize(requestModelMapper, releaseLabel, 'releaseLabel');
       requestContent = JSON.stringify(requestModel);
     }
@@ -134,7 +135,7 @@ function _rollback(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['RollbackErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -154,7 +155,7 @@ function _rollback(deploymentName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CodePushRelease']().mapper();
+          let resultMapper = new client.models['RollbackCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -198,7 +199,7 @@ class CodePushDeploymentRelease {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<RollbackCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -239,7 +240,7 @@ class CodePushDeploymentRelease {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CodePushRelease} - The deserialized result object.
+   *                      @resolve {RollbackCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -248,7 +249,8 @@ class CodePushDeploymentRelease {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CodePushRelease} for more information.
+   *                      See {@link RollbackCreatedResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

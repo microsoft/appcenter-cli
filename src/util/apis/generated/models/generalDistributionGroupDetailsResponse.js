@@ -10,15 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a GeneralDistributionGroupDetailsResponse.
- * @extends models['DistributionGroupResponse']
  */
-class GeneralDistributionGroupDetailsResponse extends models['DistributionGroupResponse'] {
+class GeneralDistributionGroupDetailsResponse {
   /**
    * Create a GeneralDistributionGroupDetailsResponse.
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {string} [displayName] The name of the distribution group
+   * @property {string} origin The creation origin of this distribution group.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {boolean} isPublic Whether the distribution group is public
    * @property {boolean} isShared Whether the distribution group is shared
    * group or not
    * @property {uuid} [ownerAppId] If distribution group is owned by an app,
@@ -27,7 +30,6 @@ class GeneralDistributionGroupDetailsResponse extends models['DistributionGroupR
    * this is the unique org ID
    */
   constructor() {
-    super();
   }
 
   /**

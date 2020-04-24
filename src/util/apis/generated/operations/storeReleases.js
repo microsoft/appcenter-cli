@@ -36,8 +36,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ReleaseRealTimeStatusResponse} for more
- *                      information.
+ *                      See {@link GetRealTimeStatusByReleaseIdOKResponse} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -116,7 +116,7 @@ function _getRealTimeStatusByReleaseId(storeName, releaseId, ownerName, appName,
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetRealTimeStatusByReleaseIdErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -136,7 +136,7 @@ function _getRealTimeStatusByReleaseId(storeName, releaseId, ownerName, appName,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ReleaseRealTimeStatusResponse']().mapper();
+          let resultMapper = new client.models['GetRealTimeStatusByReleaseIdOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -174,7 +174,7 @@ function _getRealTimeStatusByReleaseId(storeName, releaseId, ownerName, appName,
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ReleasePublishErrorResponse} for more
+ *                      See {@link GetPublishErrorOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -254,7 +254,7 @@ function _getPublishError(storeName, releaseId, ownerName, appName, options, cal
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetPublishErrorErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -274,7 +274,7 @@ function _getPublishError(storeName, releaseId, ownerName, appName, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ReleasePublishErrorResponse']().mapper();
+          let resultMapper = new client.models['GetPublishErrorOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -390,7 +390,7 @@ function _get(storeName, releaseId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetErrorModel2']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -417,10 +417,10 @@ function _get(storeName, releaseId, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StoresReleaseDetailsElementType',
+                  serializedName: 'GetOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StoresReleaseDetails'
+                    className: 'GetOKResponseItem'
                   }
               }
             }
@@ -566,7 +566,7 @@ function _deleteMethod(storeName, releaseId, ownerName, appName, options, callba
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel2']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -679,7 +679,7 @@ function _list(storeName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['ListErrorModel4']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -706,10 +706,10 @@ function _list(storeName, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StoresBasicReleaseDetailsElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StoresBasicReleaseDetails'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -823,7 +823,7 @@ function _getLatest(storeName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetLatestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -850,10 +850,10 @@ function _getLatest(storeName, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StoresReleaseDetailsElementType',
+                  serializedName: 'GetLatestOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StoresReleaseDetails'
+                    className: 'GetLatestOKResponseItem'
                   }
               }
             }
@@ -906,7 +906,7 @@ class StoreReleases {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ReleaseRealTimeStatusResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetRealTimeStatusByReleaseIdOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -947,7 +947,7 @@ class StoreReleases {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ReleaseRealTimeStatusResponse} - The deserialized result object.
+   *                      @resolve {GetRealTimeStatusByReleaseIdOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -956,8 +956,8 @@ class StoreReleases {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ReleaseRealTimeStatusResponse} for more
-   *                      information.
+   *                      See {@link GetRealTimeStatusByReleaseIdOKResponse} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1001,7 +1001,7 @@ class StoreReleases {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ReleasePublishErrorResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetPublishErrorOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1042,7 +1042,7 @@ class StoreReleases {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ReleasePublishErrorResponse} - The deserialized result object.
+   *                      @resolve {GetPublishErrorOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1051,7 +1051,7 @@ class StoreReleases {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ReleasePublishErrorResponse} for more
+   *                      See {@link GetPublishErrorOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

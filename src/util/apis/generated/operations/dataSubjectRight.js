@@ -94,7 +94,7 @@ function _cancelExportRequest(token, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CancelExportRequestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -114,7 +114,7 @@ function _cancelExportRequest(token, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DataSubjectRightResponse']().mapper();
+          let resultMapper = new client.models['CancelExportRequestAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -131,7 +131,7 @@ function _cancelExportRequest(token, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CancelExportRequestServiceUnavailableResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -161,7 +161,7 @@ function _cancelExportRequest(token, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DataSubjectRightStatusResponse} for more
+ *                      See {@link ExportStatusRequestOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -229,7 +229,7 @@ function _exportStatusRequest(token, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ExportStatusRequestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -249,7 +249,7 @@ function _exportStatusRequest(token, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DataSubjectRightStatusResponse']().mapper();
+          let resultMapper = new client.models['ExportStatusRequestOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -277,7 +277,7 @@ function _exportStatusRequest(token, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DataSubjectRightResponse} for more
+ *                      See {@link ExportRequestAcceptedResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -336,7 +336,7 @@ function _exportRequest(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ExportRequestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -356,7 +356,7 @@ function _exportRequest(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DataSubjectRightResponse']().mapper();
+          let resultMapper = new client.models['ExportRequestAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -417,7 +417,7 @@ function _cancelDeleteRequest(token, email, options, callback) {
   }
   let email1;
   if (email !== null && email !== undefined) {
-    email1 = new client.models['DataSubjectRightEmailRequest']();
+    email1 = new client.models['Email']();
     email1.email = email;
   }
 
@@ -445,7 +445,7 @@ function _cancelDeleteRequest(token, email, options, callback) {
   let requestModel = null;
   try {
     if (email1 !== null && email1 !== undefined) {
-      let requestModelMapper = new client.models['DataSubjectRightEmailRequest']().mapper();
+      let requestModelMapper = new client.models['Email']().mapper();
       requestModel = client.serialize(requestModelMapper, email1, 'email1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -477,7 +477,7 @@ function _cancelDeleteRequest(token, email, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CancelDeleteRequestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -497,7 +497,7 @@ function _cancelDeleteRequest(token, email, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DataSubjectRightResponse']().mapper();
+          let resultMapper = new client.models['CancelDeleteRequestAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -514,7 +514,7 @@ function _cancelDeleteRequest(token, email, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CancelDeleteRequestServiceUnavailableResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -546,7 +546,7 @@ function _cancelDeleteRequest(token, email, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DataSubjectRightStatusResponse} for more
+ *                      See {@link DeleteStatusRequestOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -622,7 +622,7 @@ function _deleteStatusRequest(token, email, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteStatusRequestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -642,7 +642,7 @@ function _deleteStatusRequest(token, email, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DataSubjectRightStatusResponse']().mapper();
+          let resultMapper = new client.models['DeleteStatusRequestOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -670,7 +670,7 @@ function _deleteStatusRequest(token, email, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DataSubjectRightResponse} for more
+ *                      See {@link DeleteRequestAcceptedResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -729,7 +729,7 @@ function _deleteRequest(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteRequestErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -749,7 +749,7 @@ function _deleteRequest(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DataSubjectRightResponse']().mapper();
+          let resultMapper = new client.models['DeleteRequestAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -867,7 +867,7 @@ class DataSubjectRight {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DataSubjectRightStatusResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ExportStatusRequestOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -900,7 +900,7 @@ class DataSubjectRight {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DataSubjectRightStatusResponse} - The deserialized result object.
+   *                      @resolve {ExportStatusRequestOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -909,7 +909,7 @@ class DataSubjectRight {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DataSubjectRightStatusResponse} for more
+   *                      See {@link ExportStatusRequestOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -944,7 +944,7 @@ class DataSubjectRight {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DataSubjectRightResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ExportRequestAcceptedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -975,7 +975,7 @@ class DataSubjectRight {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DataSubjectRightResponse} - The deserialized result object.
+   *                      @resolve {ExportRequestAcceptedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -984,7 +984,7 @@ class DataSubjectRight {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DataSubjectRightResponse} for more
+   *                      See {@link ExportRequestAcceptedResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1106,7 +1106,7 @@ class DataSubjectRight {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DataSubjectRightStatusResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DeleteStatusRequestOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1141,7 +1141,7 @@ class DataSubjectRight {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DataSubjectRightStatusResponse} - The deserialized result object.
+   *                      @resolve {DeleteStatusRequestOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1150,7 +1150,7 @@ class DataSubjectRight {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DataSubjectRightStatusResponse} for more
+   *                      See {@link DeleteStatusRequestOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1185,7 +1185,7 @@ class DataSubjectRight {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DataSubjectRightResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DeleteRequestAcceptedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1216,7 +1216,7 @@ class DataSubjectRight {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DataSubjectRightResponse} - The deserialized result object.
+   *                      @resolve {DeleteRequestAcceptedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1225,7 +1225,7 @@ class DataSubjectRight {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DataSubjectRightResponse} for more
+   *                      See {@link DeleteRequestAcceptedResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

@@ -50,10 +50,10 @@ class HandledErrors {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'HandledErrorElementType',
+                  serializedName: 'HandledErrorsErrorsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'HandledError'
+                    className: 'HandledErrorsErrorsItem'
                   }
               }
             }

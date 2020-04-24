@@ -10,22 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseDestinationResponse.
- * @extends models['ReleaseStoreDestinationResponse']
  */
-class ReleaseDestinationResponse extends models['ReleaseStoreDestinationResponse'] {
+class ReleaseDestinationResponse {
   /**
    * Create a ReleaseDestinationResponse.
+   * @property {string} id Unique id for the release destination
    * @property {boolean} mandatoryUpdate Flag to mark the release for the
    * provided destinations as mandatory
    * @property {string} [provisioningStatusUrl] The url to check provisioning
    * status.
    */
   constructor() {
-    super();
   }
 
   /**

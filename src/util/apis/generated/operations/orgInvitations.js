@@ -97,7 +97,7 @@ function _reject(invitationToken, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['RejectErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -199,7 +199,7 @@ function _accept(invitationToken, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AcceptErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -307,7 +307,7 @@ function _unnamedMethod(orgName, email, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UnnamedMethodErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -380,7 +380,7 @@ function _sendNewInvitation(orgName, email, options, callback) {
   }
   let role1;
   if (role !== null && role !== undefined) {
-    role1 = new client.models['AddUserAsRoleRequest']();
+    role1 = new client.models['Role']();
     role1.role = role;
   }
 
@@ -409,7 +409,7 @@ function _sendNewInvitation(orgName, email, options, callback) {
   let requestModel = null;
   try {
     if (role1 !== null && role1 !== undefined) {
-      let requestModelMapper = new client.models['AddUserAsRoleRequest']().mapper();
+      let requestModelMapper = new client.models['Role']().mapper();
       requestModel = client.serialize(requestModelMapper, role1, 'role1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -441,7 +441,7 @@ function _sendNewInvitation(orgName, email, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['SendNewInvitationErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -514,7 +514,7 @@ function _update(orgName, email, options, callback) {
   }
   let userRole;
   if (role !== null && role !== undefined) {
-    userRole = new client.models['OrganizationUserPatchRequest']();
+    userRole = new client.models['UserRole']();
     userRole.role = role;
   }
 
@@ -543,7 +543,7 @@ function _update(orgName, email, options, callback) {
   let requestModel = null;
   try {
     if (userRole !== null && userRole !== undefined) {
-      let requestModelMapper = new client.models['OrganizationUserPatchRequest']().mapper();
+      let requestModelMapper = new client.models['UserRole']().mapper();
       requestModel = client.serialize(requestModelMapper, userRole, 'userRole');
       requestContent = JSON.stringify(requestModel);
     }
@@ -575,7 +575,7 @@ function _update(orgName, email, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -647,7 +647,7 @@ function _create(orgName, userEmail, options, callback) {
   }
   let userEmail1;
   if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
-    userEmail1 = new client.models['UserEmailRequest']();
+    userEmail1 = new client.models['UserEmailModel']();
     userEmail1.userEmail = userEmail;
     userEmail1.role = role;
   }
@@ -676,7 +676,7 @@ function _create(orgName, userEmail, options, callback) {
   let requestModel = null;
   try {
     if (userEmail1 !== null && userEmail1 !== undefined) {
-      let requestModelMapper = new client.models['UserEmailRequest']().mapper();
+      let requestModelMapper = new client.models['UserEmailModel']().mapper();
       requestModel = client.serialize(requestModelMapper, userEmail1, 'userEmail1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -708,7 +708,7 @@ function _create(orgName, userEmail, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -735,9 +735,6 @@ function _create(orgName, userEmail, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {string} [options.role] The user's role. Possible values include:
- * 'admin', 'collaborator', 'member'
- *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -763,7 +760,6 @@ function _deleteMethod(orgName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -772,17 +768,13 @@ function _deleteMethod(orgName, userEmail, options, callback) {
     if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
       throw new Error('userEmail cannot be null or undefined and it must be of type string.');
     }
-    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
-      throw new Error('role must be of type string.');
-    }
   } catch (error) {
     return callback(error);
   }
   let userEmail1;
-  if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
-    userEmail1 = new client.models['UserEmailRequest']();
+  if (userEmail !== null && userEmail !== undefined) {
+    userEmail1 = new client.models['UserEmail']();
     userEmail1.userEmail = userEmail;
-    userEmail1.role = role;
   }
 
   // Construct URL
@@ -809,7 +801,7 @@ function _deleteMethod(orgName, userEmail, options, callback) {
   let requestModel = null;
   try {
     if (userEmail1 !== null && userEmail1 !== undefined) {
-      let requestModelMapper = new client.models['UserEmailRequest']().mapper();
+      let requestModelMapper = new client.models['UserEmail']().mapper();
       requestModel = client.serialize(requestModelMapper, userEmail1, 'userEmail1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -841,7 +833,7 @@ function _deleteMethod(orgName, userEmail, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -942,7 +934,7 @@ function _listPending(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListPendingErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -969,10 +961,10 @@ function _listPending(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'OrganizationInvitationSimpleDetailResponseElementType',
+                  serializedName: 'ListPendingOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'OrganizationInvitationSimpleDetailResponse'
+                    className: 'ListPendingOKResponseItem'
                   }
               }
             }
@@ -1548,9 +1540,6 @@ class OrgInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.role] The user's role. Possible values include:
-   * 'admin', 'collaborator', 'member'
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1582,9 +1571,6 @@ class OrgInvitations {
    * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
-   *
-   * @param {string} [options.role] The user's role. Possible values include:
-   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

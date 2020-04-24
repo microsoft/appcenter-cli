@@ -10,18 +10,35 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorGroupListItem.
- * @extends models['ErrorGroup']
  */
-class ErrorGroupListItem extends models['ErrorGroup'] {
+class ErrorGroupListItem {
   /**
    * Create a ErrorGroupListItem.
+   * @property {string} state Possible values include: 'open', 'closed',
+   * 'ignored'
+   * @property {string} [annotation]
+   * @property {string} errorGroupId
+   * @property {string} appVersion
+   * @property {string} [appBuild]
+   * @property {number} count
+   * @property {number} deviceCount
+   * @property {date} firstOccurrence
+   * @property {date} lastOccurrence
+   * @property {string} [exceptionType]
+   * @property {string} [exceptionMessage]
+   * @property {string} [exceptionClassName]
+   * @property {boolean} [exceptionClassMethod]
+   * @property {string} [exceptionMethod]
+   * @property {boolean} [exceptionAppCode]
+   * @property {string} [exceptionFile]
+   * @property {string} [exceptionLine]
+   * @property {string} [codeRaw]
+   * @property {array} [reasonFrames]
+   * @property {boolean} [hidden]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -171,12 +188,19 @@ class ErrorGroupListItem extends models['ErrorGroup'] {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'HandledErrorReasonFrameElementType',
+                  serializedName: 'ErrorGroupListItemReasonFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'HandledErrorReasonFrame'
+                    className: 'ErrorGroupListItemReasonFramesItem'
                   }
               }
+            }
+          },
+          hidden: {
+            required: false,
+            serializedName: 'hidden',
+            type: {
+              name: 'Boolean'
             }
           }
         }

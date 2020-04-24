@@ -42,10 +42,10 @@ class DatabaseCollectionsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DatabaseCollectionElementType',
+                  serializedName: 'DatabaseCollectionsResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DatabaseCollection'
+                    className: 'DatabaseCollectionsResponseValueItem'
                   }
               }
             }

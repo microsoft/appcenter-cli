@@ -17,7 +17,7 @@
 class VersionedBillingPlan {
   /**
    * Create a VersionedBillingPlan.
-   * @property {object} [document]
+   * @property {object} [document] Billing Plan
    * @property {string} [document.id] The Billing Plan ID
    * @property {string} [document.version] Version of the Billing Plan schema
    * @property {number} [document.price] Price of the Billing Plan
@@ -26,8 +26,8 @@ class VersionedBillingPlan {
    * 'GitHub', 'Xtc'
    * @property {string} [document.service] Name of the service that the plan
    * applies to. Possible values include: 'Build', 'Test'
-   * @property {object} [document.limits]
-   * @property {object} [document.attributes]
+   * @property {object} [document.limits] A collection of named numeric values
+   * @property {object} [document.attributes] Collection of attribute values.
    * @property {string} [document.parentId]
    * @property {string} [etag] The version of the object
    */
@@ -53,7 +53,7 @@ class VersionedBillingPlan {
             serializedName: 'document',
             type: {
               name: 'Composite',
-              className: 'BillingPlan'
+              className: 'VersionedBillingPlanDocument'
             }
           },
           etag: {

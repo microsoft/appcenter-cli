@@ -10,22 +10,33 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Configuration for export to Blob Storage with customer provided connection
  * string
  *
- * @extends models['ExportBlobConfiguration']
  */
-class ExportConfigurationBlobStorageConnectionString extends models['ExportBlobConfiguration'] {
+class ExportConfigurationBlobStorageConnectionString {
   /**
    * Create a ExportConfigurationBlobStorageConnectionString.
+   * @property {string} type Type of export configuration. Possible values
+   * include: 'blob_storage_connection_string',
+   * 'application_insights_instrumentation_key',
+   * 'blob_storage_linked_subscription',
+   * 'application_insights_linked_subscription'
+   * @property {array} [exportEntities]
+   * @property {string} [resourceName] The resource name on azure
+   * @property {string} [resourceGroup] The resource group name on azure
+   * @property {boolean} [backfill] Field to determine if backfilling should
+   * occur. The default value is true. If set to false export starts from date
+   * and time of config creation.
+   * @property {string} [blobPathFormatKind] The path to the blob when enum set
+   * to 'WithoutAppId' is 'year/month/day/hour/minute' and when set to
+   * 'WithAppId' is 'appId/year/month/day/hour/minute'. Possible values
+   * include: 'WithoutAppId', 'WithAppId'
    * @property {string} connectionString Connection string for blob storage
    * account
    */
   constructor() {
-    super();
   }
 
   /**
@@ -40,13 +51,15 @@ class ExportConfigurationBlobStorageConnectionString extends models['ExportBlobC
       serializedName: 'blob_storage_connection_string',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'ExportConfiguration',
         className: 'ExportConfigurationBlobStorageConnectionString',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           exportEntities: {
             required: false,
             serializedName: 'export_entities',
@@ -57,7 +70,7 @@ class ExportConfigurationBlobStorageConnectionString extends models['ExportBlobC
                   serializedName: 'ExportEntityElementType',
                   type: {
                     name: 'Enum',
-                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                    allowedValues: [ 'crashes', 'errors', 'attachments', 'no_logs' ]
                   }
               }
             }
@@ -76,12 +89,11 @@ class ExportConfigurationBlobStorageConnectionString extends models['ExportBlobC
               name: 'String'
             }
           },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
+          backfill: {
+            required: false,
+            serializedName: 'backfill',
             type: {
-              name: 'String'
+              name: 'Boolean'
             }
           },
           blobPathFormatKind: {

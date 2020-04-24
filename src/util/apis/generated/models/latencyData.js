@@ -74,10 +74,10 @@ class LatencyData {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'MetricsDataElementType',
+                  serializedName: 'LatencyDataMetricValuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'MetricsData'
+                    className: 'LatencyDataMetricValuesItem'
                   }
               }
             }

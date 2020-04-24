@@ -36,7 +36,10 @@ class ExternalStoreResponse {
    * @property {string} [serviceConnectionId] Id for the shared service
    * connection. In case of Apple / GooglePlay stores, this connection will be
    * used to connect to the Apple / Google stores in App Center.
-   * @property {string} [createdBy] user id of the user who created the store.
+   * @property {string} [createdBy] The ID of the principal that created the
+   * store.
+   * @property {string} [createdByPrincipalType] The type of the principal that
+   * created the store.
    */
   constructor() {
   }
@@ -88,7 +91,7 @@ class ExternalStoreResponse {
             serializedName: 'intune_details',
             type: {
               name: 'Composite',
-              className: 'IntuneStoreResponse'
+              className: 'ExternalStoreResponseIntuneDetails'
             }
           },
           serviceConnectionId: {
@@ -101,6 +104,13 @@ class ExternalStoreResponse {
           createdBy: {
             required: false,
             serializedName: 'created_by',
+            type: {
+              name: 'String'
+            }
+          },
+          createdByPrincipalType: {
+            required: false,
+            serializedName: 'created_by_principal_type',
             type: {
               name: 'String'
             }

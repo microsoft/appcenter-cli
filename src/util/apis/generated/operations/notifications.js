@@ -28,7 +28,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AlertUserEmailSettingsResult} for more
+ *                      See {@link GetUserEmailSettingsOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -87,7 +87,7 @@ function _getUserEmailSettings(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['AlertingError']().mapper();
+          let resultMapper = new client.models['GetUserEmailSettingsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -107,7 +107,7 @@ function _getUserEmailSettings(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AlertUserEmailSettingsResult']().mapper();
+          let resultMapper = new client.models['GetUserEmailSettingsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -141,7 +141,7 @@ function _getUserEmailSettings(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AlertUserAppEmailSettingsResult} for more
+ *                      See {@link GetAppEmailSettingsOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -213,7 +213,7 @@ function _getAppEmailSettings(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['AlertingError']().mapper();
+          let resultMapper = new client.models['GetAppEmailSettingsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -233,7 +233,7 @@ function _getAppEmailSettings(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AlertUserAppEmailSettingsResult']().mapper();
+          let resultMapper = new client.models['GetAppEmailSettingsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -270,7 +270,7 @@ class Notifications {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AlertUserEmailSettingsResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetUserEmailSettingsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -303,7 +303,7 @@ class Notifications {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AlertUserEmailSettingsResult} - The deserialized result object.
+   *                      @resolve {GetUserEmailSettingsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -312,7 +312,7 @@ class Notifications {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AlertUserEmailSettingsResult} for more
+   *                      See {@link GetUserEmailSettingsOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -353,7 +353,7 @@ class Notifications {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AlertUserAppEmailSettingsResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetAppEmailSettingsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -390,7 +390,7 @@ class Notifications {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AlertUserAppEmailSettingsResult} - The deserialized result object.
+   *                      @resolve {GetAppEmailSettingsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -399,7 +399,7 @@ class Notifications {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AlertUserAppEmailSettingsResult} for more
+   *                      See {@link GetAppEmailSettingsOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

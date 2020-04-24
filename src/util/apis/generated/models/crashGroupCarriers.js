@@ -50,10 +50,10 @@ class CrashGroupCarriers {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupCarrierElementType',
+                  serializedName: 'CrashGroupCarriersCarriersItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroupCarrier'
+                    className: 'CrashGroupCarriersCarriersItem'
                   }
               }
             }

@@ -17,7 +17,8 @@
 class BranchConfigurationToolsets {
   /**
    * Create a BranchConfigurationToolsets.
-   * @property {object} [xcode]
+   * @property {object} [xcode] Build configuration when Xcode is part of the
+   * build steps
    * @property {string} [xcode.projectOrWorkspacePath] Xcode project/workspace
    * path
    * @property {string} [xcode.podfilePath] Path to CococaPods file, if present
@@ -49,14 +50,15 @@ class BranchConfigurationToolsets {
    * from workspace settings is used.
    * By default new build system is used if workspace setting is not committed
    * to the repository. Only used for iOS React Native app, with Xcode 10.
-   * @property {object} [javascript]
+   * @property {object} [javascript] Build configuration when React Native, or
+   * other JavaScript tech, is part of the build steps
    * @property {string} [javascript.packageJsonPath] Path to package.json file
    * for the main project, e.g. "package.json" or "myapp/package.json"
    * @property {boolean} [javascript.runTests] Whether to run Jest unit tests,
    * via npm test, during the build
    * @property {string} [javascript.reactNativeVersion] Version of React Native
    * from package.json files
-   * @property {object} [xamarin]
+   * @property {object} [xamarin] Build configuration for Xamarin projects
    * @property {string} [xamarin.slnPath]
    * @property {boolean} [xamarin.isSimBuild]
    * @property {string} [xamarin.args]
@@ -72,7 +74,7 @@ class BranchConfigurationToolsets {
    * If both symlink and monoVersion or sdkBundle are passed, the symlink is
    * taking precedence. If non-existing symlink is passed, the current stable
    * Mono version will be configured for building.
-   * @property {object} [android]
+   * @property {object} [android] Build configuration for Android projects
    * @property {string} [android.gradleWrapperPath] Path to the Gradle wrapper
    * script
    * @property {string} [android.module] The Gradle module to build
@@ -104,7 +106,7 @@ class BranchConfigurationToolsets {
   mapper() {
     return {
       required: false,
-      serializedName: 'BranchConfigurationToolsets',
+      serializedName: 'BranchConfiguration_toolsets',
       type: {
         name: 'Composite',
         className: 'BranchConfigurationToolsets',
@@ -114,7 +116,7 @@ class BranchConfigurationToolsets {
             serializedName: 'xcode',
             type: {
               name: 'Composite',
-              className: 'XcodeBranchConfigurationProperties'
+              className: 'BranchConfigurationToolsetsXcode'
             }
           },
           javascript: {
@@ -122,7 +124,7 @@ class BranchConfigurationToolsets {
             serializedName: 'javascript',
             type: {
               name: 'Composite',
-              className: 'JavaScriptBranchConfigurationProperties'
+              className: 'BranchConfigurationToolsetsJavascript'
             }
           },
           xamarin: {
@@ -130,7 +132,7 @@ class BranchConfigurationToolsets {
             serializedName: 'xamarin',
             type: {
               name: 'Composite',
-              className: 'XamarinBranchConfigurationProperties'
+              className: 'BranchConfigurationToolsetsXamarin'
             }
           },
           android: {
@@ -138,7 +140,7 @@ class BranchConfigurationToolsets {
             serializedName: 'android',
             type: {
               name: 'Composite',
-              className: 'AndroidBranchConfigurationProperties'
+              className: 'BranchConfigurationToolsetsAndroid'
             }
           }
         }

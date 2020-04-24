@@ -45,10 +45,10 @@ class GetReleasesContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ReleaseWithDistributionGroupElementType',
+                  serializedName: 'GetReleasesContainerReleasesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ReleaseWithDistributionGroup'
+                    className: 'GetReleasesContainerReleasesItem'
                   }
               }
             }

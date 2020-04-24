@@ -102,7 +102,7 @@ function _configExists(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ConfigExistsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -139,8 +139,7 @@ function _configExists(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link NotificationConfigResult} for more
- *                      information.
+ *                      See {@link GetConfigOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -211,7 +210,7 @@ function _getConfig(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetConfigErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -231,7 +230,7 @@ function _getConfig(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['NotificationConfigResult']().mapper();
+          let resultMapper = new client.models['GetConfigOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -269,8 +268,7 @@ function _getConfig(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link NotificationConfigResult} for more
- *                      information.
+ *                      See {@link SetConfigOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -326,7 +324,7 @@ function _setConfig(properties, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (properties !== null && properties !== undefined) {
-      let requestModelMapper = new client.models['NotificationConfig']().mapper();
+      let requestModelMapper = new client.models['Properties']().mapper();
       requestModel = client.serialize(requestModelMapper, properties, 'properties');
       requestContent = JSON.stringify(requestModel);
     }
@@ -358,7 +356,7 @@ function _setConfig(properties, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['SetConfigErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -378,7 +376,7 @@ function _setConfig(properties, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['NotificationConfigResult']().mapper();
+          let resultMapper = new client.models['SetConfigOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -482,7 +480,7 @@ function _deleteConfig(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteConfigErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -521,7 +519,7 @@ function _deleteConfig(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link NotificationDetailsResult} for more
+ *                      See {@link GetOKResponseModelModelModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -597,7 +595,7 @@ function _get(notificationId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -617,7 +615,7 @@ function _get(notificationId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['NotificationDetailsResult']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -668,8 +666,7 @@ function _get(notificationId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link NotificationsListResult} for more
- *                      information.
+ *                      See {@link ListOKResponseModel} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -789,7 +786,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -809,7 +806,7 @@ function _list(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['NotificationsListResult']().mapper();
+          let resultMapper = new client.models['ListOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -831,20 +828,23 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {string} appName The name of the application
  *
- * @param {object} notificationContent
+ * @param {object} notificationContent Notification definition object
  *
  * @param {string} notificationContent.name Notification name
  *
  * @param {string} [notificationContent.title] Notification title
  *
- * @param {string} notificationContent.body Notification body
+ * @param {string} [notificationContent.body] Notification body
  *
  * @param {object} [notificationContent.customData] Notification custom data
  * (such as badge, color, sound, etc.)
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {object} [options.notificationTarget]
+ * @param {object} [options.notificationTarget] Type of Notification target
+ * (audiences, devices, user ids, account ids or broadcast). The object must
+ * include the correct properties for the specified target type except for
+ * broadcast.
  *
  * @param {string} options.notificationTarget.type Polymorphic Discriminator
  *
@@ -858,8 +858,7 @@ function _list(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link NotificationSendSucceededResult} for more
- *                      information.
+ *                      See {@link SendAcceptedResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -892,7 +891,7 @@ function _send(ownerName, appName, notificationContent, options, callback) {
   }
   let properties;
   if ((notificationTarget !== null && notificationTarget !== undefined) || (notificationContent !== null && notificationContent !== undefined)) {
-    properties = new client.models['NotificationDefinition']();
+    properties = new client.models['PropertiesModel']();
     properties.notificationTarget = notificationTarget;
     properties.notificationContent = notificationContent;
   }
@@ -922,7 +921,7 @@ function _send(ownerName, appName, notificationContent, options, callback) {
   let requestModel = null;
   try {
     if (properties !== null && properties !== undefined) {
-      let requestModelMapper = new client.models['NotificationDefinition']().mapper();
+      let requestModelMapper = new client.models['PropertiesModel']().mapper();
       requestModel = client.serialize(requestModelMapper, properties, 'properties');
       requestContent = JSON.stringify(requestModel);
     }
@@ -954,7 +953,7 @@ function _send(ownerName, appName, notificationContent, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['SendErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -974,7 +973,7 @@ function _send(ownerName, appName, notificationContent, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['NotificationSendSucceededResult']().mapper();
+          let resultMapper = new client.models['SendAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1046,7 +1045,7 @@ function _deleteMethod(ownerName, appName, values, options, callback) {
   }
   let notificationIds;
   if (values !== null && values !== undefined) {
-    notificationIds = new client.models['NotificationIdList']();
+    notificationIds = new client.models['NotificationIds']();
     notificationIds.values = values;
   }
 
@@ -1075,7 +1074,7 @@ function _deleteMethod(ownerName, appName, values, options, callback) {
   let requestModel = null;
   try {
     if (notificationIds !== null && notificationIds !== undefined) {
-      let requestModelMapper = new client.models['NotificationIdList']().mapper();
+      let requestModelMapper = new client.models['NotificationIds']().mapper();
       requestModel = client.serialize(requestModelMapper, notificationIds, 'notificationIds');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1107,7 +1106,7 @@ function _deleteMethod(ownerName, appName, values, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1220,7 +1219,7 @@ function _deleteInstallId(installId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteInstallIdErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1259,7 +1258,8 @@ function _deleteInstallId(installId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExportStatusResult} for more information.
+ *                      See {@link ExportDevicesStatusOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1334,7 +1334,7 @@ function _exportDevicesStatus(exportId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ExportDevicesStatusErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1354,7 +1354,7 @@ function _exportDevicesStatus(exportId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExportStatusResult']().mapper();
+          let resultMapper = new client.models['ExportDevicesStatusOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1391,7 +1391,8 @@ function _exportDevicesStatus(exportId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExportStartedResult} for more information.
+ *                      See {@link ExportDevicesAcceptedResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1423,7 +1424,7 @@ function _exportDevices(ownerName, appName, blobContainerSasUri, options, callba
   }
   let properties;
   if (blobContainerSasUri !== null && blobContainerSasUri !== undefined) {
-    properties = new client.models['ExportConfig']();
+    properties = new client.models['PropertiesModelModel']();
     properties.blobContainerSasUri = blobContainerSasUri;
   }
 
@@ -1452,7 +1453,7 @@ function _exportDevices(ownerName, appName, blobContainerSasUri, options, callba
   let requestModel = null;
   try {
     if (properties !== null && properties !== undefined) {
-      let requestModelMapper = new client.models['ExportConfig']().mapper();
+      let requestModelMapper = new client.models['PropertiesModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, properties, 'properties');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1484,7 +1485,7 @@ function _exportDevices(ownerName, appName, blobContainerSasUri, options, callba
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ExportDevicesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1504,7 +1505,7 @@ function _exportDevices(ownerName, appName, blobContainerSasUri, options, callba
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExportStartedResult']().mapper();
+          let resultMapper = new client.models['ExportDevicesAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1639,7 +1640,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<NotificationConfigResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetConfigOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1676,7 +1677,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {NotificationConfigResult} - The deserialized result object.
+   *                      @resolve {GetConfigOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1685,8 +1686,7 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link NotificationConfigResult} for more
-   *                      information.
+   *                      See {@link GetConfigOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1730,7 +1730,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<NotificationConfigResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<SetConfigOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1771,7 +1771,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {NotificationConfigResult} - The deserialized result object.
+   *                      @resolve {SetConfigOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1780,8 +1780,7 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link NotificationConfigResult} for more
-   *                      information.
+   *                      See {@link SetConfigOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1908,7 +1907,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<NotificationDetailsResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1947,7 +1946,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {NotificationDetailsResult} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1956,7 +1955,7 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link NotificationDetailsResult} for more
+   *                      See {@link GetOKResponseModelModelModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -2014,7 +2013,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<NotificationsListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2068,7 +2067,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {NotificationsListResult} - The deserialized result object.
+   *                      @resolve {ListOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2077,8 +2076,7 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link NotificationsListResult} for more
-   *                      information.
+   *                      See {@link ListOKResponseModel} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2111,20 +2109,23 @@ class Push {
    *
    * @param {string} appName The name of the application
    *
-   * @param {object} notificationContent
+   * @param {object} notificationContent Notification definition object
    *
    * @param {string} notificationContent.name Notification name
    *
    * @param {string} [notificationContent.title] Notification title
    *
-   * @param {string} notificationContent.body Notification body
+   * @param {string} [notificationContent.body] Notification body
    *
    * @param {object} [notificationContent.customData] Notification custom data
    * (such as badge, color, sound, etc.)
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {object} [options.notificationTarget]
+   * @param {object} [options.notificationTarget] Type of Notification target
+   * (audiences, devices, user ids, account ids or broadcast). The object must
+   * include the correct properties for the specified target type except for
+   * broadcast.
    *
    * @param {string} options.notificationTarget.type Polymorphic Discriminator
    *
@@ -2133,7 +2134,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<NotificationSendSucceededResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<SendAcceptedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2158,20 +2159,23 @@ class Push {
    *
    * @param {string} appName The name of the application
    *
-   * @param {object} notificationContent
+   * @param {object} notificationContent Notification definition object
    *
    * @param {string} notificationContent.name Notification name
    *
    * @param {string} [notificationContent.title] Notification title
    *
-   * @param {string} notificationContent.body Notification body
+   * @param {string} [notificationContent.body] Notification body
    *
    * @param {object} [notificationContent.customData] Notification custom data
    * (such as badge, color, sound, etc.)
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {object} [options.notificationTarget]
+   * @param {object} [options.notificationTarget] Type of Notification target
+   * (audiences, devices, user ids, account ids or broadcast). The object must
+   * include the correct properties for the specified target type except for
+   * broadcast.
    *
    * @param {string} options.notificationTarget.type Polymorphic Discriminator
    *
@@ -2185,7 +2189,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {NotificationSendSucceededResult} - The deserialized result object.
+   *                      @resolve {SendAcceptedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2194,8 +2198,7 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link NotificationSendSucceededResult} for more
-   *                      information.
+   *                      See {@link SendAcceptedResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2415,7 +2418,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExportStatusResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ExportDevicesStatusOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2454,7 +2457,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExportStatusResult} - The deserialized result object.
+   *                      @resolve {ExportDevicesStatusOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2463,7 +2466,8 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExportStatusResult} for more information.
+   *                      See {@link ExportDevicesStatusOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2506,7 +2510,7 @@ class Push {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExportStartedResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ExportDevicesAcceptedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2546,7 +2550,7 @@ class Push {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExportStartedResult} - The deserialized result object.
+   *                      @resolve {ExportDevicesAcceptedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2555,7 +2559,8 @@ class Push {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExportStartedResult} for more information.
+   *                      See {@link ExportDevicesAcceptedResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

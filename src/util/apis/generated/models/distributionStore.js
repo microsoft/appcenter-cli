@@ -10,20 +10,23 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionStore.
- * @extends models['DistributionStoreWithoutIsLatest']
  */
-class DistributionStore extends models['DistributionStoreWithoutIsLatest'] {
+class DistributionStore {
   /**
    * Create a DistributionStore.
+   * @property {string} id ID identifying a unique distribution store.
+   * @property {string} [name] A name identifying a unique distribution store.
+   * @property {string} [type] type of the distribution store currently stores
+   * type can be intune, googleplay or windows. Possible values include:
+   * 'intune', 'googleplay', 'apple', 'none'
+   * @property {string} [publishingStatus] publishing status of the release in
+   * the store.
    * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution store.
    */
   constructor() {
-    super();
   }
 
   /**

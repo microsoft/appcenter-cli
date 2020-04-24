@@ -10,16 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * New crash group alerting event
  *
- * @extends models['AlertingEvent']
  */
-class NewCrashGroupAlertingEvent extends models['AlertingEvent'] {
+class NewCrashGroupAlertingEvent {
   /**
    * Create a NewCrashGroupAlertingEvent.
+   * @property {string} eventTimestamp ISO 8601 date time when event was
+   * generated
+   * @property {string} eventId A unique identifier for this event instance.
+   * Useful for deduplication
+   * @property {object} [properties] Obsolete. Use emailProperties.
    * @property {object} [crashGroupProperties] Properties of new crash group
    * @property {string} [crashGroupProperties.id]
    * @property {string} [crashGroupProperties.name]
@@ -31,7 +33,6 @@ class NewCrashGroupAlertingEvent extends models['AlertingEvent'] {
    * @property {array} [crashGroupProperties.stackTrace]
    */
   constructor() {
-    super();
   }
 
   /**

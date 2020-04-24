@@ -42,10 +42,10 @@ class DataInstancesResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DataInstanceElementType',
+                  serializedName: 'DataInstancesResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DataInstance'
+                    className: 'DataInstancesResponseValueItem'
                   }
               }
             }

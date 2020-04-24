@@ -20,14 +20,17 @@ class AggregatedBillingInformation {
    * @property {string} [version] Version of the Billing Information schema
    * @property {string} [timestamp] The ISO 8601 datetime of last modification
    * @property {string} [id] ID of the user or organization
-   * @property {object} [billingPlans]
-   * @property {object} [billingPlans.buildService]
+   * @property {object} [billingPlans] Billing Plans section in the Billing
+   * Information
+   * @property {object} [billingPlans.buildService] Billing Plans for a single
+   * service
    * @property {boolean} [billingPlans.buildService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
    * @property {string} [billingPlans.buildService.lastTrialPlanExpirationTime]
    * Expiration time of the last selected trial plan. Will be null if trial
    * plan was not used.
    * @property {object} [billingPlans.buildService.currentBillingPeriod]
+   * Billing plans for a given period
    * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.startTime] Inclusive start
    * of the period
@@ -35,12 +38,14 @@ class AggregatedBillingInformation {
    * [billingPlans.buildService.currentBillingPeriod.endTime] Exclusive end of
    * the period.
    * @property {object}
-   * [billingPlans.buildService.currentBillingPeriod.byAccount]
+   * [billingPlans.buildService.currentBillingPeriod.byAccount] Selection of a
+   * billing plan
    * @property {number}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.count] Number of
    * instances of the billing plan.
    * @property {object}
-   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan]
+   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan] Billing
+   * Plan
    * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.id] The
    * Billing Plan ID
@@ -59,30 +64,36 @@ class AggregatedBillingInformation {
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Test'
    * @property {object}
-   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.limits]
+   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.limits] A
+   * collection of named numeric values
    * @property {object}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.attributes]
+   * Collection of attribute values.
    * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.parentId]
-   * @property {object} [billingPlans.testService]
+   * @property {object} [billingPlans.testService] Billing Plans for a single
+   * service
    * @property {boolean} [billingPlans.testService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
    * @property {string} [billingPlans.testService.lastTrialPlanExpirationTime]
    * Expiration time of the last selected trial plan. Will be null if trial
    * plan was not used.
-   * @property {object} [billingPlans.testService.currentBillingPeriod]
+   * @property {object} [billingPlans.testService.currentBillingPeriod] Billing
+   * plans for a given period
    * @property {string}
    * [billingPlans.testService.currentBillingPeriod.startTime] Inclusive start
    * of the period
    * @property {string} [billingPlans.testService.currentBillingPeriod.endTime]
    * Exclusive end of the period.
    * @property {object}
-   * [billingPlans.testService.currentBillingPeriod.byAccount]
+   * [billingPlans.testService.currentBillingPeriod.byAccount] Selection of a
+   * billing plan
    * @property {number}
    * [billingPlans.testService.currentBillingPeriod.byAccount.count] Number of
    * instances of the billing plan.
    * @property {object}
-   * [billingPlans.testService.currentBillingPeriod.byAccount.plan]
+   * [billingPlans.testService.currentBillingPeriod.byAccount.plan] Billing
+   * Plan
    * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.id] The
    * Billing Plan ID
@@ -101,28 +112,38 @@ class AggregatedBillingInformation {
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Test'
    * @property {object}
-   * [billingPlans.testService.currentBillingPeriod.byAccount.plan.limits]
+   * [billingPlans.testService.currentBillingPeriod.byAccount.plan.limits] A
+   * collection of named numeric values
    * @property {object}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.attributes]
+   * Collection of attribute values.
    * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.parentId]
-   * @property {object} [usage]
-   * @property {object} [usage.buildService]
-   * @property {object} [usage.buildService.currentUsagePeriod]
+   * @property {object} [usage] Usage section in the Billing Information
+   * @property {object} [usage.buildService] Resource usage for a single Mobile
+   * Center service
+   * @property {object} [usage.buildService.currentUsagePeriod] Usage for a
+   * single period
    * @property {string} [usage.buildService.currentUsagePeriod.startTime]
    * Inclusive start time of the usage period
    * @property {string} [usage.buildService.currentUsagePeriod.endTime]
    * Exclusive end time of the usage period.
-   * @property {object} [usage.buildService.currentUsagePeriod.byAccount]
-   * @property {object} [usage.buildService.currentUsagePeriod.byApp]
-   * @property {object} [usage.testService]
-   * @property {object} [usage.testService.currentUsagePeriod]
+   * @property {object} [usage.buildService.currentUsagePeriod.byAccount] A
+   * collection of named numeric values
+   * @property {object} [usage.buildService.currentUsagePeriod.byApp] A
+   * collection of  named numeric values grouped by app
+   * @property {object} [usage.testService] Resource usage for a single Mobile
+   * Center service
+   * @property {object} [usage.testService.currentUsagePeriod] Usage for a
+   * single period
    * @property {string} [usage.testService.currentUsagePeriod.startTime]
    * Inclusive start time of the usage period
    * @property {string} [usage.testService.currentUsagePeriod.endTime]
    * Exclusive end time of the usage period.
-   * @property {object} [usage.testService.currentUsagePeriod.byAccount]
-   * @property {object} [usage.testService.currentUsagePeriod.byApp]
+   * @property {object} [usage.testService.currentUsagePeriod.byAccount] A
+   * collection of named numeric values
+   * @property {object} [usage.testService.currentUsagePeriod.byApp] A
+   * collection of  named numeric values grouped by app
    * @property {string} [azureSubscriptionId] Unique identifier for the Azure
    * subscription used for billing
    * @property {string} [azureSubscriptionState] State of the Azure
@@ -172,7 +193,7 @@ class AggregatedBillingInformation {
             serializedName: 'billingPlans',
             type: {
               name: 'Composite',
-              className: 'BillingInformationPlans'
+              className: 'AggregatedBillingInformationBillingPlans'
             }
           },
           usage: {
@@ -180,7 +201,7 @@ class AggregatedBillingInformation {
             serializedName: 'usage',
             type: {
               name: 'Composite',
-              className: 'BillingResourceUsage'
+              className: 'AggregatedBillingInformationUsage'
             }
           },
           azureSubscriptionId: {

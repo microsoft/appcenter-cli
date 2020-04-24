@@ -42,10 +42,10 @@ class AnalyticsReleasesResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AnalyticsReleasesParameterElementType',
+                  serializedName: 'AnalyticsReleasesResponseReleasesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AnalyticsReleasesParameter'
+                    className: 'AnalyticsReleasesResponseReleasesItem'
                   }
               }
             }

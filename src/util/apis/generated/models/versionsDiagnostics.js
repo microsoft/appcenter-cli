@@ -43,10 +43,10 @@ class VersionsDiagnostics {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'VersionDiagnosticsElementType',
+                  serializedName: 'VersionsDiagnosticsVersionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'VersionDiagnostics'
+                    className: 'VersionsDiagnosticsVersionsItem'
                   }
               }
             }

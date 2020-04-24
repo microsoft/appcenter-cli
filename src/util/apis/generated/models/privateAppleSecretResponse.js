@@ -10,19 +10,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * private Apple connection secrets response
  *
- * @extends models['PrivateSharedConnectionResponse']
  */
-class PrivateAppleSecretResponse extends models['PrivateSharedConnectionResponse'] {
+class PrivateAppleSecretResponse {
   /**
    * Create a PrivateAppleSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira|applecertificate. Possible values include:
+   * 'apple', 'jira', 'googleplay', 'gitlab'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    */
   constructor() {
-    super();
   }
 
   /**
@@ -37,11 +40,6 @@ class PrivateAppleSecretResponse extends models['PrivateSharedConnectionResponse
       serializedName: 'apple',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'PrivateSharedConnectionResponse',
         className: 'PrivateAppleSecretResponse',
         modelProperties: {
           id: {
@@ -58,6 +56,13 @@ class PrivateAppleSecretResponse extends models['PrivateSharedConnectionResponse
               name: 'String'
             }
           },
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
+            type: {
+              name: 'String'
+            }
+          },
           isValid: {
             required: false,
             serializedName: 'isValid',
@@ -70,14 +75,6 @@ class PrivateAppleSecretResponse extends models['PrivateSharedConnectionResponse
             serializedName: 'is2FA',
             type: {
               name: 'Boolean'
-            }
-          },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
-            type: {
-              name: 'String'
             }
           }
         }

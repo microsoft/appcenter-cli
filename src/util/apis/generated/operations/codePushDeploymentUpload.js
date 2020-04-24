@@ -34,7 +34,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CodePushReleaseUpload} for more information.
+ *                      See {@link CreateOKResponseModelModel} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -109,7 +110,7 @@ function _create(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CreateErrorModel3']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -129,7 +130,7 @@ function _create(deploymentName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CodePushReleaseUpload']().mapper();
+          let resultMapper = new client.models['CreateOKResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -171,7 +172,7 @@ class CodePushDeploymentUpload {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CodePushReleaseUpload>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOKResponseModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -210,7 +211,7 @@ class CodePushDeploymentUpload {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CodePushReleaseUpload} - The deserialized result object.
+   *                      @resolve {CreateOKResponseModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -219,7 +220,8 @@ class CodePushDeploymentUpload {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CodePushReleaseUpload} for more information.
+   *                      See {@link CreateOKResponseModelModel} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

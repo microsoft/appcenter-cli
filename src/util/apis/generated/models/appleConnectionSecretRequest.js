@@ -10,19 +10,20 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Apple connection secrets
  *
- * @extends models['SharedConnectionRequest']
  */
-class AppleConnectionSecretRequest extends models['SharedConnectionRequest'] {
+class AppleConnectionSecretRequest {
   /**
    * Create a AppleConnectionSecretRequest.
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira|applecertificate. Possible values include:
+   * 'apple', 'jira', 'googleplay', 'gitlab'
+   * @property {string} credentialType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,10 +39,10 @@ class AppleConnectionSecretRequest extends models['SharedConnectionRequest'] {
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
+          serializedName: 'credentialType',
+          clientName: 'credentialType'
         },
-        uberParent: 'SharedConnectionRequest',
+        uberParent: 'AppleConnectionSecretRequest',
         className: 'AppleConnectionSecretRequest',
         modelProperties: {
           displayName: {
@@ -51,17 +52,16 @@ class AppleConnectionSecretRequest extends models['SharedConnectionRequest'] {
               name: 'String'
             }
           },
-          credentialType: {
-            required: false,
-            serializedName: 'credentialType',
-            defaultValue: 'credentials',
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
           },
-          serviceType: {
+          credentialType: {
             required: true,
-            serializedName: 'serviceType',
+            serializedName: 'credentialType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'

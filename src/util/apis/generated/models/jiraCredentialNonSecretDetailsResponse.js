@@ -10,22 +10,27 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Jira credentials non-secret details
  *
- * @extends models['GooglePlayConnectionNonSecretResponse']
  */
-class JiraCredentialNonSecretDetailsResponse extends models['GooglePlayConnectionNonSecretResponse'] {
+class JiraCredentialNonSecretDetailsResponse {
   /**
    * Create a JiraCredentialNonSecretDetailsResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira. Possible values include: 'apple', 'jira',
+   * 'googleplay', 'gitlab'
+   * @property {string} credentialType the type of the credential. Possible
+   * values include: 'credentials', 'certificate'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data Jira credentials non-secret details
    * @property {string} [data.baseUrl] baseUrl to connect to jira instance
    * @property {string} [data.username] username to connect to jira instance
    */
   constructor() {
-    super();
   }
 
   /**
@@ -40,11 +45,6 @@ class JiraCredentialNonSecretDetailsResponse extends models['GooglePlayConnectio
       serializedName: 'credentials',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'SharedConnectionResponse',
         className: 'JiraCredentialNonSecretDetailsResponse',
         modelProperties: {
           id: {
@@ -57,6 +57,13 @@ class JiraCredentialNonSecretDetailsResponse extends models['GooglePlayConnectio
           displayName: {
             required: false,
             serializedName: 'displayName',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
@@ -82,20 +89,12 @@ class JiraCredentialNonSecretDetailsResponse extends models['GooglePlayConnectio
               name: 'Boolean'
             }
           },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
-            type: {
-              name: 'String'
-            }
-          },
           data: {
             required: true,
             serializedName: 'data',
             type: {
               name: 'Composite',
-              className: 'JiraSecretDetailsResponse'
+              className: 'JiraCredentialNonSecretDetailsResponseData'
             }
           }
         }

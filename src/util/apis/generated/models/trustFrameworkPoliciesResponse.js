@@ -42,10 +42,10 @@ class TrustFrameworkPoliciesResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TrustFrameworkPolicyResponseElementType',
+                  serializedName: 'TrustFrameworkPoliciesResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TrustFrameworkPolicyResponse'
+                    className: 'TrustFrameworkPoliciesResponseValueItem'
                   }
               }
             }

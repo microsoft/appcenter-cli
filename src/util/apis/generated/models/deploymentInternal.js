@@ -10,19 +10,36 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DeploymentInternal.
- * @extends models['Deployment']
  */
-class DeploymentInternal extends models['Deployment'] {
+class DeploymentInternal {
   /**
    * Create a DeploymentInternal.
+   * @property {string} [key]
+   * @property {string} name
+   * @property {object} [latestRelease]
+   * @property {string} [latestRelease.targetBinaryRange]
+   * @property {string} [latestRelease.description]
+   * @property {boolean} [latestRelease.isDisabled]
+   * @property {boolean} [latestRelease.isMandatory]
+   * @property {number} [latestRelease.rollout]
+   * @property {string} [latestRelease.label]
+   * @property {string} [latestRelease.packageHash]
+   * @property {string} [latestRelease.blobUrl]
+   * @property {object} [latestRelease.diffPackageMap]
+   * @property {string} [latestRelease.originalDeployment] Set on 'Promote'
+   * @property {string} [latestRelease.originalLabel] Set on 'Promote' and
+   * 'Rollback'
+   * @property {string} [latestRelease.releasedBy]
+   * @property {string} [latestRelease.releaseMethod] The release method is
+   * unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+   * @property {number} [latestRelease.size]
+   * @property {number} [latestRelease.uploadTime]
    * @property {string} [id]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -58,7 +75,7 @@ class DeploymentInternal extends models['Deployment'] {
             serializedName: 'latest_release',
             type: {
               name: 'Composite',
-              className: 'CodePushRelease'
+              className: 'DeploymentInternalLatestRelease'
             }
           },
           id: {

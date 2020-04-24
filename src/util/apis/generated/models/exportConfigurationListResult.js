@@ -45,10 +45,10 @@ class ExportConfigurationListResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ExportConfigurationResultElementType',
+                  serializedName: 'ExportConfigurationListResultValuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ExportConfigurationResult'
+                    className: 'ExportConfigurationListResultValuesItem'
                   }
               }
             }

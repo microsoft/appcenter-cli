@@ -102,7 +102,7 @@ function _registerUserForDevice(userId, body, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['DeviceInfoRequest']().mapper();
+      let requestModelMapper = new client.models['Body']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -150,7 +150,7 @@ function _registerUserForDevice(userId, body, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceInfoResponse']().mapper();
+          let resultMapper = new client.models['RegisterUserForDeviceOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -167,7 +167,7 @@ function _registerUserForDevice(userId, body, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['RegisterUserForDeviceNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -281,7 +281,7 @@ function _deviceDetails(deviceUdid, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceInfoResponse']().mapper();
+          let resultMapper = new client.models['DeviceDetailsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -298,7 +298,7 @@ function _deviceDetails(deviceUdid, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['DeviceDetailsBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -315,7 +315,7 @@ function _deviceDetails(deviceUdid, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['DeviceDetailsForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -332,7 +332,7 @@ function _deviceDetails(deviceUdid, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['DeviceDetailsNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -364,7 +364,6 @@ function _deviceDetails(deviceUdid, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ErrorDetails} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -447,7 +446,7 @@ function _removeUserDevice(deviceUdid, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['RemoveUserDeviceForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -464,7 +463,7 @@ function _removeUserDevice(deviceUdid, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['RemoveUserDeviceNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -574,10 +573,10 @@ function _userDevicesList(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeviceInfoResponseElementType',
+                  serializedName: 'UserDevicesListOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DeviceInfoResponse'
+                    className: 'UserDevicesListOKResponseItem'
                   }
               }
             }
@@ -598,7 +597,7 @@ function _userDevicesList(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['UserDevicesListBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -615,7 +614,7 @@ function _userDevicesList(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['UserDevicesListForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -763,7 +762,7 @@ function _getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ResignStatus']().mapper();
+          let resultMapper = new client.models['GetReleaseUpdateDevicesStatusOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -780,7 +779,7 @@ function _getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetReleaseUpdateDevicesStatusBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -797,7 +796,7 @@ function _getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetReleaseUpdateDevicesStatusNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1083,10 +1082,10 @@ function _list(distributionGroupName, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeviceInfoResponseElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DeviceInfoResponse'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -1107,7 +1106,7 @@ function _list(distributionGroupName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['ListBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1124,7 +1123,7 @@ function _list(distributionGroupName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['ListNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1512,7 +1511,7 @@ class Devices {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1547,7 +1546,7 @@ class Devices {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *                      @resolve {Object} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1556,7 +1555,6 @@ class Devices {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ErrorDetails} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

@@ -53,7 +53,7 @@ class AdministeredOrgsResponse {
             serializedName: 'organizations',
             type: {
               name: 'Composite',
-              className: 'OrganizationResponse'
+              className: 'AdministeredOrgsResponseOrganizations'
             }
           }
         }

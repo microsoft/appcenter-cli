@@ -50,10 +50,10 @@ class IntuneGroups {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'IntuneGroupValueElementType',
+                  serializedName: 'IntuneGroupsValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'IntuneGroupValue'
+                    className: 'IntuneGroupsValueItem'
                   }
               }
             }

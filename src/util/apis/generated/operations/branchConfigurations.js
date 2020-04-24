@@ -34,8 +34,9 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BranchConfigurationWithId} for more
- *                      information.
+ *                      See {@link
+ *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -110,7 +111,7 @@ function _get(branch, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel10']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -130,7 +131,7 @@ function _get(branch, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BranchConfigurationWithId']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -165,9 +166,11 @@ function _get(branch, ownerName, appName, options, callback) {
  * from. If provided, all other parameters will be ignored. Only supported in
  * POST requests.
  *
- * @param {object} [params.toolsets]
+ * @param {object} [params.toolsets] The branch build configuration for each
+ * toolset
  *
- * @param {object} [params.toolsets.xcode]
+ * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+ * part of the build steps
  *
  * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
  * project/workspace path
@@ -224,7 +227,8 @@ function _get(branch, ownerName, appName, options, callback) {
  * the repository. Only used for iOS React Native app, with Xcode 10.
  *
  *
- * @param {object} [params.toolsets.javascript]
+ * @param {object} [params.toolsets.javascript] Build configuration when React
+ * Native, or other JavaScript tech, is part of the build steps
  *
  * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
  * package.json file for the main project, e.g. "package.json" or
@@ -236,7 +240,8 @@ function _get(branch, ownerName, appName, options, callback) {
  * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
  * React Native from package.json files
  *
- * @param {object} [params.toolsets.xamarin]
+ * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+ * projects
  *
  * @param {string} [params.toolsets.xamarin.slnPath]
  *
@@ -264,7 +269,8 @@ function _get(branch, ownerName, appName, options, callback) {
  * version will be configured for building.
  *
  *
- * @param {object} [params.toolsets.android]
+ * @param {object} [params.toolsets.android] Build configuration for Android
+ * projects
  *
  * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
  * Gradle wrapper script
@@ -299,7 +305,8 @@ function _get(branch, ownerName, appName, options, callback) {
  * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
  * encoded value
  *
- * @param {object} [params.artifactVersioning]
+ * @param {object} [params.artifactVersioning] The versioning configuration for
+ * artifacts built for this branch
  *
  * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
  * values include: 'buildId', 'timestamp'
@@ -320,7 +327,7 @@ function _get(branch, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BranchConfigurationWithId} for more
+ *                      See {@link CreateOKResponseModelModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -381,7 +388,7 @@ function _create(branch, params, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (params !== null && params !== undefined) {
-      let requestModelMapper = new client.models['BranchConfiguration']().mapper();
+      let requestModelMapper = new client.models['Params']().mapper();
       requestModel = client.serialize(requestModelMapper, params, 'params');
       requestContent = JSON.stringify(requestModel);
     }
@@ -429,7 +436,7 @@ function _create(branch, params, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BranchConfigurationWithId']().mapper();
+          let resultMapper = new client.models['CreateOKResponseModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -464,9 +471,11 @@ function _create(branch, params, ownerName, appName, options, callback) {
  * from. If provided, all other parameters will be ignored. Only supported in
  * POST requests.
  *
- * @param {object} [params.toolsets]
+ * @param {object} [params.toolsets] The branch build configuration for each
+ * toolset
  *
- * @param {object} [params.toolsets.xcode]
+ * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+ * part of the build steps
  *
  * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
  * project/workspace path
@@ -523,7 +532,8 @@ function _create(branch, params, ownerName, appName, options, callback) {
  * the repository. Only used for iOS React Native app, with Xcode 10.
  *
  *
- * @param {object} [params.toolsets.javascript]
+ * @param {object} [params.toolsets.javascript] Build configuration when React
+ * Native, or other JavaScript tech, is part of the build steps
  *
  * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
  * package.json file for the main project, e.g. "package.json" or
@@ -535,7 +545,8 @@ function _create(branch, params, ownerName, appName, options, callback) {
  * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
  * React Native from package.json files
  *
- * @param {object} [params.toolsets.xamarin]
+ * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+ * projects
  *
  * @param {string} [params.toolsets.xamarin.slnPath]
  *
@@ -563,7 +574,8 @@ function _create(branch, params, ownerName, appName, options, callback) {
  * version will be configured for building.
  *
  *
- * @param {object} [params.toolsets.android]
+ * @param {object} [params.toolsets.android] Build configuration for Android
+ * projects
  *
  * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
  * Gradle wrapper script
@@ -598,7 +610,8 @@ function _create(branch, params, ownerName, appName, options, callback) {
  * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
  * encoded value
  *
- * @param {object} [params.artifactVersioning]
+ * @param {object} [params.artifactVersioning] The versioning configuration for
+ * artifacts built for this branch
  *
  * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
  * values include: 'buildId', 'timestamp'
@@ -619,8 +632,9 @@ function _create(branch, params, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BranchConfigurationWithId} for more
- *                      information.
+ *                      See {@link
+ *                      UpdateOKResponseModelModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -680,7 +694,7 @@ function _update(branch, params, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (params !== null && params !== undefined) {
-      let requestModelMapper = new client.models['BranchConfiguration']().mapper();
+      let requestModelMapper = new client.models['Params']().mapper();
       requestModel = client.serialize(requestModelMapper, params, 'params');
       requestContent = JSON.stringify(requestModel);
     }
@@ -728,7 +742,7 @@ function _update(branch, params, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BranchConfigurationWithId']().mapper();
+          let resultMapper = new client.models['UpdateOKResponseModelModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -766,7 +780,7 @@ function _update(branch, params, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link SuccessResponse} for more information.
+ *                      See {@link DeleteOKResponseModel} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -881,7 +895,7 @@ function _deleteMethod(branch, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SuccessResponse']().mapper();
+          let resultMapper = new client.models['DeleteOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -926,7 +940,7 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -965,7 +979,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -974,8 +988,9 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BranchConfigurationWithId} for more
-   *                      information.
+   *                      See {@link
+   *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1021,9 +1036,11 @@ class BranchConfigurations {
    * from. If provided, all other parameters will be ignored. Only supported in
    * POST requests.
    *
-   * @param {object} [params.toolsets]
+   * @param {object} [params.toolsets] The branch build configuration for each
+   * toolset
    *
-   * @param {object} [params.toolsets.xcode]
+   * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+   * part of the build steps
    *
    * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
    * project/workspace path
@@ -1080,7 +1097,8 @@ class BranchConfigurations {
    * the repository. Only used for iOS React Native app, with Xcode 10.
    *
    *
-   * @param {object} [params.toolsets.javascript]
+   * @param {object} [params.toolsets.javascript] Build configuration when React
+   * Native, or other JavaScript tech, is part of the build steps
    *
    * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
@@ -1092,7 +1110,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
    * React Native from package.json files
    *
-   * @param {object} [params.toolsets.xamarin]
+   * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+   * projects
    *
    * @param {string} [params.toolsets.xamarin.slnPath]
    *
@@ -1120,7 +1139,8 @@ class BranchConfigurations {
    * version will be configured for building.
    *
    *
-   * @param {object} [params.toolsets.android]
+   * @param {object} [params.toolsets.android] Build configuration for Android
+   * projects
    *
    * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
    * Gradle wrapper script
@@ -1155,7 +1175,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
    * encoded value
    *
-   * @param {object} [params.artifactVersioning]
+   * @param {object} [params.artifactVersioning] The versioning configuration for
+   * artifacts built for this branch
    *
    * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
    * values include: 'buildId', 'timestamp'
@@ -1171,7 +1192,7 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOKResponseModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1209,9 +1230,11 @@ class BranchConfigurations {
    * from. If provided, all other parameters will be ignored. Only supported in
    * POST requests.
    *
-   * @param {object} [params.toolsets]
+   * @param {object} [params.toolsets] The branch build configuration for each
+   * toolset
    *
-   * @param {object} [params.toolsets.xcode]
+   * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+   * part of the build steps
    *
    * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
    * project/workspace path
@@ -1268,7 +1291,8 @@ class BranchConfigurations {
    * the repository. Only used for iOS React Native app, with Xcode 10.
    *
    *
-   * @param {object} [params.toolsets.javascript]
+   * @param {object} [params.toolsets.javascript] Build configuration when React
+   * Native, or other JavaScript tech, is part of the build steps
    *
    * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
@@ -1280,7 +1304,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
    * React Native from package.json files
    *
-   * @param {object} [params.toolsets.xamarin]
+   * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+   * projects
    *
    * @param {string} [params.toolsets.xamarin.slnPath]
    *
@@ -1308,7 +1333,8 @@ class BranchConfigurations {
    * version will be configured for building.
    *
    *
-   * @param {object} [params.toolsets.android]
+   * @param {object} [params.toolsets.android] Build configuration for Android
+   * projects
    *
    * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
    * Gradle wrapper script
@@ -1343,7 +1369,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
    * encoded value
    *
-   * @param {object} [params.artifactVersioning]
+   * @param {object} [params.artifactVersioning] The versioning configuration for
+   * artifacts built for this branch
    *
    * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
    * values include: 'buildId', 'timestamp'
@@ -1364,7 +1391,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
+   *                      @resolve {CreateOKResponseModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1373,7 +1400,7 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BranchConfigurationWithId} for more
+   *                      See {@link CreateOKResponseModelModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1420,9 +1447,11 @@ class BranchConfigurations {
    * from. If provided, all other parameters will be ignored. Only supported in
    * POST requests.
    *
-   * @param {object} [params.toolsets]
+   * @param {object} [params.toolsets] The branch build configuration for each
+   * toolset
    *
-   * @param {object} [params.toolsets.xcode]
+   * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+   * part of the build steps
    *
    * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
    * project/workspace path
@@ -1479,7 +1508,8 @@ class BranchConfigurations {
    * the repository. Only used for iOS React Native app, with Xcode 10.
    *
    *
-   * @param {object} [params.toolsets.javascript]
+   * @param {object} [params.toolsets.javascript] Build configuration when React
+   * Native, or other JavaScript tech, is part of the build steps
    *
    * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
@@ -1491,7 +1521,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
    * React Native from package.json files
    *
-   * @param {object} [params.toolsets.xamarin]
+   * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+   * projects
    *
    * @param {string} [params.toolsets.xamarin.slnPath]
    *
@@ -1519,7 +1550,8 @@ class BranchConfigurations {
    * version will be configured for building.
    *
    *
-   * @param {object} [params.toolsets.android]
+   * @param {object} [params.toolsets.android] Build configuration for Android
+   * projects
    *
    * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
    * Gradle wrapper script
@@ -1554,7 +1586,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
    * encoded value
    *
-   * @param {object} [params.artifactVersioning]
+   * @param {object} [params.artifactVersioning] The versioning configuration for
+   * artifacts built for this branch
    *
    * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
    * values include: 'buildId', 'timestamp'
@@ -1570,7 +1603,7 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1608,9 +1641,11 @@ class BranchConfigurations {
    * from. If provided, all other parameters will be ignored. Only supported in
    * POST requests.
    *
-   * @param {object} [params.toolsets]
+   * @param {object} [params.toolsets] The branch build configuration for each
+   * toolset
    *
-   * @param {object} [params.toolsets.xcode]
+   * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+   * part of the build steps
    *
    * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
    * project/workspace path
@@ -1667,7 +1702,8 @@ class BranchConfigurations {
    * the repository. Only used for iOS React Native app, with Xcode 10.
    *
    *
-   * @param {object} [params.toolsets.javascript]
+   * @param {object} [params.toolsets.javascript] Build configuration when React
+   * Native, or other JavaScript tech, is part of the build steps
    *
    * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
@@ -1679,7 +1715,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
    * React Native from package.json files
    *
-   * @param {object} [params.toolsets.xamarin]
+   * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+   * projects
    *
    * @param {string} [params.toolsets.xamarin.slnPath]
    *
@@ -1707,7 +1744,8 @@ class BranchConfigurations {
    * version will be configured for building.
    *
    *
-   * @param {object} [params.toolsets.android]
+   * @param {object} [params.toolsets.android] Build configuration for Android
+   * projects
    *
    * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
    * Gradle wrapper script
@@ -1742,7 +1780,8 @@ class BranchConfigurations {
    * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
    * encoded value
    *
-   * @param {object} [params.artifactVersioning]
+   * @param {object} [params.artifactVersioning] The versioning configuration for
+   * artifacts built for this branch
    *
    * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
    * values include: 'buildId', 'timestamp'
@@ -1763,7 +1802,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
+   *                      @resolve {UpdateOKResponseModelModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1772,8 +1811,9 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BranchConfigurationWithId} for more
-   *                      information.
+   *                      See {@link
+   *                      UpdateOKResponseModelModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1817,7 +1857,7 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<SuccessResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DeleteOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1858,7 +1898,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {SuccessResponse} - The deserialized result object.
+   *                      @resolve {DeleteOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1867,7 +1907,7 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link SuccessResponse} for more information.
+   *                      See {@link DeleteOKResponseModel} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

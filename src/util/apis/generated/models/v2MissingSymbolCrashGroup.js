@@ -20,6 +20,7 @@ class V2MissingSymbolCrashGroup {
    * @property {string} symbolGroupId id of the symbol group
    * @property {number} [crashCount] number of crashes that belong to this
    * group
+   * @property {number} [errorCount] number of errors that belong to this group
    * @property {string} appId application id
    * @property {string} appVer application version
    * @property {string} appBuild application build
@@ -59,6 +60,13 @@ class V2MissingSymbolCrashGroup {
               name: 'Number'
             }
           },
+          errorCount: {
+            required: false,
+            serializedName: 'error_count',
+            type: {
+              name: 'Number'
+            }
+          },
           appId: {
             required: true,
             serializedName: 'app_id',
@@ -94,10 +102,10 @@ class V2MissingSymbolCrashGroup {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'V2MissingSymbolElementType',
+                  serializedName: 'V2MissingSymbolCrashGroupMissingSymbolsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'V2MissingSymbol'
+                    className: 'V2MissingSymbolCrashGroupMissingSymbolsItem'
                   }
               }
             }

@@ -59,7 +59,7 @@ export interface Devices {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    registerUserForDeviceWithHttpOperationResponse(userId: string, body: models.DeviceInfoRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    registerUserForDeviceWithHttpOperationResponse(userId: string, body: models.Body, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Registers a user for an existing device
@@ -113,9 +113,9 @@ export interface Devices {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    registerUserForDevice(userId: string, body: models.DeviceInfoRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    registerUserForDevice(userId: string, body: models.DeviceInfoRequest, callback: ServiceCallback<any>): void;
-    registerUserForDevice(userId: string, body: models.DeviceInfoRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    registerUserForDevice(userId: string, body: models.Body, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    registerUserForDevice(userId: string, body: models.Body, callback: ServiceCallback<any>): void;
+    registerUserForDevice(userId: string, body: models.Body, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -184,11 +184,11 @@ export interface Devices {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    removeUserDeviceWithHttpOperationResponse(deviceUdid: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    removeUserDeviceWithHttpOperationResponse(deviceUdid: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Removes an existing device from a user
@@ -207,7 +207,7 @@ export interface Devices {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {Object} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -215,16 +215,15 @@ export interface Devices {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    removeUserDevice(deviceUdid: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    removeUserDevice(deviceUdid: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    removeUserDevice(deviceUdid: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    removeUserDevice(deviceUdid: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    removeUserDevice(deviceUdid: string, callback: ServiceCallback<any>): void;
+    removeUserDevice(deviceUdid: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -592,11 +591,11 @@ export interface Notifications {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AlertUserEmailSettingsResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetUserEmailSettingsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getUserEmailSettingsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertUserEmailSettingsResult>>;
+    getUserEmailSettingsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetUserEmailSettingsOKResponse>>;
 
     /**
      * Get Default email notification settings for the user
@@ -613,7 +612,7 @@ export interface Notifications {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AlertUserEmailSettingsResult} - The deserialized result object.
+     *                      @resolve {GetUserEmailSettingsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -621,17 +620,17 @@ export interface Notifications {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AlertUserEmailSettingsResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AlertUserEmailSettingsResult} for more
+     *                      {GetUserEmailSettingsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetUserEmailSettingsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getUserEmailSettings(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertUserEmailSettingsResult>;
-    getUserEmailSettings(callback: ServiceCallback<models.AlertUserEmailSettingsResult>): void;
-    getUserEmailSettings(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertUserEmailSettingsResult>): void;
+    getUserEmailSettings(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetUserEmailSettingsOKResponse>;
+    getUserEmailSettings(callback: ServiceCallback<models.GetUserEmailSettingsOKResponse>): void;
+    getUserEmailSettings(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetUserEmailSettingsOKResponse>): void;
 
 
     /**
@@ -648,11 +647,11 @@ export interface Notifications {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AlertUserAppEmailSettingsResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetAppEmailSettingsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAppEmailSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertUserAppEmailSettingsResult>>;
+    getAppEmailSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAppEmailSettingsOKResponse>>;
 
     /**
      * Get Email notification settings of user for a particular app
@@ -673,7 +672,7 @@ export interface Notifications {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AlertUserAppEmailSettingsResult} - The deserialized result object.
+     *                      @resolve {GetAppEmailSettingsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -681,17 +680,481 @@ export interface Notifications {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AlertUserAppEmailSettingsResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AlertUserAppEmailSettingsResult} for more
+     *                      {GetAppEmailSettingsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetAppEmailSettingsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAppEmailSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertUserAppEmailSettingsResult>;
-    getAppEmailSettings(ownerName: string, appName: string, callback: ServiceCallback<models.AlertUserAppEmailSettingsResult>): void;
-    getAppEmailSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertUserAppEmailSettingsResult>): void;
+    getAppEmailSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAppEmailSettingsOKResponse>;
+    getAppEmailSettings(ownerName: string, appName: string, callback: ServiceCallback<models.GetAppEmailSettingsOKResponse>): void;
+    getAppEmailSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAppEmailSettingsOKResponse>): void;
+}
+
+/**
+ * @class
+ * Users
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Users {
+
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GetUserMetadataOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getUserMetadataWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetUserMetadataOKResponse>>;
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GetUserMetadataOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GetUserMetadataOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetUserMetadataOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getUserMetadata(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetUserMetadataOKResponse>;
+    getUserMetadata(callback: ServiceCallback<models.GetUserMetadataOKResponse>): void;
+    getUserMetadata(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetUserMetadataOKResponse>): void;
+
+
+    /**
+     * Returns the user profile data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GetOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponse>>;
+
+    /**
+     * Returns the user profile data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GetOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GetOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    get(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponse>;
+    get(callback: ServiceCallback<models.GetOKResponse>): void;
+    get(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponse>): void;
+
+
+    /**
+     * Updates the user profile and returns the updated user data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.displayName] The full name of the user. Might for
+     * example be first and last name
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<UpdateOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateWithHttpOperationResponse(options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponse>>;
+
+    /**
+     * Updates the user profile and returns the updated user data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.displayName] The full name of the user. Might for
+     * example be first and last name
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {UpdateOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {UpdateOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    update(options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponse>;
+    update(callback: ServiceCallback<models.UpdateOKResponse>): void;
+    update(options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponse>): void;
+
+
+    /**
+     * Updates the given organization user
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role in the organizatiion.
+     * Possible values include: 'admin', 'collaborator', 'member'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<UpdateOrgRoleOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateOrgRoleWithHttpOperationResponse(orgName: string, userName: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOrgRoleOKResponse>>;
+
+    /**
+     * Updates the given organization user
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role in the organizatiion.
+     * Possible values include: 'admin', 'collaborator', 'member'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {UpdateOrgRoleOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {UpdateOrgRoleOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateOrgRoleOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateOrgRole(orgName: string, userName: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOrgRoleOKResponse>;
+    updateOrgRole(orgName: string, userName: string, callback: ServiceCallback<models.UpdateOrgRoleOKResponse>): void;
+    updateOrgRole(orgName: string, userName: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOrgRoleOKResponse>): void;
+
+
+    /**
+     * Removes a user from an organization.
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    removeFromOrgWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Removes a user from an organization.
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    removeFromOrg(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    removeFromOrg(orgName: string, userName: string, callback: ServiceCallback<void>): void;
+    removeFromOrg(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Get a user information from an organization by name - if there is explicit
+     * permission return it, if not if not return highest implicit permission
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GetForOrgOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getForOrgWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetForOrgOKResponse>>;
+
+    /**
+     * Get a user information from an organization by name - if there is explicit
+     * permission return it, if not if not return highest implicit permission
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GetForOrgOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GetForOrgOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetForOrgOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getForOrg(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetForOrgOKResponse>;
+    getForOrg(orgName: string, userName: string, callback: ServiceCallback<models.GetForOrgOKResponse>): void;
+    getForOrg(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetForOrgOKResponse>): void;
+
+
+    /**
+     * Returns a list of users that belong to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForOrgOKResponseItem[]>>;
+
+    /**
+     * Returns a list of users that belong to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForOrgOKResponseItem[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.ListForOrgOKResponseItem[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForOrgOKResponseItem[]>): void;
+
+
+    /**
+     * Returns the users associated with the app specified with the given app name
+     * which belongs to the given owner.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModel[]>>;
+
+    /**
+     * Returns the users associated with the app specified with the given app name
+     * which belongs to the given owner.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModel[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModel[]>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModel[]>): void;
 }
 
 /**
@@ -1080,9 +1543,6 @@ export interface OrgInvitations {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.role] The user's role. Possible values include:
-     * 'admin', 'collaborator', 'member'
-     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -1092,7 +1552,7 @@ export interface OrgInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    deleteMethodWithHttpOperationResponse(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Removes a user's invitation to an organization
@@ -1102,9 +1562,6 @@ export interface OrgInvitations {
      * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.role] The user's role. Possible values include:
-     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1130,9 +1587,9 @@ export interface OrgInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     deleteMethod(orgName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    deleteMethod(orgName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(orgName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -1151,7 +1608,7 @@ export interface OrgInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listPendingWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationInvitationSimpleDetailResponse[]>>;
+    listPendingWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListPendingOKResponseItem[]>>;
 
     /**
      * Gets the pending invitations for the organization
@@ -1184,9 +1641,9 @@ export interface OrgInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listPending(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationInvitationSimpleDetailResponse[]>;
-    listPending(orgName: string, callback: ServiceCallback<models.OrganizationInvitationSimpleDetailResponse[]>): void;
-    listPending(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationInvitationSimpleDetailResponse[]>): void;
+    listPending(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListPendingOKResponseItem[]>;
+    listPending(orgName: string, callback: ServiceCallback<models.ListPendingOKResponseItem[]>): void;
+    listPending(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListPendingOKResponseItem[]>): void;
 }
 
 /**
@@ -1645,11 +2102,11 @@ export interface AppInvitations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppInvitationDetailResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListOKResponseModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppInvitationDetailResponse>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseModelModel>>;
 
     /**
      * Gets the pending invitations for the app
@@ -1670,7 +2127,7 @@ export interface AppInvitations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppInvitationDetailResponse} - The deserialized result object.
+     *                      @resolve {ListOKResponseModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -1678,17 +2135,17 @@ export interface AppInvitations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppInvitationDetailResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppInvitationDetailResponse} for more
+     *                      {ListOKResponseModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListOKResponseModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppInvitationDetailResponse>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.AppInvitationDetailResponse>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppInvitationDetailResponse>): void;
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseModelModel>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseModelModel>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseModelModel>): void;
 }
 
 /**
@@ -1714,7 +2171,7 @@ export interface Sharedconnection {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    connectionsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SharedConnectionResponse[]>>;
+    connectionsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ConnectionsOKResponseItem[]>>;
 
     /**
      * Gets all service connections of the service type for GDPR export.
@@ -1745,9 +2202,9 @@ export interface Sharedconnection {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    connections(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SharedConnectionResponse[]>;
-    connections(callback: ServiceCallback<models.SharedConnectionResponse[]>): void;
-    connections(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SharedConnectionResponse[]>): void;
+    connections(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ConnectionsOKResponseItem[]>;
+    connections(callback: ServiceCallback<models.ConnectionsOKResponseItem[]>): void;
+    connections(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ConnectionsOKResponseItem[]>): void;
 }
 
 /**
@@ -1819,11 +2276,11 @@ export interface DataSubjectRight {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DataSubjectRightStatusResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ExportStatusRequestOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    exportStatusRequestWithHttpOperationResponse(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightStatusResponse>>;
+    exportStatusRequestWithHttpOperationResponse(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportStatusRequestOKResponse>>;
 
     /**
      * @param {uuid} token Unique request ID (GUID)
@@ -1840,7 +2297,7 @@ export interface DataSubjectRight {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DataSubjectRightStatusResponse} - The deserialized result object.
+     *                      @resolve {ExportStatusRequestOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -1848,17 +2305,17 @@ export interface DataSubjectRight {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DataSubjectRightStatusResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DataSubjectRightStatusResponse} for more
+     *                      {ExportStatusRequestOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExportStatusRequestOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    exportStatusRequest(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightStatusResponse>;
-    exportStatusRequest(token: string, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
-    exportStatusRequest(token: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
+    exportStatusRequest(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportStatusRequestOKResponse>;
+    exportStatusRequest(token: string, callback: ServiceCallback<models.ExportStatusRequestOKResponse>): void;
+    exportStatusRequest(token: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportStatusRequestOKResponse>): void;
 
 
     /**
@@ -1869,11 +2326,11 @@ export interface DataSubjectRight {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DataSubjectRightResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ExportRequestAcceptedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    exportRequestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightResponse>>;
+    exportRequestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportRequestAcceptedResponse>>;
 
     /**
      * @param {object} [options] Optional Parameters.
@@ -1888,7 +2345,7 @@ export interface DataSubjectRight {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DataSubjectRightResponse} - The deserialized result object.
+     *                      @resolve {ExportRequestAcceptedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -1896,17 +2353,17 @@ export interface DataSubjectRight {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DataSubjectRightResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DataSubjectRightResponse} for more
+     *                      {ExportRequestAcceptedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExportRequestAcceptedResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    exportRequest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightResponse>;
-    exportRequest(callback: ServiceCallback<models.DataSubjectRightResponse>): void;
-    exportRequest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightResponse>): void;
+    exportRequest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportRequestAcceptedResponse>;
+    exportRequest(callback: ServiceCallback<models.ExportRequestAcceptedResponse>): void;
+    exportRequest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportRequestAcceptedResponse>): void;
 
 
     /**
@@ -1977,11 +2434,11 @@ export interface DataSubjectRight {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DataSubjectRightStatusResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteStatusRequestOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteStatusRequestWithHttpOperationResponse(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightStatusResponse>>;
+    deleteStatusRequestWithHttpOperationResponse(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteStatusRequestOKResponse>>;
 
     /**
      * @param {uuid} token Unique request ID (GUID)
@@ -2000,7 +2457,7 @@ export interface DataSubjectRight {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DataSubjectRightStatusResponse} - The deserialized result object.
+     *                      @resolve {DeleteStatusRequestOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -2008,17 +2465,17 @@ export interface DataSubjectRight {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DataSubjectRightStatusResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DataSubjectRightStatusResponse} for more
+     *                      {DeleteStatusRequestOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteStatusRequestOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteStatusRequest(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightStatusResponse>;
-    deleteStatusRequest(token: string, email: string, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
-    deleteStatusRequest(token: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
+    deleteStatusRequest(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteStatusRequestOKResponse>;
+    deleteStatusRequest(token: string, email: string, callback: ServiceCallback<models.DeleteStatusRequestOKResponse>): void;
+    deleteStatusRequest(token: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteStatusRequestOKResponse>): void;
 
 
     /**
@@ -2029,11 +2486,11 @@ export interface DataSubjectRight {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DataSubjectRightResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteRequestAcceptedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteRequestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightResponse>>;
+    deleteRequestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteRequestAcceptedResponse>>;
 
     /**
      * @param {object} [options] Optional Parameters.
@@ -2048,7 +2505,7 @@ export interface DataSubjectRight {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DataSubjectRightResponse} - The deserialized result object.
+     *                      @resolve {DeleteRequestAcceptedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -2056,443 +2513,26 @@ export interface DataSubjectRight {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DataSubjectRightResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DataSubjectRightResponse} for more
+     *                      {DeleteRequestAcceptedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteRequestAcceptedResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteRequest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightResponse>;
-    deleteRequest(callback: ServiceCallback<models.DataSubjectRightResponse>): void;
-    deleteRequest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightResponse>): void;
+    deleteRequest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteRequestAcceptedResponse>;
+    deleteRequest(callback: ServiceCallback<models.DeleteRequestAcceptedResponse>): void;
+    deleteRequest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteRequestAcceptedResponse>): void;
 }
 
 /**
  * @class
- * Users
+ * ReleasesOperations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface Users {
-
-
-    /**
-     * Returns the user profile data
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<UserProfileResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UserProfileResponse>>;
-
-    /**
-     * Returns the user profile data
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {UserProfileResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {UserProfileResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link UserProfileResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    get(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UserProfileResponse>;
-    get(callback: ServiceCallback<models.UserProfileResponse>): void;
-    get(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UserProfileResponse>): void;
-
-
-    /**
-     * Updates the user profile and returns the updated user data
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.displayName] The full name of the user. Might for
-     * example be first and last name
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<UserProfileResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updateWithHttpOperationResponse(options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UserProfileResponse>>;
-
-    /**
-     * Updates the user profile and returns the updated user data
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.displayName] The full name of the user. Might for
-     * example be first and last name
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {UserProfileResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {UserProfileResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link UserProfileResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    update(options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UserProfileResponse>;
-    update(callback: ServiceCallback<models.UserProfileResponse>): void;
-    update(options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UserProfileResponse>): void;
-
-
-    /**
-     * Updates the given organization user
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userName The slug name of the user
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator', 'member'
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<OrganizationUserResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updateOrgRoleWithHttpOperationResponse(orgName: string, userName: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationUserResponse>>;
-
-    /**
-     * Updates the given organization user
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userName The slug name of the user
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator', 'member'
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {OrganizationUserResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {OrganizationUserResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationUserResponse} for more
-     *                      information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    updateOrgRole(orgName: string, userName: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationUserResponse>;
-    updateOrgRole(orgName: string, userName: string, callback: ServiceCallback<models.OrganizationUserResponse>): void;
-    updateOrgRole(orgName: string, userName: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationUserResponse>): void;
-
-
-    /**
-     * Removes a user from an organization.
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userName The slug name of the user
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    removeFromOrgWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Removes a user from an organization.
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userName The slug name of the user
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    removeFromOrg(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    removeFromOrg(orgName: string, userName: string, callback: ServiceCallback<void>): void;
-    removeFromOrg(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Get a user information from an organization by name - if there is explicit
-     * permission return it, if not if not return highest implicit permission
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userName The slug name of the user
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<OrganizationUserResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getForOrgWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationUserResponse>>;
-
-    /**
-     * Get a user information from an organization by name - if there is explicit
-     * permission return it, if not if not return highest implicit permission
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userName The slug name of the user
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {OrganizationUserResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {OrganizationUserResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationUserResponse} for more
-     *                      information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getForOrg(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationUserResponse>;
-    getForOrg(orgName: string, userName: string, callback: ServiceCallback<models.OrganizationUserResponse>): void;
-    getForOrg(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationUserResponse>): void;
-
-
-    /**
-     * Returns a list of users that belong to an organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationUserResponse[]>>;
-
-    /**
-     * Returns a list of users that belong to an organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationUserResponse[]>;
-    listForOrg(orgName: string, callback: ServiceCallback<models.OrganizationUserResponse[]>): void;
-    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationUserResponse[]>): void;
-
-
-    /**
-     * Returns the users associated with the app specified with the given app name
-     * which belongs to the given owner.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UserProfileResponse[]>>;
-
-    /**
-     * Returns the users associated with the app specified with the given app name
-     * which belongs to the given owner.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UserProfileResponse[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.UserProfileResponse[]>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UserProfileResponse[]>): void;
-}
-
-/**
- * @class
- * Releases
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the AppCenterClient.
- */
-export interface Releases {
+export interface ReleasesOperations {
 
 
     /**
@@ -2510,7 +2550,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listTesterAppsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppWithReleaseResponse[]>>;
+    listTesterAppsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListTesterAppsOKResponseItem[]>>;
 
     /**
      * Return a list of applications that the user has tester permission to with
@@ -2542,9 +2582,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listTesterApps(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppWithReleaseResponse[]>;
-    listTesterApps(callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
-    listTesterApps(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
+    listTesterApps(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListTesterAppsOKResponseItem[]>;
+    listTesterApps(callback: ServiceCallback<models.ListTesterAppsOKResponseItem[]>): void;
+    listTesterApps(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListTesterAppsOKResponseItem[]>): void;
 
 
     /**
@@ -2622,6 +2662,70 @@ export interface Releases {
 
 
     /**
+     * Get the latest release distributed to a private group the given user is a
+     * member of for the given app.
+     *
+     * @param {string} appSecret The secret of the target application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.udid] When passing `udid` in the query string, a
+     * provisioning check for the given device ID will be done. Will be ignored for
+     * non-iOS platforms.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getLatestPrivateReleaseWithHttpOperationResponse(appSecret: string, options?: { udid? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Get the latest release distributed to a private group the given user is a
+     * member of for the given app.
+     *
+     * @param {string} appSecret The secret of the target application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.udid] When passing `udid` in the query string, a
+     * provisioning check for the given device ID will be done. Will be ignored for
+     * non-iOS platforms.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getLatestPrivateRelease(appSecret: string, options?: { udid? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getLatestPrivateRelease(appSecret: string, callback: ServiceCallback<any>): void;
+    getLatestPrivateRelease(appSecret: string, options: { udid? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
      * Delete the given tester from the all releases
      *
      * @param {string} testerId The id of the tester
@@ -2637,11 +2741,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteTesterFromDestinationsNotFoundResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteTesterFromDestinationsWithHttpOperationResponse(testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteTesterFromDestinationsWithHttpOperationResponse(testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteTesterFromDestinationsNotFoundResponse>>;
 
     /**
      * Delete the given tester from the all releases
@@ -2664,7 +2768,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {DeleteTesterFromDestinationsNotFoundResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -2672,16 +2776,18 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {DeleteTesterFromDestinationsNotFoundResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      DeleteTesterFromDestinationsNotFoundResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteTesterFromDestinationsNotFoundResponse>;
+    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteTesterFromDestinationsNotFoundResponse>): void;
+    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteTesterFromDestinationsNotFoundResponse>): void;
 
 
     /**
@@ -2705,11 +2811,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PutDistributionTesterNotFoundResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    putDistributionTesterWithHttpOperationResponse(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    putDistributionTesterWithHttpOperationResponse(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PutDistributionTesterNotFoundResponse>>;
 
     /**
      * Update details about the specified tester associated with the release
@@ -2737,7 +2843,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {PutDistributionTesterNotFoundResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -2745,16 +2851,17 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {PutDistributionTesterNotFoundResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PutDistributionTesterNotFoundResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, callback: ServiceCallback<models.ErrorDetails>): void;
-    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.PutDistributionTesterNotFoundResponse>;
+    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, callback: ServiceCallback<models.PutDistributionTesterNotFoundResponse>): void;
+    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PutDistributionTesterNotFoundResponse>): void;
 
 
     /**
@@ -2775,11 +2882,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteDistributionTesterNotFoundResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteDistributionTesterWithHttpOperationResponse(releaseId: number, testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteDistributionTesterWithHttpOperationResponse(releaseId: number, testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteDistributionTesterNotFoundResponse>>;
 
     /**
      * Delete the given tester from the release
@@ -2804,7 +2911,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {DeleteDistributionTesterNotFoundResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -2812,16 +2919,17 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {DeleteDistributionTesterNotFoundResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteDistributionTesterNotFoundResponse}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteDistributionTesterNotFoundResponse>;
+    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteDistributionTesterNotFoundResponse>): void;
+    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteDistributionTesterNotFoundResponse>): void;
 
 
     /**
@@ -2920,11 +3028,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteDistributionStoreNotFoundResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteDistributionStoreWithHttpOperationResponse(releaseId: number, storeId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteDistributionStoreWithHttpOperationResponse(releaseId: number, storeId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteDistributionStoreNotFoundResponse>>;
 
     /**
      * Delete the given distribution store from the release
@@ -2949,7 +3057,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {DeleteDistributionStoreNotFoundResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -2957,16 +3065,17 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {DeleteDistributionStoreNotFoundResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteDistributionStoreNotFoundResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteDistributionStoreNotFoundResponse>;
+    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteDistributionStoreNotFoundResponse>): void;
+    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteDistributionStoreNotFoundResponse>): void;
 
 
     /**
@@ -3057,11 +3166,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PutDistributionGroupNotFoundResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    putDistributionGroupWithHttpOperationResponse(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    putDistributionGroupWithHttpOperationResponse(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PutDistributionGroupNotFoundResponse>>;
 
     /**
      * Update details about the specified distribution group associated with the
@@ -3090,7 +3199,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {PutDistributionGroupNotFoundResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -3098,16 +3207,17 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {PutDistributionGroupNotFoundResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PutDistributionGroupNotFoundResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, callback: ServiceCallback<models.ErrorDetails>): void;
-    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.PutDistributionGroupNotFoundResponse>;
+    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, callback: ServiceCallback<models.PutDistributionGroupNotFoundResponse>): void;
+    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PutDistributionGroupNotFoundResponse>): void;
 
 
     /**
@@ -3128,11 +3238,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteDistributionGroupNotFoundResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteDistributionGroupWithHttpOperationResponse(releaseId: number, groupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteDistributionGroupWithHttpOperationResponse(releaseId: number, groupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteDistributionGroupNotFoundResponse>>;
 
     /**
      * Delete the given distribution group from the release
@@ -3157,7 +3267,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {DeleteDistributionGroupNotFoundResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -3165,16 +3275,17 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {DeleteDistributionGroupNotFoundResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteDistributionGroupNotFoundResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteDistributionGroupNotFoundResponse>;
+    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteDistributionGroupNotFoundResponse>): void;
+    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteDistributionGroupNotFoundResponse>): void;
 
 
     /**
@@ -3349,7 +3460,8 @@ export interface Releases {
      *
      * @param {string} [options.releaseNotes] Release notes for this release.
      *
-     * @param {object} [options.build]
+     * @param {object} [options.build] Contains metadata about the build that
+     * produced the release being uploaded
      *
      * @param {string} [options.build.branchName] The branch name of the build
      * producing the release
@@ -3369,7 +3481,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateDetailsWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, options?: { enabled? : boolean, releaseNotes? : string, build? : models.BuildInfo, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    updateDetailsWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, options?: { enabled? : boolean, releaseNotes? : string, build? : models.BodyBuild, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Update details of a release.
@@ -3387,7 +3499,8 @@ export interface Releases {
      *
      * @param {string} [options.releaseNotes] Release notes for this release.
      *
-     * @param {object} [options.build]
+     * @param {object} [options.build] Contains metadata about the build that
+     * produced the release being uploaded
      *
      * @param {string} [options.build.branchName] The branch name of the build
      * producing the release
@@ -3422,9 +3535,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    updateDetails(releaseId: number, ownerName: string, appName: string, options?: { enabled? : boolean, releaseNotes? : string, build? : models.BuildInfo, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    updateDetails(releaseId: number, ownerName: string, appName: string, options?: { enabled? : boolean, releaseNotes? : string, build? : models.BodyBuild, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     updateDetails(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    updateDetails(releaseId: number, ownerName: string, appName: string, options: { enabled? : boolean, releaseNotes? : string, build? : models.BuildInfo, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    updateDetails(releaseId: number, ownerName: string, appName: string, options: { enabled? : boolean, releaseNotes? : string, build? : models.BodyBuild, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -3472,7 +3585,8 @@ export interface Releases {
      * @param {array} [body.destinations] Distribute this release under the
      * following list of destinations (store groups or distribution groups).
      *
-     * @param {object} [body.build]
+     * @param {object} [body.build] Contains metadata about the build that produced
+     * the release being uploaded
      *
      * @param {string} [body.build.branchName] The branch name of the build
      * producing the release
@@ -3484,7 +3598,16 @@ export interface Releases {
      * producing the release
      *
      * @param {boolean} [body.notifyTesters] A boolean which determines whether to
-     * notify testers of a new release, default to false.
+     * notify testers of a new release, default to true.
+     *
+     * @param {object} [body.metadata] An object containing all the release
+     * metadata.
+     *
+     * @param {string} [body.metadata.dsaSignature] dsa signature of the release
+     * for the sparkle feed.
+     *
+     * @param {string} [body.metadata.edSignature] edDSA signature of the release
+     * for the sparkle feed.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -3501,7 +3624,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(releaseId: number, body: models.ReleaseUpdateRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    updateWithHttpOperationResponse(releaseId: number, body: models.BodyModelModelModelModelModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Updates a release.
@@ -3548,7 +3671,8 @@ export interface Releases {
      * @param {array} [body.destinations] Distribute this release under the
      * following list of destinations (store groups or distribution groups).
      *
-     * @param {object} [body.build]
+     * @param {object} [body.build] Contains metadata about the build that produced
+     * the release being uploaded
      *
      * @param {string} [body.build.branchName] The branch name of the build
      * producing the release
@@ -3560,7 +3684,16 @@ export interface Releases {
      * producing the release
      *
      * @param {boolean} [body.notifyTesters] A boolean which determines whether to
-     * notify testers of a new release, default to false.
+     * notify testers of a new release, default to true.
+     *
+     * @param {object} [body.metadata] An object containing all the release
+     * metadata.
+     *
+     * @param {string} [body.metadata.dsaSignature] dsa signature of the release
+     * for the sparkle feed.
+     *
+     * @param {string} [body.metadata.edSignature] edDSA signature of the release
+     * for the sparkle feed.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -3592,9 +3725,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(releaseId: number, body: models.ReleaseUpdateRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    update(releaseId: number, body: models.ReleaseUpdateRequest, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    update(releaseId: number, body: models.ReleaseUpdateRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    update(releaseId: number, body: models.BodyModelModelModelModelModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    update(releaseId: number, body: models.BodyModelModelModelModelModelModelModel, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    update(releaseId: number, body: models.BodyModelModelModelModelModelModelModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -3613,11 +3746,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteMethodWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Deletes a release.
@@ -3640,7 +3773,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {Object} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -3648,16 +3781,15 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteMethod(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteMethod(releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteMethod(releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    deleteMethod(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    deleteMethod(releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -3682,7 +3814,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    availableToTesterWithHttpOperationResponse(ownerName: string, appName: string, options?: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
+    availableToTesterWithHttpOperationResponse(ownerName: string, appName: string, options?: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AvailableToTesterOKResponseItem[]>>;
 
     /**
      * Return detailed information about releases avaiable to a tester.
@@ -3721,9 +3853,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    availableToTester(ownerName: string, appName: string, options?: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
-    availableToTester(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
-    availableToTester(ownerName: string, appName: string, options: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    availableToTester(ownerName: string, appName: string, options?: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AvailableToTesterOKResponseItem[]>;
+    availableToTester(ownerName: string, appName: string, callback: ServiceCallback<models.AvailableToTesterOKResponseItem[]>): void;
+    availableToTester(ownerName: string, appName: string, options: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AvailableToTesterOKResponseItem[]>): void;
 
 
     /**
@@ -3751,7 +3883,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModel[]>>;
 
     /**
      * Return basic information about releases.
@@ -3793,9 +3925,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
-    list(ownerName: string, appName: string, options: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    list(ownerName: string, appName: string, options?: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModel[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModel[]>): void;
+    list(ownerName: string, appName: string, options: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModel[]>): void;
 
 
     /**
@@ -3817,7 +3949,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listLatestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
+    listLatestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListLatestOKResponseItem[]>>;
 
     /**
      * Get the latest release from every distribution group associated with an
@@ -3853,9 +3985,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listLatest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
-    listLatest(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
-    listLatest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    listLatest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListLatestOKResponseItem[]>;
+    listLatest(ownerName: string, appName: string, callback: ServiceCallback<models.ListLatestOKResponseItem[]>): void;
+    listLatest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListLatestOKResponseItem[]>): void;
 
 
     /**
@@ -3868,9 +4000,8 @@ export interface Releases {
      *
      * @param {string} distributionGroupName The name of the distribution group.
      *
-     * @param {string} releaseId Only supports the constant `latest`, specific IDs
-     * are not supported. `latest` will return the latest release in the
-     * distribution group.
+     * @param {string} releaseId Also supports the constant `latest`, which will
+     * return the latest release in the distribution group.
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3895,9 +4026,8 @@ export interface Releases {
      *
      * @param {string} distributionGroupName The name of the distribution group.
      *
-     * @param {string} releaseId Only supports the constant `latest`, specific IDs
-     * are not supported. `latest` will return the latest release in the
-     * distribution group.
+     * @param {string} releaseId Also supports the constant `latest`, which will
+     * return the latest release in the distribution group.
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3948,11 +4078,11 @@ export interface Releases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteWithDistributionGroupIdWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteWithDistributionGroupIdWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Deletes a release with id 'release_id' in a given distribution group.
@@ -3977,7 +4107,7 @@ export interface Releases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {null} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -3985,16 +4115,15 @@ export interface Releases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, callback: ServiceCallback<void>): void;
+    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: number, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -4063,11 +4192,11 @@ export interface Releases {
 
 /**
  * @class
- * Apps
+ * AppsOperations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface Apps {
+export interface AppsOperations {
 
 
     /**
@@ -4088,7 +4217,7 @@ export interface Apps {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getForOrgUserWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
+    getForOrgUserWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetForOrgUserOKResponseItem[]>>;
 
     /**
      * Get a user apps information from an organization by name
@@ -4123,9 +4252,9 @@ export interface Apps {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getForOrgUser(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
-    getForOrgUser(orgName: string, userName: string, callback: ServiceCallback<models.AppResponse[]>): void;
-    getForOrgUser(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
+    getForOrgUser(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetForOrgUserOKResponseItem[]>;
+    getForOrgUser(orgName: string, userName: string, callback: ServiceCallback<models.GetForOrgUserOKResponseItem[]>): void;
+    getForOrgUser(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetForOrgUserOKResponseItem[]>): void;
 
 
     /**
@@ -4146,11 +4275,12 @@ export interface Apps {
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+     * 'Custom'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms', 'Custom'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -4159,11 +4289,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createForOrgWithHttpOperationResponse(orgName: string, app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    createForOrgWithHttpOperationResponse(orgName: string, app: models.AppModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Creates a new app for the organization and returns it to the caller
@@ -4183,11 +4313,12 @@ export interface Apps {
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+     * 'Custom'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms', 'Custom'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -4201,7 +4332,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {Object} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4209,16 +4340,15 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createForOrg(orgName: string, app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    createForOrg(orgName: string, app: models.AppRequest, callback: ServiceCallback<models.AppResponse>): void;
-    createForOrg(orgName: string, app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    createForOrg(orgName: string, app: models.AppModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    createForOrg(orgName: string, app: models.AppModel, callback: ServiceCallback<any>): void;
+    createForOrg(orgName: string, app: models.AppModel, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -4237,7 +4367,7 @@ export interface Apps {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForOrgOKResponseItemModelModel[]>>;
 
     /**
      * Returns a list of apps for the organization
@@ -4270,9 +4400,9 @@ export interface Apps {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
-    listForOrg(orgName: string, callback: ServiceCallback<models.AppResponse[]>): void;
-    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForOrgOKResponseItemModelModel[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.ListForOrgOKResponseItemModelModel[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForOrgOKResponseItemModelModel[]>): void;
 
 
     /**
@@ -4417,11 +4547,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<TransferToOrgOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    transferToOrgWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+    transferToOrgWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TransferToOrgOKResponse>>;
 
     /**
      * Transfers ownership of an app to a new organization
@@ -4442,7 +4572,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *                      @resolve {TransferToOrgOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4450,16 +4580,17 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationResponse} for more information.
+     *                      {TransferToOrgOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TransferToOrgOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    transferToOrg(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
-    transferToOrg(ownerName: string, appName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
-    transferToOrg(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+    transferToOrg(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TransferToOrgOKResponse>;
+    transferToOrg(ownerName: string, appName: string, callback: ServiceCallback<models.TransferToOrgOKResponse>): void;
+    transferToOrg(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TransferToOrgOKResponse>): void;
 
 
     /**
@@ -4479,11 +4610,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<TransferOwnershipOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    transferOwnershipWithHttpOperationResponse(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    transferOwnershipWithHttpOperationResponse(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TransferOwnershipOKResponse>>;
 
     /**
      * Transfers ownership of an app to a different user or organization
@@ -4507,7 +4638,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {TransferOwnershipOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4515,16 +4646,17 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {TransferOwnershipOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TransferOwnershipOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, callback: ServiceCallback<models.AppResponse>): void;
-    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TransferOwnershipOKResponse>;
+    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, callback: ServiceCallback<models.TransferOwnershipOKResponse>): void;
+    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TransferOwnershipOKResponse>): void;
 
 
     /**
@@ -4546,7 +4678,7 @@ export interface Apps {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listTestersWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UserProfileResponse[]>>;
+    listTestersWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListTestersOKResponseItem[]>>;
 
     /**
      * Returns the testers associated with the app specified with the given app
@@ -4582,9 +4714,9 @@ export interface Apps {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listTesters(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UserProfileResponse[]>;
-    listTesters(ownerName: string, appName: string, callback: ServiceCallback<models.UserProfileResponse[]>): void;
-    listTesters(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UserProfileResponse[]>): void;
+    listTesters(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListTestersOKResponseItem[]>;
+    listTesters(ownerName: string, appName: string, callback: ServiceCallback<models.ListTestersOKResponseItem[]>): void;
+    listTesters(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListTestersOKResponseItem[]>): void;
 
 
     /**
@@ -4605,7 +4737,7 @@ export interface Apps {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getTeamsWithHttpOperationResponse(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamAppResponse[]>>;
+    getTeamsWithHttpOperationResponse(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetTeamsOKResponseItem[]>>;
 
     /**
      * Returns the details of all teams that have access to the app.
@@ -4640,9 +4772,9 @@ export interface Apps {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getTeams(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamAppResponse[]>;
-    getTeams(appName: string, ownerName: string, callback: ServiceCallback<models.TeamAppResponse[]>): void;
-    getTeams(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamAppResponse[]>): void;
+    getTeams(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetTeamsOKResponseItem[]>;
+    getTeams(appName: string, ownerName: string, callback: ServiceCallback<models.GetTeamsOKResponseItem[]>): void;
+    getTeams(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetTeamsOKResponseItem[]>): void;
 
 
     /**
@@ -4654,18 +4786,18 @@ export interface Apps {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.avatar] The image for an app avatar to upload.
+     * @param {object} [options.avatar] The image for an app avatar to upload.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateAvatarOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateAvatarWithHttpOperationResponse(ownerName: string, appName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    updateAvatarWithHttpOperationResponse(ownerName: string, appName: string, options?: { avatar? : stream.Readable, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateAvatarOKResponseModel>>;
 
     /**
      * Sets the app avatar
@@ -4676,7 +4808,7 @@ export interface Apps {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.avatar] The image for an app avatar to upload.
+     * @param {object} [options.avatar] The image for an app avatar to upload.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -4688,7 +4820,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {UpdateAvatarOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4696,16 +4828,17 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {UpdateAvatarOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateAvatarOKResponseModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    updateAvatar(ownerName: string, appName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    updateAvatar(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
-    updateAvatar(ownerName: string, appName: string, options: { avatar? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    updateAvatar(ownerName: string, appName: string, options?: { avatar? : stream.Readable, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateAvatarOKResponseModel>;
+    updateAvatar(ownerName: string, appName: string, callback: ServiceCallback<models.UpdateAvatarOKResponseModel>): void;
+    updateAvatar(ownerName: string, appName: string, options: { avatar? : stream.Readable, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateAvatarOKResponseModel>): void;
 
 
     /**
@@ -4722,11 +4855,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteAvatarOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteAvatarWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    deleteAvatarWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteAvatarOKResponseModel>>;
 
     /**
      * Deletes the uploaded app avatar
@@ -4747,7 +4880,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {DeleteAvatarOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4755,16 +4888,17 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {DeleteAvatarOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteAvatarOKResponseModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteAvatar(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    deleteAvatar(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
-    deleteAvatar(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    deleteAvatar(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteAvatarOKResponseModel>;
+    deleteAvatar(ownerName: string, appName: string, callback: ServiceCallback<models.DeleteAvatarOKResponseModel>): void;
+    deleteAvatar(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteAvatarOKResponseModel>): void;
 
 
     /**
@@ -4782,11 +4916,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel>>;
 
     /**
      * Return a specific app with the given app name which belongs to the given
@@ -4808,7 +4942,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4816,16 +4950,18 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    get(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
-    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel>;
+    get(ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel>): void;
+    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -4859,11 +4995,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(appName: string, ownerName: string, options?: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    updateWithHttpOperationResponse(appName: string, ownerName: string, options?: { app? : models.AppModelModel, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModelModelModelModelModelModelModelModel>>;
 
     /**
      * Partially updates a single app
@@ -4901,7 +5037,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -4909,16 +5045,18 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {UpdateOKResponseModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      UpdateOKResponseModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(appName: string, ownerName: string, options?: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    update(appName: string, ownerName: string, callback: ServiceCallback<models.AppResponse>): void;
-    update(appName: string, ownerName: string, options: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    update(appName: string, ownerName: string, options?: { app? : models.AppModelModel, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModelModelModelModelModelModelModelModel>;
+    update(appName: string, ownerName: string, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModelModelModelModel>): void;
+    update(appName: string, ownerName: string, options: { app? : models.AppModelModel, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -4995,11 +5133,12 @@ export interface Apps {
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+     * 'Custom'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms', 'Custom'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -5008,11 +5147,11 @@ export interface Apps {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+    createWithHttpOperationResponse(app: models.AppModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponseModelModelModelModelModelModel>>;
 
     /**
      * Creates a new app and returns it to the caller
@@ -5030,11 +5169,12 @@ export interface Apps {
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+     * 'Custom'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms', 'Custom'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -5048,7 +5188,7 @@ export interface Apps {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppResponse} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponseModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -5056,16 +5196,18 @@ export interface Apps {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
+     *                      {CreateCreatedResponseModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      CreateCreatedResponseModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    create(app: models.AppRequest, callback: ServiceCallback<models.AppResponse>): void;
-    create(app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    create(app: models.AppModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponseModelModelModelModelModelModel>;
+    create(app: models.AppModel, callback: ServiceCallback<models.CreateCreatedResponseModelModelModelModelModelModel>): void;
+    create(app: models.AppModel, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponseModelModelModelModelModelModel>): void;
 
 
     /**
@@ -5087,7 +5229,7 @@ export interface Apps {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
+    listWithHttpOperationResponse(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>>;
 
     /**
      * Returns a list of apps
@@ -5123,9 +5265,9 @@ export interface Apps {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
-    list(callback: ServiceCallback<models.AppResponse[]>): void;
-    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
+    list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>;
+    list(callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>): void;
+    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>): void;
 }
 
 /**
@@ -5154,7 +5296,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listAllTestersForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupTesterGetResponse[]>>;
+    listAllTestersForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListAllTestersForOrgOKResponseItem[]>>;
 
     /**
      * Returns a unique list of users including the whole organization members plus
@@ -5188,9 +5330,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listAllTestersForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupTesterGetResponse[]>;
-    listAllTestersForOrg(orgName: string, callback: ServiceCallback<models.DistributionGroupTesterGetResponse[]>): void;
-    listAllTestersForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupTesterGetResponse[]>): void;
+    listAllTestersForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListAllTestersForOrgOKResponseItem[]>;
+    listAllTestersForOrg(orgName: string, callback: ServiceCallback<models.ListAllTestersForOrgOKResponseItem[]>): void;
+    listAllTestersForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListAllTestersForOrgOKResponseItem[]>): void;
 
 
     /**
@@ -5212,7 +5354,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    detailsForOrgWithHttpOperationResponse(orgName: string, options?: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrgDistributionGroupDetailsResponse[]>>;
+    detailsForOrgWithHttpOperationResponse(orgName: string, options?: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DetailsForOrgOKResponseItem[]>>;
 
     /**
      * Returns a list of distribution groups with details for an organization
@@ -5248,9 +5390,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    detailsForOrg(orgName: string, options?: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrgDistributionGroupDetailsResponse[]>;
-    detailsForOrg(orgName: string, callback: ServiceCallback<models.OrgDistributionGroupDetailsResponse[]>): void;
-    detailsForOrg(orgName: string, options: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrgDistributionGroupDetailsResponse[]>): void;
+    detailsForOrg(orgName: string, options?: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.DetailsForOrgOKResponseItem[]>;
+    detailsForOrg(orgName: string, callback: ServiceCallback<models.DetailsForOrgOKResponseItem[]>): void;
+    detailsForOrg(orgName: string, options: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DetailsForOrgOKResponseItem[]>): void;
 
 
     /**
@@ -5397,7 +5539,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listUsersForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserGetResponse[]>>;
+    listUsersForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListUsersForOrgOKResponseItem[]>>;
 
     /**
      * Returns a list of member in the distribution group specified
@@ -5432,9 +5574,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listUsersForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserGetResponse[]>;
-    listUsersForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
-    listUsersForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
+    listUsersForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListUsersForOrgOKResponseItem[]>;
+    listUsersForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.ListUsersForOrgOKResponseItem[]>): void;
+    listUsersForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListUsersForOrgOKResponseItem[]>): void;
 
 
     /**
@@ -5457,7 +5599,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    addUsersForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserPostResponse[]>>;
+    addUsersForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AddUsersForOrgOKResponseItem[]>>;
 
     /**
      * Accepts an array of user email addresses to get added to the specified group
@@ -5494,9 +5636,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    addUsersForOrg(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserPostResponse[]>;
-    addUsersForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
-    addUsersForOrg(orgName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
+    addUsersForOrg(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.AddUsersForOrgOKResponseItem[]>;
+    addUsersForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.AddUsersForOrgOKResponseItem[]>): void;
+    addUsersForOrg(orgName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AddUsersForOrgOKResponseItem[]>): void;
 
 
     /**
@@ -5520,7 +5662,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    bulkDeleteAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { apps? : models.AppDeleteRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    bulkDeleteAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { apps? : models.AppsAppsItem[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Delete apps from distribution group in an org
@@ -5558,9 +5700,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    bulkDeleteApps(orgName: string, distributionGroupName: string, options?: { apps? : models.AppDeleteRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    bulkDeleteApps(orgName: string, distributionGroupName: string, options?: { apps? : models.AppsAppsItem[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     bulkDeleteApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
-    bulkDeleteApps(orgName: string, distributionGroupName: string, options: { apps? : models.AppDeleteRequest[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    bulkDeleteApps(orgName: string, distributionGroupName: string, options: { apps? : models.AppsAppsItem[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -5581,7 +5723,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrgDistributionGroupAppResponse[]>>;
+    getAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAppsOKResponseItem[]>>;
 
     /**
      * Get apps from a distribution group in an org
@@ -5616,9 +5758,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getApps(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrgDistributionGroupAppResponse[]>;
-    getApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.OrgDistributionGroupAppResponse[]>): void;
-    getApps(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrgDistributionGroupAppResponse[]>): void;
+    getApps(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAppsOKResponseItem[]>;
+    getApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.GetAppsOKResponseItem[]>): void;
+    getApps(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAppsOKResponseItem[]>): void;
 
 
     /**
@@ -5641,7 +5783,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    addAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { apps? : models.AppAddRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    addAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { apps? : models.AppsAppsItemModel[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Add apps to distribution group in an org
@@ -5678,9 +5820,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    addApps(orgName: string, distributionGroupName: string, options?: { apps? : models.AppAddRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    addApps(orgName: string, distributionGroupName: string, options?: { apps? : models.AppsAppsItemModel[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     addApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
-    addApps(orgName: string, distributionGroupName: string, options: { apps? : models.AppAddRequest[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    addApps(orgName: string, distributionGroupName: string, options: { apps? : models.AppsAppsItemModel[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -5698,11 +5840,11 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetForOrgOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    getForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetForOrgOKResponseModel>>;
 
     /**
      * Returns a single distribution group in org for a given distribution group
@@ -5724,7 +5866,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {GetForOrgOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -5732,17 +5874,17 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
+     *                      {GetForOrgOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetForOrgOKResponseModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    getForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    getForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    getForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetForOrgOKResponseModel>;
+    getForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.GetForOrgOKResponseModel>): void;
+    getForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetForOrgOKResponseModel>): void;
 
 
     /**
@@ -5763,11 +5905,11 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PatchForOrgOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    patchForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    patchForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PatchForOrgOKResponse>>;
 
     /**
      * Update one given distribution group name in an org
@@ -5792,7 +5934,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {PatchForOrgOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -5800,17 +5942,16 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
-     *                      information.
+     *                      {PatchForOrgOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PatchForOrgOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    patchForOrg(orgName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    patchForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    patchForOrg(orgName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    patchForOrg(orgName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.PatchForOrgOKResponse>;
+    patchForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.PatchForOrgOKResponse>): void;
+    patchForOrg(orgName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PatchForOrgOKResponse>): void;
 
 
     /**
@@ -5891,11 +6032,11 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateForOrgCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createForOrgWithHttpOperationResponse(orgName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    createForOrgWithHttpOperationResponse(orgName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateForOrgCreatedResponse>>;
 
     /**
      * Creates a disribution goup which can be shared across apps under an
@@ -5920,7 +6061,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {CreateForOrgCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -5928,17 +6069,17 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
+     *                      {CreateForOrgCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateForOrgCreatedResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createForOrg(orgName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    createForOrg(orgName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    createForOrg(orgName: string, name: string, options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    createForOrg(orgName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateForOrgCreatedResponse>;
+    createForOrg(orgName: string, name: string, callback: ServiceCallback<models.CreateForOrgCreatedResponse>): void;
+    createForOrg(orgName: string, name: string, options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateForOrgCreatedResponse>): void;
 
 
     /**
@@ -5957,7 +6098,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse[]>>;
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForOrgCreatedResponseItem[]>>;
 
     /**
      * Returns a list of distribution groups in the org specified
@@ -5990,9 +6131,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse[]>;
-    listForOrg(orgName: string, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
-    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForOrgCreatedResponseItem[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.ListForOrgCreatedResponseItem[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForOrgCreatedResponseItem[]>): void;
 
 
     /**
@@ -6085,7 +6226,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    removeUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserDeleteResponse[]>>;
+    removeUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.RemoveUserOKResponseItem[]>>;
 
     /**
      * Remove the users from the distribution group
@@ -6124,9 +6265,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    removeUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserDeleteResponse[]>;
-    removeUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserDeleteResponse[]>): void;
-    removeUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserDeleteResponse[]>): void;
+    removeUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.RemoveUserOKResponseItem[]>;
+    removeUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.RemoveUserOKResponseItem[]>): void;
+    removeUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.RemoveUserOKResponseItem[]>): void;
 
 
     /**
@@ -6152,7 +6293,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listUsersWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserGetResponse[]>>;
+    listUsersWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListUsersOKResponseItem[]>>;
 
     /**
      * Returns a list of member details in the distribution group specified
@@ -6192,9 +6333,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listUsers(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserGetResponse[]>;
-    listUsers(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
-    listUsers(ownerName: string, appName: string, distributionGroupName: string, options: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
+    listUsers(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListUsersOKResponseItem[]>;
+    listUsers(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.ListUsersOKResponseItem[]>): void;
+    listUsers(ownerName: string, appName: string, distributionGroupName: string, options: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListUsersOKResponseItem[]>): void;
 
 
     /**
@@ -6219,7 +6360,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    addUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserPostResponse[]>>;
+    addUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AddUserOKResponseItem[]>>;
 
     /**
      * Adds the members to the specified distribution group
@@ -6258,9 +6399,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    addUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserPostResponse[]>;
-    addUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
-    addUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
+    addUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.AddUserOKResponseItem[]>;
+    addUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.AddUserOKResponseItem[]>): void;
+    addUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AddUserOKResponseItem[]>): void;
 
 
     /**
@@ -6279,11 +6420,11 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    getWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModel>>;
 
     /**
      * Returns a single distribution group for a given distribution group name
@@ -6306,7 +6447,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -6314,17 +6455,18 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
-     *                      information.
+     *                      {GetOKResponseModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    get(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    get(ownerName: string, appName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    get(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModel>;
+    get(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModel>): void;
+    get(ownerName: string, appName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -6347,11 +6489,11 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    updateWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModelModelModel>>;
 
     /**
      * Updates the attributes of distribution group
@@ -6378,7 +6520,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -6386,17 +6528,17 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
-     *                      information.
+     *                      {UpdateOKResponseModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateOKResponseModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    update(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    update(ownerName: string, appName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    update(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModelModelModel>;
+    update(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModel>): void;
+    update(ownerName: string, appName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModel>): void;
 
 
     /**
@@ -6479,7 +6621,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse[]>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModel[]>>;
 
     /**
      * Returns a list of distribution groups in the app specified
@@ -6514,9 +6656,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModel[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModel[]>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModel[]>): void;
 
 
     /**
@@ -6538,11 +6680,11 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponseModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponseModelModel>>;
 
     /**
      * Creates a new distribution group and returns it to the caller
@@ -6568,7 +6710,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponseModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -6576,17 +6718,17 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
+     *                      {CreateCreatedResponseModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateCreatedResponseModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    create(ownerName: string, appName: string, name: string, options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    create(ownerName: string, appName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponseModelModel>;
+    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.CreateCreatedResponseModelModel>): void;
+    create(ownerName: string, appName: string, name: string, options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponseModelModel>): void;
 }
 
 /**
@@ -6674,11 +6816,11 @@ export interface Teams {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TeamUserResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetUsersOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getUsersWithHttpOperationResponse(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamUserResponse>>;
+    getUsersWithHttpOperationResponse(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetUsersOKResponse>>;
 
     /**
      * Returns the users of a team which is owned by an organization
@@ -6699,7 +6841,7 @@ export interface Teams {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TeamUserResponse} - The deserialized result object.
+     *                      @resolve {GetUsersOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -6707,16 +6849,16 @@ export interface Teams {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TeamUserResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TeamUserResponse} for more information.
+     *                      {GetUsersOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetUsersOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getUsers(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamUserResponse>;
-    getUsers(orgName: string, teamName: string, callback: ServiceCallback<models.TeamUserResponse>): void;
-    getUsers(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamUserResponse>): void;
+    getUsers(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetUsersOKResponse>;
+    getUsers(orgName: string, teamName: string, callback: ServiceCallback<models.GetUsersOKResponse>): void;
+    getUsers(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetUsersOKResponse>): void;
 
 
     /**
@@ -6730,19 +6872,16 @@ export interface Teams {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.role] The user's role. Possible values include:
-     * 'admin', 'collaborator', 'member'
-     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TeamUserResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<AddUserCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    addUserWithHttpOperationResponse(orgName: string, teamName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamUserResponse>>;
+    addUserWithHttpOperationResponse(orgName: string, teamName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AddUserCreatedResponse>>;
 
     /**
      * Adds a new user to a team that is owned by an organization
@@ -6755,9 +6894,6 @@ export interface Teams {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.role] The user's role. Possible values include:
-     * 'admin', 'collaborator', 'member'
-     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -6768,7 +6904,7 @@ export interface Teams {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TeamUserResponse} - The deserialized result object.
+     *                      @resolve {AddUserCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -6776,86 +6912,87 @@ export interface Teams {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TeamUserResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TeamUserResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    addUser(orgName: string, teamName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamUserResponse>;
-    addUser(orgName: string, teamName: string, userEmail: string, callback: ServiceCallback<models.TeamUserResponse>): void;
-    addUser(orgName: string, teamName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamUserResponse>): void;
-
-
-    /**
-     * Updates the permissions the team has to the app
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} teamName The team's name
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {array} permissions The permissions all members of the team have on
-     * the app
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppWithTeamPermissionsResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updatePermissionsWithHttpOperationResponse(orgName: string, teamName: string, appName: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppWithTeamPermissionsResponse>>;
-
-    /**
-     * Updates the permissions the team has to the app
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} teamName The team's name
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {array} permissions The permissions all members of the team have on
-     * the app
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppWithTeamPermissionsResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppWithTeamPermissionsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppWithTeamPermissionsResponse} for more
+     *                      {AddUserCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AddUserCreatedResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppWithTeamPermissionsResponse>;
-    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], callback: ServiceCallback<models.AppWithTeamPermissionsResponse>): void;
-    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppWithTeamPermissionsResponse>): void;
+    addUser(orgName: string, teamName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AddUserCreatedResponse>;
+    addUser(orgName: string, teamName: string, userEmail: string, callback: ServiceCallback<models.AddUserCreatedResponse>): void;
+    addUser(orgName: string, teamName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AddUserCreatedResponse>): void;
+
+
+    /**
+     * Updates the permissions the team has to the app
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} teamName The team's name
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {array} permissions The permissions all members of the team have on
+     * the app
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<UpdatePermissionsOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updatePermissionsWithHttpOperationResponse(orgName: string, teamName: string, appName: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdatePermissionsOKResponse>>;
+
+    /**
+     * Updates the permissions the team has to the app
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} teamName The team's name
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {array} permissions The permissions all members of the team have on
+     * the app
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {UpdatePermissionsOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {UpdatePermissionsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdatePermissionsOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdatePermissionsOKResponse>;
+    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], callback: ServiceCallback<models.UpdatePermissionsOKResponse>): void;
+    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdatePermissionsOKResponse>): void;
 
 
     /**
@@ -6937,11 +7074,11 @@ export interface Teams {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppWithTeamPermissionsResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<AddAppCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    addAppWithHttpOperationResponse(orgName: string, teamName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppWithTeamPermissionsResponse>>;
+    addAppWithHttpOperationResponse(orgName: string, teamName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AddAppCreatedResponse>>;
 
     /**
      * Adds an app to a team
@@ -6965,7 +7102,7 @@ export interface Teams {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppWithTeamPermissionsResponse} - The deserialized result object.
+     *                      @resolve {AddAppCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -6973,17 +7110,16 @@ export interface Teams {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppWithTeamPermissionsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppWithTeamPermissionsResponse} for more
-     *                      information.
+     *                      {AddAppCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AddAppCreatedResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    addApp(orgName: string, teamName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppWithTeamPermissionsResponse>;
-    addApp(orgName: string, teamName: string, name: string, callback: ServiceCallback<models.AppWithTeamPermissionsResponse>): void;
-    addApp(orgName: string, teamName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppWithTeamPermissionsResponse>): void;
+    addApp(orgName: string, teamName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AddAppCreatedResponse>;
+    addApp(orgName: string, teamName: string, name: string, callback: ServiceCallback<models.AddAppCreatedResponse>): void;
+    addApp(orgName: string, teamName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AddAppCreatedResponse>): void;
 
 
     /**
@@ -7004,7 +7140,7 @@ export interface Teams {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listAppsWithHttpOperationResponse(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppWithTeamPermissionsResponse[]>>;
+    listAppsWithHttpOperationResponse(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListAppsOKResponseItem[]>>;
 
     /**
      * Returns the apps a team has access to
@@ -7039,9 +7175,9 @@ export interface Teams {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listApps(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppWithTeamPermissionsResponse[]>;
-    listApps(orgName: string, teamName: string, callback: ServiceCallback<models.AppWithTeamPermissionsResponse[]>): void;
-    listApps(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppWithTeamPermissionsResponse[]>): void;
+    listApps(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListAppsOKResponseItem[]>;
+    listApps(orgName: string, teamName: string, callback: ServiceCallback<models.ListAppsOKResponseItem[]>): void;
+    listApps(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListAppsOKResponseItem[]>): void;
 
 
     /**
@@ -7058,11 +7194,11 @@ export interface Teams {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TeamResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetTeamOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getTeamWithHttpOperationResponse(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamResponse>>;
+    getTeamWithHttpOperationResponse(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetTeamOKResponse>>;
 
     /**
      * Returns the details of a single team
@@ -7083,7 +7219,7 @@ export interface Teams {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TeamResponse} - The deserialized result object.
+     *                      @resolve {GetTeamOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -7091,16 +7227,16 @@ export interface Teams {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TeamResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TeamResponse} for more information.
+     *                      {GetTeamOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetTeamOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getTeam(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamResponse>;
-    getTeam(orgName: string, teamName: string, callback: ServiceCallback<models.TeamResponse>): void;
-    getTeam(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamResponse>): void;
+    getTeam(orgName: string, teamName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetTeamOKResponse>;
+    getTeam(orgName: string, teamName: string, callback: ServiceCallback<models.GetTeamOKResponse>): void;
+    getTeam(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetTeamOKResponse>): void;
 
 
     /**
@@ -7168,24 +7304,20 @@ export interface Teams {
      *
      * @param {string} teamName The team's name
      *
-     * @param {string} displayName The display name of the team
+     * @param {string} displayName The new display name of the team
      *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.name] The name of the team
-     *
-     * @param {string} [options.description] The description of the team
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TeamResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(orgName: string, teamName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamResponse>>;
+    updateWithHttpOperationResponse(orgName: string, teamName: string, displayName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModel>>;
 
     /**
      * Updates a single team
@@ -7194,13 +7326,9 @@ export interface Teams {
      *
      * @param {string} teamName The team's name
      *
-     * @param {string} displayName The display name of the team
+     * @param {string} displayName The new display name of the team
      *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.name] The name of the team
-     *
-     * @param {string} [options.description] The description of the team
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -7212,7 +7340,7 @@ export interface Teams {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TeamResponse} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -7220,16 +7348,16 @@ export interface Teams {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TeamResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TeamResponse} for more information.
+     *                      {UpdateOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateOKResponseModel} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(orgName: string, teamName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamResponse>;
-    update(orgName: string, teamName: string, displayName: string, callback: ServiceCallback<models.TeamResponse>): void;
-    update(orgName: string, teamName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamResponse>): void;
+    update(orgName: string, teamName: string, displayName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModel>;
+    update(orgName: string, teamName: string, displayName: string, callback: ServiceCallback<models.UpdateOKResponseModel>): void;
+    update(orgName: string, teamName: string, displayName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModel>): void;
 
 
     /**
@@ -7248,7 +7376,7 @@ export interface Teams {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listAllWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamResponse[]>>;
+    listAllWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListAllOKResponseItem[]>>;
 
     /**
      * Returns the list of all teams in this org
@@ -7281,9 +7409,9 @@ export interface Teams {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listAll(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamResponse[]>;
-    listAll(orgName: string, callback: ServiceCallback<models.TeamResponse[]>): void;
-    listAll(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamResponse[]>): void;
+    listAll(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListAllOKResponseItem[]>;
+    listAll(orgName: string, callback: ServiceCallback<models.ListAllOKResponseItem[]>): void;
+    listAll(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListAllOKResponseItem[]>): void;
 
 
     /**
@@ -7308,7 +7436,7 @@ export interface Teams {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createTeamWithHttpOperationResponse(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamResponse[]>>;
+    createTeamWithHttpOperationResponse(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateTeamCreatedResponseItem[]>>;
 
     /**
      * Creates a team and returns it
@@ -7347,9 +7475,9 @@ export interface Teams {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createTeam(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamResponse[]>;
-    createTeam(orgName: string, displayName: string, callback: ServiceCallback<models.TeamResponse[]>): void;
-    createTeam(orgName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamResponse[]>): void;
+    createTeam(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateTeamCreatedResponseItem[]>;
+    createTeam(orgName: string, displayName: string, callback: ServiceCallback<models.CreateTeamCreatedResponseItem[]>): void;
+    createTeam(orgName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateTeamCreatedResponseItem[]>): void;
 }
 
 /**
@@ -7377,7 +7505,7 @@ export interface AzureSubscription {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AzureSubscriptionResponse[]>>;
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForOrgOKResponseItemModel[]>>;
 
     /**
      * Returns a list of azure subscriptions for the organization
@@ -7410,9 +7538,9 @@ export interface AzureSubscription {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AzureSubscriptionResponse[]>;
-    listForOrg(orgName: string, callback: ServiceCallback<models.AzureSubscriptionResponse[]>): void;
-    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AzureSubscriptionResponse[]>): void;
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForOrgOKResponseItemModel[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.ListForOrgOKResponseItemModel[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForOrgOKResponseItemModel[]>): void;
 
 
     /**
@@ -7429,7 +7557,7 @@ export interface AzureSubscription {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listForUserWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AzureSubscriptionResponse[]>>;
+    listForUserWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForUserOKResponseItem[]>>;
 
     /**
      * Returns a list of azure subscriptions for the user
@@ -7460,9 +7588,9 @@ export interface AzureSubscription {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listForUser(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AzureSubscriptionResponse[]>;
-    listForUser(callback: ServiceCallback<models.AzureSubscriptionResponse[]>): void;
-    listForUser(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AzureSubscriptionResponse[]>): void;
+    listForUser(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForUserOKResponseItem[]>;
+    listForUser(callback: ServiceCallback<models.ListForUserOKResponseItem[]>): void;
+    listForUser(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForUserOKResponseItem[]>): void;
 
 
     /**
@@ -7547,7 +7675,7 @@ export interface AzureSubscription {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listForAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AzureSubscriptionResponse[]>>;
+    listForAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForAppOKResponseItem[]>>;
 
     /**
      * Returns a list of azure subscriptions for the app
@@ -7582,9 +7710,9 @@ export interface AzureSubscription {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listForApp(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AzureSubscriptionResponse[]>;
-    listForApp(ownerName: string, appName: string, callback: ServiceCallback<models.AzureSubscriptionResponse[]>): void;
-    listForApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AzureSubscriptionResponse[]>): void;
+    listForApp(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForAppOKResponseItem[]>;
+    listForApp(ownerName: string, appName: string, callback: ServiceCallback<models.ListForAppOKResponseItem[]>): void;
+    listForApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForAppOKResponseItem[]>): void;
 
 
     /**
@@ -7651,11 +7779,11 @@ export interface AzureSubscription {
 
 /**
  * @class
- * Organization
+ * OrganizationOperations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface Organization {
+export interface OrganizationOperations {
 
 
     /**
@@ -7665,7 +7793,7 @@ export interface Organization {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.avatar] The image for an Organization avatar to
+     * @param {object} [options.avatar] The image for an Organization avatar to
      * upload.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
@@ -7673,11 +7801,11 @@ export interface Organization {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateAvatarOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateAvatarWithHttpOperationResponse(orgName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+    updateAvatarWithHttpOperationResponse(orgName: string, options?: { avatar? : stream.Readable, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateAvatarOKResponse>>;
 
     /**
      * Sets the organization avatar
@@ -7686,7 +7814,7 @@ export interface Organization {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.avatar] The image for an Organization avatar to
+     * @param {object} [options.avatar] The image for an Organization avatar to
      * upload.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
@@ -7699,7 +7827,7 @@ export interface Organization {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *                      @resolve {UpdateAvatarOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -7707,16 +7835,17 @@ export interface Organization {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationResponse} for more information.
+     *                      {UpdateAvatarOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateAvatarOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    updateAvatar(orgName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
-    updateAvatar(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
-    updateAvatar(orgName: string, options: { avatar? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+    updateAvatar(orgName: string, options?: { avatar? : stream.Readable, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateAvatarOKResponse>;
+    updateAvatar(orgName: string, callback: ServiceCallback<models.UpdateAvatarOKResponse>): void;
+    updateAvatar(orgName: string, options: { avatar? : stream.Readable, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateAvatarOKResponse>): void;
 
 
     /**
@@ -7731,11 +7860,11 @@ export interface Organization {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteAvatarOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteAvatarWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+    deleteAvatarWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteAvatarOKResponse>>;
 
     /**
      * Deletes the uploaded organization avatar
@@ -7754,7 +7883,7 @@ export interface Organization {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *                      @resolve {DeleteAvatarOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -7762,268 +7891,17 @@ export interface Organization {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationResponse} for more information.
+     *                      {DeleteAvatarOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteAvatarOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteAvatar(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
-    deleteAvatar(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
-    deleteAvatar(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
-
-
-    /**
-     * Allows the role of an aad_group to be changed
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator', 'member'
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updateAADGroupsWithHttpOperationResponse(orgName: string, aadGroupId: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Allows the role of an aad_group to be changed
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator', 'member'
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    updateAADGroups(orgName: string, aadGroupId: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    updateAADGroups(orgName: string, aadGroupId: string, callback: ServiceCallback<void>): void;
-    updateAADGroups(orgName: string, aadGroupId: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Delete already added aad group from the organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    deleteAADGroupWithHttpOperationResponse(orgName: string, aadGroupId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Delete already added aad group from the organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    deleteAADGroup(orgName: string, aadGroupId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    deleteAADGroup(orgName: string, aadGroupId: string, callback: ServiceCallback<void>): void;
-    deleteAADGroup(orgName: string, aadGroupId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Adds aad groups to an organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {uuid} aadGroupId The id of the aad group
-     *
-     * @param {uuid} tenantId The id of the aad tenant
-     *
-     * @param {string} displayName The display name of the aad group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AddAADGroupResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    addAADGroupsWithHttpOperationResponse(orgName: string, aadGroupId: string, tenantId: string, displayName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AddAADGroupResponse>>;
-
-    /**
-     * Adds aad groups to an organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {uuid} aadGroupId The id of the aad group
-     *
-     * @param {uuid} tenantId The id of the aad tenant
-     *
-     * @param {string} displayName The display name of the aad group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AddAADGroupResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AddAADGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AddAADGroupResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    addAADGroups(orgName: string, aadGroupId: string, tenantId: string, displayName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AddAADGroupResponse>;
-    addAADGroups(orgName: string, aadGroupId: string, tenantId: string, displayName: string, callback: ServiceCallback<models.AddAADGroupResponse>): void;
-    addAADGroups(orgName: string, aadGroupId: string, tenantId: string, displayName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AddAADGroupResponse>): void;
-}
-
-/**
- * @class
- * AadGroup
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the AppCenterClient.
- */
-export interface AadGroup {
-
-
-    /**
-     * Returns a list of aad groups that belong to an organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationAADGroupResponse[]>>;
-
-    /**
-     * Returns a list of aad groups that belong to an organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationAADGroupResponse[]>;
-    listForOrg(orgName: string, callback: ServiceCallback<models.OrganizationAADGroupResponse[]>): void;
-    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationAADGroupResponse[]>): void;
+    deleteAvatar(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteAvatarOKResponse>;
+    deleteAvatar(orgName: string, callback: ServiceCallback<models.DeleteAvatarOKResponse>): void;
+    deleteAvatar(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteAvatarOKResponse>): void;
 }
 
 /**
@@ -8047,11 +7925,11 @@ export interface Organizations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+    getWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModel>>;
 
     /**
      * Returns the details of a single organization
@@ -8070,7 +7948,7 @@ export interface Organizations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *                      @resolve {GetOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8078,16 +7956,16 @@ export interface Organizations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationResponse} for more information.
+     *                      {GetOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetOKResponseModel} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
-    get(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
-    get(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+    get(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModel>;
+    get(orgName: string, callback: ServiceCallback<models.GetOKResponseModel>): void;
+    get(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModel>): void;
 
 
     /**
@@ -8107,11 +7985,11 @@ export interface Organizations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(orgName: string, options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+    updateWithHttpOperationResponse(orgName: string, options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModel>>;
 
     /**
      * Returns a list of organizations the requesting user has access to
@@ -8135,7 +8013,7 @@ export interface Organizations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8143,16 +8021,17 @@ export interface Organizations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationResponse} for more information.
+     *                      {UpdateOKResponseModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateOKResponseModelModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(orgName: string, options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
-    update(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
-    update(orgName: string, options: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+    update(orgName: string, options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModel>;
+    update(orgName: string, callback: ServiceCallback<models.UpdateOKResponseModelModel>): void;
+    update(orgName: string, options: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModel>): void;
 
 
     /**
@@ -8223,11 +8102,11 @@ export interface Organizations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOrUpdateCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createOrUpdateWithHttpOperationResponse(options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+    createOrUpdateWithHttpOperationResponse(options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOrUpdateCreatedResponse>>;
 
     /**
      * Creates a new organization and returns it to the caller
@@ -8248,7 +8127,7 @@ export interface Organizations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *                      @resolve {CreateOrUpdateCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8256,16 +8135,17 @@ export interface Organizations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OrganizationResponse} for more information.
+     *                      {CreateOrUpdateCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOrUpdateCreatedResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createOrUpdate(options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
-    createOrUpdate(callback: ServiceCallback<models.OrganizationResponse>): void;
-    createOrUpdate(options: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+    createOrUpdate(options?: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOrUpdateCreatedResponse>;
+    createOrUpdate(callback: ServiceCallback<models.CreateOrUpdateCreatedResponse>): void;
+    createOrUpdate(options: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOrUpdateCreatedResponse>): void;
 
 
     /**
@@ -8328,11 +8208,11 @@ export interface Organizations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AdministeredOrgsResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListAdministeredOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listAdministeredWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AdministeredOrgsResponse>>;
+    listAdministeredWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListAdministeredOKResponse>>;
 
     /**
      * Returns a list organizations in which the requesting user is an admin
@@ -8349,7 +8229,7 @@ export interface Organizations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AdministeredOrgsResponse} - The deserialized result object.
+     *                      @resolve {ListAdministeredOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8357,17 +8237,17 @@ export interface Organizations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AdministeredOrgsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AdministeredOrgsResponse} for more
+     *                      {ListAdministeredOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListAdministeredOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listAdministered(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AdministeredOrgsResponse>;
-    listAdministered(callback: ServiceCallback<models.AdministeredOrgsResponse>): void;
-    listAdministered(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AdministeredOrgsResponse>): void;
+    listAdministered(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListAdministeredOKResponse>;
+    listAdministered(callback: ServiceCallback<models.ListAdministeredOKResponse>): void;
+    listAdministered(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListAdministeredOKResponse>): void;
 }
 
 /**
@@ -8401,11 +8281,11 @@ export interface BillingAggregatedInformation {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AggregatedBillingInformation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetForOrgOKResponseModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getForOrgWithHttpOperationResponse(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AggregatedBillingInformation>>;
+    getForOrgWithHttpOperationResponse(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetForOrgOKResponseModelModel>>;
 
     /**
      * Aggregated Billing Information for a given Organization.
@@ -8434,7 +8314,7 @@ export interface BillingAggregatedInformation {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AggregatedBillingInformation} - The deserialized result object.
+     *                      @resolve {GetForOrgOKResponseModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8442,17 +8322,17 @@ export interface BillingAggregatedInformation {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AggregatedBillingInformation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AggregatedBillingInformation} for more
+     *                      {GetForOrgOKResponseModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetForOrgOKResponseModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getForOrg(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AggregatedBillingInformation>;
-    getForOrg(orgName: string, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
-    getForOrg(orgName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+    getForOrg(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.GetForOrgOKResponseModelModel>;
+    getForOrg(orgName: string, callback: ServiceCallback<models.GetForOrgOKResponseModelModel>): void;
+    getForOrg(orgName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetForOrgOKResponseModelModel>): void;
 
 
     /**
@@ -8476,11 +8356,11 @@ export interface BillingAggregatedInformation {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AllAccountsAggregatedBillingInformation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetAllOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAllWithHttpOperationResponse(options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AllAccountsAggregatedBillingInformation>>;
+    getAllWithHttpOperationResponse(options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAllOKResponse>>;
 
     /**
      * Aggregated Billing Information for the requesting user and the organizations
@@ -8508,7 +8388,7 @@ export interface BillingAggregatedInformation {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AllAccountsAggregatedBillingInformation} - The deserialized result object.
+     *                      @resolve {GetAllOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8516,17 +8396,16 @@ export interface BillingAggregatedInformation {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AllAccountsAggregatedBillingInformation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AllAccountsAggregatedBillingInformation} for
-     *                      more information.
+     *                      {GetAllOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetAllOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAll(options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AllAccountsAggregatedBillingInformation>;
-    getAll(callback: ServiceCallback<models.AllAccountsAggregatedBillingInformation>): void;
-    getAll(options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AllAccountsAggregatedBillingInformation>): void;
+    getAll(options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAllOKResponse>;
+    getAll(callback: ServiceCallback<models.GetAllOKResponse>): void;
+    getAll(options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAllOKResponse>): void;
 
 
     /**
@@ -8553,11 +8432,11 @@ export interface BillingAggregatedInformation {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AggregatedBillingInformation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetByAppOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getByAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AggregatedBillingInformation>>;
+    getByAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetByAppOKResponse>>;
 
     /**
      * Aggregated Billing Information for owner of a given app.
@@ -8588,7 +8467,7 @@ export interface BillingAggregatedInformation {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AggregatedBillingInformation} - The deserialized result object.
+     *                      @resolve {GetByAppOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8596,17 +8475,264 @@ export interface BillingAggregatedInformation {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AggregatedBillingInformation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AggregatedBillingInformation} for more
-     *                      information.
+     *                      {GetByAppOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetByAppOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getByApp(ownerName: string, appName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AggregatedBillingInformation>;
-    getByApp(ownerName: string, appName: string, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
-    getByApp(ownerName: string, appName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+    getByApp(ownerName: string, appName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.GetByAppOKResponse>;
+    getByApp(ownerName: string, appName: string, callback: ServiceCallback<models.GetByAppOKResponse>): void;
+    getByApp(ownerName: string, appName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetByAppOKResponse>): void;
+}
+
+/**
+ * @class
+ * LegacyCodePushAcquisition
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface LegacyCodePushAcquisition {
+
+
+    /**
+     * Check for updates
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.deploymentKey]
+     *
+     * @param {string} [options.appVersion]
+     *
+     * @param {string} [options.packageHash]
+     *
+     * @param {string} [options.label]
+     *
+     * @param {string} [options.clientUniqueId]
+     *
+     * @param {string} [options.isCompanion]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<UpdateCheckOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateCheckWithHttpOperationResponse(options?: { deploymentKey? : string, appVersion? : string, packageHash? : string, label? : string, clientUniqueId? : string, isCompanion? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateCheckOKResponse>>;
+
+    /**
+     * Check for updates
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.deploymentKey]
+     *
+     * @param {string} [options.appVersion]
+     *
+     * @param {string} [options.packageHash]
+     *
+     * @param {string} [options.label]
+     *
+     * @param {string} [options.clientUniqueId]
+     *
+     * @param {string} [options.isCompanion]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {UpdateCheckOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {UpdateCheckOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateCheckOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateCheck(options?: { deploymentKey? : string, appVersion? : string, packageHash? : string, label? : string, clientUniqueId? : string, isCompanion? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateCheckOKResponse>;
+    updateCheck(callback: ServiceCallback<models.UpdateCheckOKResponse>): void;
+    updateCheck(options: { deploymentKey? : string, appVersion? : string, packageHash? : string, label? : string, clientUniqueId? : string, isCompanion? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateCheckOKResponse>): void;
+
+
+    /**
+     * Report download of specified release
+     *
+     * @param {object} releaseMetadata Deployment status metric properties
+     *
+     * @param {string} [releaseMetadata.deploymentKey]
+     *
+     * @param {string} [releaseMetadata.label]
+     *
+     * @param {string} [releaseMetadata.appVersion]
+     *
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     *
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     *
+     * @param {string} [releaseMetadata.status]
+     *
+     * @param {string} [releaseMetadata.clientUniqueId]
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateDownloadStatusWithHttpOperationResponse(releaseMetadata: models.ReleaseMetadataModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Report download of specified release
+     *
+     * @param {object} releaseMetadata Deployment status metric properties
+     *
+     * @param {string} [releaseMetadata.deploymentKey]
+     *
+     * @param {string} [releaseMetadata.label]
+     *
+     * @param {string} [releaseMetadata.appVersion]
+     *
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     *
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     *
+     * @param {string} [releaseMetadata.status]
+     *
+     * @param {string} [releaseMetadata.clientUniqueId]
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateDownloadStatus(releaseMetadata: models.ReleaseMetadataModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    updateDownloadStatus(releaseMetadata: models.ReleaseMetadataModel, callback: ServiceCallback<void>): void;
+    updateDownloadStatus(releaseMetadata: models.ReleaseMetadataModel, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Report deploy of specified release
+     *
+     * @param {object} releaseMetadata Deployment status metric properties
+     *
+     * @param {string} [releaseMetadata.deploymentKey]
+     *
+     * @param {string} [releaseMetadata.label]
+     *
+     * @param {string} [releaseMetadata.appVersion]
+     *
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     *
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     *
+     * @param {string} [releaseMetadata.status]
+     *
+     * @param {string} [releaseMetadata.clientUniqueId]
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateInstallsStatusWithHttpOperationResponse(releaseMetadata: models.ReleaseMetadataModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Report deploy of specified release
+     *
+     * @param {object} releaseMetadata Deployment status metric properties
+     *
+     * @param {string} [releaseMetadata.deploymentKey]
+     *
+     * @param {string} [releaseMetadata.label]
+     *
+     * @param {string} [releaseMetadata.appVersion]
+     *
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     *
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     *
+     * @param {string} [releaseMetadata.status]
+     *
+     * @param {string} [releaseMetadata.clientUniqueId]
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateInstallsStatus(releaseMetadata: models.ReleaseMetadataModel, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    updateInstallsStatus(releaseMetadata: models.ReleaseMetadataModel, callback: ServiceCallback<void>): void;
+    updateInstallsStatus(releaseMetadata: models.ReleaseMetadataModel, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 }
 
 /**
@@ -8632,7 +8758,7 @@ export interface Invitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    sentWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GDPRInvitationDetailResponse[]>>;
+    sentWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SentOKResponseItem[]>>;
 
     /**
      * Returns all invitations sent by the caller
@@ -8663,9 +8789,9 @@ export interface Invitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    sent(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GDPRInvitationDetailResponse[]>;
-    sent(callback: ServiceCallback<models.GDPRInvitationDetailResponse[]>): void;
-    sent(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GDPRInvitationDetailResponse[]>): void;
+    sent(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SentOKResponseItem[]>;
+    sent(callback: ServiceCallback<models.SentOKResponseItem[]>): void;
+    sent(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SentOKResponseItem[]>): void;
 }
 
 /**
@@ -8695,7 +8821,7 @@ export interface Builds {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listXcodeVersionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.XcodeVersion[]>>;
+    listXcodeVersionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListXcodeVersionsOKResponseItem[]>>;
 
     /**
      * Gets the Xcode versions available to this app
@@ -8730,9 +8856,9 @@ export interface Builds {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listXcodeVersions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.XcodeVersion[]>;
-    listXcodeVersions(ownerName: string, appName: string, callback: ServiceCallback<models.XcodeVersion[]>): void;
-    listXcodeVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.XcodeVersion[]>): void;
+    listXcodeVersions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListXcodeVersionsOKResponseItem[]>;
+    listXcodeVersions(ownerName: string, appName: string, callback: ServiceCallback<models.ListXcodeVersionsOKResponseItem[]>): void;
+    listXcodeVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListXcodeVersionsOKResponseItem[]>): void;
 
 
     /**
@@ -8753,7 +8879,7 @@ export interface Builds {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listXamarinSDKBundlesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.XamarinSDKBundle[]>>;
+    listXamarinSDKBundlesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListXamarinSDKBundlesOKResponseItem[]>>;
 
     /**
      * Gets the Xamarin SDK bundles available to this app
@@ -8788,9 +8914,9 @@ export interface Builds {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listXamarinSDKBundles(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.XamarinSDKBundle[]>;
-    listXamarinSDKBundles(ownerName: string, appName: string, callback: ServiceCallback<models.XamarinSDKBundle[]>): void;
-    listXamarinSDKBundles(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.XamarinSDKBundle[]>): void;
+    listXamarinSDKBundles(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListXamarinSDKBundlesOKResponseItem[]>;
+    listXamarinSDKBundles(ownerName: string, appName: string, callback: ServiceCallback<models.ListXamarinSDKBundlesOKResponseItem[]>): void;
+    listXamarinSDKBundles(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListXamarinSDKBundlesOKResponseItem[]>): void;
 
 
     /**
@@ -8810,11 +8936,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Toolsets>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListToolsetsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listToolsetsWithHttpOperationResponse(ownerName: string, appName: string, options?: { tools? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Toolsets>>;
+    listToolsetsWithHttpOperationResponse(ownerName: string, appName: string, options?: { tools? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListToolsetsOKResponse>>;
 
     /**
      * Returns available toolsets for application
@@ -8838,7 +8964,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Toolsets} - The deserialized result object.
+     *                      @resolve {ListToolsetsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8846,16 +8972,17 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Toolsets} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Toolsets} for more information.
+     *                      {ListToolsetsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListToolsetsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listToolsets(ownerName: string, appName: string, options?: { tools? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.Toolsets>;
-    listToolsets(ownerName: string, appName: string, callback: ServiceCallback<models.Toolsets>): void;
-    listToolsets(ownerName: string, appName: string, options: { tools? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Toolsets>): void;
+    listToolsets(ownerName: string, appName: string, options?: { tools? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListToolsetsOKResponse>;
+    listToolsets(ownerName: string, appName: string, callback: ServiceCallback<models.ListToolsetsOKResponse>): void;
+    listToolsets(ownerName: string, appName: string, options: { tools? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListToolsetsOKResponse>): void;
 
 
     /**
@@ -8874,11 +9001,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BuildLog>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetLogOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getLogWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BuildLog>>;
+    getLogWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetLogOKResponse>>;
 
     /**
      * Get the build log
@@ -8901,7 +9028,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BuildLog} - The deserialized result object.
+     *                      @resolve {GetLogOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8909,16 +9036,16 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BuildLog} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BuildLog} for more information.
+     *                      {GetLogOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetLogOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getLog(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BuildLog>;
-    getLog(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.BuildLog>): void;
-    getLog(buildId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BuildLog>): void;
+    getLog(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetLogOKResponse>;
+    getLog(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.GetLogOKResponse>): void;
+    getLog(buildId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetLogOKResponse>): void;
 
 
     /**
@@ -8940,11 +9067,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DownloadContainer>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetDownloadUriOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getDownloadUriWithHttpOperationResponse(buildId: number, downloadType: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DownloadContainer>>;
+    getDownloadUriWithHttpOperationResponse(buildId: number, downloadType: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetDownloadUriOKResponse>>;
 
     /**
      * Gets the download URI
@@ -8970,7 +9097,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DownloadContainer} - The deserialized result object.
+     *                      @resolve {GetDownloadUriOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8978,16 +9105,17 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DownloadContainer} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DownloadContainer} for more information.
+     *                      {GetDownloadUriOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetDownloadUriOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getDownloadUri(buildId: number, downloadType: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DownloadContainer>;
-    getDownloadUri(buildId: number, downloadType: string, ownerName: string, appName: string, callback: ServiceCallback<models.DownloadContainer>): void;
-    getDownloadUri(buildId: number, downloadType: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DownloadContainer>): void;
+    getDownloadUri(buildId: number, downloadType: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetDownloadUriOKResponse>;
+    getDownloadUri(buildId: number, downloadType: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetDownloadUriOKResponse>): void;
+    getDownloadUri(buildId: number, downloadType: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetDownloadUriOKResponse>): void;
 
 
     /**
@@ -9018,11 +9146,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DistributeOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    distributeWithHttpOperationResponse(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionResponse>>;
+    distributeWithHttpOperationResponse(buildId: number, distributeInfo: models.DistributeInfo, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributeOKResponse>>;
 
     /**
      * Distribute a build
@@ -9057,7 +9185,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionResponse} - The deserialized result object.
+     *                      @resolve {DistributeOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9065,16 +9193,16 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionResponse} for more information.
+     *                      {DistributeOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributeOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    distribute(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionResponse>;
-    distribute(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, callback: ServiceCallback<models.DistributionResponse>): void;
-    distribute(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionResponse>): void;
+    distribute(buildId: number, distributeInfo: models.DistributeInfo, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributeOKResponse>;
+    distribute(buildId: number, distributeInfo: models.DistributeInfo, ownerName: string, appName: string, callback: ServiceCallback<models.DistributeOKResponse>): void;
+    distribute(buildId: number, distributeInfo: models.DistributeInfo, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributeOKResponse>): void;
 
 
     /**
@@ -9093,11 +9221,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Build>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Build>>;
+    getWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModel>>;
 
     /**
      * Returns the build detail for the given build ID
@@ -9120,7 +9248,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Build} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9128,16 +9256,18 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Build} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Build} for more information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Build>;
-    get(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.Build>): void;
-    get(buildId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
+    get(buildId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModel>;
+    get(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModel>): void;
+    get(buildId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -9159,11 +9289,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Build>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, options?: { status? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Build>>;
+    updateWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, options?: { status? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModelModelModelModelModelModel>>;
 
     /**
      * Cancels a build
@@ -9189,7 +9319,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Build} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9197,16 +9327,18 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Build} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Build} for more information.
+     *                      {UpdateOKResponseModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      UpdateOKResponseModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(buildId: number, ownerName: string, appName: string, options?: { status? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.Build>;
-    update(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.Build>): void;
-    update(buildId: number, ownerName: string, appName: string, options: { status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
+    update(buildId: number, ownerName: string, appName: string, options?: { status? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModelModelModelModelModelModel>;
+    update(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModelModel>): void;
+    update(buildId: number, ownerName: string, appName: string, options: { status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -9223,11 +9355,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BuildServiceStatus>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetStatusByAppIdOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getStatusByAppIdWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BuildServiceStatus>>;
+    getStatusByAppIdWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetStatusByAppIdOKResponse>>;
 
     /**
      * Application specific build service status
@@ -9248,7 +9380,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BuildServiceStatus} - The deserialized result object.
+     *                      @resolve {GetStatusByAppIdOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9256,16 +9388,17 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BuildServiceStatus} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BuildServiceStatus} for more information.
+     *                      {GetStatusByAppIdOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetStatusByAppIdOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getStatusByAppId(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BuildServiceStatus>;
-    getStatusByAppId(ownerName: string, appName: string, callback: ServiceCallback<models.BuildServiceStatus>): void;
-    getStatusByAppId(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BuildServiceStatus>): void;
+    getStatusByAppId(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetStatusByAppIdOKResponse>;
+    getStatusByAppId(ownerName: string, appName: string, callback: ServiceCallback<models.GetStatusByAppIdOKResponse>): void;
+    getStatusByAppId(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetStatusByAppIdOKResponse>): void;
 
 
     /**
@@ -9285,17 +9418,20 @@ export interface Builds {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.maxSearchDepth] The depth of the repository to
+     * search for project files
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ToolsetProjects>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListToolsetProjectsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listToolsetProjectsWithHttpOperationResponse(branch: string, os: string, platform: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ToolsetProjects>>;
+    listToolsetProjectsWithHttpOperationResponse(branch: string, os: string, platform: string, ownerName: string, appName: string, options?: { maxSearchDepth? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListToolsetProjectsOKResponse>>;
 
     /**
      * Returns the projects in the repository for the branch, for all toolsets
@@ -9314,6 +9450,9 @@ export interface Builds {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.maxSearchDepth] The depth of the repository to
+     * search for project files
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -9325,7 +9464,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ToolsetProjects} - The deserialized result object.
+     *                      @resolve {ListToolsetProjectsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9333,16 +9472,17 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ToolsetProjects} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ToolsetProjects} for more information.
+     *                      {ListToolsetProjectsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListToolsetProjectsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listToolsetProjects(branch: string, os: string, platform: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ToolsetProjects>;
-    listToolsetProjects(branch: string, os: string, platform: string, ownerName: string, appName: string, callback: ServiceCallback<models.ToolsetProjects>): void;
-    listToolsetProjects(branch: string, os: string, platform: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ToolsetProjects>): void;
+    listToolsetProjects(branch: string, os: string, platform: string, ownerName: string, appName: string, options?: { maxSearchDepth? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListToolsetProjectsOKResponse>;
+    listToolsetProjects(branch: string, os: string, platform: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListToolsetProjectsOKResponse>): void;
+    listToolsetProjects(branch: string, os: string, platform: string, ownerName: string, appName: string, options: { maxSearchDepth? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListToolsetProjectsOKResponse>): void;
 
 
     /**
@@ -9365,7 +9505,7 @@ export interface Builds {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listByBranchWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Build[]>>;
+    listByBranchWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListByBranchOKResponseItem[]>>;
 
     /**
      * Returns the list of builds for the branch
@@ -9402,9 +9542,9 @@ export interface Builds {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listByBranch(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Build[]>;
-    listByBranch(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.Build[]>): void;
-    listByBranch(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build[]>): void;
+    listByBranch(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListByBranchOKResponseItem[]>;
+    listByBranch(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListByBranchOKResponseItem[]>): void;
+    listByBranch(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListByBranchOKResponseItem[]>): void;
 
 
     /**
@@ -9428,11 +9568,11 @@ export interface Builds {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Build>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOKResponseModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Build>>;
+    createWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOKResponseModelModelModelModel>>;
 
     /**
      * Create a build
@@ -9460,7 +9600,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Build} - The deserialized result object.
+     *                      @resolve {CreateOKResponseModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9468,16 +9608,17 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Build} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Build} for more information.
+     *                      {CreateOKResponseModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOKResponseModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(branch: string, ownerName: string, appName: string, options?: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.Build>;
-    create(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.Build>): void;
-    create(branch: string, ownerName: string, appName: string, options: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
+    create(branch: string, ownerName: string, appName: string, options?: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOKResponseModelModelModelModel>;
+    create(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.CreateOKResponseModelModelModelModel>): void;
+    create(branch: string, ownerName: string, appName: string, options: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOKResponseModelModelModelModel>): void;
 
 
     /**
@@ -9498,7 +9639,7 @@ export interface Builds {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listBranchesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchStatus[]>>;
+    listBranchesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListBranchesOKResponseItem[]>>;
 
     /**
      * Returns the list of Git branches for this application
@@ -9533,9 +9674,9 @@ export interface Builds {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listBranches(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchStatus[]>;
-    listBranches(ownerName: string, appName: string, callback: ServiceCallback<models.BranchStatus[]>): void;
-    listBranches(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchStatus[]>): void;
+    listBranches(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListBranchesOKResponseItem[]>;
+    listBranches(ownerName: string, appName: string, callback: ServiceCallback<models.ListBranchesOKResponseItem[]>): void;
+    listBranches(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListBranchesOKResponseItem[]>): void;
 }
 
 /**
@@ -9561,11 +9702,11 @@ export interface Webhooks {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AlertWebhookListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertWebhookListResult>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponse>>;
 
     /**
      * Get web hooks configured for a particular app
@@ -9586,7 +9727,7 @@ export interface Webhooks {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AlertWebhookListResult} - The deserialized result object.
+     *                      @resolve {ListOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9594,17 +9735,16 @@ export interface Webhooks {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AlertWebhookListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AlertWebhookListResult} for more
-     *                      information.
+     *                      {ListOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertWebhookListResult>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.AlertWebhookListResult>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertWebhookListResult>): void;
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponse>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponse>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponse>): void;
 }
 
 /**
@@ -9617,9 +9757,7 @@ export interface Crashes {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a list of application versions. Available for UWP apps only.
+     * Gets a list of application versions.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -9636,12 +9774,10 @@ export interface Crashes {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAppVersionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppVersion[]>>;
+    getAppVersionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAppVersionsOKResponseItem[]>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a list of application versions. Available for UWP apps only.
+     * Gets a list of application versions.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -9673,15 +9809,13 @@ export interface Crashes {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAppVersions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppVersion[]>;
-    getAppVersions(ownerName: string, appName: string, callback: ServiceCallback<models.AppVersion[]>): void;
-    getAppVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppVersion[]>): void;
+    getAppVersions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAppVersionsOKResponseItem[]>;
+    getAppVersions(ownerName: string, appName: string, callback: ServiceCallback<models.GetAppVersionsOKResponseItem[]>): void;
+    getAppVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAppVersionsOKResponseItem[]>): void;
 
 
     /**
-     * @summary Gets the state of HockeyApp Crash forwarding for SxS apps
-     *
-     * Gets the state of HockeyApp Crash forwarding for SxS apps
+     * Gets whether the application has any crashes.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -9694,16 +9828,14 @@ export interface Crashes {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<HockeyAppCrashForwardingInfo>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetAppCrashesInfoOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getHockeyAppCrashForwardingStatusWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HockeyAppCrashForwardingInfo>>;
+    getAppCrashesInfoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAppCrashesInfoOKResponse>>;
 
     /**
-     * @summary Gets the state of HockeyApp Crash forwarding for SxS apps
-     *
-     * Gets the state of HockeyApp Crash forwarding for SxS apps
+     * Gets whether the application has any crashes.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -9721,7 +9853,7 @@ export interface Crashes {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {HockeyAppCrashForwardingInfo} - The deserialized result object.
+     *                      @resolve {GetAppCrashesInfoOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9729,148 +9861,17 @@ export interface Crashes {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {HockeyAppCrashForwardingInfo} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link HockeyAppCrashForwardingInfo} for more
+     *                      {GetAppCrashesInfoOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetAppCrashesInfoOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getHockeyAppCrashForwardingStatus(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.HockeyAppCrashForwardingInfo>;
-    getHockeyAppCrashForwardingStatus(ownerName: string, appName: string, callback: ServiceCallback<models.HockeyAppCrashForwardingInfo>): void;
-    getHockeyAppCrashForwardingStatus(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HockeyAppCrashForwardingInfo>): void;
-
-
-    /**
-     * @summary Enable HockeyApp crash forwarding for SxS apps
-     *
-     * Enable HockeyApp crash forwarding for SxS apps
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {boolean} [options.enableForwarding]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<HockeyAppCrashForwardingInfo>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updateHockeyAppCrashForwardingWithHttpOperationResponse(ownerName: string, appName: string, options?: { enableForwarding? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HockeyAppCrashForwardingInfo>>;
-
-    /**
-     * @summary Enable HockeyApp crash forwarding for SxS apps
-     *
-     * Enable HockeyApp crash forwarding for SxS apps
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {boolean} [options.enableForwarding]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {HockeyAppCrashForwardingInfo} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {HockeyAppCrashForwardingInfo} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link HockeyAppCrashForwardingInfo} for more
-     *                      information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    updateHockeyAppCrashForwarding(ownerName: string, appName: string, options?: { enableForwarding? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.HockeyAppCrashForwardingInfo>;
-    updateHockeyAppCrashForwarding(ownerName: string, appName: string, callback: ServiceCallback<models.HockeyAppCrashForwardingInfo>): void;
-    updateHockeyAppCrashForwarding(ownerName: string, appName: string, options: { enableForwarding? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HockeyAppCrashForwardingInfo>): void;
-
-
-    /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets whether the application has any crashes. Available for UWP apps only.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppCrashesInfo>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getAppCrashesInfoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppCrashesInfo>>;
-
-    /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets whether the application has any crashes. Available for UWP apps only.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppCrashesInfo} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppCrashesInfo} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppCrashesInfo} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getAppCrashesInfo(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppCrashesInfo>;
-    getAppCrashesInfo(ownerName: string, appName: string, callback: ServiceCallback<models.AppCrashesInfo>): void;
-    getAppCrashesInfo(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppCrashesInfo>): void;
+    getAppCrashesInfo(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAppCrashesInfoOKResponse>;
+    getAppCrashesInfo(ownerName: string, appName: string, callback: ServiceCallback<models.GetAppCrashesInfoOKResponse>): void;
+    getAppCrashesInfo(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAppCrashesInfoOKResponse>): void;
 
 
     /**
@@ -9891,11 +9892,11 @@ export interface Crashes {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<GenericLogContainer>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListSessionLogsOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listSessionLogsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GenericLogContainer>>;
+    listSessionLogsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListSessionLogsOKResponseModel>>;
 
     /**
      * Get session logs by crash ID
@@ -9920,7 +9921,7 @@ export interface Crashes {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {GenericLogContainer} - The deserialized result object.
+     *                      @resolve {ListSessionLogsOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9928,22 +9929,21 @@ export interface Crashes {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {GenericLogContainer} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link GenericLogContainer} for more information.
+     *                      {ListSessionLogsOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListSessionLogsOKResponseModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listSessionLogs(crashId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GenericLogContainer>;
-    listSessionLogs(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogContainer>): void;
-    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { date? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainer>): void;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListSessionLogsOKResponseModel>;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListSessionLogsOKResponseModel>): void;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { date? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListSessionLogsOKResponseModel>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets content of the text attachment. Available for UWP apps only.
+     * Gets content of the text attachment.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -9967,9 +9967,7 @@ export interface Crashes {
     getCrashTextAttachmentContentWithHttpOperationResponse(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets content of the text attachment. Available for UWP apps only.
+     * Gets content of the text attachment.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -10011,10 +10009,7 @@ export interface Crashes {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the URI location to download crash attachment. Available for UWP apps
-     * only.
+     * Gets the URI location to download crash attachment.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -10031,17 +10026,14 @@ export interface Crashes {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashAttachmentLocation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetCrashAttachmentLocationOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getCrashAttachmentLocationWithHttpOperationResponse(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashAttachmentLocation>>;
+    getCrashAttachmentLocationWithHttpOperationResponse(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetCrashAttachmentLocationOKResponse>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the URI location to download crash attachment. Available for UWP apps
-     * only.
+     * Gets the URI location to download crash attachment.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -10063,7 +10055,7 @@ export interface Crashes {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashAttachmentLocation} - The deserialized result object.
+     *                      @resolve {GetCrashAttachmentLocationOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -10071,23 +10063,21 @@ export interface Crashes {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashAttachmentLocation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashAttachmentLocation} for more
-     *                      information.
+     *                      {GetCrashAttachmentLocationOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetCrashAttachmentLocationOKResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashAttachmentLocation>;
-    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashAttachmentLocation>): void;
-    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashAttachmentLocation>): void;
+    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetCrashAttachmentLocationOKResponse>;
+    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetCrashAttachmentLocationOKResponse>): void;
+    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetCrashAttachmentLocationOKResponse>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets all attachments for a specific crash. Available for UWP apps only.
+     * Gets all attachments for a specific crash.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -10106,12 +10096,10 @@ export interface Crashes {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listAttachmentsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashAttachment[]>>;
+    listAttachmentsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListAttachmentsOKResponseItem[]>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets all attachments for a specific crash. Available for UWP apps only.
+     * Gets all attachments for a specific crash.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -10145,15 +10133,13 @@ export interface Crashes {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listAttachments(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashAttachment[]>;
-    listAttachments(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashAttachment[]>): void;
-    listAttachments(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashAttachment[]>): void;
+    listAttachments(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListAttachmentsOKResponseItem[]>;
+    listAttachments(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListAttachmentsOKResponseItem[]>): void;
+    listAttachments(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListAttachmentsOKResponseItem[]>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a stacktrace for a specific crash. Available for UWP apps only.
+     * Gets a stacktrace for a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10180,9 +10166,7 @@ export interface Crashes {
     getStacktraceWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Stacktrace>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a stacktrace for a specific crash. Available for UWP apps only.
+     * Gets a stacktrace for a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10228,10 +10212,7 @@ export interface Crashes {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the URI location to download json of a specific crash. Available for
-     * UWP apps only.
+     * Gets the URI location to download json of a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10248,17 +10229,14 @@ export interface Crashes {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashRawLocation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetRawCrashLocationOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getRawCrashLocationWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashRawLocation>>;
+    getRawCrashLocationWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetRawCrashLocationOKResponse>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the URI location to download json of a specific crash. Available for
-     * UWP apps only.
+     * Gets the URI location to download json of a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10280,7 +10258,7 @@ export interface Crashes {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashRawLocation} - The deserialized result object.
+     *                      @resolve {GetRawCrashLocationOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -10288,23 +10266,21 @@ export interface Crashes {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashRawLocation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashRawLocation} for more information.
+     *                      {GetRawCrashLocationOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetRawCrashLocationOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashRawLocation>;
-    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashRawLocation>): void;
-    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashRawLocation>): void;
+    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetRawCrashLocationOKResponse>;
+    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetRawCrashLocationOKResponse>): void;
+    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetRawCrashLocationOKResponse>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the native log of a specific crash as a text attachment. Available for
-     * UWP apps only.
+     * Gets the native log of a specific crash as a text attachment.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10328,10 +10304,7 @@ export interface Crashes {
     getNativeCrashDownloadWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the native log of a specific crash as a text attachment. Available for
-     * UWP apps only.
+     * Gets the native log of a specific crash as a text attachment.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10373,9 +10346,7 @@ export interface Crashes {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the native log of a specific crash. Available for UWP apps only.
+     * Gets the native log of a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10399,9 +10370,7 @@ export interface Crashes {
     getNativeCrashWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets the native log of a specific crash. Available for UWP apps only.
+     * Gets the native log of a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10443,9 +10412,7 @@ export interface Crashes {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a specific crash for an app. Available for UWP apps only.
+     * Gets a specific crash for an app.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10484,9 +10451,7 @@ export interface Crashes {
     getWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { includeReport? : boolean, includeLog? : boolean, includeDetails? : boolean, includeStacktrace? : boolean, groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Crash>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a specific crash for an app. Available for UWP apps only.
+     * Gets a specific crash for an app.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10544,10 +10509,7 @@ export interface Crashes {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
      * Delete a specific crash and related attachments and blobs for an app.
-     * Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10567,17 +10529,14 @@ export interface Crashes {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashDeleteCounter>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteOKResponseModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashDeleteCounter>>;
+    deleteMethodWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteOKResponseModelModel>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
      * Delete a specific crash and related attachments and blobs for an app.
-     * Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10602,7 +10561,7 @@ export interface Crashes {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashDeleteCounter} - The deserialized result object.
+     *                      @resolve {DeleteOKResponseModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -10610,22 +10569,21 @@ export interface Crashes {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashDeleteCounter} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashDeleteCounter} for more information.
+     *                      {DeleteOKResponseModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteOKResponseModelModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashDeleteCounter>;
-    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashDeleteCounter>): void;
-    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashDeleteCounter>): void;
+    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteOKResponseModelModel>;
+    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteOKResponseModelModel>): void;
+    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteOKResponseModelModel>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets all crashes of a group. Available for UWP apps only.
+     * Gets all crashes of a group.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10662,9 +10620,7 @@ export interface Crashes {
     listWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { includeReport? : boolean, includeLog? : boolean, dateFrom? : Date, dateTo? : Date, appVersion? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Crash[]>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets all crashes of a group. Available for UWP apps only.
+     * Gets all crashes of a group.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -10743,11 +10699,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DeviceSet>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetDeviceSetOfUserOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getDeviceSetOfUserWithHttpOperationResponse(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeviceSet>>;
+    getDeviceSetOfUserWithHttpOperationResponse(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetDeviceSetOfUserOKResponse>>;
 
     /**
      * Gets a device set belonging to the user
@@ -10770,7 +10726,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DeviceSet} - The deserialized result object.
+     *                      @resolve {GetDeviceSetOfUserOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -10778,16 +10734,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DeviceSet} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DeviceSet} for more information.
+     *                      {GetDeviceSetOfUserOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetDeviceSetOfUserOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getDeviceSetOfUser(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceSet>;
-    getDeviceSetOfUser(id: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeviceSet>): void;
-    getDeviceSetOfUser(id: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceSet>): void;
+    getDeviceSetOfUser(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetDeviceSetOfUserOKResponse>;
+    getDeviceSetOfUser(id: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetDeviceSetOfUserOKResponse>): void;
+    getDeviceSetOfUser(id: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetDeviceSetOfUserOKResponse>): void;
 
 
     /**
@@ -10940,7 +10897,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listDeviceSetsOfUserWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeviceSet[]>>;
+    listDeviceSetsOfUserWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListDeviceSetsOfUserOKResponseItem[]>>;
 
     /**
      * Lists device sets belonging to the user
@@ -10975,9 +10932,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listDeviceSetsOfUser(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceSet[]>;
-    listDeviceSetsOfUser(ownerName: string, appName: string, callback: ServiceCallback<models.DeviceSet[]>): void;
-    listDeviceSetsOfUser(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceSet[]>): void;
+    listDeviceSetsOfUser(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListDeviceSetsOfUserOKResponseItem[]>;
+    listDeviceSetsOfUser(ownerName: string, appName: string, callback: ServiceCallback<models.ListDeviceSetsOfUserOKResponseItem[]>): void;
+    listDeviceSetsOfUser(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListDeviceSetsOfUserOKResponseItem[]>): void;
 
 
     /**
@@ -11066,7 +11023,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAllTestRunsForSeriesWithHttpOperationResponse(testSeriesSlug: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestRun[]>>;
+    getAllTestRunsForSeriesWithHttpOperationResponse(testSeriesSlug: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAllTestRunsForSeriesOKResponseItem[]>>;
 
     /**
      * Returns list of all test runs for a given test series
@@ -11103,9 +11060,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAllTestRunsForSeries(testSeriesSlug: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestRun[]>;
-    getAllTestRunsForSeries(testSeriesSlug: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestRun[]>): void;
-    getAllTestRunsForSeries(testSeriesSlug: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun[]>): void;
+    getAllTestRunsForSeries(testSeriesSlug: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAllTestRunsForSeriesOKResponseItem[]>;
+    getAllTestRunsForSeries(testSeriesSlug: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetAllTestRunsForSeriesOKResponseItem[]>): void;
+    getAllTestRunsForSeries(testSeriesSlug: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAllTestRunsForSeriesOKResponseItem[]>): void;
 
 
     /**
@@ -11188,11 +11145,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestSeries>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PatchTestSeriesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    patchTestSeriesWithHttpOperationResponse(testSeriesSlug: string, ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestSeries>>;
+    patchTestSeriesWithHttpOperationResponse(testSeriesSlug: string, ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PatchTestSeriesOKResponse>>;
 
     /**
      * Updates name and slug of a test series
@@ -11217,7 +11174,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestSeries} - The deserialized result object.
+     *                      @resolve {PatchTestSeriesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11225,16 +11182,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestSeries} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestSeries} for more information.
+     *                      {PatchTestSeriesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PatchTestSeriesOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestSeries>;
-    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, callback: ServiceCallback<models.TestSeries>): void;
-    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries>): void;
+    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.PatchTestSeriesOKResponse>;
+    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, callback: ServiceCallback<models.PatchTestSeriesOKResponse>): void;
+    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PatchTestSeriesOKResponse>): void;
 
 
     /**
@@ -11257,7 +11215,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAllTestSeriesWithHttpOperationResponse(ownerName: string, appName: string, options?: { query? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestSeries[]>>;
+    getAllTestSeriesWithHttpOperationResponse(ownerName: string, appName: string, options?: { query? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAllTestSeriesOKResponseItem[]>>;
 
     /**
      * Returns list of all test series for an application
@@ -11294,9 +11252,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAllTestSeries(ownerName: string, appName: string, options?: { query? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TestSeries[]>;
-    getAllTestSeries(ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries[]>): void;
-    getAllTestSeries(ownerName: string, appName: string, options: { query? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries[]>): void;
+    getAllTestSeries(ownerName: string, appName: string, options?: { query? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAllTestSeriesOKResponseItem[]>;
+    getAllTestSeries(ownerName: string, appName: string, callback: ServiceCallback<models.GetAllTestSeriesOKResponseItem[]>): void;
+    getAllTestSeries(ownerName: string, appName: string, options: { query? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAllTestSeriesOKResponseItem[]>): void;
 
 
     /**
@@ -11377,11 +11335,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestRun>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<StopTestRunOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    stopTestRunWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestRun>>;
+    stopTestRunWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StopTestRunOKResponse>>;
 
     /**
      * Stop a test run execution
@@ -11404,7 +11362,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestRun} - The deserialized result object.
+     *                      @resolve {StopTestRunOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11412,16 +11370,16 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestRun} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestRun} for more information.
+     *                      {StopTestRunOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link StopTestRunOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    stopTestRun(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestRun>;
-    stopTestRun(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestRun>): void;
-    stopTestRun(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun>): void;
+    stopTestRun(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StopTestRunOKResponse>;
+    stopTestRun(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.StopTestRunOKResponse>): void;
+    stopTestRun(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StopTestRunOKResponse>): void;
 
 
     /**
@@ -11440,11 +11398,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestRunState>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetTestRunStateOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getTestRunStateWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestRunState>>;
+    getTestRunStateWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetTestRunStateOKResponse>>;
 
     /**
      * Gets state of the test run
@@ -11467,7 +11425,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestRunState} - The deserialized result object.
+     *                      @resolve {GetTestRunStateOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11475,114 +11433,115 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestRunState} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestRunState} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getTestRunState(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestRunState>;
-    getTestRunState(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestRunState>): void;
-    getTestRunState(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRunState>): void;
-
-
-    /**
-     * Starts test run
-     *
-     * @param {string} testRunId The ID of the test run
-     *
-     * @param {object} startOptions Option required to start the test run
-     *
-     * @param {string} startOptions.testFramework Test framework used by tests.
-     *
-     * @param {string} startOptions.deviceSelection Device selection string.
-     *
-     * @param {string} [startOptions.language] Language that should be used to run
-     * tests.
-     *
-     * @param {string} [startOptions.locale] Locale that should be used to run
-     * tests.
-     *
-     * @param {string} [startOptions.testSeries] Name of the test series.
-     *
-     * @param {object} [startOptions.testParameters] A JSON dictionary with
-     * additional test parameters
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<TestCloudStartTestRunResult>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    startTestRunWithHttpOperationResponse(testRunId: string, startOptions: models.TestCloudStartTestRunOptions, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestCloudStartTestRunResult>>;
-
-    /**
-     * Starts test run
-     *
-     * @param {string} testRunId The ID of the test run
-     *
-     * @param {object} startOptions Option required to start the test run
-     *
-     * @param {string} startOptions.testFramework Test framework used by tests.
-     *
-     * @param {string} startOptions.deviceSelection Device selection string.
-     *
-     * @param {string} [startOptions.language] Language that should be used to run
-     * tests.
-     *
-     * @param {string} [startOptions.locale] Locale that should be used to run
-     * tests.
-     *
-     * @param {string} [startOptions.testSeries] Name of the test series.
-     *
-     * @param {object} [startOptions.testParameters] A JSON dictionary with
-     * additional test parameters
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {TestCloudStartTestRunResult} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {TestCloudStartTestRunResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestCloudStartTestRunResult} for more
+     *                      {GetTestRunStateOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetTestRunStateOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    startTestRun(testRunId: string, startOptions: models.TestCloudStartTestRunOptions, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestCloudStartTestRunResult>;
-    startTestRun(testRunId: string, startOptions: models.TestCloudStartTestRunOptions, ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
-    startTestRun(testRunId: string, startOptions: models.TestCloudStartTestRunOptions, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
+    getTestRunState(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetTestRunStateOKResponse>;
+    getTestRunState(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetTestRunStateOKResponse>): void;
+    getTestRunState(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetTestRunStateOKResponse>): void;
+
+
+    /**
+     * Starts test run
+     *
+     * @param {string} testRunId The ID of the test run
+     *
+     * @param {object} startOptions Option required to start the test run
+     *
+     * @param {string} startOptions.testFramework Test framework used by tests.
+     *
+     * @param {string} startOptions.deviceSelection Device selection string.
+     *
+     * @param {string} [startOptions.language] Language that should be used to run
+     * tests.
+     *
+     * @param {string} [startOptions.locale] Locale that should be used to run
+     * tests.
+     *
+     * @param {string} [startOptions.testSeries] Name of the test series.
+     *
+     * @param {object} [startOptions.testParameters] A JSON dictionary with
+     * additional test parameters
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<StartTestRunOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    startTestRunWithHttpOperationResponse(testRunId: string, startOptions: models.StartOptions, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StartTestRunOKResponse>>;
+
+    /**
+     * Starts test run
+     *
+     * @param {string} testRunId The ID of the test run
+     *
+     * @param {object} startOptions Option required to start the test run
+     *
+     * @param {string} startOptions.testFramework Test framework used by tests.
+     *
+     * @param {string} startOptions.deviceSelection Device selection string.
+     *
+     * @param {string} [startOptions.language] Language that should be used to run
+     * tests.
+     *
+     * @param {string} [startOptions.locale] Locale that should be used to run
+     * tests.
+     *
+     * @param {string} [startOptions.testSeries] Name of the test series.
+     *
+     * @param {object} [startOptions.testParameters] A JSON dictionary with
+     * additional test parameters
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {StartTestRunOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {StartTestRunOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link StartTestRunOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    startTestRun(testRunId: string, startOptions: models.StartOptions, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StartTestRunOKResponse>;
+    startTestRun(testRunId: string, startOptions: models.StartOptions, ownerName: string, appName: string, callback: ServiceCallback<models.StartTestRunOKResponse>): void;
+    startTestRun(testRunId: string, startOptions: models.StartOptions, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StartTestRunOKResponse>): void;
 
 
     /**
@@ -11601,11 +11560,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestReport>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetTestReportOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getTestReportWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestReport>>;
+    getTestReportWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetTestReportOKResponse>>;
 
     /**
      * Returns a single test report
@@ -11628,7 +11587,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestReport} - The deserialized result object.
+     *                      @resolve {GetTestReportOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11636,16 +11595,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestReport} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestReport} for more information.
+     *                      {GetTestReportOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetTestReportOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getTestReport(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestReport>;
-    getTestReport(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestReport>): void;
-    getTestReport(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestReport>): void;
+    getTestReport(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetTestReportOKResponse>;
+    getTestReport(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetTestReportOKResponse>): void;
+    getTestReport(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetTestReportOKResponse>): void;
 
 
     /**
@@ -11670,7 +11630,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    uploadHashesBatchWithHttpOperationResponse(testRunId: string, fileInfo: models.TestCloudFileHash[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestCloudFileHashResponse[]>>;
+    uploadHashesBatchWithHttpOperationResponse(testRunId: string, fileInfo: models.FileInfoItem[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UploadHashesBatchOKResponseItem[]>>;
 
     /**
      * Adds file with the given hash to a test run
@@ -11709,9 +11669,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    uploadHashesBatch(testRunId: string, fileInfo: models.TestCloudFileHash[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestCloudFileHashResponse[]>;
-    uploadHashesBatch(testRunId: string, fileInfo: models.TestCloudFileHash[], ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudFileHashResponse[]>): void;
-    uploadHashesBatch(testRunId: string, fileInfo: models.TestCloudFileHash[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudFileHashResponse[]>): void;
+    uploadHashesBatch(testRunId: string, fileInfo: models.FileInfoItem[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UploadHashesBatchOKResponseItem[]>;
+    uploadHashesBatch(testRunId: string, fileInfo: models.FileInfoItem[], ownerName: string, appName: string, callback: ServiceCallback<models.UploadHashesBatchOKResponseItem[]>): void;
+    uploadHashesBatch(testRunId: string, fileInfo: models.FileInfoItem[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UploadHashesBatchOKResponseItem[]>): void;
 
 
     /**
@@ -11746,7 +11706,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    uploadHashWithHttpOperationResponse(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    uploadHashWithHttpOperationResponse(testRunId: string, fileInfo: models.FileInfo, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Adds file with the given hash to a test run
@@ -11795,9 +11755,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.FileInfo, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    uploadHash(testRunId: string, fileInfo: models.FileInfo, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.FileInfo, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -11878,11 +11838,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestRun>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetTestRunOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getTestRunWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestRun>>;
+    getTestRunWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetTestRunOKResponse>>;
 
     /**
      * Returns a single test runs
@@ -11905,7 +11865,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestRun} - The deserialized result object.
+     *                      @resolve {GetTestRunOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11913,16 +11873,16 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestRun} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestRun} for more information.
+     *                      {GetTestRunOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetTestRunOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getTestRun(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestRun>;
-    getTestRun(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestRun>): void;
-    getTestRun(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun>): void;
+    getTestRun(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetTestRunOKResponse>;
+    getTestRun(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetTestRunOKResponse>): void;
+    getTestRun(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetTestRunOKResponse>): void;
 
 
     /**
@@ -11941,11 +11901,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestRun>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ArchiveTestRunOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    archiveTestRunWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestRun>>;
+    archiveTestRunWithHttpOperationResponse(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ArchiveTestRunOKResponse>>;
 
     /**
      * Logically deletes a test run
@@ -11968,7 +11928,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestRun} - The deserialized result object.
+     *                      @resolve {ArchiveTestRunOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11976,16 +11936,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestRun} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestRun} for more information.
+     *                      {ArchiveTestRunOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ArchiveTestRunOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    archiveTestRun(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestRun>;
-    archiveTestRun(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestRun>): void;
-    archiveTestRun(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun>): void;
+    archiveTestRun(testRunId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ArchiveTestRunOKResponse>;
+    archiveTestRun(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ArchiveTestRunOKResponse>): void;
+    archiveTestRun(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ArchiveTestRunOKResponse>): void;
 
 
     /**
@@ -12006,7 +11967,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getTestRunsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestRun[]>>;
+    getTestRunsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetTestRunsOKResponseItem[]>>;
 
     /**
      * Returns a list of test runs
@@ -12041,9 +12002,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getTestRuns(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestRun[]>;
-    getTestRuns(ownerName: string, appName: string, callback: ServiceCallback<models.TestRun[]>): void;
-    getTestRuns(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun[]>): void;
+    getTestRuns(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetTestRunsOKResponseItem[]>;
+    getTestRuns(ownerName: string, appName: string, callback: ServiceCallback<models.GetTestRunsOKResponseItem[]>): void;
+    getTestRuns(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetTestRunsOKResponseItem[]>): void;
 
 
     /**
@@ -12118,11 +12079,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRTestRun>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportTestRunOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportTestRunWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRTestRun>>;
+    gdprExportTestRunWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportTestRunOKResponse>>;
 
     /**
      * Lists test run data
@@ -12143,7 +12104,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRTestRun} - The deserialized result object.
+     *                      @resolve {GdprExportTestRunOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12151,16 +12112,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRTestRun} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRTestRun} for more information.
+     *                      {GdprExportTestRunOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportTestRunOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportTestRun(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRTestRun>;
-    gdprExportTestRun(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRTestRun>): void;
-    gdprExportTestRun(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRTestRun>): void;
+    gdprExportTestRun(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportTestRunOKResponse>;
+    gdprExportTestRun(ownerName: string, appName: string, callback: ServiceCallback<models.GdprExportTestRunOKResponse>): void;
+    gdprExportTestRun(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportTestRunOKResponse>): void;
 
 
     /**
@@ -12177,11 +12139,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRPipelineTest>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportPipelineTestOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportPipelineTestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRPipelineTest>>;
+    gdprExportPipelineTestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportPipelineTestOKResponse>>;
 
     /**
      * Lists pipeline test data
@@ -12202,7 +12164,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRPipelineTest} - The deserialized result object.
+     *                      @resolve {GdprExportPipelineTestOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12210,16 +12172,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRPipelineTest} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRPipelineTest} for more information.
+     *                      {GdprExportPipelineTestOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportPipelineTestOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportPipelineTest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRPipelineTest>;
-    gdprExportPipelineTest(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRPipelineTest>): void;
-    gdprExportPipelineTest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRPipelineTest>): void;
+    gdprExportPipelineTest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportPipelineTestOKResponse>;
+    gdprExportPipelineTest(ownerName: string, appName: string, callback: ServiceCallback<models.GdprExportPipelineTestOKResponse>): void;
+    gdprExportPipelineTest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportPipelineTestOKResponse>): void;
 
 
     /**
@@ -12236,11 +12199,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRHashFile>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportHashFileOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportHashFileWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRHashFile>>;
+    gdprExportHashFileWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportHashFileOKResponse>>;
 
     /**
      * Lists hash file data
@@ -12261,7 +12224,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRHashFile} - The deserialized result object.
+     *                      @resolve {GdprExportHashFileOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12269,16 +12232,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRHashFile} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRHashFile} for more information.
+     *                      {GdprExportHashFileOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportHashFileOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportHashFile(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRHashFile>;
-    gdprExportHashFile(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRHashFile>): void;
-    gdprExportHashFile(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRHashFile>): void;
+    gdprExportHashFile(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportHashFileOKResponse>;
+    gdprExportHashFile(ownerName: string, appName: string, callback: ServiceCallback<models.GdprExportHashFileOKResponse>): void;
+    gdprExportHashFile(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportHashFileOKResponse>): void;
 
 
     /**
@@ -12295,11 +12259,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRFileSetFile>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportFileSetFileOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportFileSetFileWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRFileSetFile>>;
+    gdprExportFileSetFileWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportFileSetFileOKResponse>>;
 
     /**
      * Lists file set file data
@@ -12320,7 +12284,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRFileSetFile} - The deserialized result object.
+     *                      @resolve {GdprExportFileSetFileOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12328,16 +12292,77 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRFileSetFile} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRFileSetFile} for more information.
+     *                      {GdprExportFileSetFileOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportFileSetFileOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportFileSetFile(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRFileSetFile>;
-    gdprExportFileSetFile(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRFileSetFile>): void;
-    gdprExportFileSetFile(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRFileSetFile>): void;
+    gdprExportFileSetFile(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportFileSetFileOKResponse>;
+    gdprExportFileSetFile(ownerName: string, appName: string, callback: ServiceCallback<models.GdprExportFileSetFileOKResponse>): void;
+    gdprExportFileSetFile(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportFileSetFileOKResponse>): void;
+
+
+    /**
+     * Lists app data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GdprExportAppOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportAppOKResponse>>;
+
+    /**
+     * Lists app data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GdprExportAppOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GdprExportAppOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportAppOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportApp(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportAppOKResponse>;
+    gdprExportApp(ownerName: string, appName: string, callback: ServiceCallback<models.GdprExportAppOKResponse>): void;
+    gdprExportApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportAppOKResponse>): void;
 
 
     /**
@@ -12354,11 +12379,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRResourceList>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportAppsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportAppsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+    gdprExportAppsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportAppsOKResponse>>;
 
     /**
      * Lists all the endpoints available for Test apps data
@@ -12379,7 +12404,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRResourceList} - The deserialized result object.
+     *                      @resolve {GdprExportAppsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12387,16 +12412,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRResourceList} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRResourceList} for more information.
+     *                      {GdprExportAppsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportAppsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportApps(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
-    gdprExportApps(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRResourceList>): void;
-    gdprExportApps(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportApps(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportAppsOKResponse>;
+    gdprExportApps(ownerName: string, appName: string, callback: ServiceCallback<models.GdprExportAppsOKResponse>): void;
+    gdprExportApps(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportAppsOKResponse>): void;
 
 
     /**
@@ -12413,11 +12439,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Subscription>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetSubscriptionsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getSubscriptionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Subscription>>;
+    getSubscriptionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetSubscriptionsOKResponse>>;
 
     /**
      * Get information about the currently active subscriptions, if any
@@ -12438,7 +12464,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Subscription} - The deserialized result object.
+     *                      @resolve {GetSubscriptionsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12446,16 +12472,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Subscription} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Subscription} for more information.
+     *                      {GetSubscriptionsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetSubscriptionsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getSubscriptions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Subscription>;
-    getSubscriptions(ownerName: string, appName: string, callback: ServiceCallback<models.Subscription>): void;
-    getSubscriptions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Subscription>): void;
+    getSubscriptions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetSubscriptionsOKResponse>;
+    getSubscriptions(ownerName: string, appName: string, callback: ServiceCallback<models.GetSubscriptionsOKResponse>): void;
+    getSubscriptions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetSubscriptionsOKResponse>): void;
 
 
     /**
@@ -12472,11 +12499,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Subscription>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateSubscriptionCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createSubscriptionWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Subscription>>;
+    createSubscriptionWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateSubscriptionCreatedResponse>>;
 
     /**
      * Accept a free trial subscription
@@ -12497,7 +12524,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Subscription} - The deserialized result object.
+     *                      @resolve {CreateSubscriptionCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12505,16 +12532,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Subscription} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Subscription} for more information.
+     *                      {CreateSubscriptionCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateSubscriptionCreatedResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createSubscription(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Subscription>;
-    createSubscription(ownerName: string, appName: string, callback: ServiceCallback<models.Subscription>): void;
-    createSubscription(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Subscription>): void;
+    createSubscription(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateSubscriptionCreatedResponse>;
+    createSubscription(ownerName: string, appName: string, callback: ServiceCallback<models.CreateSubscriptionCreatedResponse>): void;
+    createSubscription(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateSubscriptionCreatedResponse>): void;
 
 
     /**
@@ -12533,11 +12561,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DeviceSet>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetDeviceSetOfOwnerOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getDeviceSetOfOwnerWithHttpOperationResponse(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeviceSet>>;
+    getDeviceSetOfOwnerWithHttpOperationResponse(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetDeviceSetOfOwnerOKResponse>>;
 
     /**
      * Gets a device set belonging to the owner
@@ -12560,7 +12588,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DeviceSet} - The deserialized result object.
+     *                      @resolve {GetDeviceSetOfOwnerOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12568,16 +12596,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DeviceSet} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DeviceSet} for more information.
+     *                      {GetDeviceSetOfOwnerOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetDeviceSetOfOwnerOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getDeviceSetOfOwner(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceSet>;
-    getDeviceSetOfOwner(id: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeviceSet>): void;
-    getDeviceSetOfOwner(id: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceSet>): void;
+    getDeviceSetOfOwner(id: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetDeviceSetOfOwnerOKResponse>;
+    getDeviceSetOfOwner(id: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetDeviceSetOfOwnerOKResponse>): void;
+    getDeviceSetOfOwner(id: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetDeviceSetOfOwnerOKResponse>): void;
 
 
     /**
@@ -12730,7 +12759,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listDeviceSetsOfOwnerWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeviceSet[]>>;
+    listDeviceSetsOfOwnerWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListDeviceSetsOfOwnerOKResponseItem[]>>;
 
     /**
      * Lists device sets belonging to the owner
@@ -12765,9 +12794,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listDeviceSetsOfOwner(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceSet[]>;
-    listDeviceSetsOfOwner(ownerName: string, appName: string, callback: ServiceCallback<models.DeviceSet[]>): void;
-    listDeviceSetsOfOwner(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceSet[]>): void;
+    listDeviceSetsOfOwner(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListDeviceSetsOfOwnerOKResponseItem[]>;
+    listDeviceSetsOfOwner(ownerName: string, appName: string, callback: ServiceCallback<models.ListDeviceSetsOfOwnerOKResponseItem[]>): void;
+    listDeviceSetsOfOwner(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListDeviceSetsOfOwnerOKResponseItem[]>): void;
 
 
     /**
@@ -12918,7 +12947,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getDeviceConfigurationsWithHttpOperationResponse(ownerName: string, appName: string, options?: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeviceConfiguration[]>>;
+    getDeviceConfigurationsWithHttpOperationResponse(ownerName: string, appName: string, options?: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetDeviceConfigurationsOKResponseItem[]>>;
 
     /**
      * Returns a list of available devices
@@ -12955,9 +12984,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getDeviceConfigurations(ownerName: string, appName: string, options?: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceConfiguration[]>;
-    getDeviceConfigurations(ownerName: string, appName: string, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
-    getDeviceConfigurations(ownerName: string, appName: string, options: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
+    getDeviceConfigurations(ownerName: string, appName: string, options?: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.GetDeviceConfigurationsOKResponseItem[]>;
+    getDeviceConfigurations(ownerName: string, appName: string, callback: ServiceCallback<models.GetDeviceConfigurationsOKResponseItem[]>): void;
+    getDeviceConfigurations(ownerName: string, appName: string, options: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetDeviceConfigurationsOKResponseItem[]>): void;
 
 
     /**
@@ -12970,11 +12999,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRFeatureFlag>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportFeatureFlagOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportFeatureFlagWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRFeatureFlag>>;
+    gdprExportFeatureFlagWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportFeatureFlagOKResponse>>;
 
     /**
      * Lists feature flag data
@@ -12991,7 +13020,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRFeatureFlag} - The deserialized result object.
+     *                      @resolve {GdprExportFeatureFlagOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12999,16 +13028,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRFeatureFlag} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRFeatureFlag} for more information.
+     *                      {GdprExportFeatureFlagOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportFeatureFlagOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportFeatureFlag(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRFeatureFlag>;
-    gdprExportFeatureFlag(callback: ServiceCallback<models.TestGDPRFeatureFlag>): void;
-    gdprExportFeatureFlag(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRFeatureFlag>): void;
+    gdprExportFeatureFlag(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportFeatureFlagOKResponse>;
+    gdprExportFeatureFlag(callback: ServiceCallback<models.GdprExportFeatureFlagOKResponse>): void;
+    gdprExportFeatureFlag(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportFeatureFlagOKResponse>): void;
 
 
     /**
@@ -13021,11 +13051,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRAccount>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportAccountOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportAccountWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRAccount>>;
+    gdprExportAccountWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportAccountOKResponse>>;
 
     /**
      * Lists account data
@@ -13042,7 +13072,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRAccount} - The deserialized result object.
+     *                      @resolve {GdprExportAccountOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -13050,16 +13080,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRAccount} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRAccount} for more information.
+     *                      {GdprExportAccountOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportAccountOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportAccount(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRAccount>;
-    gdprExportAccount(callback: ServiceCallback<models.TestGDPRAccount>): void;
-    gdprExportAccount(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRAccount>): void;
+    gdprExportAccount(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportAccountOKResponse>;
+    gdprExportAccount(callback: ServiceCallback<models.GdprExportAccountOKResponse>): void;
+    gdprExportAccount(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportAccountOKResponse>): void;
 
 
     /**
@@ -13072,11 +13103,11 @@ export interface Test {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<TestGDPRResourceList>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GdprExportAccountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportAccountsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+    gdprExportAccountsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GdprExportAccountsOKResponse>>;
 
     /**
      * Lists all the endpoints available for Test accounts data
@@ -13093,7 +13124,7 @@ export interface Test {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {TestGDPRResourceList} - The deserialized result object.
+     *                      @resolve {GdprExportAccountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -13101,16 +13132,17 @@ export interface Test {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {TestGDPRResourceList} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRResourceList} for more information.
+     *                      {GdprExportAccountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GdprExportAccountsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportAccounts(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
-    gdprExportAccounts(callback: ServiceCallback<models.TestGDPRResourceList>): void;
-    gdprExportAccounts(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportAccounts(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GdprExportAccountsOKResponse>;
+    gdprExportAccounts(callback: ServiceCallback<models.GdprExportAccountsOKResponse>): void;
+    gdprExportAccounts(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GdprExportAccountsOKResponse>): void;
 }
 
 /**
@@ -13712,6 +13744,9 @@ export interface SymbolUploads {
      * is completed. Includes indexed and failed states.
      * . Possible values include: 'all', 'uploaded', 'processed'
      *
+     * @param {string} [options.symbolType] The type of symbols. Possible values
+     * include: 'AndroidProguard', 'Apple', 'Breakpad', 'JavaScript', 'UWP'
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -13721,7 +13756,7 @@ export interface SymbolUploads {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { top? : number, status? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { top? : number, status? : string, symbolType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Gets a list of all uploads for the specified application
@@ -13742,6 +13777,9 @@ export interface SymbolUploads {
      * is completed. Includes indexed and failed states.
      * . Possible values include: 'all', 'uploaded', 'processed'
      *
+     * @param {string} [options.symbolType] The type of symbols. Possible values
+     * include: 'AndroidProguard', 'Apple', 'Breakpad', 'JavaScript', 'UWP'
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -13766,9 +13804,9 @@ export interface SymbolUploads {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { top? : number, status? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    list(ownerName: string, appName: string, options?: { top? : number, status? : string, symbolType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     list(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    list(ownerName: string, appName: string, options: { top? : number, status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, options: { top? : number, status? : string, symbolType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -13807,7 +13845,7 @@ export interface SymbolUploads {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(body: models.SymbolUploadBeginRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    createWithHttpOperationResponse(body: models.BodyModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Begins the symbol upload process for a new set of symbols for the specified
@@ -13860,9 +13898,9 @@ export interface SymbolUploads {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(body: models.SymbolUploadBeginRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    create(body: models.SymbolUploadBeginRequest, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    create(body: models.SymbolUploadBeginRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(body: models.BodyModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    create(body: models.BodyModelModel, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    create(body: models.BodyModelModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -13888,11 +13926,11 @@ export interface StoreNotifications {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<StoreNotification>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetNotificationByAppIdOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getNotificationByAppIdWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoreNotification>>;
+    getNotificationByAppIdWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetNotificationByAppIdOKResponse>>;
 
     /**
      * Application specific store service status
@@ -13913,7 +13951,7 @@ export interface StoreNotifications {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {StoreNotification} - The deserialized result object.
+     *                      @resolve {GetNotificationByAppIdOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -13921,16 +13959,17 @@ export interface StoreNotifications {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {StoreNotification} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link StoreNotification} for more information.
+     *                      {GetNotificationByAppIdOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetNotificationByAppIdOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getNotificationByAppId(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoreNotification>;
-    getNotificationByAppId(ownerName: string, appName: string, callback: ServiceCallback<models.StoreNotification>): void;
-    getNotificationByAppId(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoreNotification>): void;
+    getNotificationByAppId(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetNotificationByAppIdOKResponse>;
+    getNotificationByAppId(ownerName: string, appName: string, callback: ServiceCallback<models.GetNotificationByAppIdOKResponse>): void;
+    getNotificationByAppId(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetNotificationByAppIdOKResponse>): void;
 }
 
 /**
@@ -13975,7 +14014,7 @@ export interface Repositories {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(sourceHost: string, ownerName: string, appName: string, options?: { vstsAccountName? : string, vstsProjectId? : string, serviceConnectionId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SourceRepository[]>>;
+    listWithHttpOperationResponse(sourceHost: string, ownerName: string, appName: string, options?: { vstsAccountName? : string, vstsProjectId? : string, serviceConnectionId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModel[]>>;
 
     /**
      * Gets the repositories available from the source code host
@@ -14025,9 +14064,9 @@ export interface Repositories {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(sourceHost: string, ownerName: string, appName: string, options?: { vstsAccountName? : string, vstsProjectId? : string, serviceConnectionId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.SourceRepository[]>;
-    list(sourceHost: string, ownerName: string, appName: string, callback: ServiceCallback<models.SourceRepository[]>): void;
-    list(sourceHost: string, ownerName: string, appName: string, options: { vstsAccountName? : string, vstsProjectId? : string, serviceConnectionId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SourceRepository[]>): void;
+    list(sourceHost: string, ownerName: string, appName: string, options?: { vstsAccountName? : string, vstsProjectId? : string, serviceConnectionId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModel[]>;
+    list(sourceHost: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModel[]>): void;
+    list(sourceHost: string, ownerName: string, appName: string, options: { vstsAccountName? : string, vstsProjectId? : string, serviceConnectionId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModel[]>): void;
 }
 
 /**
@@ -14060,7 +14099,7 @@ export interface RepositoryConfigurations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { includeInactive? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.RepoConfig[]>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { includeInactive? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModel[]>>;
 
     /**
      * Returns the repository build configuration status of the app
@@ -14098,9 +14137,9 @@ export interface RepositoryConfigurations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { includeInactive? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.RepoConfig[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.RepoConfig[]>): void;
-    list(ownerName: string, appName: string, options: { includeInactive? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.RepoConfig[]>): void;
+    list(ownerName: string, appName: string, options?: { includeInactive? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModel[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModel[]>): void;
+    list(ownerName: string, appName: string, options: { includeInactive? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModel[]>): void;
 
 
     /**
@@ -14108,10 +14147,7 @@ export interface RepositoryConfigurations {
      *
      * @param {object} repo The repository information
      *
-     * @param {string} [repo.installationId] The GitHub App Installation id.
-     * Required for repositories connected from GitHub App
-     *
-     * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+     * @param {string} repo.repoUrl The repository's git url, must be a HTTPS URL
      *
      * @param {string} [repo.repoId] The repository id from the repository
      * provider. Required for repositories connected from GitHub App and GitLab.com
@@ -14121,6 +14157,9 @@ export interface RepositoryConfigurations {
      *
      * @param {string} [repo.serviceConnectionId] The id of the service connection
      * (private). Required for GitLab self-hosted repositories
+     *
+     * @param {string} [repo.installationId] The GitHub App Installation id.
+     * Required for repositories connected from GitHub App
      *
      * @param {string} ownerName The name of the owner
      *
@@ -14133,21 +14172,18 @@ export interface RepositoryConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<SuccessResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOrUpdateOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createOrUpdateWithHttpOperationResponse(repo: models.RepoConfigPostRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
+    createOrUpdateWithHttpOperationResponse(repo: models.Repo, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOrUpdateOKResponse>>;
 
     /**
      * Configures the repository for build
      *
      * @param {object} repo The repository information
      *
-     * @param {string} [repo.installationId] The GitHub App Installation id.
-     * Required for repositories connected from GitHub App
-     *
-     * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+     * @param {string} repo.repoUrl The repository's git url, must be a HTTPS URL
      *
      * @param {string} [repo.repoId] The repository id from the repository
      * provider. Required for repositories connected from GitHub App and GitLab.com
@@ -14157,6 +14193,9 @@ export interface RepositoryConfigurations {
      *
      * @param {string} [repo.serviceConnectionId] The id of the service connection
      * (private). Required for GitLab self-hosted repositories
+     *
+     * @param {string} [repo.installationId] The GitHub App Installation id.
+     * Required for repositories connected from GitHub App
      *
      * @param {string} ownerName The name of the owner
      *
@@ -14174,7 +14213,7 @@ export interface RepositoryConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {SuccessResponse} - The deserialized result object.
+     *                      @resolve {CreateOrUpdateOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14182,16 +14221,17 @@ export interface RepositoryConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {SuccessResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link SuccessResponse} for more information.
+     *                      {CreateOrUpdateOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOrUpdateOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createOrUpdate(repo: models.RepoConfigPostRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
-    createOrUpdate(repo: models.RepoConfigPostRequest, ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
-    createOrUpdate(repo: models.RepoConfigPostRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+    createOrUpdate(repo: models.Repo, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOrUpdateOKResponse>;
+    createOrUpdate(repo: models.Repo, ownerName: string, appName: string, callback: ServiceCallback<models.CreateOrUpdateOKResponse>): void;
+    createOrUpdate(repo: models.Repo, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOrUpdateOKResponse>): void;
 
 
     /**
@@ -14208,11 +14248,11 @@ export interface RepositoryConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<SuccessResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
+    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteOKResponseModel>>;
 
     /**
      * Removes the configuration for the repository
@@ -14233,7 +14273,7 @@ export interface RepositoryConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {SuccessResponse} - The deserialized result object.
+     *                      @resolve {DeleteOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14241,16 +14281,16 @@ export interface RepositoryConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {SuccessResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link SuccessResponse} for more information.
+     *                      {DeleteOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteOKResponseModel} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
-    deleteMethod(ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
-    deleteMethod(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+    deleteMethod(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteOKResponseModel>;
+    deleteMethod(ownerName: string, appName: string, callback: ServiceCallback<models.DeleteOKResponseModel>): void;
+    deleteMethod(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteOKResponseModel>): void;
 }
 
 /**
@@ -14353,11 +14393,11 @@ export interface ReleaseUploads {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ReleaseUploadEndResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CompleteOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    completeWithHttpOperationResponse(uploadId: string, ownerName: string, appName: string, status: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseUploadEndResponse>>;
+    completeWithHttpOperationResponse(uploadId: string, ownerName: string, appName: string, status: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CompleteOKResponseModel>>;
 
     /**
      * Commits or aborts the upload process for a release for the specified
@@ -14384,7 +14424,7 @@ export interface ReleaseUploads {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ReleaseUploadEndResponse} - The deserialized result object.
+     *                      @resolve {CompleteOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14392,17 +14432,17 @@ export interface ReleaseUploads {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ReleaseUploadEndResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ReleaseUploadEndResponse} for more
+     *                      {CompleteOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CompleteOKResponseModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    complete(uploadId: string, ownerName: string, appName: string, status: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseUploadEndResponse>;
-    complete(uploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<models.ReleaseUploadEndResponse>): void;
-    complete(uploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadEndResponse>): void;
+    complete(uploadId: string, ownerName: string, appName: string, status: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CompleteOKResponseModel>;
+    complete(uploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<models.CompleteOKResponseModel>): void;
+    complete(uploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CompleteOKResponseModel>): void;
 
 
     /**
@@ -14414,24 +14454,25 @@ export interface ReleaseUploads {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {number} [options.releaseId] The ID of the release.
+     * @param {number} [options.releaseId] Optional value for explicitly specifying
+     * the ID of existing release.
      *
      * @param {string} [options.buildVersion] The build version of the uploaded
-     * binary
+     * binary, used for macOS, Windows and Custom app support.
      *
      * @param {string} [options.buildNumber] The build number of the uploaded
-     * binary
+     * binary, used with build_version for macOS app support.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ReleaseUploadBeginResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { releaseId? : number, buildVersion? : string, buildNumber? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseUploadBeginResponse>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { releaseId? : number, buildVersion? : string, buildNumber? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponse>>;
 
     /**
      * Begins the upload process for a new release for the specified application.
@@ -14442,13 +14483,14 @@ export interface ReleaseUploads {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {number} [options.releaseId] The ID of the release.
+     * @param {number} [options.releaseId] Optional value for explicitly specifying
+     * the ID of existing release.
      *
      * @param {string} [options.buildVersion] The build version of the uploaded
-     * binary
+     * binary, used for macOS, Windows and Custom app support.
      *
      * @param {string} [options.buildNumber] The build number of the uploaded
-     * binary
+     * binary, used with build_version for macOS app support.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -14460,7 +14502,7 @@ export interface ReleaseUploads {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ReleaseUploadBeginResponse} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14468,17 +14510,16 @@ export interface ReleaseUploads {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ReleaseUploadBeginResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ReleaseUploadBeginResponse} for more
-     *                      information.
+     *                      {CreateCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateCreatedResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, options?: { releaseId? : number, buildVersion? : string, buildNumber? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseUploadBeginResponse>;
-    create(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
-    create(ownerName: string, appName: string, options: { releaseId? : number, buildVersion? : string, buildNumber? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
+    create(ownerName: string, appName: string, options?: { releaseId? : number, buildVersion? : string, buildNumber? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponse>;
+    create(ownerName: string, appName: string, callback: ServiceCallback<models.CreateCreatedResponse>): void;
+    create(ownerName: string, appName: string, options: { releaseId? : number, buildVersion? : string, buildNumber? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponse>): void;
 }
 
 /**
@@ -14562,11 +14603,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<NotificationConfigResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetConfigOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getConfigWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationConfigResult>>;
+    getConfigWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetConfigOKResponse>>;
 
     /**
      * Get the push configuration for the selected app.
@@ -14587,7 +14628,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {NotificationConfigResult} - The deserialized result object.
+     *                      @resolve {GetConfigOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14595,17 +14636,16 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {NotificationConfigResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link NotificationConfigResult} for more
-     *                      information.
+     *                      {GetConfigOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetConfigOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getConfig(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.NotificationConfigResult>;
-    getConfig(ownerName: string, appName: string, callback: ServiceCallback<models.NotificationConfigResult>): void;
-    getConfig(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationConfigResult>): void;
+    getConfig(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetConfigOKResponse>;
+    getConfig(ownerName: string, appName: string, callback: ServiceCallback<models.GetConfigOKResponse>): void;
+    getConfig(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetConfigOKResponse>): void;
 
 
     /**
@@ -14626,11 +14666,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<NotificationConfigResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<SetConfigOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    setConfigWithHttpOperationResponse(properties: models.NotificationConfig, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationConfigResult>>;
+    setConfigWithHttpOperationResponse(properties: models.Properties, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SetConfigOKResponse>>;
 
     /**
      * Set the push configuration for the selected app.
@@ -14655,7 +14695,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {NotificationConfigResult} - The deserialized result object.
+     *                      @resolve {SetConfigOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14663,17 +14703,16 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {NotificationConfigResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link NotificationConfigResult} for more
-     *                      information.
+     *                      {SetConfigOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link SetConfigOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    setConfig(properties: models.NotificationConfig, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.NotificationConfigResult>;
-    setConfig(properties: models.NotificationConfig, ownerName: string, appName: string, callback: ServiceCallback<models.NotificationConfigResult>): void;
-    setConfig(properties: models.NotificationConfig, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationConfigResult>): void;
+    setConfig(properties: models.Properties, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SetConfigOKResponse>;
+    setConfig(properties: models.Properties, ownerName: string, appName: string, callback: ServiceCallback<models.SetConfigOKResponse>): void;
+    setConfig(properties: models.Properties, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SetConfigOKResponse>): void;
 
 
     /**
@@ -14750,11 +14789,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<NotificationDetailsResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(notificationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationDetailsResult>>;
+    getWithHttpOperationResponse(notificationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModel>>;
 
     /**
      * Get details about a specific notification.
@@ -14777,7 +14816,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {NotificationDetailsResult} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14785,17 +14824,17 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {NotificationDetailsResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link NotificationDetailsResult} for more
+     *                      {GetOKResponseModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetOKResponseModelModelModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(notificationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.NotificationDetailsResult>;
-    get(notificationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.NotificationDetailsResult>): void;
-    get(notificationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationDetailsResult>): void;
+    get(notificationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModel>;
+    get(notificationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModel>): void;
+    get(notificationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModel>): void;
 
 
     /**
@@ -14829,11 +14868,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<NotificationsListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationsListResult>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseModel>>;
 
     /**
      * Get a list of notifications from the service.
@@ -14871,7 +14910,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {NotificationsListResult} - The deserialized result object.
+     *                      @resolve {ListOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14879,17 +14918,16 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {NotificationsListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link NotificationsListResult} for more
-     *                      information.
+     *                      {ListOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListOKResponseModel} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.NotificationsListResult>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.NotificationsListResult>): void;
-    list(ownerName: string, appName: string, options: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationsListResult>): void;
+    list(ownerName: string, appName: string, options?: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseModel>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseModel>): void;
+    list(ownerName: string, appName: string, options: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseModel>): void;
 
 
     /**
@@ -14899,20 +14937,23 @@ export interface Push {
      *
      * @param {string} appName The name of the application
      *
-     * @param {object} notificationContent
+     * @param {object} notificationContent Notification definition object
      *
      * @param {string} notificationContent.name Notification name
      *
      * @param {string} [notificationContent.title] Notification title
      *
-     * @param {string} notificationContent.body Notification body
+     * @param {string} [notificationContent.body] Notification body
      *
      * @param {object} [notificationContent.customData] Notification custom data
      * (such as badge, color, sound, etc.)
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {object} [options.notificationTarget]
+     * @param {object} [options.notificationTarget] Type of Notification target
+     * (audiences, devices, user ids, account ids or broadcast). The object must
+     * include the correct properties for the specified target type except for
+     * broadcast.
      *
      * @param {string} options.notificationTarget.type Polymorphic Discriminator
      *
@@ -14921,11 +14962,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<NotificationSendSucceededResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<SendAcceptedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    sendWithHttpOperationResponse(ownerName: string, appName: string, notificationContent: models.NotificationContent, options?: { notificationTarget? : models.NotificationTarget, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationSendSucceededResult>>;
+    sendWithHttpOperationResponse(ownerName: string, appName: string, notificationContent: models.PropertiesNotificationContent, options?: { notificationTarget? : models.PropertiesNotificationTarget, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SendAcceptedResponse>>;
 
     /**
      * Send a notification to one or more devices.
@@ -14934,20 +14975,23 @@ export interface Push {
      *
      * @param {string} appName The name of the application
      *
-     * @param {object} notificationContent
+     * @param {object} notificationContent Notification definition object
      *
      * @param {string} notificationContent.name Notification name
      *
      * @param {string} [notificationContent.title] Notification title
      *
-     * @param {string} notificationContent.body Notification body
+     * @param {string} [notificationContent.body] Notification body
      *
      * @param {object} [notificationContent.customData] Notification custom data
      * (such as badge, color, sound, etc.)
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {object} [options.notificationTarget]
+     * @param {object} [options.notificationTarget] Type of Notification target
+     * (audiences, devices, user ids, account ids or broadcast). The object must
+     * include the correct properties for the specified target type except for
+     * broadcast.
      *
      * @param {string} options.notificationTarget.type Polymorphic Discriminator
      *
@@ -14961,7 +15005,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {NotificationSendSucceededResult} - The deserialized result object.
+     *                      @resolve {SendAcceptedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14969,17 +15013,16 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {NotificationSendSucceededResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link NotificationSendSucceededResult} for more
-     *                      information.
+     *                      {SendAcceptedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link SendAcceptedResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    send(ownerName: string, appName: string, notificationContent: models.NotificationContent, options?: { notificationTarget? : models.NotificationTarget, customHeaders? : { [headerName: string]: string; } }): Promise<models.NotificationSendSucceededResult>;
-    send(ownerName: string, appName: string, notificationContent: models.NotificationContent, callback: ServiceCallback<models.NotificationSendSucceededResult>): void;
-    send(ownerName: string, appName: string, notificationContent: models.NotificationContent, options: { notificationTarget? : models.NotificationTarget, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationSendSucceededResult>): void;
+    send(ownerName: string, appName: string, notificationContent: models.PropertiesNotificationContent, options?: { notificationTarget? : models.PropertiesNotificationTarget, customHeaders? : { [headerName: string]: string; } }): Promise<models.SendAcceptedResponse>;
+    send(ownerName: string, appName: string, notificationContent: models.PropertiesNotificationContent, callback: ServiceCallback<models.SendAcceptedResponse>): void;
+    send(ownerName: string, appName: string, notificationContent: models.PropertiesNotificationContent, options: { notificationTarget? : models.PropertiesNotificationTarget, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SendAcceptedResponse>): void;
 
 
     /**
@@ -15122,11 +15165,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExportStatusResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ExportDevicesStatusOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    exportDevicesStatusWithHttpOperationResponse(exportId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportStatusResult>>;
+    exportDevicesStatusWithHttpOperationResponse(exportId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportDevicesStatusOKResponse>>;
 
     /**
      * Get the status of an export operation.
@@ -15149,7 +15192,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExportStatusResult} - The deserialized result object.
+     *                      @resolve {ExportDevicesStatusOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15157,16 +15200,17 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExportStatusResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExportStatusResult} for more information.
+     *                      {ExportDevicesStatusOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExportDevicesStatusOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    exportDevicesStatus(exportId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportStatusResult>;
-    exportDevicesStatus(exportId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportStatusResult>): void;
-    exportDevicesStatus(exportId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportStatusResult>): void;
+    exportDevicesStatus(exportId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportDevicesStatusOKResponse>;
+    exportDevicesStatus(exportId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportDevicesStatusOKResponse>): void;
+    exportDevicesStatus(exportId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportDevicesStatusOKResponse>): void;
 
 
     /**
@@ -15186,11 +15230,11 @@ export interface Push {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExportStartedResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ExportDevicesAcceptedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    exportDevicesWithHttpOperationResponse(ownerName: string, appName: string, blobContainerSasUri: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportStartedResult>>;
+    exportDevicesWithHttpOperationResponse(ownerName: string, appName: string, blobContainerSasUri: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportDevicesAcceptedResponse>>;
 
     /**
      * Exports information for all devices using Push to Azure Blob Storage
@@ -15214,7 +15258,7 @@ export interface Push {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExportStartedResult} - The deserialized result object.
+     *                      @resolve {ExportDevicesAcceptedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15222,16 +15266,17 @@ export interface Push {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExportStartedResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExportStartedResult} for more information.
+     *                      {ExportDevicesAcceptedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExportDevicesAcceptedResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportStartedResult>;
-    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, callback: ServiceCallback<models.ExportStartedResult>): void;
-    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportStartedResult>): void;
+    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportDevicesAcceptedResponse>;
+    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, callback: ServiceCallback<models.ExportDevicesAcceptedResponse>): void;
+    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportDevicesAcceptedResponse>): void;
 }
 
 /**
@@ -15259,11 +15304,11 @@ export interface FileAssets {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<FileAsset>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.FileAsset>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOKResponseModel>>;
 
     /**
      * Create a new asset to upload a file
@@ -15286,7 +15331,7 @@ export interface FileAssets {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {FileAsset} - The deserialized result object.
+     *                      @resolve {CreateOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15294,16 +15339,16 @@ export interface FileAssets {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {FileAsset} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link FileAsset} for more information.
+     *                      {CreateOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOKResponseModel} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<models.FileAsset>;
-    create(ownerName: string, appName: string, callback: ServiceCallback<models.FileAsset>): void;
-    create(ownerName: string, appName: string, options: { payload? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.FileAsset>): void;
+    create(ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOKResponseModel>;
+    create(ownerName: string, appName: string, callback: ServiceCallback<models.CreateOKResponseModel>): void;
+    create(ownerName: string, appName: string, options: { payload? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOKResponseModel>): void;
 }
 
 /**
@@ -15455,11 +15500,11 @@ export interface ExportConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExportConfigurationResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(exportConfigurationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportConfigurationResult>>;
+    getWithHttpOperationResponse(exportConfigurationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModel>>;
 
     /**
      * Get export configuration.
@@ -15482,7 +15527,7 @@ export interface ExportConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExportConfigurationResult} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15490,17 +15535,17 @@ export interface ExportConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExportConfigurationResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExportConfigurationResult} for more
-     *                      information.
+     *                      {GetOKResponseModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetOKResponseModelModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(exportConfigurationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportConfigurationResult>;
-    get(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
-    get(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    get(exportConfigurationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModel>;
+    get(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModel>): void;
+    get(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModel>): void;
 
 
     /**
@@ -15515,6 +15560,10 @@ export interface ExportConfigurations {
      * @param {string} [properties.resourceName] The resource name on azure
      *
      * @param {string} [properties.resourceGroup] The resource group name on azure
+     *
+     * @param {boolean} [properties.backfill] Field to determine if backfilling
+     * should occur. The default value is true. If set to false export starts from
+     * date and time of config creation.
      *
      * @param {string} properties.type Polymorphic Discriminator
      *
@@ -15529,11 +15578,11 @@ export interface ExportConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExportConfigurationResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PartialUpdateOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    partialUpdateWithHttpOperationResponse(exportConfigurationId: string, properties: models.ExportConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportConfigurationResult>>;
+    partialUpdateWithHttpOperationResponse(exportConfigurationId: string, properties: models.PropertiesModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PartialUpdateOKResponse>>;
 
     /**
      * Partially update export configuration.
@@ -15547,6 +15596,10 @@ export interface ExportConfigurations {
      * @param {string} [properties.resourceName] The resource name on azure
      *
      * @param {string} [properties.resourceGroup] The resource group name on azure
+     *
+     * @param {boolean} [properties.backfill] Field to determine if backfilling
+     * should occur. The default value is true. If set to false export starts from
+     * date and time of config creation.
      *
      * @param {string} properties.type Polymorphic Discriminator
      *
@@ -15566,7 +15619,7 @@ export interface ExportConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExportConfigurationResult} - The deserialized result object.
+     *                      @resolve {PartialUpdateOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15574,17 +15627,17 @@ export interface ExportConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExportConfigurationResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExportConfigurationResult} for more
+     *                      {PartialUpdateOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PartialUpdateOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    partialUpdate(exportConfigurationId: string, properties: models.ExportConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportConfigurationResult>;
-    partialUpdate(exportConfigurationId: string, properties: models.ExportConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
-    partialUpdate(exportConfigurationId: string, properties: models.ExportConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    partialUpdate(exportConfigurationId: string, properties: models.PropertiesModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.PartialUpdateOKResponse>;
+    partialUpdate(exportConfigurationId: string, properties: models.PropertiesModelModelModel, ownerName: string, appName: string, callback: ServiceCallback<models.PartialUpdateOKResponse>): void;
+    partialUpdate(exportConfigurationId: string, properties: models.PropertiesModelModelModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PartialUpdateOKResponse>): void;
 
 
     /**
@@ -15663,11 +15716,11 @@ export interface ExportConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExportConfigurationListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListOKResponseModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportConfigurationListResult>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseModelModelModel>>;
 
     /**
      * List export configurations.
@@ -15688,7 +15741,7 @@ export interface ExportConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExportConfigurationListResult} - The deserialized result object.
+     *                      @resolve {ListOKResponseModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15696,17 +15749,17 @@ export interface ExportConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExportConfigurationListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExportConfigurationListResult} for more
+     *                      {ListOKResponseModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListOKResponseModelModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportConfigurationListResult>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationListResult>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationListResult>): void;
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseModelModelModel>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseModelModelModel>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseModelModelModel>): void;
 
 
     /**
@@ -15719,6 +15772,10 @@ export interface ExportConfigurations {
      * @param {string} [properties.resourceName] The resource name on azure
      *
      * @param {string} [properties.resourceGroup] The resource group name on azure
+     *
+     * @param {boolean} [properties.backfill] Field to determine if backfilling
+     * should occur. The default value is true. If set to false export starts from
+     * date and time of config creation.
      *
      * @param {string} properties.type Polymorphic Discriminator
      *
@@ -15733,11 +15790,11 @@ export interface ExportConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExportConfigurationResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateAcceptedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(properties: models.ExportConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportConfigurationResult>>;
+    createWithHttpOperationResponse(properties: models.PropertiesModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateAcceptedResponse>>;
 
     /**
      * Create new export configuration
@@ -15749,6 +15806,10 @@ export interface ExportConfigurations {
      * @param {string} [properties.resourceName] The resource name on azure
      *
      * @param {string} [properties.resourceGroup] The resource group name on azure
+     *
+     * @param {boolean} [properties.backfill] Field to determine if backfilling
+     * should occur. The default value is true. If set to false export starts from
+     * date and time of config creation.
      *
      * @param {string} properties.type Polymorphic Discriminator
      *
@@ -15768,7 +15829,7 @@ export interface ExportConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExportConfigurationResult} - The deserialized result object.
+     *                      @resolve {CreateAcceptedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15776,17 +15837,17 @@ export interface ExportConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExportConfigurationResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExportConfigurationResult} for more
+     *                      {CreateAcceptedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateAcceptedResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(properties: models.ExportConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportConfigurationResult>;
-    create(properties: models.ExportConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
-    create(properties: models.ExportConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    create(properties: models.PropertiesModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateAcceptedResponse>;
+    create(properties: models.PropertiesModelModelModel, ownerName: string, appName: string, callback: ServiceCallback<models.CreateAcceptedResponse>): void;
+    create(properties: models.PropertiesModelModelModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateAcceptedResponse>): void;
 }
 
 /**
@@ -15816,11 +15877,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<GenericLogContainerDiagnostics>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListSessionLogsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listSessionLogsWithHttpOperationResponse(errorId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GenericLogContainerDiagnostics>>;
+    listSessionLogsWithHttpOperationResponse(errorId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListSessionLogsOKResponse>>;
 
     /**
      * Get session logs by error ID
@@ -15845,7 +15906,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {GenericLogContainerDiagnostics} - The deserialized result object.
+     *                      @resolve {ListSessionLogsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15853,17 +15914,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {GenericLogContainerDiagnostics} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link GenericLogContainerDiagnostics} for more
+     *                      {ListSessionLogsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListSessionLogsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listSessionLogs(errorId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GenericLogContainerDiagnostics>;
-    listSessionLogs(errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogContainerDiagnostics>): void;
-    listSessionLogs(errorId: string, ownerName: string, appName: string, options: { date? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainerDiagnostics>): void;
+    listSessionLogs(errorId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListSessionLogsOKResponse>;
+    listSessionLogs(errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListSessionLogsOKResponse>): void;
+    listSessionLogs(errorId: string, ownerName: string, appName: string, options: { date? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListSessionLogsOKResponse>): void;
 
 
     /**
@@ -15884,11 +15945,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorAttachmentText>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ErrorAttachmentTextOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorAttachmentTextMethodWithHttpOperationResponse(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentText>>;
+    errorAttachmentTextMethodWithHttpOperationResponse(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentTextOKResponse>>;
 
     /**
      * Error attachment text.
@@ -15913,7 +15974,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorAttachmentText} - The deserialized result object.
+     *                      @resolve {ErrorAttachmentTextOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15921,16 +15982,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorAttachmentText} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorAttachmentText} for more information.
+     *                      {ErrorAttachmentTextOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorAttachmentTextOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentText>;
-    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentText>): void;
-    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentText>): void;
+    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentTextOKResponse>;
+    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentTextOKResponse>): void;
+    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentTextOKResponse>): void;
 
 
     /**
@@ -15951,11 +16013,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorAttachmentLocation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ErrorAttachmentLocationOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorAttachmentLocationMethodWithHttpOperationResponse(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentLocation>>;
+    errorAttachmentLocationMethodWithHttpOperationResponse(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentLocationOKResponse>>;
 
     /**
      * Error attachment location.
@@ -15980,7 +16042,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorAttachmentLocation} - The deserialized result object.
+     *                      @resolve {ErrorAttachmentLocationOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -15988,17 +16050,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorAttachmentLocation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorAttachmentLocation} for more
+     *                      {ErrorAttachmentLocationOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorAttachmentLocationOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentLocation>;
-    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentLocation>): void;
-    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentLocation>): void;
+    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentLocationOKResponse>;
+    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentLocationOKResponse>): void;
+    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentLocationOKResponse>): void;
 
 
     /**
@@ -16021,7 +16083,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorAttachmentsWithHttpOperationResponse(errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachment[]>>;
+    errorAttachmentsWithHttpOperationResponse(errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentsOKResponseItem[]>>;
 
     /**
      * List error attachments.
@@ -16058,9 +16120,9 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorAttachments(errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachment[]>;
-    errorAttachments(errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachment[]>): void;
-    errorAttachments(errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachment[]>): void;
+    errorAttachments(errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentsOKResponseItem[]>;
+    errorAttachments(errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentsOKResponseItem[]>): void;
+    errorAttachments(errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentsOKResponseItem[]>): void;
 
 
     /**
@@ -16095,11 +16157,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorsSearchResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ErrorSearchOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorSearchWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorsSearchResult>>;
+    errorSearchWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorSearchOKResponse>>;
 
     /**
      * Errors list based on search parameters
@@ -16138,7 +16200,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorsSearchResult} - The deserialized result object.
+     *                      @resolve {ErrorSearchOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16146,16 +16208,16 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorsSearchResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorsSearchResult} for more information.
+     *                      {ErrorSearchOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorSearchOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorSearch(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorsSearchResult>;
-    errorSearch(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorsSearchResult>): void;
-    errorSearch(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorsSearchResult>): void;
+    errorSearch(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorSearchOKResponse>;
+    errorSearch(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorSearchOKResponse>): void;
+    errorSearch(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorSearchOKResponse>): void;
 
 
     /**
@@ -16176,11 +16238,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorRetentionSettings>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PutRetentionSettingsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    putRetentionSettingsWithHttpOperationResponse(ownerName: string, appName: string, retentionInDays: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorRetentionSettings>>;
+    putRetentionSettingsWithHttpOperationResponse(ownerName: string, appName: string, retentionInDays: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PutRetentionSettingsOKResponse>>;
 
     /**
      * @summary Creates and updates the retention settings in days
@@ -16205,7 +16267,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorRetentionSettings} - The deserialized result object.
+     *                      @resolve {PutRetentionSettingsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16213,17 +16275,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorRetentionSettings} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorRetentionSettings} for more
+     *                      {PutRetentionSettingsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PutRetentionSettingsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorRetentionSettings>;
-    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
-    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
+    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.PutRetentionSettingsOKResponse>;
+    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, callback: ServiceCallback<models.PutRetentionSettingsOKResponse>): void;
+    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PutRetentionSettingsOKResponse>): void;
 
 
     /**
@@ -16242,11 +16304,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorRetentionSettings>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetRetentionSettingsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getRetentionSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorRetentionSettings>>;
+    getRetentionSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetRetentionSettingsOKResponse>>;
 
     /**
      * @summary gets the retention settings in days
@@ -16269,7 +16331,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorRetentionSettings} - The deserialized result object.
+     *                      @resolve {GetRetentionSettingsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16277,17 +16339,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorRetentionSettings} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorRetentionSettings} for more
+     *                      {GetRetentionSettingsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetRetentionSettingsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getRetentionSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorRetentionSettings>;
-    getRetentionSettings(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
-    getRetentionSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
+    getRetentionSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetRetentionSettingsOKResponse>;
+    getRetentionSettings(ownerName: string, appName: string, callback: ServiceCallback<models.GetRetentionSettingsOKResponse>): void;
+    getRetentionSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetRetentionSettingsOKResponse>): void;
 
 
     /**
@@ -16319,11 +16381,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorFreeDevicePercentages>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ErrorFreeDevicePercentagesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentages>>;
+    errorFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentagesOKResponse>>;
 
     /**
      * Percentage of error-free devices by day in the time range based on the
@@ -16359,7 +16421,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorFreeDevicePercentages} - The deserialized result object.
+     *                      @resolve {ErrorFreeDevicePercentagesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16367,17 +16429,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorFreeDevicePercentages} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorFreeDevicePercentages} for more
-     *                      information.
+     *                      {ErrorFreeDevicePercentagesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorFreeDevicePercentagesOKResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentages>;
-    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
-    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentagesOKResponse>;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorFreeDevicePercentagesOKResponse>): void;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentagesOKResponse>): void;
 
 
     /**
@@ -16462,11 +16524,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorGroupOperatingSystems>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GroupOperatingSystemCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupOperatingSystemCountsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupOperatingSystems>>;
+    groupOperatingSystemCountsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GroupOperatingSystemCountsOKResponse>>;
 
     /**
      * Top OSes of the selected error group.
@@ -16492,7 +16554,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorGroupOperatingSystems} - The deserialized result object.
+     *                      @resolve {GroupOperatingSystemCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16500,17 +16562,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorGroupOperatingSystems} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorGroupOperatingSystems} for more
-     *                      information.
+     *                      {GroupOperatingSystemCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GroupOperatingSystemCountsOKResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupOperatingSystems>;
-    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupOperatingSystems>): void;
-    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupOperatingSystems>): void;
+    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.GroupOperatingSystemCountsOKResponse>;
+    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GroupOperatingSystemCountsOKResponse>): void;
+    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GroupOperatingSystemCountsOKResponse>): void;
 
 
     /**
@@ -16532,11 +16594,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorGroupModels>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GroupModelCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupModelCountsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupModels>>;
+    groupModelCountsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GroupModelCountsOKResponse>>;
 
     /**
      * Top models of the selected error group.
@@ -16562,7 +16624,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorGroupModels} - The deserialized result object.
+     *                      @resolve {GroupModelCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16570,16 +16632,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorGroupModels} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorGroupModels} for more information.
+     *                      {GroupModelCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GroupModelCountsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupModels>;
-    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupModels>): void;
-    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupModels>): void;
+    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.GroupModelCountsOKResponse>;
+    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GroupModelCountsOKResponse>): void;
+    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GroupModelCountsOKResponse>): void;
 
 
     /**
@@ -16667,11 +16730,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorLocation>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ErrorLocationOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorLocationMethodWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorLocation>>;
+    errorLocationMethodWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorLocationOKResponse>>;
 
     /**
      * Error location.
@@ -16696,7 +16759,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorLocation} - The deserialized result object.
+     *                      @resolve {ErrorLocationOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16704,16 +16767,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorLocation} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorLocation} for more information.
+     *                      {ErrorLocationOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorLocationOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorLocation>;
-    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorLocation>): void;
-    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorLocation>): void;
+    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorLocationOKResponse>;
+    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorLocationOKResponse>): void;
+    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorLocationOKResponse>): void;
 
 
     /**
@@ -16806,11 +16870,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<HandledErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetErrorDetailsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getErrorDetailsWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrorDetails>>;
+    getErrorDetailsWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetErrorDetailsOKResponse>>;
 
     /**
      * Error details.
@@ -16835,7 +16899,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {HandledErrorDetails} - The deserialized result object.
+     *                      @resolve {GetErrorDetailsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16843,305 +16907,314 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {HandledErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link HandledErrorDetails} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrorDetails>;
-    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrorDetails>): void;
-    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrorDetails>): void;
-
-
-    /**
-     * Delete a specific error and related attachments and blobs for an app.
-     * Searchable data will not be deleted immediately and may take up to 30 days.
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {string} errorId The id of the error
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<ErrorDeleteCounter>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    deleteErrorWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDeleteCounter>>;
-
-    /**
-     * Delete a specific error and related attachments and blobs for an app.
-     * Searchable data will not be deleted immediately and may take up to 30 days.
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {string} errorId The id of the error
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {ErrorDeleteCounter} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {ErrorDeleteCounter} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDeleteCounter} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDeleteCounter>;
-    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDeleteCounter>): void;
-    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDeleteCounter>): void;
-
-
-    /**
-     * Latest error details.
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<HandledErrorDetails>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    latestErrorDetailsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrorDetails>>;
-
-    /**
-     * Latest error details.
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {HandledErrorDetails} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {HandledErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link HandledErrorDetails} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrorDetails>;
-    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrorDetails>): void;
-    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrorDetails>): void;
-
-
-    /**
-     * Get all errors for group
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
-     *
-     * @param {string} [options.model]
-     *
-     * @param {string} [options.os]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<HandledErrors>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listForGroupWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrors>>;
-
-    /**
-     * Get all errors for group
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
-     *
-     * @param {string} [options.model]
-     *
-     * @param {string} [options.os]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {HandledErrors} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {HandledErrors} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link HandledErrors} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrors>;
-    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrors>): void;
-    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrors>): void;
-
-
-    /**
-     * Percentage of error-free devices by day in the time range. Api will return
-     * -1 if crash devices is greater than active devices
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<ErrorFreeDevicePercentages>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    groupErrorFreeDevicePercentagesWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentages>>;
-
-    /**
-     * Percentage of error-free devices by day in the time range. Api will return
-     * -1 if crash devices is greater than active devices
-     *
-     * @param {string} errorGroupId The id of the error group
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {ErrorFreeDevicePercentages} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {ErrorFreeDevicePercentages} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorFreeDevicePercentages} for more
+     *                      {GetErrorDetailsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetErrorDetailsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentages>;
-    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
-    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetErrorDetailsOKResponse>;
+    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetErrorDetailsOKResponse>): void;
+    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetErrorDetailsOKResponse>): void;
+
+
+    /**
+     * Delete a specific error and related attachments and blobs for an app.
+     * Searchable data will not be deleted immediately and may take up to 30 days.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DeleteErrorOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteErrorWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteErrorOKResponse>>;
+
+    /**
+     * Delete a specific error and related attachments and blobs for an app.
+     * Searchable data will not be deleted immediately and may take up to 30 days.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DeleteErrorOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DeleteErrorOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteErrorOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteErrorOKResponse>;
+    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteErrorOKResponse>): void;
+    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteErrorOKResponse>): void;
+
+
+    /**
+     * Latest error details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<LatestErrorDetailsOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    latestErrorDetailsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.LatestErrorDetailsOKResponse>>;
+
+    /**
+     * Latest error details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {LatestErrorDetailsOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {LatestErrorDetailsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link LatestErrorDetailsOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.LatestErrorDetailsOKResponse>;
+    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.LatestErrorDetailsOKResponse>): void;
+    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LatestErrorDetailsOKResponse>): void;
+
+
+    /**
+     * Get all errors for group
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results till the max number.)
+     *
+     * @param {string} [options.model]
+     *
+     * @param {string} [options.os]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ListForGroupOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listForGroupWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListForGroupOKResponse>>;
+
+    /**
+     * Get all errors for group
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results till the max number.)
+     *
+     * @param {string} [options.model]
+     *
+     * @param {string} [options.os]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ListForGroupOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ListForGroupOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListForGroupOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListForGroupOKResponse>;
+    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ListForGroupOKResponse>): void;
+    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListForGroupOKResponse>): void;
+
+
+    /**
+     * Percentage of error-free devices by day in the time range. Api will return
+     * -1 if crash devices is greater than active devices
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GroupErrorFreeDevicePercentagesOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupErrorFreeDevicePercentagesWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GroupErrorFreeDevicePercentagesOKResponse>>;
+
+    /**
+     * Percentage of error-free devices by day in the time range. Api will return
+     * -1 if crash devices is greater than active devices
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GroupErrorFreeDevicePercentagesOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GroupErrorFreeDevicePercentagesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GroupErrorFreeDevicePercentagesOKResponse}
+     *                      for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GroupErrorFreeDevicePercentagesOKResponse>;
+    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.GroupErrorFreeDevicePercentagesOKResponse>): void;
+    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GroupErrorFreeDevicePercentagesOKResponse>): void;
 
 
     /**
@@ -17168,11 +17241,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorCounts>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GroupCountsPerDayOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupCountsPerDayWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
+    groupCountsPerDayWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GroupCountsPerDayOKResponse>>;
 
     /**
      * Count of errors by day in the time range of the selected error group with
@@ -17203,7 +17276,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorCounts} - The deserialized result object.
+     *                      @resolve {GroupCountsPerDayOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17211,16 +17284,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorCounts} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorCounts} for more information.
+     *                      {GroupCountsPerDayOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GroupCountsPerDayOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorCounts>;
-    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorCounts>): void;
-    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorCounts>): void;
+    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GroupCountsPerDayOKResponse>;
+    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.GroupCountsPerDayOKResponse>): void;
+    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GroupCountsPerDayOKResponse>): void;
 
 
     /**
@@ -17239,11 +17313,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorGroup>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GroupDetailsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupDetailsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroup>>;
+    groupDetailsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GroupDetailsOKResponse>>;
 
     /**
      * Error group details
@@ -17266,7 +17340,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorGroup} - The deserialized result object.
+     *                      @resolve {GroupDetailsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17274,16 +17348,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorGroup} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorGroup} for more information.
+     *                      {GroupDetailsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GroupDetailsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupDetails(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroup>;
-    groupDetails(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroup>): void;
-    groupDetails(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroup>): void;
+    groupDetails(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GroupDetailsOKResponse>;
+    groupDetails(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GroupDetailsOKResponse>): void;
+    groupDetails(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GroupDetailsOKResponse>): void;
 
 
     /**
@@ -17306,11 +17381,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorGroup>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateStateOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateStateWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, state: string, options?: { annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroup>>;
+    updateStateWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, state: string, options?: { annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateStateOKResponse>>;
 
     /**
      * Update error group state
@@ -17337,7 +17412,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorGroup} - The deserialized result object.
+     *                      @resolve {UpdateStateOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17345,16 +17420,16 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorGroup} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorGroup} for more information.
+     *                      {UpdateStateOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateStateOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, options?: { annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroup>;
-    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, callback: ServiceCallback<models.ErrorGroup>): void;
-    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, options: { annotation? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroup>): void;
+    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, options?: { annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateStateOKResponse>;
+    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, callback: ServiceCallback<models.UpdateStateOKResponse>): void;
+    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, options: { annotation? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateStateOKResponse>): void;
 
 
     /**
@@ -17389,11 +17464,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorGroupsSearchResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ErrorGroupsSearchOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorGroupsSearchWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupsSearchResult>>;
+    errorGroupsSearchWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupsSearchOKResponse>>;
 
     /**
      * Error groups list based on search parameters
@@ -17432,7 +17507,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorGroupsSearchResult} - The deserialized result object.
+     *                      @resolve {ErrorGroupsSearchOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17440,17 +17515,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorGroupsSearchResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorGroupsSearchResult} for more
+     *                      {ErrorGroupsSearchOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroupsSearchOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorGroupsSearch(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupsSearchResult>;
-    errorGroupsSearch(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupsSearchResult>): void;
-    errorGroupsSearch(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupsSearchResult>): void;
+    errorGroupsSearch(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupsSearchOKResponse>;
+    errorGroupsSearch(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupsSearchOKResponse>): void;
+    errorGroupsSearch(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupsSearchOKResponse>): void;
 
 
     /**
@@ -17488,11 +17563,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorGroups>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GroupListOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupListWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, appBuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroups>>;
+    groupListWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, appBuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GroupListOKResponse>>;
 
     /**
      * List of error groups
@@ -17534,7 +17609,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorGroups} - The deserialized result object.
+     *                      @resolve {GroupListOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17542,16 +17617,16 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorGroups} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorGroups} for more information.
+     *                      {GroupListOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GroupListOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupList(start: Date|string, ownerName: string, appName: string, options?: { version? : string, appBuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroups>;
-    groupList(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroups>): void;
-    groupList(start: Date|string, ownerName: string, appName: string, options: { version? : string, appBuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroups>): void;
+    groupList(start: Date|string, ownerName: string, appName: string, options?: { version? : string, appBuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.GroupListOKResponse>;
+    groupList(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.GroupListOKResponse>): void;
+    groupList(start: Date|string, ownerName: string, appName: string, options: { version? : string, appBuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GroupListOKResponse>): void;
 
 
     /**
@@ -17582,11 +17657,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorCounts>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CountsPerDayOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    countsPerDayWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
+    countsPerDayWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CountsPerDayOKResponse>>;
 
     /**
      * Count of crashes or errors by day in the time range based the selected
@@ -17621,7 +17696,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorCounts} - The deserialized result object.
+     *                      @resolve {CountsPerDayOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17629,16 +17704,17 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorCounts} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorCounts} for more information.
+     *                      {CountsPerDayOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CountsPerDayOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    countsPerDay(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorCounts>;
-    countsPerDay(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorCounts>): void;
-    countsPerDay(start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorCounts>): void;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CountsPerDayOKResponse>;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CountsPerDayOKResponse>): void;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, appBuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CountsPerDayOKResponse>): void;
 
 
     /**
@@ -17678,11 +17754,11 @@ export interface Errors {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AvailableVersionsDiagnostics>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<AvailableVersionsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    availableVersionsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AvailableVersionsDiagnostics>>;
+    availableVersionsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AvailableVersionsOKResponse>>;
 
     /**
      * Get all available versions in the time range.
@@ -17726,7 +17802,7 @@ export interface Errors {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AvailableVersionsDiagnostics} - The deserialized result object.
+     *                      @resolve {AvailableVersionsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17734,70 +17810,75 @@ export interface Errors {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AvailableVersionsDiagnostics} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AvailableVersionsDiagnostics} for more
+     *                      {AvailableVersionsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AvailableVersionsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AvailableVersionsDiagnostics>;
-    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.AvailableVersionsDiagnostics>): void;
-    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AvailableVersionsDiagnostics>): void;
-}
-
-/**
- * @class
- * TextError
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the AppCenterClient.
- */
-export interface TextError {
+    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AvailableVersionsOKResponse>;
+    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.AvailableVersionsOKResponse>): void;
+    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AvailableVersionsOKResponse>): void;
 
 
     /**
-     * @summary Uploads a text error to ingest
+     * List of app builds
      *
-     * Uploads a text error to ingest
+     * @param {string} version
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
      *
      * @param {string} ownerName The name of the owner
-     *
-     * @param {string} log File with the crash log. Note - the maximum allowed file
-     * size is 200kB!
      *
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.errorUserId] user account id
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results till the max number.)
+     *
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * including All. Possible values include: 'all', 'unhandledError',
+     * 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Failure>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<AppBuildsListOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    uploadWithHttpOperationResponse(ownerName: string, log: string, appName: string, options?: { errorUserId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Failure>>;
+    appBuildsListWithHttpOperationResponse(version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppBuildsListOKResponse>>;
 
     /**
-     * @summary Uploads a text error to ingest
+     * List of app builds
      *
-     * Uploads a text error to ingest
+     * @param {string} version
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
      *
      * @param {string} ownerName The name of the owner
-     *
-     * @param {string} log File with the crash log. Note - the maximum allowed file
-     * size is 200kB!
      *
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.errorUserId] user account id
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results till the max number.)
+     *
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * including All. Possible values include: 'all', 'unhandledError',
+     * 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -17809,7 +17890,7 @@ export interface TextError {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Failure} - The deserialized result object.
+     *                      @resolve {AppBuildsListOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17817,16 +17898,17 @@ export interface TextError {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Failure} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Failure} for more information.
+     *                      {AppBuildsListOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppBuildsListOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    upload(ownerName: string, log: string, appName: string, options?: { errorUserId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.Failure>;
-    upload(ownerName: string, log: string, appName: string, callback: ServiceCallback<models.Failure>): void;
-    upload(ownerName: string, log: string, appName: string, options: { errorUserId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Failure>): void;
+    appBuildsList(version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppBuildsListOKResponse>;
+    appBuildsList(version: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.AppBuildsListOKResponse>): void;
+    appBuildsList(version: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppBuildsListOKResponse>): void;
 }
 
 /**
@@ -17856,11 +17938,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ReleaseRealTimeStatusResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetRealTimeStatusByReleaseIdOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getRealTimeStatusByReleaseIdWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseRealTimeStatusResponse>>;
+    getRealTimeStatusByReleaseIdWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetRealTimeStatusByReleaseIdOKResponse>>;
 
     /**
      * Return the Real time Status publishing of release from store.
@@ -17885,7 +17967,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ReleaseRealTimeStatusResponse} - The deserialized result object.
+     *                      @resolve {GetRealTimeStatusByReleaseIdOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17893,17 +17975,17 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ReleaseRealTimeStatusResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ReleaseRealTimeStatusResponse} for more
-     *                      information.
+     *                      {GetRealTimeStatusByReleaseIdOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetRealTimeStatusByReleaseIdOKResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseRealTimeStatusResponse>;
-    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseRealTimeStatusResponse>): void;
-    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseRealTimeStatusResponse>): void;
+    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetRealTimeStatusByReleaseIdOKResponse>;
+    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.GetRealTimeStatusByReleaseIdOKResponse>): void;
+    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetRealTimeStatusByReleaseIdOKResponse>): void;
 
 
     /**
@@ -17924,11 +18006,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ReleasePublishErrorResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetPublishErrorOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getPublishErrorWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleasePublishErrorResponse>>;
+    getPublishErrorWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetPublishErrorOKResponse>>;
 
     /**
      * Return the Error Details of release which failed in publishing.
@@ -17953,7 +18035,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ReleasePublishErrorResponse} - The deserialized result object.
+     *                      @resolve {GetPublishErrorOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -17961,17 +18043,17 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ReleasePublishErrorResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ReleasePublishErrorResponse} for more
+     *                      {GetPublishErrorOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetPublishErrorOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleasePublishErrorResponse>;
-    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ReleasePublishErrorResponse>): void;
-    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleasePublishErrorResponse>): void;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetPublishErrorOKResponse>;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.GetPublishErrorOKResponse>): void;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetPublishErrorOKResponse>): void;
 
 
     /**
@@ -17996,7 +18078,7 @@ export interface StoreReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoresReleaseDetails[]>>;
+    getWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseItem[]>>;
 
     /**
      * Return releases published in a store for releaseId and storeId
@@ -18035,9 +18117,9 @@ export interface StoreReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoresReleaseDetails[]>;
-    get(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
-    get(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseItem[]>;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseItem[]>): void;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseItem[]>): void;
 
 
     /**
@@ -18130,7 +18212,7 @@ export interface StoreReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoresBasicReleaseDetails[]>>;
+    listWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModel[]>>;
 
     /**
      * Return all releases published  in a store
@@ -18167,9 +18249,9 @@ export interface StoreReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoresBasicReleaseDetails[]>;
-    list(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.StoresBasicReleaseDetails[]>): void;
-    list(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoresBasicReleaseDetails[]>): void;
+    list(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModel[]>;
+    list(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModel[]>): void;
+    list(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModel[]>): void;
 
 
     /**
@@ -18192,7 +18274,7 @@ export interface StoreReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getLatestWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoresReleaseDetails[]>>;
+    getLatestWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetLatestOKResponseItem[]>>;
 
     /**
      * Returns the latest release published in a store.
@@ -18229,9 +18311,9 @@ export interface StoreReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getLatest(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoresReleaseDetails[]>;
-    getLatest(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
-    getLatest(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
+    getLatest(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetLatestOKResponseItem[]>;
+    getLatest(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetLatestOKResponseItem[]>): void;
+    getLatest(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetLatestOKResponseItem[]>): void;
 }
 
 /**
@@ -18336,11 +18418,11 @@ export interface Stores {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExternalStoreResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExternalStoreResponse>>;
+    getWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModel>>;
 
     /**
      * Return the store details for specified store name.
@@ -18363,7 +18445,7 @@ export interface Stores {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExternalStoreResponse} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -18371,16 +18453,17 @@ export interface Stores {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExternalStoreResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExternalStoreResponse} for more information.
+     *                      {GetOKResponseModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetOKResponseModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExternalStoreResponse>;
-    get(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse>): void;
-    get(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse>): void;
+    get(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModel>;
+    get(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModel>): void;
+    get(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModel>): void;
 
 
     /**
@@ -18570,11 +18653,11 @@ export interface Stores {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ExternalStoreResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(body: models.ExternalStoreRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExternalStoreResponse>>;
+    createWithHttpOperationResponse(body: models.BodyModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponseModel>>;
 
     /**
      * Create a new external store for the specified application.
@@ -18636,7 +18719,7 @@ export interface Stores {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ExternalStoreResponse} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -18644,16 +18727,17 @@ export interface Stores {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ExternalStoreResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ExternalStoreResponse} for more information.
+     *                      {CreateCreatedResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateCreatedResponseModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExternalStoreResponse>;
-    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse>): void;
-    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse>): void;
+    create(body: models.BodyModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponseModel>;
+    create(body: models.BodyModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, callback: ServiceCallback<models.CreateCreatedResponseModel>): void;
+    create(body: models.BodyModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponseModel>): void;
 
 
     /**
@@ -18675,7 +18759,7 @@ export interface Stores {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExternalStoreResponse[]>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModelModel[]>>;
 
     /**
      * Get all the store details from Storage store table for a particular
@@ -18711,9 +18795,9 @@ export interface Stores {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExternalStoreResponse[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse[]>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse[]>): void;
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModelModel[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModel[]>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModel[]>): void;
 }
 
 /**
@@ -18741,11 +18825,11 @@ export interface MissingSymbolGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsInfoResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<InfoOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    infoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.V2MissingSymbolCrashGroupsInfoResponse>>;
+    infoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.InfoOKResponse>>;
 
     /**
      * @summary Gets application level statistics for all missing symbol groups
@@ -18768,7 +18852,7 @@ export interface MissingSymbolGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {V2MissingSymbolCrashGroupsInfoResponse} - The deserialized result object.
+     *                      @resolve {InfoOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -18776,17 +18860,16 @@ export interface MissingSymbolGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {V2MissingSymbolCrashGroupsInfoResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link V2MissingSymbolCrashGroupsInfoResponse} for
-     *                      more information.
+     *                      {InfoOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link InfoOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    info(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.V2MissingSymbolCrashGroupsInfoResponse>;
-    info(ownerName: string, appName: string, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsInfoResponse>): void;
-    info(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsInfoResponse>): void;
+    info(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.InfoOKResponse>;
+    info(ownerName: string, appName: string, callback: ServiceCallback<models.InfoOKResponse>): void;
+    info(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.InfoOKResponse>): void;
 
 
     /**
@@ -18807,11 +18890,11 @@ export interface MissingSymbolGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.V2MissingSymbolCrashGroupsResponse>>;
+    getWithHttpOperationResponse(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModel>>;
 
     /**
      * @summary Gets missing symbol crash group by its id
@@ -18836,7 +18919,7 @@ export interface MissingSymbolGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -18844,17 +18927,18 @@ export interface MissingSymbolGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {V2MissingSymbolCrashGroupsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
-     *                      information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.V2MissingSymbolCrashGroupsResponse>;
-    get(symbolGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
-    get(symbolGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
+    get(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModel>;
+    get(symbolGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModel>): void;
+    get(symbolGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -18878,11 +18962,11 @@ export interface MissingSymbolGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListOKResponseModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.V2MissingSymbolCrashGroupsResponse>>;
+    listWithHttpOperationResponse(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseModelModelModelModel>>;
 
     /**
      * @summary Gets top N (ordered by crash count) of crash groups by missing
@@ -18910,7 +18994,7 @@ export interface MissingSymbolGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
+     *                      @resolve {ListOKResponseModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -18918,26 +19002,26 @@ export interface MissingSymbolGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {V2MissingSymbolCrashGroupsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
+     *                      {ListOKResponseModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListOKResponseModelModelModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.V2MissingSymbolCrashGroupsResponse>;
-    list(top: number, ownerName: string, appName: string, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
-    list(top: number, ownerName: string, appName: string, options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
+    list(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseModelModelModelModel>;
+    list(top: number, ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseModelModelModelModel>): void;
+    list(top: number, ownerName: string, appName: string, options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseModelModelModelModel>): void;
 }
 
 /**
  * @class
- * App
+ * AppOperations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface App {
+export interface AppOperations {
 
 
     /**
@@ -19033,11 +19117,11 @@ export interface CodePushDeploymentUpload {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CodePushReleaseUpload>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOKResponseModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushReleaseUpload>>;
+    createWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOKResponseModelModel>>;
 
     /**
      * Create a new CodePush release upload for the specified deployment
@@ -19060,7 +19144,7 @@ export interface CodePushDeploymentUpload {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CodePushReleaseUpload} - The deserialized result object.
+     *                      @resolve {CreateOKResponseModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -19068,16 +19152,17 @@ export interface CodePushDeploymentUpload {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CodePushReleaseUpload} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CodePushReleaseUpload} for more information.
+     *                      {CreateOKResponseModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOKResponseModelModel} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushReleaseUpload>;
-    create(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushReleaseUpload>): void;
-    create(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushReleaseUpload>): void;
+    create(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOKResponseModelModel>;
+    create(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CreateOKResponseModelModel>): void;
+    create(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOKResponseModelModel>): void;
 }
 
 /**
@@ -19107,11 +19192,11 @@ export interface CodePushDeploymentRelease {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<RollbackCreatedResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    rollbackWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { label? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
+    rollbackWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { label? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.RollbackCreatedResponse>>;
 
     /**
      * Rollback the latest or a specific release for an app deployment
@@ -19136,7 +19221,7 @@ export interface CodePushDeploymentRelease {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CodePushRelease} - The deserialized result object.
+     *                      @resolve {RollbackCreatedResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -19144,16 +19229,17 @@ export interface CodePushDeploymentRelease {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CodePushRelease} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CodePushRelease} for more information.
+     *                      {RollbackCreatedResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link RollbackCreatedResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    rollback(deploymentName: string, ownerName: string, appName: string, options?: { label? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
-    rollback(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
-    rollback(deploymentName: string, ownerName: string, appName: string, options: { label? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    rollback(deploymentName: string, ownerName: string, appName: string, options?: { label? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.RollbackCreatedResponse>;
+    rollback(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.RollbackCreatedResponse>): void;
+    rollback(deploymentName: string, ownerName: string, appName: string, options: { label? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.RollbackCreatedResponse>): void;
 }
 
 /**
@@ -19196,11 +19282,11 @@ export interface DeploymentReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(deploymentName: string, releaseLabel: string, release: models.CodePushReleaseModification, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
+    updateWithHttpOperationResponse(deploymentName: string, releaseLabel: string, release: models.ReleaseModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModelModelModelModel>>;
 
     /**
      * Modifies a CodePush release metadata under the given Deployment
@@ -19238,7 +19324,7 @@ export interface DeploymentReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CodePushRelease} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -19246,16 +19332,17 @@ export interface DeploymentReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CodePushRelease} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CodePushRelease} for more information.
+     *                      {UpdateOKResponseModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link UpdateOKResponseModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(deploymentName: string, releaseLabel: string, release: models.CodePushReleaseModification, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
-    update(deploymentName: string, releaseLabel: string, release: models.CodePushReleaseModification, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
-    update(deploymentName: string, releaseLabel: string, release: models.CodePushReleaseModification, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    update(deploymentName: string, releaseLabel: string, release: models.ReleaseModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModelModelModelModel>;
+    update(deploymentName: string, releaseLabel: string, release: models.ReleaseModel, ownerName: string, appName: string, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModel>): void;
+    update(deploymentName: string, releaseLabel: string, release: models.ReleaseModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModel>): void;
 }
 
 /**
@@ -19349,7 +19436,7 @@ export interface CodePushDeploymentReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease[]>>;
+    getWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseItemModel[]>>;
 
     /**
      * Gets the history of releases on a Deployment
@@ -19386,9 +19473,9 @@ export interface CodePushDeploymentReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease[]>;
-    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease[]>): void;
-    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseItemModel[]>;
+    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseItemModel[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseItemModel[]>): void;
 
 
     /**
@@ -19446,11 +19533,11 @@ export interface CodePushDeploymentReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
+    createWithHttpOperationResponse(deploymentName: string, uploadedRelease: models.UploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponseModelModelModel>>;
 
     /**
      * Create a new CodePush release for the specified deployment
@@ -19512,7 +19599,7 @@ export interface CodePushDeploymentReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CodePushRelease} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponseModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -19520,16 +19607,17 @@ export interface CodePushDeploymentReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CodePushRelease} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CodePushRelease} for more information.
+     *                      {CreateCreatedResponseModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateCreatedResponseModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
-    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
-    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    create(deploymentName: string, uploadedRelease: models.UploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponseModelModelModel>;
+    create(deploymentName: string, uploadedRelease: models.UploadedRelease, ownerName: string, appName: string, callback: ServiceCallback<models.CreateCreatedResponseModelModelModel>): void;
+    create(deploymentName: string, uploadedRelease: models.UploadedRelease, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponseModelModelModel>): void;
 }
 
 /**
@@ -19558,8 +19646,6 @@ export interface CodePushDeployments {
      * provide optional fields, description, label, disabled, mandatory, rollout,
      * targetBinaryVersion
      *
-     * @param {string} [options.release.label]
-     *
      * @param {string} [options.release.targetBinaryRange]
      *
      * @param {string} [options.release.description]
@@ -19570,16 +19656,18 @@ export interface CodePushDeployments {
      *
      * @param {number} [options.release.rollout]
      *
+     * @param {string} [options.release.label]
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PromoteOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    promoteWithHttpOperationResponse(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options?: { release? : models.CodePushReleasePromote, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
+    promoteWithHttpOperationResponse(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options?: { release? : models.ReleaseModelModel, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PromoteOKResponse>>;
 
     /**
      * Promote one release (default latest one) from one deployment to another
@@ -19598,8 +19686,6 @@ export interface CodePushDeployments {
      * provide optional fields, description, label, disabled, mandatory, rollout,
      * targetBinaryVersion
      *
-     * @param {string} [options.release.label]
-     *
      * @param {string} [options.release.targetBinaryRange]
      *
      * @param {string} [options.release.description]
@@ -19609,6 +19695,8 @@ export interface CodePushDeployments {
      * @param {boolean} [options.release.isMandatory]
      *
      * @param {number} [options.release.rollout]
+     *
+     * @param {string} [options.release.label]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -19620,7 +19708,7 @@ export interface CodePushDeployments {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CodePushRelease} - The deserialized result object.
+     *                      @resolve {PromoteOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -19628,16 +19716,16 @@ export interface CodePushDeployments {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CodePushRelease} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CodePushRelease} for more information.
+     *                      {PromoteOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PromoteOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options?: { release? : models.CodePushReleasePromote, customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
-    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
-    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options: { release? : models.CodePushReleasePromote, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options?: { release? : models.ReleaseModelModel, customHeaders? : { [headerName: string]: string; } }): Promise<models.PromoteOKResponse>;
+    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.PromoteOKResponse>): void;
+    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options: { release? : models.ReleaseModelModel, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PromoteOKResponse>): void;
 
 
     /**
@@ -19722,11 +19810,11 @@ export interface CodePushDeployments {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Deployment>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Deployment>>;
+    getWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModelModel>>;
 
     /**
      * Gets a CodePush Deployment for the given app
@@ -19749,7 +19837,7 @@ export interface CodePushDeployments {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Deployment} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -19757,16 +19845,18 @@ export interface CodePushDeployments {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Deployment} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Deployment} for more information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Deployment>;
-    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.Deployment>): void;
-    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModelModel>;
+    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModel>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -19853,7 +19943,7 @@ export interface CodePushDeployments {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Deployment[]>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel[]>>;
 
     /**
      * Gets a list of CodePush deployments for the given app
@@ -19888,9 +19978,9 @@ export interface CodePushDeployments {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Deployment[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.Deployment[]>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment[]>): void;
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel[]>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel[]>): void;
 
 
     /**
@@ -19907,6 +19997,16 @@ export interface CodePushDeployments {
      * @param {string} [options.key]
      *
      * @param {object} [options.latestRelease]
+     *
+     * @param {string} [options.latestRelease.targetBinaryRange]
+     *
+     * @param {string} [options.latestRelease.description]
+     *
+     * @param {boolean} [options.latestRelease.isDisabled]
+     *
+     * @param {boolean} [options.latestRelease.isMandatory]
+     *
+     * @param {number} [options.latestRelease.rollout]
      *
      * @param {string} [options.latestRelease.label]
      *
@@ -19930,27 +20030,17 @@ export interface CodePushDeployments {
      * @param {number} [options.latestRelease.size]
      *
      * @param {number} [options.latestRelease.uploadTime]
-     *
-     * @param {string} [options.latestRelease.targetBinaryRange]
-     *
-     * @param {string} [options.latestRelease.description]
-     *
-     * @param {boolean} [options.latestRelease.isDisabled]
-     *
-     * @param {boolean} [options.latestRelease.isMandatory]
-     *
-     * @param {number} [options.latestRelease.rollout]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Deployment>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { key? : string, latestRelease? : models.CodePushRelease, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Deployment>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { key? : string, latestRelease? : models.DeploymentLatestReleaseModel, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponseModelModelModelModel>>;
 
     /**
      * Creates a CodePush Deployment for the given app
@@ -19966,6 +20056,16 @@ export interface CodePushDeployments {
      * @param {string} [options.key]
      *
      * @param {object} [options.latestRelease]
+     *
+     * @param {string} [options.latestRelease.targetBinaryRange]
+     *
+     * @param {string} [options.latestRelease.description]
+     *
+     * @param {boolean} [options.latestRelease.isDisabled]
+     *
+     * @param {boolean} [options.latestRelease.isMandatory]
+     *
+     * @param {number} [options.latestRelease.rollout]
      *
      * @param {string} [options.latestRelease.label]
      *
@@ -19989,16 +20089,6 @@ export interface CodePushDeployments {
      * @param {number} [options.latestRelease.size]
      *
      * @param {number} [options.latestRelease.uploadTime]
-     *
-     * @param {string} [options.latestRelease.targetBinaryRange]
-     *
-     * @param {string} [options.latestRelease.description]
-     *
-     * @param {boolean} [options.latestRelease.isDisabled]
-     *
-     * @param {boolean} [options.latestRelease.isMandatory]
-     *
-     * @param {number} [options.latestRelease.rollout]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -20010,7 +20100,7 @@ export interface CodePushDeployments {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Deployment} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponseModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20018,16 +20108,17 @@ export interface CodePushDeployments {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Deployment} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Deployment} for more information.
+     *                      {CreateCreatedResponseModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateCreatedResponseModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, name: string, options?: { key? : string, latestRelease? : models.CodePushRelease, customHeaders? : { [headerName: string]: string; } }): Promise<models.Deployment>;
-    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.Deployment>): void;
-    create(ownerName: string, appName: string, name: string, options: { key? : string, latestRelease? : models.CodePushRelease, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
+    create(ownerName: string, appName: string, name: string, options?: { key? : string, latestRelease? : models.DeploymentLatestReleaseModel, customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponseModelModelModelModel>;
+    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.CreateCreatedResponseModelModelModelModel>): void;
+    create(ownerName: string, appName: string, name: string, options: { key? : string, latestRelease? : models.DeploymentLatestReleaseModel, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponseModelModelModelModel>): void;
 }
 
 /**
@@ -20059,7 +20150,7 @@ export interface CodePushDeploymentMetrics {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushReleaseMetric[]>>;
+    getWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseItemModelModel[]>>;
 
     /**
      * Gets all releases metrics for specified Deployment
@@ -20096,9 +20187,9 @@ export interface CodePushDeploymentMetrics {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushReleaseMetric[]>;
-    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushReleaseMetric[]>): void;
-    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushReleaseMetric[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseItemModelModel[]>;
+    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseItemModelModel[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseItemModelModel[]>): void;
 }
 
 /**
@@ -20210,7 +20301,7 @@ export interface Data {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    postResourceProvisioningWithHttpOperationResponse(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    postResourceProvisioningWithHttpOperationResponse(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.ProvisionDatabaseParameters, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * @summary Creates Cosmos DB or attaches an existing one
@@ -20273,9 +20364,9 @@ export interface Data {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.ProvisionDatabaseParameters, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options: { provisionDatabaseParameters? : models.ProvisionDatabaseParameters, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -20412,17 +20503,15 @@ export interface Data {
 
 /**
  * @class
- * CrashGroups
+ * CrashGroupsOperations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface CrashGroups {
+export interface CrashGroupsOperations {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a stacktrace for a specific crash. Available for UWP apps only.
+     * Gets a stacktrace for a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -20447,9 +20536,7 @@ export interface CrashGroups {
     getStacktraceWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Stacktrace>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a stacktrace for a specific crash. Available for UWP apps only.
+     * Gets a stacktrace for a specific crash.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -20493,9 +20580,7 @@ export interface CrashGroups {
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a specific group. Available for UWP apps only.
+     * Gets a specific group.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -20510,16 +20595,14 @@ export interface CrashGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashGroup>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroup>>;
+    getWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModelModelModel>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Gets a specific group. Available for UWP apps only.
+     * Gets a specific group.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -20539,7 +20622,7 @@ export interface CrashGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashGroup} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20547,22 +20630,22 @@ export interface CrashGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashGroup} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashGroup} for more information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroup>;
-    get(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroup>): void;
-    get(crashGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup>): void;
+    get(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModelModelModel>;
+    get(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModel>): void;
+    get(crashGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Updates a group. Available for UWP apps only.
+     * Updates a group.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -20581,16 +20664,14 @@ export interface CrashGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashGroup>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroup>>;
+    updateWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModelModelModelModelModel>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
-     * Updates a group. Available for UWP apps only.
+     * Updates a group.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -20614,7 +20695,7 @@ export interface CrashGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashGroup} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20622,23 +20703,23 @@ export interface CrashGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashGroup} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashGroup} for more information.
+     *                      {UpdateOKResponseModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      UpdateOKResponseModelModelModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(crashGroupId: string, ownerName: string, appName: string, options?: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroup>;
-    update(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroup>): void;
-    update(crashGroupId: string, ownerName: string, appName: string, options: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup>): void;
+    update(crashGroupId: string, ownerName: string, appName: string, options?: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModelModelModelModelModel>;
+    update(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModel>): void;
+    update(crashGroupId: string, ownerName: string, appName: string, options: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModel>): void;
 
 
     /**
-     * @summary Available for UWP apps only.
-     *
      * Gets a list of crash groups and whether the list contains all available
-     * groups. Available for UWP apps only.
+     * groups.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20676,17 +20757,15 @@ export interface CrashGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashGroupsContainer>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListOKResponseModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupsContainer>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseModelModelModelModelModel>>;
 
     /**
-     * @summary Available for UWP apps only.
-     *
      * Gets a list of crash groups and whether the list contains all available
-     * groups. Available for UWP apps only.
+     * groups.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20729,7 +20808,7 @@ export interface CrashGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashGroupsContainer} - The deserialized result object.
+     *                      @resolve {ListOKResponseModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20737,16 +20816,17 @@ export interface CrashGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashGroupsContainer} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashGroupsContainer} for more information.
+     *                      {ListOKResponseModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListOKResponseModelModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupsContainer>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupsContainer>): void;
-    list(ownerName: string, appName: string, options: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupsContainer>): void;
+    list(ownerName: string, appName: string, options?: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseModelModelModelModelModel>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ListOKResponseModelModelModelModelModel>): void;
+    list(ownerName: string, appName: string, options: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseModelModelModelModelModel>): void;
 }
 
 /**
@@ -20778,7 +20858,7 @@ export interface Commits {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listByShaListWithHttpOperationResponse(hashes: string[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CommitDetails[]>>;
+    listByShaListWithHttpOperationResponse(hashes: string[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListByShaListOKResponseItem[]>>;
 
     /**
      * Returns commit information for a batch of shas
@@ -20815,9 +20895,9 @@ export interface Commits {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listByShaList(hashes: string[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CommitDetails[]>;
-    listByShaList(hashes: string[], ownerName: string, appName: string, callback: ServiceCallback<models.CommitDetails[]>): void;
-    listByShaList(hashes: string[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CommitDetails[]>): void;
+    listByShaList(hashes: string[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListByShaListOKResponseItem[]>;
+    listByShaList(hashes: string[], ownerName: string, appName: string, callback: ServiceCallback<models.ListByShaListOKResponseItem[]>): void;
+    listByShaList(hashes: string[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListByShaListOKResponseItem[]>): void;
 }
 
 /**
@@ -20845,11 +20925,11 @@ export interface BugTracker {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BugTrackerIssueResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetRepoIssueFromCrashOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getRepoIssueFromCrashWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BugTrackerIssueResult>>;
+    getRepoIssueFromCrashWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetRepoIssueFromCrashOKResponse>>;
 
     /**
      * Get project issue related to a crash group
@@ -20872,7 +20952,7 @@ export interface BugTracker {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BugTrackerIssueResult} - The deserialized result object.
+     *                      @resolve {GetRepoIssueFromCrashOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20880,16 +20960,17 @@ export interface BugTracker {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BugTrackerIssueResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BugTrackerIssueResult} for more information.
+     *                      {GetRepoIssueFromCrashOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetRepoIssueFromCrashOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BugTrackerIssueResult>;
-    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.BugTrackerIssueResult>): void;
-    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BugTrackerIssueResult>): void;
+    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetRepoIssueFromCrashOKResponse>;
+    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetRepoIssueFromCrashOKResponse>): void;
+    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetRepoIssueFromCrashOKResponse>): void;
 
 
     /**
@@ -20906,11 +20987,11 @@ export interface BugTracker {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AlertingBugtracker>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetSettingsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertingBugtracker>>;
+    getSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetSettingsOKResponse>>;
 
     /**
      * Get bug tracker settings for a particular app
@@ -20931,7 +21012,7 @@ export interface BugTracker {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AlertingBugtracker} - The deserialized result object.
+     *                      @resolve {GetSettingsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20939,16 +21020,16 @@ export interface BugTracker {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AlertingBugtracker} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AlertingBugtracker} for more information.
+     *                      {GetSettingsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetSettingsOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertingBugtracker>;
-    getSettings(ownerName: string, appName: string, callback: ServiceCallback<models.AlertingBugtracker>): void;
-    getSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertingBugtracker>): void;
+    getSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetSettingsOKResponse>;
+    getSettings(ownerName: string, appName: string, callback: ServiceCallback<models.GetSettingsOKResponse>): void;
+    getSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetSettingsOKResponse>): void;
 }
 
 /**
@@ -20976,11 +21057,11 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfigurationWithId>>;
+    getWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel>>;
 
     /**
      * Gets the branch configuration
@@ -21003,7 +21084,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -21011,17 +21092,18 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BranchConfigurationWithId} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BranchConfigurationWithId} for more
-     *                      information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfigurationWithId>;
-    get(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
-    get(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
+    get(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel>;
+    get(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel>): void;
+    get(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -21044,9 +21126,11 @@ export interface BranchConfigurations {
      * from. If provided, all other parameters will be ignored. Only supported in
      * POST requests.
      *
-     * @param {object} [params.toolsets]
+     * @param {object} [params.toolsets] The branch build configuration for each
+     * toolset
      *
-     * @param {object} [params.toolsets.xcode]
+     * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+     * part of the build steps
      *
      * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
      * project/workspace path
@@ -21103,7 +21187,8 @@ export interface BranchConfigurations {
      * the repository. Only used for iOS React Native app, with Xcode 10.
      *
      *
-     * @param {object} [params.toolsets.javascript]
+     * @param {object} [params.toolsets.javascript] Build configuration when React
+     * Native, or other JavaScript tech, is part of the build steps
      *
      * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
      * package.json file for the main project, e.g. "package.json" or
@@ -21115,7 +21200,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
      * React Native from package.json files
      *
-     * @param {object} [params.toolsets.xamarin]
+     * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+     * projects
      *
      * @param {string} [params.toolsets.xamarin.slnPath]
      *
@@ -21143,7 +21229,8 @@ export interface BranchConfigurations {
      * version will be configured for building.
      *
      *
-     * @param {object} [params.toolsets.android]
+     * @param {object} [params.toolsets.android] Build configuration for Android
+     * projects
      *
      * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
      * Gradle wrapper script
@@ -21178,7 +21265,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
      * encoded value
      *
-     * @param {object} [params.artifactVersioning]
+     * @param {object} [params.artifactVersioning] The versioning configuration for
+     * artifacts built for this branch
      *
      * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
      * values include: 'buildId', 'timestamp'
@@ -21194,11 +21282,11 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOKResponseModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfigurationWithId>>;
+    createWithHttpOperationResponse(branch: string, params: models.Params, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOKResponseModelModelModel>>;
 
     /**
      * Configures the branch for build
@@ -21220,9 +21308,11 @@ export interface BranchConfigurations {
      * from. If provided, all other parameters will be ignored. Only supported in
      * POST requests.
      *
-     * @param {object} [params.toolsets]
+     * @param {object} [params.toolsets] The branch build configuration for each
+     * toolset
      *
-     * @param {object} [params.toolsets.xcode]
+     * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+     * part of the build steps
      *
      * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
      * project/workspace path
@@ -21279,7 +21369,8 @@ export interface BranchConfigurations {
      * the repository. Only used for iOS React Native app, with Xcode 10.
      *
      *
-     * @param {object} [params.toolsets.javascript]
+     * @param {object} [params.toolsets.javascript] Build configuration when React
+     * Native, or other JavaScript tech, is part of the build steps
      *
      * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
      * package.json file for the main project, e.g. "package.json" or
@@ -21291,7 +21382,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
      * React Native from package.json files
      *
-     * @param {object} [params.toolsets.xamarin]
+     * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+     * projects
      *
      * @param {string} [params.toolsets.xamarin.slnPath]
      *
@@ -21319,7 +21411,8 @@ export interface BranchConfigurations {
      * version will be configured for building.
      *
      *
-     * @param {object} [params.toolsets.android]
+     * @param {object} [params.toolsets.android] Build configuration for Android
+     * projects
      *
      * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
      * Gradle wrapper script
@@ -21354,7 +21447,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
      * encoded value
      *
-     * @param {object} [params.artifactVersioning]
+     * @param {object} [params.artifactVersioning] The versioning configuration for
+     * artifacts built for this branch
      *
      * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
      * values include: 'buildId', 'timestamp'
@@ -21375,7 +21469,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
+     *                      @resolve {CreateOKResponseModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -21383,17 +21477,17 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BranchConfigurationWithId} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BranchConfigurationWithId} for more
+     *                      {CreateOKResponseModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOKResponseModelModelModel} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfigurationWithId>;
-    create(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
-    create(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
+    create(branch: string, params: models.Params, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOKResponseModelModelModel>;
+    create(branch: string, params: models.Params, ownerName: string, appName: string, callback: ServiceCallback<models.CreateOKResponseModelModelModel>): void;
+    create(branch: string, params: models.Params, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOKResponseModelModelModel>): void;
 
 
     /**
@@ -21416,9 +21510,11 @@ export interface BranchConfigurations {
      * from. If provided, all other parameters will be ignored. Only supported in
      * POST requests.
      *
-     * @param {object} [params.toolsets]
+     * @param {object} [params.toolsets] The branch build configuration for each
+     * toolset
      *
-     * @param {object} [params.toolsets.xcode]
+     * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+     * part of the build steps
      *
      * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
      * project/workspace path
@@ -21475,7 +21571,8 @@ export interface BranchConfigurations {
      * the repository. Only used for iOS React Native app, with Xcode 10.
      *
      *
-     * @param {object} [params.toolsets.javascript]
+     * @param {object} [params.toolsets.javascript] Build configuration when React
+     * Native, or other JavaScript tech, is part of the build steps
      *
      * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
      * package.json file for the main project, e.g. "package.json" or
@@ -21487,7 +21584,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
      * React Native from package.json files
      *
-     * @param {object} [params.toolsets.xamarin]
+     * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+     * projects
      *
      * @param {string} [params.toolsets.xamarin.slnPath]
      *
@@ -21515,7 +21613,8 @@ export interface BranchConfigurations {
      * version will be configured for building.
      *
      *
-     * @param {object} [params.toolsets.android]
+     * @param {object} [params.toolsets.android] Build configuration for Android
+     * projects
      *
      * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
      * Gradle wrapper script
@@ -21550,7 +21649,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
      * encoded value
      *
-     * @param {object} [params.artifactVersioning]
+     * @param {object} [params.artifactVersioning] The versioning configuration for
+     * artifacts built for this branch
      *
      * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
      * values include: 'buildId', 'timestamp'
@@ -21566,11 +21666,11 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfigurationWithId>>;
+    updateWithHttpOperationResponse(branch: string, params: models.Params, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UpdateOKResponseModelModelModelModelModelModelModelModel>>;
 
     /**
      * Reconfigures the branch for build
@@ -21592,9 +21692,11 @@ export interface BranchConfigurations {
      * from. If provided, all other parameters will be ignored. Only supported in
      * POST requests.
      *
-     * @param {object} [params.toolsets]
+     * @param {object} [params.toolsets] The branch build configuration for each
+     * toolset
      *
-     * @param {object} [params.toolsets.xcode]
+     * @param {object} [params.toolsets.xcode] Build configuration when Xcode is
+     * part of the build steps
      *
      * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
      * project/workspace path
@@ -21651,7 +21753,8 @@ export interface BranchConfigurations {
      * the repository. Only used for iOS React Native app, with Xcode 10.
      *
      *
-     * @param {object} [params.toolsets.javascript]
+     * @param {object} [params.toolsets.javascript] Build configuration when React
+     * Native, or other JavaScript tech, is part of the build steps
      *
      * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
      * package.json file for the main project, e.g. "package.json" or
@@ -21663,7 +21766,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
      * React Native from package.json files
      *
-     * @param {object} [params.toolsets.xamarin]
+     * @param {object} [params.toolsets.xamarin] Build configuration for Xamarin
+     * projects
      *
      * @param {string} [params.toolsets.xamarin.slnPath]
      *
@@ -21691,7 +21795,8 @@ export interface BranchConfigurations {
      * version will be configured for building.
      *
      *
-     * @param {object} [params.toolsets.android]
+     * @param {object} [params.toolsets.android] Build configuration for Android
+     * projects
      *
      * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
      * Gradle wrapper script
@@ -21726,7 +21831,8 @@ export interface BranchConfigurations {
      * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
      * encoded value
      *
-     * @param {object} [params.artifactVersioning]
+     * @param {object} [params.artifactVersioning] The versioning configuration for
+     * artifacts built for this branch
      *
      * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
      * values include: 'buildId', 'timestamp'
@@ -21747,7 +21853,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
+     *                      @resolve {UpdateOKResponseModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -21755,17 +21861,18 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BranchConfigurationWithId} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BranchConfigurationWithId} for more
-     *                      information.
+     *                      {UpdateOKResponseModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      UpdateOKResponseModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfigurationWithId>;
-    update(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
-    update(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
+    update(branch: string, params: models.Params, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UpdateOKResponseModelModelModelModelModelModelModelModel>;
+    update(branch: string, params: models.Params, ownerName: string, appName: string, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModelModelModel>): void;
+    update(branch: string, params: models.Params, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateOKResponseModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -21786,11 +21893,11 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<SuccessResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeleteOKResponseModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
+    deleteMethodWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeleteOKResponseModel>>;
 
     /**
      * Deletes the branch build configuration
@@ -21815,7 +21922,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {SuccessResponse} - The deserialized result object.
+     *                      @resolve {DeleteOKResponseModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -21823,16 +21930,16 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {SuccessResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link SuccessResponse} for more information.
+     *                      {DeleteOKResponseModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeleteOKResponseModel} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(branch: string, ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
-    deleteMethod(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
-    deleteMethod(branch: string, ownerName: string, appName: string, options: { payload? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+    deleteMethod(branch: string, ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<models.DeleteOKResponseModel>;
+    deleteMethod(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeleteOKResponseModel>): void;
+    deleteMethod(branch: string, ownerName: string, appName: string, options: { payload? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeleteOKResponseModel>): void;
 }
 
 /**
@@ -21939,7 +22046,7 @@ export interface AppleMapping {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    testFlightGroupsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppleTestFlightGroupsResponse[]>>;
+    testFlightGroupsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestFlightGroupsOKResponseItem[]>>;
 
     /**
      * Fetch all apple test flight groups
@@ -21974,9 +22081,9 @@ export interface AppleMapping {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    testFlightGroups(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppleTestFlightGroupsResponse[]>;
-    testFlightGroups(ownerName: string, appName: string, callback: ServiceCallback<models.AppleTestFlightGroupsResponse[]>): void;
-    testFlightGroups(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppleTestFlightGroupsResponse[]>): void;
+    testFlightGroups(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestFlightGroupsOKResponseItem[]>;
+    testFlightGroups(ownerName: string, appName: string, callback: ServiceCallback<models.TestFlightGroupsOKResponseItem[]>): void;
+    testFlightGroups(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestFlightGroupsOKResponseItem[]>): void;
 
 
     /**
@@ -21993,11 +22100,11 @@ export interface AppleMapping {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppleMappingResponse>>;
+    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel>>;
 
     /**
      * Get mapping of apple app to an existing app in apple store.
@@ -22018,7 +22125,7 @@ export interface AppleMapping {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppleMappingResponse} - The deserialized result object.
+     *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -22026,16 +22133,18 @@ export interface AppleMapping {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppleMappingResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppleMappingResponse} for more information.
+     *                      {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppleMappingResponse>;
-    get(ownerName: string, appName: string, callback: ServiceCallback<models.AppleMappingResponse>): void;
-    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppleMappingResponse>): void;
+    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel>;
+    get(ownerName: string, appName: string, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel>): void;
+    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel>): void;
 
 
     /**
@@ -22130,11 +22239,11 @@ export interface AppleMapping {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModelModelModel>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(body: models.AppleMappingRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppleMappingResponse>>;
+    createWithHttpOperationResponse(body: models.BodyModelModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateCreatedResponseModelModelModelModelModel>>;
 
     /**
      * Create a mapping for an existing app in apple store for the specified
@@ -22171,7 +22280,7 @@ export interface AppleMapping {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AppleMappingResponse} - The deserialized result object.
+     *                      @resolve {CreateCreatedResponseModelModelModelModelModel} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -22179,16 +22288,18 @@ export interface AppleMapping {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AppleMappingResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppleMappingResponse} for more information.
+     *                      {CreateCreatedResponseModelModelModelModelModel} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link
+     *                      CreateCreatedResponseModelModelModelModelModel} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppleMappingResponse>;
-    create(body: models.AppleMappingRequest, ownerName: string, appName: string, callback: ServiceCallback<models.AppleMappingResponse>): void;
-    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppleMappingResponse>): void;
+    create(body: models.BodyModelModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateCreatedResponseModelModelModelModelModel>;
+    create(body: models.BodyModelModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, callback: ServiceCallback<models.CreateCreatedResponseModelModelModelModelModel>): void;
+    create(body: models.BodyModelModelModelModelModelModelModelModelModelModelModelModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateCreatedResponseModelModelModelModelModel>): void;
 }
 
 /**
@@ -22224,11 +22335,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Versions>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<VersionsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    versionsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Versions>>;
+    versionsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.VersionsOKResponse>>;
 
     /**
      * Count of active versions in the time range ordered by version.
@@ -22259,7 +22370,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Versions} - The deserialized result object.
+     *                      @resolve {VersionsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -22267,16 +22378,16 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Versions} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Versions} for more information.
+     *                      {VersionsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link VersionsOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    versionsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.Versions>;
-    versionsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.Versions>): void;
-    versionsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Versions>): void;
+    versionsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.VersionsOKResponse>;
+    versionsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.VersionsOKResponse>): void;
+    versionsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.VersionsOKResponse>): void;
 
 
     /**
@@ -22304,11 +22415,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<SessionsPerDevice>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PerDeviceCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    perDeviceCountsWithHttpOperationResponse(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SessionsPerDevice>>;
+    perDeviceCountsWithHttpOperationResponse(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PerDeviceCountsOKResponse>>;
 
     /**
      * Count of sessions per device in the time range.
@@ -22340,7 +22451,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {SessionsPerDevice} - The deserialized result object.
+     *                      @resolve {PerDeviceCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -22348,90 +22459,91 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {SessionsPerDevice} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link SessionsPerDevice} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    perDeviceCounts(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.SessionsPerDevice>;
-    perDeviceCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.SessionsPerDevice>): void;
-    perDeviceCounts(start: Date|string, interval: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SessionsPerDevice>): void;
-
-
-    /**
-     * Gets session duration.
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format.
-     *
-     * @param {array} [options.versions]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<SessionDurationsDistribution>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    sessionDurationsDistributionMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SessionDurationsDistribution>>;
-
-    /**
-     * Gets session duration.
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format.
-     *
-     * @param {array} [options.versions]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {SessionDurationsDistribution} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {SessionDurationsDistribution} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link SessionDurationsDistribution} for more
+     *                      {PerDeviceCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PerDeviceCountsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    sessionDurationsDistributionMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.SessionDurationsDistribution>;
-    sessionDurationsDistributionMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.SessionDurationsDistribution>): void;
-    sessionDurationsDistributionMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SessionDurationsDistribution>): void;
+    perDeviceCounts(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.PerDeviceCountsOKResponse>;
+    perDeviceCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.PerDeviceCountsOKResponse>): void;
+    perDeviceCounts(start: Date|string, interval: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PerDeviceCountsOKResponse>): void;
+
+
+    /**
+     * Gets session duration.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format.
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<SessionDurationsDistributionOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    sessionDurationsDistributionMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SessionDurationsDistributionOKResponse>>;
+
+    /**
+     * Gets session duration.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format.
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {SessionDurationsDistributionOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {SessionDurationsDistributionOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link SessionDurationsDistributionOKResponse} for
+     *                      more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    sessionDurationsDistributionMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.SessionDurationsDistributionOKResponse>;
+    sessionDurationsDistributionMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.SessionDurationsDistributionOKResponse>): void;
+    sessionDurationsDistributionMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SessionDurationsDistributionOKResponse>): void;
 
 
     /**
@@ -22463,7 +22575,7 @@ export interface Analytics {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    sessionCountsWithHttpOperationResponse(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DateTimeCounts[]>>;
+    sessionCountsWithHttpOperationResponse(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SessionCountsOKResponseItem[]>>;
 
     /**
      * Count of sessions in the time range.
@@ -22509,9 +22621,9 @@ export interface Analytics {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DateTimeCounts[]>;
-    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.DateTimeCounts[]>): void;
-    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DateTimeCounts[]>): void;
+    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.SessionCountsOKResponseItem[]>;
+    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.SessionCountsOKResponseItem[]>): void;
+    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SessionCountsOKResponseItem[]>): void;
 
 
     /**
@@ -22538,11 +22650,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Places>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<PlaceCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    placeCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Places>>;
+    placeCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.PlaceCountsOKResponse>>;
 
     /**
      * Places in the time range.
@@ -22573,7 +22685,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Places} - The deserialized result object.
+     *                      @resolve {PlaceCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -22581,16 +22693,16 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Places} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Places} for more information.
+     *                      {PlaceCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link PlaceCountsOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    placeCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.Places>;
-    placeCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.Places>): void;
-    placeCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Places>): void;
+    placeCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.PlaceCountsOKResponse>;
+    placeCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.PlaceCountsOKResponse>): void;
+    placeCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PlaceCountsOKResponse>): void;
 
 
     /**
@@ -22617,11 +22729,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<OSes>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<OperatingSystemCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    operatingSystemCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OSes>>;
+    operatingSystemCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OperatingSystemCountsOKResponse>>;
 
     /**
      * OSes in the time range.
@@ -22652,7 +22764,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {OSes} - The deserialized result object.
+     *                      @resolve {OperatingSystemCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -22660,313 +22772,315 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {OSes} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link OSes} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    operatingSystemCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.OSes>;
-    operatingSystemCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.OSes>): void;
-    operatingSystemCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OSes>): void;
-
-
-    /**
-     * Models in the time range.
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format.
-     *
-     * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
-     *
-     * @param {array} [options.versions]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AnalyticsModels>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    modelCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AnalyticsModels>>;
-
-    /**
-     * Models in the time range.
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format.
-     *
-     * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
-     *
-     * @param {array} [options.versions]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AnalyticsModels} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AnalyticsModels} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AnalyticsModels} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    modelCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.AnalyticsModels>;
-    modelCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.AnalyticsModels>): void;
-    modelCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AnalyticsModels>): void;
-
-
-    /**
-     * Logs received between the specified start time and the current time. The API
-     * will return a maximum of 100 logs per call.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.start] Start date time in data in ISO 8601 date time
-     * format. It must be within the current day in the UTC timezone. The default
-     * value is the start time of the current day in UTC timezone.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<LogFlowLogContainer>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    logFlowWithHttpOperationResponse(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.LogFlowLogContainer>>;
-
-    /**
-     * Logs received between the specified start time and the current time. The API
-     * will return a maximum of 100 logs per call.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.start] Start date time in data in ISO 8601 date time
-     * format. It must be within the current day in the UTC timezone. The default
-     * value is the start time of the current day in UTC timezone.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {LogFlowLogContainer} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {LogFlowLogContainer} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link LogFlowLogContainer} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    logFlow(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.LogFlowLogContainer>;
-    logFlow(ownerName: string, appName: string, callback: ServiceCallback<models.LogFlowLogContainer>): void;
-    logFlow(ownerName: string, appName: string, options: { start? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LogFlowLogContainer>): void;
-
-
-    /**
-     * Languages in the time range.
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format.
-     *
-     * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
-     *
-     * @param {array} [options.versions]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Languages>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    languageCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Languages>>;
-
-    /**
-     * Languages in the time range.
-     *
-     * @param {date} start Start date time in data in ISO 8601 date time format.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format.
-     *
-     * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
-     *
-     * @param {array} [options.versions]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Languages} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Languages} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Languages} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    languageCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.Languages>;
-    languageCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.Languages>): void;
-    languageCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Languages>): void;
-
-
-    /**
-     * Logs received between the specified start time and the current time. The API
-     * will return a maximum of 100 logs per call.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.start] Start date time in data in ISO 8601 date time
-     * format. It must be within the current day in the UTC timezone. The default
-     * value is the start time of the current day in UTC timezone.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<LogFlowGenericLogContainer>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    genericLogFlowWithHttpOperationResponse(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.LogFlowGenericLogContainer>>;
-
-    /**
-     * Logs received between the specified start time and the current time. The API
-     * will return a maximum of 100 logs per call.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.start] Start date time in data in ISO 8601 date time
-     * format. It must be within the current day in the UTC timezone. The default
-     * value is the start time of the current day in UTC timezone.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {LogFlowGenericLogContainer} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {LogFlowGenericLogContainer} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link LogFlowGenericLogContainer} for more
+     *                      {OperatingSystemCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link OperatingSystemCountsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    genericLogFlow(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.LogFlowGenericLogContainer>;
-    genericLogFlow(ownerName: string, appName: string, callback: ServiceCallback<models.LogFlowGenericLogContainer>): void;
-    genericLogFlow(ownerName: string, appName: string, options: { start? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LogFlowGenericLogContainer>): void;
+    operatingSystemCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.OperatingSystemCountsOKResponse>;
+    operatingSystemCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.OperatingSystemCountsOKResponse>): void;
+    operatingSystemCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OperatingSystemCountsOKResponse>): void;
+
+
+    /**
+     * Models in the time range.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ModelCountsOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    modelCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ModelCountsOKResponse>>;
+
+    /**
+     * Models in the time range.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ModelCountsOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ModelCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ModelCountsOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    modelCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.ModelCountsOKResponse>;
+    modelCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ModelCountsOKResponse>): void;
+    modelCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ModelCountsOKResponse>): void;
+
+
+    /**
+     * Logs received between the specified start time and the current time. The API
+     * will return a maximum of 100 logs per call.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.start] Start date time in data in ISO 8601 date time
+     * format. It must be within the current day in the UTC timezone. The default
+     * value is the start time of the current day in UTC timezone.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<LogFlowOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    logFlowWithHttpOperationResponse(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.LogFlowOKResponse>>;
+
+    /**
+     * Logs received between the specified start time and the current time. The API
+     * will return a maximum of 100 logs per call.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.start] Start date time in data in ISO 8601 date time
+     * format. It must be within the current day in the UTC timezone. The default
+     * value is the start time of the current day in UTC timezone.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {LogFlowOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {LogFlowOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link LogFlowOKResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    logFlow(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.LogFlowOKResponse>;
+    logFlow(ownerName: string, appName: string, callback: ServiceCallback<models.LogFlowOKResponse>): void;
+    logFlow(ownerName: string, appName: string, options: { start? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LogFlowOKResponse>): void;
+
+
+    /**
+     * Languages in the time range.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<LanguageCountsOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    languageCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.LanguageCountsOKResponse>>;
+
+    /**
+     * Languages in the time range.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {LanguageCountsOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {LanguageCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link LanguageCountsOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    languageCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.LanguageCountsOKResponse>;
+    languageCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.LanguageCountsOKResponse>): void;
+    languageCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LanguageCountsOKResponse>): void;
+
+
+    /**
+     * Logs received between the specified start time and the current time. The API
+     * will return a maximum of 100 logs per call.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.start] Start date time in data in ISO 8601 date time
+     * format. It must be within the current day in the UTC timezone. The default
+     * value is the start time of the current day in UTC timezone.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GenericLogFlowOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    genericLogFlowWithHttpOperationResponse(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GenericLogFlowOKResponse>>;
+
+    /**
+     * Logs received between the specified start time and the current time. The API
+     * will return a maximum of 100 logs per call.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.start] Start date time in data in ISO 8601 date time
+     * format. It must be within the current day in the UTC timezone. The default
+     * value is the start time of the current day in UTC timezone.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GenericLogFlowOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GenericLogFlowOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GenericLogFlowOKResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    genericLogFlow(ownerName: string, appName: string, options?: { start? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GenericLogFlowOKResponse>;
+    genericLogFlow(ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogFlowOKResponse>): void;
+    genericLogFlow(ownerName: string, appName: string, options: { start? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogFlowOKResponse>): void;
 
 
     /**
@@ -22997,11 +23111,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<EventPropertyValues>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventPropertyCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventPropertyCountsWithHttpOperationResponse(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPropertyValues>>;
+    eventPropertyCountsWithHttpOperationResponse(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPropertyCountsOKResponse>>;
 
     /**
      * Event properties value counts during the time range in descending order.
@@ -23036,7 +23150,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {EventPropertyValues} - The deserialized result object.
+     *                      @resolve {EventPropertyCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23044,16 +23158,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {EventPropertyValues} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link EventPropertyValues} for more information.
+     *                      {EventPropertyCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventPropertyCountsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPropertyValues>;
-    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventPropertyValues>): void;
-    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPropertyValues>): void;
+    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPropertyCountsOKResponse>;
+    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventPropertyCountsOKResponse>): void;
+    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPropertyCountsOKResponse>): void;
 
 
     /**
@@ -23072,11 +23187,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<EventProperties>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventPropertiesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventPropertiesMethodWithHttpOperationResponse(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventProperties>>;
+    eventPropertiesMethodWithHttpOperationResponse(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPropertiesOKResponse>>;
 
     /**
      * Event properties.
@@ -23099,7 +23214,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {EventProperties} - The deserialized result object.
+     *                      @resolve {EventPropertiesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23107,16 +23222,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {EventProperties} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link EventProperties} for more information.
+     *                      {EventPropertiesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventPropertiesOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventPropertiesMethod(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.EventProperties>;
-    eventPropertiesMethod(eventName: string, ownerName: string, appName: string, callback: ServiceCallback<models.EventProperties>): void;
-    eventPropertiesMethod(eventName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventProperties>): void;
+    eventPropertiesMethod(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPropertiesOKResponse>;
+    eventPropertiesMethod(eventName: string, ownerName: string, appName: string, callback: ServiceCallback<models.EventPropertiesOKResponse>): void;
+    eventPropertiesMethod(eventName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPropertiesOKResponse>): void;
 
 
     /**
@@ -23142,11 +23258,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<EventCount>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventCountOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventCountMethodWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventCount>>;
+    eventCountMethodWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventCountOKResponse>>;
 
     /**
      * Count of events by interval in the time range.
@@ -23176,7 +23292,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {EventCount} - The deserialized result object.
+     *                      @resolve {EventCountOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23184,16 +23300,16 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {EventCount} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link EventCount} for more information.
+     *                      {EventCountOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventCountOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventCount>;
-    eventCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventCount>): void;
-    eventCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventCount>): void;
+    eventCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventCountOKResponse>;
+    eventCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventCountOKResponse>): void;
+    eventCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventCountOKResponse>): void;
 
 
     /**
@@ -23219,11 +23335,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<EventDeviceCount>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventDeviceCountOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventDeviceCountMethodWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventDeviceCount>>;
+    eventDeviceCountMethodWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventDeviceCountOKResponse>>;
 
     /**
      * Count of devices for an event by interval in the time range.
@@ -23253,7 +23369,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {EventDeviceCount} - The deserialized result object.
+     *                      @resolve {EventDeviceCountOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23261,16 +23377,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {EventDeviceCount} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link EventDeviceCount} for more information.
+     *                      {EventDeviceCountOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventDeviceCountOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventDeviceCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventDeviceCount>;
-    eventDeviceCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventDeviceCount>): void;
-    eventDeviceCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventDeviceCount>): void;
+    eventDeviceCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventDeviceCountOKResponse>;
+    eventDeviceCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventDeviceCountOKResponse>): void;
+    eventDeviceCountMethod(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventDeviceCountOKResponse>): void;
 
 
     /**
@@ -23296,11 +23413,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<EventCountPerSession>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventPerSessionCountOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventPerSessionCountWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventCountPerSession>>;
+    eventPerSessionCountWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPerSessionCountOKResponse>>;
 
     /**
      * Count of events per session by interval in the time range.
@@ -23330,7 +23447,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {EventCountPerSession} - The deserialized result object.
+     *                      @resolve {EventPerSessionCountOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23338,16 +23455,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {EventCountPerSession} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link EventCountPerSession} for more information.
+     *                      {EventPerSessionCountOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventPerSessionCountOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventPerSessionCount(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventCountPerSession>;
-    eventPerSessionCount(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventCountPerSession>): void;
-    eventPerSessionCount(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventCountPerSession>): void;
+    eventPerSessionCount(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPerSessionCountOKResponse>;
+    eventPerSessionCount(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventPerSessionCountOKResponse>): void;
+    eventPerSessionCount(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPerSessionCountOKResponse>): void;
 
 
     /**
@@ -23373,11 +23491,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<EventCountPerDevice>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventPerDeviceCountOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventPerDeviceCountWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventCountPerDevice>>;
+    eventPerDeviceCountWithHttpOperationResponse(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPerDeviceCountOKResponse>>;
 
     /**
      * Count of events per device by interval in the time range.
@@ -23407,7 +23525,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {EventCountPerDevice} - The deserialized result object.
+     *                      @resolve {EventPerDeviceCountOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23415,16 +23533,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {EventCountPerDevice} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link EventCountPerDevice} for more information.
+     *                      {EventPerDeviceCountOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventPerDeviceCountOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventCountPerDevice>;
-    eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventCountPerDevice>): void;
-    eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventCountPerDevice>): void;
+    eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPerDeviceCountOKResponse>;
+    eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventPerDeviceCountOKResponse>): void;
+    eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPerDeviceCountOKResponse>): void;
 
 
     /**
@@ -23526,11 +23645,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Events>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<EventsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Events>>;
+    eventsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventsOKResponse>>;
 
     /**
      * Count of active events in the time range ordered by event.
@@ -23574,7 +23693,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Events} - The deserialized result object.
+     *                      @resolve {EventsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23582,16 +23701,16 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Events} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Events} for more information.
+     *                      {EventsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link EventsOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.Events>;
-    eventsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.Events>): void;
-    eventsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Events>): void;
+    eventsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.EventsOKResponse>;
+    eventsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventsOKResponse>): void;
+    eventsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventsOKResponse>): void;
 
 
     /**
@@ -23672,11 +23791,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ReleaseCounts>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DistributionReleaseCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    distributionReleaseCountsWithHttpOperationResponse(ownerName: string, appName: string, releases: models.ReleaseWithDistributionGroup[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseCounts>>;
+    distributionReleaseCountsWithHttpOperationResponse(ownerName: string, appName: string, releases: models.ReleasesReleasesItem[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionReleaseCountsOKResponse>>;
 
     /**
      * Count of total downloads for the provided distribution releases.
@@ -23699,7 +23818,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ReleaseCounts} - The deserialized result object.
+     *                      @resolve {DistributionReleaseCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23707,16 +23826,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ReleaseCounts} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ReleaseCounts} for more information.
+     *                      {DistributionReleaseCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionReleaseCountsOKResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleaseWithDistributionGroup[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseCounts>;
-    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleaseWithDistributionGroup[], callback: ServiceCallback<models.ReleaseCounts>): void;
-    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleaseWithDistributionGroup[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseCounts>): void;
+    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleasesReleasesItem[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionReleaseCountsOKResponse>;
+    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleasesReleasesItem[], callback: ServiceCallback<models.DistributionReleaseCountsOKResponse>): void;
+    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleasesReleasesItem[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionReleaseCountsOKResponse>): void;
 
 
     /**
@@ -23742,11 +23862,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashFreeDevicePercentages>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CrashFreeDevicePercentagesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, version: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashFreeDevicePercentages>>;
+    crashFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, version: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashFreeDevicePercentagesOKResponse>>;
 
     /**
      * Percentage of crash-free device by day in the time range based on the
@@ -23776,7 +23896,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashFreeDevicePercentages} - The deserialized result object.
+     *                      @resolve {CrashFreeDevicePercentagesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23784,90 +23904,91 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashFreeDevicePercentages} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashFreeDevicePercentages} for more
+     *                      {CrashFreeDevicePercentagesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashFreeDevicePercentagesOKResponse} for
+     *                      more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashFreeDevicePercentagesOKResponse>;
+    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashFreeDevicePercentagesOKResponse>): void;
+    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashFreeDevicePercentagesOKResponse>): void;
+
+
+    /**
+     * @summary Available for UWP apps only.
+     *
+     * Overall crashes and affected users count of the selected crash group with
+     * selected version. Available for UWP apps only.
+     *
+     * @param {string} crashGroupId The id of the crash group.
+     *
+     * @param {string} version
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<CrashGroupTotalsOKResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    crashGroupTotalsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupTotalsOKResponse>>;
+
+    /**
+     * @summary Available for UWP apps only.
+     *
+     * Overall crashes and affected users count of the selected crash group with
+     * selected version. Available for UWP apps only.
+     *
+     * @param {string} crashGroupId The id of the crash group.
+     *
+     * @param {string} version
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {CrashGroupTotalsOKResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {CrashGroupTotalsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashGroupTotalsOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashFreeDevicePercentages>;
-    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
-    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
-
-
-    /**
-     * @summary Available for UWP apps only.
-     *
-     * Overall crashes and affected users count of the selected crash group with
-     * selected version. Available for UWP apps only.
-     *
-     * @param {string} crashGroupId The id of the crash group.
-     *
-     * @param {string} version
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<CrashOverall>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    crashGroupTotalsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashOverall>>;
-
-    /**
-     * @summary Available for UWP apps only.
-     *
-     * Overall crashes and affected users count of the selected crash group with
-     * selected version. Available for UWP apps only.
-     *
-     * @param {string} crashGroupId The id of the crash group.
-     *
-     * @param {string} version
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {CrashOverall} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {CrashOverall} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashOverall} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    crashGroupTotals(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashOverall>;
-    crashGroupTotals(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashOverall>): void;
-    crashGroupTotals(crashGroupId: string, version: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashOverall>): void;
+    crashGroupTotals(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupTotalsOKResponse>;
+    crashGroupTotals(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupTotalsOKResponse>): void;
+    crashGroupTotals(crashGroupId: string, version: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupTotalsOKResponse>): void;
 
 
     /**
@@ -23894,11 +24015,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashGroupOperatingSystems>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CrashGroupOperatingSystemCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashGroupOperatingSystemCountsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupOperatingSystems>>;
+    crashGroupOperatingSystemCountsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupOperatingSystemCountsOKResponse>>;
 
     /**
      * @summary Available for UWP apps only.
@@ -23929,7 +24050,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashGroupOperatingSystems} - The deserialized result object.
+     *                      @resolve {CrashGroupOperatingSystemCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -23937,17 +24058,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashGroupOperatingSystems} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashGroupOperatingSystems} for more
-     *                      information.
+     *                      {CrashGroupOperatingSystemCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashGroupOperatingSystemCountsOKResponse}
+     *                      for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashGroupOperatingSystemCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupOperatingSystems>;
-    crashGroupOperatingSystemCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupOperatingSystems>): void;
-    crashGroupOperatingSystemCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupOperatingSystems>): void;
+    crashGroupOperatingSystemCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupOperatingSystemCountsOKResponse>;
+    crashGroupOperatingSystemCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupOperatingSystemCountsOKResponse>): void;
+    crashGroupOperatingSystemCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupOperatingSystemCountsOKResponse>): void;
 
 
     /**
@@ -23974,11 +24095,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashGroupModels>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CrashGroupModelCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashGroupModelCountsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupModels>>;
+    crashGroupModelCountsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupModelCountsOKResponse>>;
 
     /**
      * @summary Available for UWP apps only.
@@ -24009,7 +24130,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashGroupModels} - The deserialized result object.
+     *                      @resolve {CrashGroupModelCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24017,16 +24138,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashGroupModels} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashGroupModels} for more information.
+     *                      {CrashGroupModelCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashGroupModelCountsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupModels>;
-    crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupModels>): void;
-    crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupModels>): void;
+    crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupModelCountsOKResponse>;
+    crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupModelCountsOKResponse>): void;
+    crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupModelCountsOKResponse>): void;
 
 
     /**
@@ -24055,11 +24177,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashCounts>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CrashGroupCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashGroupCountsWithHttpOperationResponse(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashCounts>>;
+    crashGroupCountsWithHttpOperationResponse(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupCountsOKResponse>>;
 
     /**
      * @summary Available for UWP apps only.
@@ -24092,7 +24214,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashCounts} - The deserialized result object.
+     *                      @resolve {CrashGroupCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24100,16 +24222,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashCounts} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashCounts} for more information.
+     *                      {CrashGroupCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashGroupCountsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashCounts>;
-    crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashCounts>): void;
-    crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashCounts>): void;
+    crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupCountsOKResponse>;
+    crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupCountsOKResponse>): void;
+    crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupCountsOKResponse>): void;
 
 
     /**
@@ -24133,7 +24256,7 @@ export interface Analytics {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashGroupsTotalsWithHttpOperationResponse(ownerName: string, appName: string, crashGroups: models.CrashGroupAndVersion[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashesOverallItem[]>>;
+    crashGroupsTotalsWithHttpOperationResponse(ownerName: string, appName: string, crashGroups: models.CrashGroupsCrashGroupsItem[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupsTotalsOKResponseItem[]>>;
 
     /**
      * Overall crashes and affected users count of the selected crash groups with
@@ -24171,9 +24294,9 @@ export interface Analytics {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashGroupsTotals(ownerName: string, appName: string, crashGroups: models.CrashGroupAndVersion[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashesOverallItem[]>;
-    crashGroupsTotals(ownerName: string, appName: string, crashGroups: models.CrashGroupAndVersion[], callback: ServiceCallback<models.CrashesOverallItem[]>): void;
-    crashGroupsTotals(ownerName: string, appName: string, crashGroups: models.CrashGroupAndVersion[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashesOverallItem[]>): void;
+    crashGroupsTotals(ownerName: string, appName: string, crashGroups: models.CrashGroupsCrashGroupsItem[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashGroupsTotalsOKResponseItem[]>;
+    crashGroupsTotals(ownerName: string, appName: string, crashGroups: models.CrashGroupsCrashGroupsItem[], callback: ServiceCallback<models.CrashGroupsTotalsOKResponseItem[]>): void;
+    crashGroupsTotals(ownerName: string, appName: string, crashGroups: models.CrashGroupsCrashGroupsItem[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupsTotalsOKResponseItem[]>): void;
 
 
     /**
@@ -24200,11 +24323,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<CrashCounts>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CrashCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashCountsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashCounts>>;
+    crashCountsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashCountsOKResponse>>;
 
     /**
      * @summary Available for UWP apps only.
@@ -24235,7 +24358,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {CrashCounts} - The deserialized result object.
+     *                      @resolve {CrashCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24243,16 +24366,16 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {CrashCounts} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link CrashCounts} for more information.
+     *                      {CrashCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashCountsOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashCountsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashCounts>;
-    crashCountsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashCounts>): void;
-    crashCountsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashCounts>): void;
+    crashCountsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashCountsOKResponse>;
+    crashCountsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashCountsOKResponse>): void;
+    crashCountsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashCountsOKResponse>): void;
 
 
     /**
@@ -24395,11 +24518,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Audience>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<GetAudienceOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAudienceWithHttpOperationResponse(audienceName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Audience>>;
+    getAudienceWithHttpOperationResponse(audienceName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GetAudienceOKResponse>>;
 
     /**
      * Gets audience definition.
@@ -24422,7 +24545,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Audience} - The deserialized result object.
+     *                      @resolve {GetAudienceOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24430,16 +24553,16 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Audience} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Audience} for more information.
+     *                      {GetAudienceOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GetAudienceOKResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAudience(audienceName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Audience>;
-    getAudience(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<models.Audience>): void;
-    getAudience(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Audience>): void;
+    getAudience(audienceName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GetAudienceOKResponse>;
+    getAudience(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<models.GetAudienceOKResponse>): void;
+    getAudience(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GetAudienceOKResponse>): void;
 
 
     /**
@@ -24469,11 +24592,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Audience>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<CreateOrUpdateAudienceOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createOrUpdateAudienceWithHttpOperationResponse(audienceName: string, audience: models.AudienceDefinition, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Audience>>;
+    createOrUpdateAudienceWithHttpOperationResponse(audienceName: string, audience: models.AudienceModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CreateOrUpdateAudienceOKResponse>>;
 
     /**
      * Creates or updates audience definition.
@@ -24507,7 +24630,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Audience} - The deserialized result object.
+     *                      @resolve {CreateOrUpdateAudienceOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24515,16 +24638,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Audience} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link Audience} for more information.
+     *                      {CreateOrUpdateAudienceOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CreateOrUpdateAudienceOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createOrUpdateAudience(audienceName: string, audience: models.AudienceDefinition, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.Audience>;
-    createOrUpdateAudience(audienceName: string, audience: models.AudienceDefinition, ownerName: string, appName: string, callback: ServiceCallback<models.Audience>): void;
-    createOrUpdateAudience(audienceName: string, audience: models.AudienceDefinition, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Audience>): void;
+    createOrUpdateAudience(audienceName: string, audience: models.AudienceModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CreateOrUpdateAudienceOKResponse>;
+    createOrUpdateAudience(audienceName: string, audience: models.AudienceModel, ownerName: string, appName: string, callback: ServiceCallback<models.CreateOrUpdateAudienceOKResponse>): void;
+    createOrUpdateAudience(audienceName: string, audience: models.AudienceModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CreateOrUpdateAudienceOKResponse>): void;
 
 
     /**
@@ -24545,11 +24669,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AudienceDevicePropertyValuesListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListDevicePropertyValuesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listDevicePropertyValuesWithHttpOperationResponse(propertyName: string, ownerName: string, appName: string, options?: { contains? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AudienceDevicePropertyValuesListResult>>;
+    listDevicePropertyValuesWithHttpOperationResponse(propertyName: string, ownerName: string, appName: string, options?: { contains? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListDevicePropertyValuesOKResponse>>;
 
     /**
      * Get list of device property values.
@@ -24574,7 +24698,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AudienceDevicePropertyValuesListResult} - The deserialized result object.
+     *                      @resolve {ListDevicePropertyValuesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24582,17 +24706,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AudienceDevicePropertyValuesListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AudienceDevicePropertyValuesListResult} for
-     *                      more information.
+     *                      {ListDevicePropertyValuesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListDevicePropertyValuesOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, options?: { contains? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AudienceDevicePropertyValuesListResult>;
-    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, callback: ServiceCallback<models.AudienceDevicePropertyValuesListResult>): void;
-    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, options: { contains? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceDevicePropertyValuesListResult>): void;
+    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, options?: { contains? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListDevicePropertyValuesOKResponse>;
+    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, callback: ServiceCallback<models.ListDevicePropertyValuesOKResponse>): void;
+    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, options: { contains? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListDevicePropertyValuesOKResponse>): void;
 
 
     /**
@@ -24609,11 +24733,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AudienceDevicePropertiesListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListDevicePropertiesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listDevicePropertiesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AudienceDevicePropertiesListResult>>;
+    listDevicePropertiesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListDevicePropertiesOKResponse>>;
 
     /**
      * Get list of device properties.
@@ -24634,7 +24758,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AudienceDevicePropertiesListResult} - The deserialized result object.
+     *                      @resolve {ListDevicePropertiesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24642,17 +24766,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AudienceDevicePropertiesListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AudienceDevicePropertiesListResult} for more
+     *                      {ListDevicePropertiesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListDevicePropertiesOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listDeviceProperties(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AudienceDevicePropertiesListResult>;
-    listDeviceProperties(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
-    listDeviceProperties(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
+    listDeviceProperties(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListDevicePropertiesOKResponse>;
+    listDeviceProperties(ownerName: string, appName: string, callback: ServiceCallback<models.ListDevicePropertiesOKResponse>): void;
+    listDeviceProperties(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListDevicePropertiesOKResponse>): void;
 
 
     /**
@@ -24669,11 +24793,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AudienceDevicePropertiesListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListCustomPropertiesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listCustomPropertiesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AudienceDevicePropertiesListResult>>;
+    listCustomPropertiesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListCustomPropertiesOKResponse>>;
 
     /**
      * Get list of custom properties.
@@ -24694,7 +24818,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AudienceDevicePropertiesListResult} - The deserialized result object.
+     *                      @resolve {ListCustomPropertiesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24702,17 +24826,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AudienceDevicePropertiesListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AudienceDevicePropertiesListResult} for more
+     *                      {ListCustomPropertiesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListCustomPropertiesOKResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listCustomProperties(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AudienceDevicePropertiesListResult>;
-    listCustomProperties(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
-    listCustomProperties(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
+    listCustomProperties(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListCustomPropertiesOKResponse>;
+    listCustomProperties(ownerName: string, appName: string, callback: ServiceCallback<models.ListCustomPropertiesOKResponse>): void;
+    listCustomProperties(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListCustomPropertiesOKResponse>): void;
 
 
     /**
@@ -24740,11 +24864,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AudienceTestResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<TestAudienceOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    testAudienceWithHttpOperationResponse(audience: models.AudienceDefinition, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AudienceTestResult>>;
+    testAudienceWithHttpOperationResponse(audience: models.AudienceModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestAudienceOKResponse>>;
 
     /**
      * Tests audience definition.
@@ -24776,7 +24900,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AudienceTestResult} - The deserialized result object.
+     *                      @resolve {TestAudienceOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24784,16 +24908,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AudienceTestResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AudienceTestResult} for more information.
+     *                      {TestAudienceOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestAudienceOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    testAudience(audience: models.AudienceDefinition, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AudienceTestResult>;
-    testAudience(audience: models.AudienceDefinition, ownerName: string, appName: string, callback: ServiceCallback<models.AudienceTestResult>): void;
-    testAudience(audience: models.AudienceDefinition, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceTestResult>): void;
+    testAudience(audience: models.AudienceModel, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestAudienceOKResponse>;
+    testAudience(audience: models.AudienceModel, ownerName: string, appName: string, callback: ServiceCallback<models.TestAudienceOKResponse>): void;
+    testAudience(audience: models.AudienceModel, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestAudienceOKResponse>): void;
 
 
     /**
@@ -24813,11 +24938,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<AudienceListResult>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ListAudiencesOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listAudiencesWithHttpOperationResponse(ownerName: string, appName: string, options?: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AudienceListResult>>;
+    listAudiencesWithHttpOperationResponse(ownerName: string, appName: string, options?: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListAudiencesOKResponse>>;
 
     /**
      * Get list of audiences.
@@ -24841,7 +24966,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {AudienceListResult} - The deserialized result object.
+     *                      @resolve {ListAudiencesOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24849,16 +24974,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {AudienceListResult} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AudienceListResult} for more information.
+     *                      {ListAudiencesOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ListAudiencesOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listAudiences(ownerName: string, appName: string, options?: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AudienceListResult>;
-    listAudiences(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceListResult>): void;
-    listAudiences(ownerName: string, appName: string, options: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceListResult>): void;
+    listAudiences(ownerName: string, appName: string, options?: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListAudiencesOKResponse>;
+    listAudiences(ownerName: string, appName: string, callback: ServiceCallback<models.ListAudiencesOKResponse>): void;
+    listAudiences(ownerName: string, appName: string, options: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListAudiencesOKResponse>): void;
 
 
     /**
@@ -24884,11 +25010,11 @@ export interface Analytics {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ActiveDeviceCounts>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<DeviceCountsOKResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deviceCountsWithHttpOperationResponse(start: Date|string, appBuild: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ActiveDeviceCounts>>;
+    deviceCountsWithHttpOperationResponse(start: Date|string, appBuild: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DeviceCountsOKResponse>>;
 
     /**
      * Count of active devices by interval in the time range.
@@ -24918,7 +25044,7 @@ export interface Analytics {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ActiveDeviceCounts} - The deserialized result object.
+     *                      @resolve {DeviceCountsOKResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24926,16 +25052,17 @@ export interface Analytics {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ActiveDeviceCounts} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ActiveDeviceCounts} for more information.
+     *                      {DeviceCountsOKResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DeviceCountsOKResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.ActiveDeviceCounts>;
-    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
-    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
+    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceCountsOKResponse>;
+    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, callback: ServiceCallback<models.DeviceCountsOKResponse>): void;
+    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceCountsOKResponse>): void;
 }
 
 /**
@@ -24959,11 +25086,11 @@ export interface ApiTokens {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorResponse>>;
+    deleteMethodWithHttpOperationResponse(apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Delete the api_token object with the specific id
@@ -24982,7 +25109,7 @@ export interface ApiTokens {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorResponse} - The deserialized result object.
+     *                      @resolve {Object} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -24990,16 +25117,15 @@ export interface ApiTokens {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorResponse} for more information.
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorResponse>;
-    deleteMethod(apiTokenId: string, callback: ServiceCallback<models.ErrorResponse>): void;
-    deleteMethod(apiTokenId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    deleteMethod(apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    deleteMethod(apiTokenId: string, callback: ServiceCallback<any>): void;
+    deleteMethod(apiTokenId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**

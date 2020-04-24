@@ -34,8 +34,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link V2MissingSymbolCrashGroupsInfoResponse} for
- *                      more information.
+ *                      See {@link InfoOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -106,7 +105,7 @@ function _info(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['V2FailureResponse']().mapper();
+          let resultMapper = new client.models['InfoErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -126,7 +125,7 @@ function _info(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['V2MissingSymbolCrashGroupsInfoResponse']().mapper();
+          let resultMapper = new client.models['InfoOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -164,8 +163,9 @@ function _info(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
- *                      information.
+ *                      See {@link
+ *                      GetOKResponseModelModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -240,7 +240,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['V2FailureResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel4']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -260,7 +260,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['V2MissingSymbolCrashGroupsResponse']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -301,7 +301,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
+ *                      See {@link ListOKResponseModelModelModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -388,7 +388,7 @@ function _list(top, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['V2FailureResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel5']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -408,7 +408,7 @@ function _list(top, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['V2MissingSymbolCrashGroupsResponse']().mapper();
+          let resultMapper = new client.models['ListOKResponseModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -452,7 +452,7 @@ class MissingSymbolGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsInfoResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<InfoOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -491,7 +491,7 @@ class MissingSymbolGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {V2MissingSymbolCrashGroupsInfoResponse} - The deserialized result object.
+   *                      @resolve {InfoOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -500,8 +500,7 @@ class MissingSymbolGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link V2MissingSymbolCrashGroupsInfoResponse} for
-   *                      more information.
+   *                      See {@link InfoOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -545,7 +544,7 @@ class MissingSymbolGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -586,7 +585,7 @@ class MissingSymbolGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -595,8 +594,9 @@ class MissingSymbolGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
-   *                      information.
+   *                      See {@link
+   *                      GetOKResponseModelModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -643,7 +643,7 @@ class MissingSymbolGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListOKResponseModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -687,7 +687,7 @@ class MissingSymbolGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
+   *                      @resolve {ListOKResponseModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -696,7 +696,7 @@ class MissingSymbolGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
+   *                      See {@link ListOKResponseModelModelModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

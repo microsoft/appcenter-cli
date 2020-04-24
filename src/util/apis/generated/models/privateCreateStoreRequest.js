@@ -64,7 +64,7 @@ class PrivateCreateStoreRequest {
             serializedName: 'intune_details',
             type: {
               name: 'Composite',
-              className: 'PrivateIntuneStoreRequest'
+              className: 'PrivateCreateStoreRequestIntuneDetails'
             }
           }
         }

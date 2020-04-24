@@ -10,21 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * WNS notification configuration result.
  *
- * @extends models['NotificationConfigResult']
  */
-class NotificationConfigWindowsResult extends models['NotificationConfigResult'] {
+class NotificationConfigWindowsResult {
   /**
    * Create a NotificationConfigWindowsResult.
+   * @property {string} type
    * @property {string} packageSid Package security identifier (SID).
    * @property {string} [secretKey] windows push configuration secret key.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -39,17 +36,11 @@ class NotificationConfigWindowsResult extends models['NotificationConfigResult']
       serializedName: 'wns_config',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationConfigResult',
         className: 'NotificationConfigWindowsResult',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

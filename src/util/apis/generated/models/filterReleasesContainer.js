@@ -42,10 +42,10 @@ class FilterReleasesContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ReleaseElementType',
+                  serializedName: 'FilterReleasesContainerReleasesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Release'
+                    className: 'FilterReleasesContainerReleasesItem'
                   }
               }
             }

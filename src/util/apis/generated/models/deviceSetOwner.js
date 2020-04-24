@@ -36,7 +36,7 @@ class DeviceSetOwner {
   mapper() {
     return {
       required: false,
-      serializedName: 'DeviceSetOwner',
+      serializedName: 'DeviceSet_owner',
       type: {
         name: 'Composite',
         className: 'DeviceSetOwner',

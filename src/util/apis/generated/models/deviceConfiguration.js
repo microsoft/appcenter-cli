@@ -27,24 +27,24 @@ class DeviceConfiguration {
    * @property {string} [model.manufacturer]
    * @property {string} [model.model]
    * @property {string} [model.platform]
-   * @property {object} [model.dimensions]
+   * @property {object} [model.dimensions] Physical device dimensions
    * @property {object} [model.dimensions.depth]
    * @property {object} [model.dimensions.height]
    * @property {object} [model.dimensions.width]
-   * @property {object} [model.resolution]
+   * @property {object} [model.resolution] Device screen resolution
    * @property {string} [model.resolution.height]
    * @property {string} [model.resolution.width]
    * @property {string} [model.resolution.ppi]
    * @property {string} [model.releaseDate]
    * @property {string} [model.formFactor]
-   * @property {object} [model.screenSize]
+   * @property {object} [model.screenSize] Physical device screen dimensions
    * @property {string} [model.screenSize.cm]
    * @property {string} [model.screenSize.inProperty]
-   * @property {object} [model.cpu]
+   * @property {object} [model.cpu] CPU data for device
    * @property {string} [model.cpu.frequency]
    * @property {string} [model.cpu.core]
    * @property {string} [model.cpu.text]
-   * @property {object} [model.memory]
+   * @property {object} [model.memory] Memory data for device
    * @property {string} [model.memory.formattedSize]
    * @property {number} [model.screenRotation]
    * @property {object} [model.deviceFrame]
@@ -114,7 +114,7 @@ class DeviceConfiguration {
             serializedName: 'model',
             type: {
               name: 'Composite',
-              className: 'DeviceModel'
+              className: 'DeviceConfigurationModel'
             }
           },
           os: {

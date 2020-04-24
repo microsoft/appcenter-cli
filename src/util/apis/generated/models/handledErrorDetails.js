@@ -10,15 +10,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a HandledErrorDetails.
- * @extends models['HandledError']
  */
-class HandledErrorDetails extends models['HandledError'] {
+class HandledErrorDetails {
   /**
    * Create a HandledErrorDetails.
+   * @property {string} [errorId]
+   * @property {date} [timestamp]
+   * @property {string} [deviceName]
+   * @property {string} [osVersion]
+   * @property {string} [osType]
+   * @property {string} [country]
+   * @property {string} [language]
+   * @property {string} [userId]
+   * @property {boolean} [hasBreadcrumbs]
+   * @property {boolean} [hasAttachments]
    * @property {string} [name]
    * @property {array} [reasonFrames]
    * @property {date} [appLaunchTimestamp] Timestamp when the app was launched,
@@ -28,7 +35,6 @@ class HandledErrorDetails extends models['HandledError'] {
    * @property {object} [properties]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -101,6 +107,20 @@ class HandledErrorDetails extends models['HandledError'] {
               name: 'String'
             }
           },
+          hasBreadcrumbs: {
+            required: false,
+            serializedName: 'hasBreadcrumbs',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          hasAttachments: {
+            required: false,
+            serializedName: 'hasAttachments',
+            type: {
+              name: 'Boolean'
+            }
+          },
           name: {
             required: false,
             serializedName: 'name',
@@ -115,10 +135,10 @@ class HandledErrorDetails extends models['HandledError'] {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'HandledErrorReasonFrameElementType',
+                  serializedName: 'HandledErrorDetailsReasonFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'HandledErrorReasonFrame'
+                    className: 'HandledErrorDetailsReasonFramesItem'
                   }
               }
             }

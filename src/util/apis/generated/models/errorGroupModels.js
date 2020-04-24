@@ -50,10 +50,10 @@ class ErrorGroupModels {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ErrorGroupModelElementType',
+                  serializedName: 'ErrorGroupModelsModelsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ErrorGroupModel'
+                    className: 'ErrorGroupModelsModelsItem'
                   }
               }
             }

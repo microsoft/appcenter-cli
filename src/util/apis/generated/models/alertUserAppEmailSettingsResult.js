@@ -10,22 +10,24 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Alerting Email Settings of the user for a particular app
  *
- * @extends models['AlertUserEmailSettingsResult']
  */
-class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResult'] {
+class AlertUserAppEmailSettingsResult {
   /**
    * Create a AlertUserAppEmailSettingsResult.
+   * @property {string} requestId Unique request identifier for tracking
+   * @property {string} [eTag] The ETag of the entity
+   * @property {boolean} enabled Allows to forcefully disable emails on app or
+   * user level
+   * @property {string} [userId] The unique id (UUID) of the user
+   * @property {array} settings The settings the user has for the app
    * @property {string} [appId] Application ID
    * @property {boolean} userEnabled A flag indicating if settings are enabled
    * at user/global level
    */
   constructor() {
-    super();
   }
 
   /**
@@ -77,10 +79,10 @@ class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResu
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'EventSettingElementType',
+                  serializedName: 'AlertUserAppEmailSettingsResultSettingsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'EventSetting'
+                    className: 'AlertUserAppEmailSettingsResultSettingsItem'
                   }
               }
             }

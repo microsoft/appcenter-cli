@@ -42,10 +42,10 @@ class XcodeToolset {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XcodeSchemeContainerElementType',
+                  serializedName: 'XcodeToolsetXcodeSchemeContainersItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XcodeSchemeContainer'
+                    className: 'XcodeToolsetXcodeSchemeContainersItem'
                   }
               }
             }

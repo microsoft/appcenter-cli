@@ -32,7 +32,7 @@ class BranchConfigurationArtifactVersioning {
   mapper() {
     return {
       required: false,
-      serializedName: 'BranchConfigurationArtifactVersioning',
+      serializedName: 'BranchConfiguration_artifactVersioning',
       type: {
         name: 'Composite',
         className: 'BranchConfigurationArtifactVersioning',

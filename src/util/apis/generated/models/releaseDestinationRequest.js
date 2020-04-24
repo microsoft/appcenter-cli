@@ -10,22 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseDestinationRequest.
- * @extends models['ReleaseStoreDestinationRequest']
  */
-class ReleaseDestinationRequest extends models['ReleaseStoreDestinationRequest'] {
+class ReleaseDestinationRequest {
   /**
    * Create a ReleaseDestinationRequest.
+   * @property {uuid} id Unique id of the release destination
    * @property {boolean} [mandatoryUpdate] Flag to mark the release for the
    * provided destinations as mandatory
    * @property {boolean} [notifyTesters] Flag to enable or disable
    * notifications to testers. Default value: true .
    */
   constructor() {
-    super();
   }
 
   /**

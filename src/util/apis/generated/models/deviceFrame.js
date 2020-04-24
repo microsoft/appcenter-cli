@@ -49,7 +49,7 @@ class DeviceFrame {
             serializedName: 'grid',
             type: {
               name: 'Composite',
-              className: 'DeviceFrameDefinition'
+              className: 'DeviceFrameGrid'
             }
           },
           full: {
@@ -57,7 +57,7 @@ class DeviceFrame {
             serializedName: 'full',
             type: {
               name: 'Composite',
-              className: 'DeviceFrameDefinition'
+              className: 'DeviceFrameFull'
             }
           }
         }

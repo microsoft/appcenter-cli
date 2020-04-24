@@ -17,9 +17,12 @@
 class NotificationDefinition {
   /**
    * Create a NotificationDefinition.
-   * @property {object} [notificationTarget]
+   * @property {object} [notificationTarget] Type of Notification target
+   * (audiences, devices, user ids, account ids or broadcast). The object must
+   * include the correct properties for the specified target type except for
+   * broadcast.
    * @property {string} [notificationTarget.type] Polymorphic Discriminator
-   * @property {object} notificationContent
+   * @property {object} notificationContent Notification definition object
    * @property {string} [notificationContent.name] Notification name
    * @property {string} [notificationContent.title] Notification title
    * @property {string} [notificationContent.body] Notification body
@@ -52,8 +55,8 @@ class NotificationDefinition {
                 serializedName: 'type',
                 clientName: 'type'
               },
-              uberParent: 'NotificationTarget',
-              className: 'NotificationTarget'
+              uberParent: 'NotificationDefinitionNotificationTarget',
+              className: 'NotificationDefinitionNotificationTarget'
             }
           },
           notificationContent: {
@@ -61,7 +64,7 @@ class NotificationDefinition {
             serializedName: 'notification_content',
             type: {
               name: 'Composite',
-              className: 'NotificationContent'
+              className: 'NotificationDefinitionNotificationContent'
             }
           }
         }

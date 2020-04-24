@@ -42,6 +42,8 @@ class PrivateBasicReleaseDetailsResponse {
    * the release is a mandatory update or not.
    * @property {string} [publishingStatus] the publishing status of the
    * distributed release
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -128,6 +130,13 @@ class PrivateBasicReleaseDetailsResponse {
             serializedName: 'publishing_status',
             type: {
               name: 'String'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
+            type: {
+              name: 'Boolean'
             }
           }
         }

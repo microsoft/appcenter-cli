@@ -34,7 +34,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BugTrackerIssueResult} for more information.
+ *                      See {@link GetRepoIssueFromCrashOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -109,7 +110,7 @@ function _getRepoIssueFromCrash(crashGroupId, ownerName, appName, options, callb
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['AlertingError']().mapper();
+          let resultMapper = new client.models['GetRepoIssueFromCrashErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -129,7 +130,7 @@ function _getRepoIssueFromCrash(crashGroupId, ownerName, appName, options, callb
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BugTrackerIssueResult']().mapper();
+          let resultMapper = new client.models['GetRepoIssueFromCrashOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -163,7 +164,7 @@ function _getRepoIssueFromCrash(crashGroupId, ownerName, appName, options, callb
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AlertingBugtracker} for more information.
+ *                      See {@link GetSettingsOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -234,7 +235,7 @@ function _getSettings(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['AlertingError']().mapper();
+          let resultMapper = new client.models['GetSettingsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -254,7 +255,7 @@ function _getSettings(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AlertingBugtracker']().mapper();
+          let resultMapper = new client.models['GetSettingsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -297,7 +298,7 @@ class BugTracker {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BugTrackerIssueResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetRepoIssueFromCrashOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -336,7 +337,7 @@ class BugTracker {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BugTrackerIssueResult} - The deserialized result object.
+   *                      @resolve {GetRepoIssueFromCrashOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -345,7 +346,8 @@ class BugTracker {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BugTrackerIssueResult} for more information.
+   *                      See {@link GetRepoIssueFromCrashOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -385,7 +387,7 @@ class BugTracker {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AlertingBugtracker>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetSettingsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -422,7 +424,7 @@ class BugTracker {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AlertingBugtracker} - The deserialized result object.
+   *                      @resolve {GetSettingsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -431,7 +433,7 @@ class BugTracker {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AlertingBugtracker} for more information.
+   *                      See {@link GetSettingsOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

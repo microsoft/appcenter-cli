@@ -10,21 +10,24 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Google Play connection secrets this should be the JSON file data which is
  * provided by google play
  *
- * @extends models['SharedConnectionRequest']
  */
-class GooglePlayConnectionSecretRequest extends models['SharedConnectionRequest'] {
+class GooglePlayConnectionSecretRequest {
   /**
    * Create a GooglePlayConnectionSecretRequest.
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira|applecertificate. Possible values include:
+   * 'apple', 'jira', 'googleplay', 'gitlab'
+   * @property {string} [credentialType] credential type of the shared
+   * connection. Values can be credentials|certificate. Possible values
+   * include: 'credentials', 'certificate'. Default value: 'credentials' .
    * @property {object} data google secret details
    */
   constructor() {
-    super();
   }
 
   /**
@@ -39,11 +42,6 @@ class GooglePlayConnectionSecretRequest extends models['SharedConnectionRequest'
       serializedName: 'googleplay',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'SharedConnectionRequest',
         className: 'GooglePlayConnectionSecretRequest',
         modelProperties: {
           displayName: {
@@ -53,18 +51,17 @@ class GooglePlayConnectionSecretRequest extends models['SharedConnectionRequest'
               name: 'String'
             }
           },
-          credentialType: {
-            required: false,
-            serializedName: 'credentialType',
-            defaultValue: 'credentials',
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
           },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
+          credentialType: {
+            required: false,
+            serializedName: 'credentialType',
+            defaultValue: 'credentials',
             type: {
               name: 'String'
             }

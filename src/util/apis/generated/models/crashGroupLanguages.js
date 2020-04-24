@@ -50,10 +50,10 @@ class CrashGroupLanguages {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupLanguageElementType',
+                  serializedName: 'CrashGroupLanguagesLanguagesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroupLanguage'
+                    className: 'CrashGroupLanguagesLanguagesItem'
                   }
               }
             }

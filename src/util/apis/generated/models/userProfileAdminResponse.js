@@ -10,20 +10,27 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a UserProfileAdminResponse.
- * @extends models['UserProfileResponse']
  */
-class UserProfileAdminResponse extends models['UserProfileResponse'] {
+class UserProfileAdminResponse {
   /**
    * Create a UserProfileAdminResponse.
-   * @property {boolean} [addToAllApps] Indicating whether the user should be
-   * added as a Manager to all apps owned by the organization
+   * @property {uuid} id The unique id (UUID) of the user
+   * @property {string} [avatarUrl] The avatar URL of the user
+   * @property {boolean} [canChangePassword] User is required to send an old
+   * password in order to change the password.
+   * @property {string} displayName The full name of the user. Might for
+   * example be first and last name
+   * @property {string} email The email address of the user
+   * @property {string} name The unique name that is used to identify the user.
+   * @property {array} [permissions] The permissions the user has for the app
+   * @property {string} origin The creation origin of this user. Possible
+   * values include: 'appcenter', 'hockeyapp', 'codepush'
+   * @property {string} [role] The user's role in the organization. Possible
+   * values include: 'admin', 'collaborator', 'member'
    */
   constructor() {
-    super();
   }
 
   /**
@@ -103,11 +110,11 @@ class UserProfileAdminResponse extends models['UserProfileResponse'] {
               name: 'String'
             }
           },
-          addToAllApps: {
+          role: {
             required: false,
-            serializedName: 'add_to_all_apps',
+            serializedName: 'role',
             type: {
-              name: 'Boolean'
+              name: 'String'
             }
           }
         }

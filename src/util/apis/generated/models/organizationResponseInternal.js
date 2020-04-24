@@ -10,20 +10,24 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a OrganizationResponseInternal.
- * @extends models['OrganizationResponse']
  */
-class OrganizationResponseInternal extends models['OrganizationResponse'] {
+class OrganizationResponseInternal {
   /**
    * Create a OrganizationResponseInternal.
+   * @property {uuid} id The internal unique id (UUID) of the organization.
+   * @property {string} displayName The display name of the organization
+   * @property {string} name The slug name of the organization
+   * @property {string} [avatarUrl] The URL to a user-uploaded Avatar image
+   * @property {string} origin The creation origin of this organization.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {string} createdAt The creation date of this organization
+   * @property {string} updatedAt The date the organization was last updated at
    * @property {array} [featureFlags] The feature flags that are enabled for
    * this organization
    */
   constructor() {
-    super();
   }
 
   /**

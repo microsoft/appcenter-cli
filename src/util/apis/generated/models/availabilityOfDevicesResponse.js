@@ -18,19 +18,19 @@
 class AvailabilityOfDevicesResponse {
   /**
    * Create a AvailabilityOfDevicesResponse.
-   * @property {object} iphones
+   * @property {object} iphones ...
    * @property {number} [iphones.registered]
    * @property {number} [iphones.available]
    * @property {number} [iphones.maximum]
-   * @property {object} ipads
+   * @property {object} ipads ...
    * @property {number} [ipads.registered]
    * @property {number} [ipads.available]
    * @property {number} [ipads.maximum]
-   * @property {object} ipods
+   * @property {object} ipods ...
    * @property {number} [ipods.registered]
    * @property {number} [ipods.available]
    * @property {number} [ipods.maximum]
-   * @property {object} watches
+   * @property {object} watches ...
    * @property {number} [watches.registered]
    * @property {number} [watches.available]
    * @property {number} [watches.maximum]
@@ -57,7 +57,7 @@ class AvailabilityOfDevicesResponse {
             serializedName: 'iphones',
             type: {
               name: 'Composite',
-              className: 'DeviceAvailability'
+              className: 'AvailabilityOfDevicesResponseIphones'
             }
           },
           ipads: {
@@ -65,7 +65,7 @@ class AvailabilityOfDevicesResponse {
             serializedName: 'ipads',
             type: {
               name: 'Composite',
-              className: 'DeviceAvailability'
+              className: 'AvailabilityOfDevicesResponseIpads'
             }
           },
           ipods: {
@@ -73,7 +73,7 @@ class AvailabilityOfDevicesResponse {
             serializedName: 'ipods',
             type: {
               name: 'Composite',
-              className: 'DeviceAvailability'
+              className: 'AvailabilityOfDevicesResponseIpods'
             }
           },
           watches: {
@@ -81,7 +81,7 @@ class AvailabilityOfDevicesResponse {
             serializedName: 'watches',
             type: {
               name: 'Composite',
-              className: 'DeviceAvailability'
+              className: 'AvailabilityOfDevicesResponseWatches'
             }
           }
         }
