@@ -503,7 +503,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       const { result, response } = await out.progress(
         `Publishing to store '${storeInformation.name}'...`,
-        clientRequest<void>(async (cb) => client.releasesOperations.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb))
+        clientRequest<void>(async (cb) =>
+          client.releasesOperations.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb)
+        )
       );
 
       const statusCode = response.statusCode;
