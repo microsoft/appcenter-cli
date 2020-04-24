@@ -1,23 +1,14 @@
 // token create command
 
-import {
-  Command,
-  CommandArgs,
-  CommandResult,
-  help,
-  success,
-  failure,
-  ErrorCodes,
-  shortName,
-  longName,
-  hasArg,
-} from "../../util/commandline";
+import { CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, AppCommand, defaultValue } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
+import { DefaultApp } from "../../util/profile";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { allPrincipalTypes, principalMessaging, PrincipalType } from "../../util/misc/principal-type";
 
 @help("Create a new API token")
-export default class TokenCreateCommand extends Command {
+export default class TokenCreateCommand extends AppCommand {
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -28,13 +19,21 @@ export default class TokenCreateCommand extends Command {
   @hasArg
   description: string;
 
+  @help("The type of token principal authentication: [" + allPrincipalTypes.join(", ") + "]")
+  @shortName("t")
+  @longName("type")
+  @hasArg
+  @defaultValue("user")
+  public principalType: string;
+
   async run(client: AppCenterClient): Promise<CommandResult> {
+    const app: DefaultApp = this.app;
+    const tokenMessaging = this.principalType === PrincipalType.USER ? principalMessaging.user : principalMessaging.app;
     const tokenAttributes: models.ApiTokensCreateRequest = {
       description: this.description,
     };
 
-    const createTokenResponse = await out.progress(
-      "Creating token ...",
+    const createTokenResponse = await out.progress(`Creating ${tokenMessaging} token ...`,
       clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod(tokenAttributes, cb))
     );
 
