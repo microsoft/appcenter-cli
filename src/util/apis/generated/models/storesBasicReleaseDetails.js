@@ -90,10 +90,10 @@ class StoresBasicReleaseDetails {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StoresDetailsElementType',
+                  serializedName: 'StoresBasicReleaseDetailsDistributionStoresItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StoresDetails'
+                    className: 'StoresBasicReleaseDetailsDistributionStoresItem'
                   }
               }
             }

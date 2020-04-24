@@ -10,16 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Audience with details.
  *
- * @extends models['AudienceSummary']
  */
-class Audience extends models['AudienceSummary'] {
+class Audience {
   /**
    * Create a Audience.
+   * @property {string} [name] Audience name.
+   * @property {string} [description] Audience description.
+   * @property {number} [estimatedCount] Estimated audience size.
+   * @property {string} [definition] Audience definition in OData format.
+   * @property {string} [state] Audience state. Possible values include:
+   * 'Calculating', 'Ready', 'Disabled'
    * @property {boolean} [enabled] Default value: true .
    * @property {object} [customProperties] Custom properties used in the
    * definition.
@@ -27,7 +30,6 @@ class Audience extends models['AudienceSummary'] {
    * @property {date} [timestamp] Date the audience was last refreshed.
    */
   constructor() {
-    super();
   }
 
   /**

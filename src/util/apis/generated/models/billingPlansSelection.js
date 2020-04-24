@@ -17,10 +17,10 @@
 class BillingPlansSelection {
   /**
    * Create a BillingPlansSelection.
-   * @property {object} [buildService]
+   * @property {object} [buildService] Selection of a billing plan
    * @property {number} [buildService.count] Number of instances of the billing
    * plan.
-   * @property {object} [buildService.plan]
+   * @property {object} [buildService.plan] Billing Plan
    * @property {string} [buildService.plan.id] The Billing Plan ID
    * @property {string} [buildService.plan.version] Version of the Billing Plan
    * schema
@@ -30,13 +30,15 @@ class BillingPlansSelection {
    * 'AppCenter', 'GitHub', 'Xtc'
    * @property {string} [buildService.plan.service] Name of the service that
    * the plan applies to. Possible values include: 'Build', 'Test'
-   * @property {object} [buildService.plan.limits]
-   * @property {object} [buildService.plan.attributes]
+   * @property {object} [buildService.plan.limits] A collection of named
+   * numeric values
+   * @property {object} [buildService.plan.attributes] Collection of attribute
+   * values.
    * @property {string} [buildService.plan.parentId]
-   * @property {object} [testService]
+   * @property {object} [testService] Selection of a billing plan
    * @property {number} [testService.count] Number of instances of the billing
    * plan.
-   * @property {object} [testService.plan]
+   * @property {object} [testService.plan] Billing Plan
    * @property {string} [testService.plan.id] The Billing Plan ID
    * @property {string} [testService.plan.version] Version of the Billing Plan
    * schema
@@ -46,8 +48,10 @@ class BillingPlansSelection {
    * 'AppCenter', 'GitHub', 'Xtc'
    * @property {string} [testService.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Test'
-   * @property {object} [testService.plan.limits]
-   * @property {object} [testService.plan.attributes]
+   * @property {object} [testService.plan.limits] A collection of named numeric
+   * values
+   * @property {object} [testService.plan.attributes] Collection of attribute
+   * values.
    * @property {string} [testService.plan.parentId]
    */
   constructor() {
@@ -72,7 +76,7 @@ class BillingPlansSelection {
             serializedName: 'buildService',
             type: {
               name: 'Composite',
-              className: 'BillingPlanSelection'
+              className: 'BillingPlansSelectionBuildService'
             }
           },
           testService: {
@@ -80,7 +84,7 @@ class BillingPlansSelection {
             serializedName: 'testService',
             type: {
               name: 'Composite',
-              className: 'BillingPlanSelection'
+              className: 'BillingPlansSelectionTestService'
             }
           }
         }

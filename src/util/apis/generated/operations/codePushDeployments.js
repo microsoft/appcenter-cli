@@ -30,8 +30,6 @@ const WebResource = msRest.WebResource;
  * provide optional fields, description, label, disabled, mandatory, rollout,
  * targetBinaryVersion
  *
- * @param {string} [options.release.label]
- *
  * @param {string} [options.release.targetBinaryRange]
  *
  * @param {string} [options.release.description]
@@ -41,6 +39,8 @@ const WebResource = msRest.WebResource;
  * @param {boolean} [options.release.isMandatory]
  *
  * @param {number} [options.release.rollout]
+ *
+ * @param {string} [options.release.label]
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -52,7 +52,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CodePushRelease} for more information.
+ *                      See {@link PromoteOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -114,7 +114,7 @@ function _promote(deploymentName, promoteDeploymentName, ownerName, appName, opt
   let requestModel = null;
   try {
     if (release !== null && release !== undefined) {
-      let requestModelMapper = new client.models['CodePushReleasePromote']().mapper();
+      let requestModelMapper = new client.models['ReleaseModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, release, 'release');
       requestContent = JSON.stringify(requestModel);
     }
@@ -146,7 +146,7 @@ function _promote(deploymentName, promoteDeploymentName, ownerName, appName, opt
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['PromoteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -166,7 +166,7 @@ function _promote(deploymentName, promoteDeploymentName, ownerName, appName, opt
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CodePushRelease']().mapper();
+          let resultMapper = new client.models['PromoteOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -302,7 +302,7 @@ function _deleteMethod(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel5']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -341,7 +341,9 @@ function _deleteMethod(deploymentName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Deployment} for more information.
+ *                      See {@link
+ *                      GetOKResponseModelModelModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -416,7 +418,7 @@ function _get(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetErrorModel7']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -436,7 +438,7 @@ function _get(deploymentName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Deployment']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -518,7 +520,7 @@ function _update(deploymentName, ownerName, appName, name, options, callback) {
   }
   let deployment;
   if (name !== null && name !== undefined) {
-    deployment = new client.models['DeploymentModification']();
+    deployment = new client.models['DeploymentModel']();
     deployment.name = name;
   }
 
@@ -548,7 +550,7 @@ function _update(deploymentName, ownerName, appName, name, options, callback) {
   let requestModel = null;
   try {
     if (deployment !== null && deployment !== undefined) {
-      let requestModelMapper = new client.models['DeploymentModification']().mapper();
+      let requestModelMapper = new client.models['DeploymentModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deployment, 'deployment');
       requestContent = JSON.stringify(requestModel);
     }
@@ -580,7 +582,7 @@ function _update(deploymentName, ownerName, appName, name, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel2']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -687,7 +689,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['ListErrorModel6']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -714,10 +716,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeploymentElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Deployment'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -751,6 +753,16 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {object} [options.latestRelease]
  *
+ * @param {string} [options.latestRelease.targetBinaryRange]
+ *
+ * @param {string} [options.latestRelease.description]
+ *
+ * @param {boolean} [options.latestRelease.isDisabled]
+ *
+ * @param {boolean} [options.latestRelease.isMandatory]
+ *
+ * @param {number} [options.latestRelease.rollout]
+ *
  * @param {string} [options.latestRelease.label]
  *
  * @param {string} [options.latestRelease.packageHash]
@@ -774,16 +786,6 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {number} [options.latestRelease.uploadTime]
  *
- * @param {string} [options.latestRelease.targetBinaryRange]
- *
- * @param {string} [options.latestRelease.description]
- *
- * @param {boolean} [options.latestRelease.isDisabled]
- *
- * @param {boolean} [options.latestRelease.isMandatory]
- *
- * @param {number} [options.latestRelease.rollout]
- *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -794,7 +796,8 @@ function _list(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Deployment} for more information.
+ *                      See {@link CreateCreatedResponseModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -831,7 +834,7 @@ function _create(ownerName, appName, name, options, callback) {
   }
   let deployment;
   if ((key !== null && key !== undefined) || (name !== null && name !== undefined) || (latestRelease !== null && latestRelease !== undefined)) {
-    deployment = new client.models['Deployment']();
+    deployment = new client.models['DeploymentModelModel']();
     deployment.key = key;
     deployment.name = name;
     deployment.latestRelease = latestRelease;
@@ -862,7 +865,7 @@ function _create(ownerName, appName, name, options, callback) {
   let requestModel = null;
   try {
     if (deployment !== null && deployment !== undefined) {
-      let requestModelMapper = new client.models['Deployment']().mapper();
+      let requestModelMapper = new client.models['DeploymentModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deployment, 'deployment');
       requestContent = JSON.stringify(requestModel);
     }
@@ -894,7 +897,7 @@ function _create(ownerName, appName, name, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CreateErrorModel5']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -914,7 +917,7 @@ function _create(ownerName, appName, name, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Deployment']().mapper();
+          let resultMapper = new client.models['CreateCreatedResponseModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -962,8 +965,6 @@ class CodePushDeployments {
    * provide optional fields, description, label, disabled, mandatory, rollout,
    * targetBinaryVersion
    *
-   * @param {string} [options.release.label]
-   *
    * @param {string} [options.release.targetBinaryRange]
    *
    * @param {string} [options.release.description]
@@ -974,12 +975,14 @@ class CodePushDeployments {
    *
    * @param {number} [options.release.rollout]
    *
+   * @param {string} [options.release.label]
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<PromoteOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1014,8 +1017,6 @@ class CodePushDeployments {
    * provide optional fields, description, label, disabled, mandatory, rollout,
    * targetBinaryVersion
    *
-   * @param {string} [options.release.label]
-   *
    * @param {string} [options.release.targetBinaryRange]
    *
    * @param {string} [options.release.description]
@@ -1025,6 +1026,8 @@ class CodePushDeployments {
    * @param {boolean} [options.release.isMandatory]
    *
    * @param {number} [options.release.rollout]
+   *
+   * @param {string} [options.release.label]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1036,7 +1039,7 @@ class CodePushDeployments {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CodePushRelease} - The deserialized result object.
+   *                      @resolve {PromoteOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1045,7 +1048,7 @@ class CodePushDeployments {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CodePushRelease} for more information.
+   *                      See {@link PromoteOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1180,7 +1183,7 @@ class CodePushDeployments {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Deployment>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1219,7 +1222,7 @@ class CodePushDeployments {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Deployment} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1228,7 +1231,9 @@ class CodePushDeployments {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Deployment} for more information.
+   *                      See {@link
+   *                      GetOKResponseModelModelModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1447,6 +1452,16 @@ class CodePushDeployments {
    *
    * @param {object} [options.latestRelease]
    *
+   * @param {string} [options.latestRelease.targetBinaryRange]
+   *
+   * @param {string} [options.latestRelease.description]
+   *
+   * @param {boolean} [options.latestRelease.isDisabled]
+   *
+   * @param {boolean} [options.latestRelease.isMandatory]
+   *
+   * @param {number} [options.latestRelease.rollout]
+   *
    * @param {string} [options.latestRelease.label]
    *
    * @param {string} [options.latestRelease.packageHash]
@@ -1470,22 +1485,12 @@ class CodePushDeployments {
    *
    * @param {number} [options.latestRelease.uploadTime]
    *
-   * @param {string} [options.latestRelease.targetBinaryRange]
-   *
-   * @param {string} [options.latestRelease.description]
-   *
-   * @param {boolean} [options.latestRelease.isDisabled]
-   *
-   * @param {boolean} [options.latestRelease.isMandatory]
-   *
-   * @param {number} [options.latestRelease.rollout]
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Deployment>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1518,6 +1523,16 @@ class CodePushDeployments {
    *
    * @param {object} [options.latestRelease]
    *
+   * @param {string} [options.latestRelease.targetBinaryRange]
+   *
+   * @param {string} [options.latestRelease.description]
+   *
+   * @param {boolean} [options.latestRelease.isDisabled]
+   *
+   * @param {boolean} [options.latestRelease.isMandatory]
+   *
+   * @param {number} [options.latestRelease.rollout]
+   *
    * @param {string} [options.latestRelease.label]
    *
    * @param {string} [options.latestRelease.packageHash]
@@ -1541,16 +1556,6 @@ class CodePushDeployments {
    *
    * @param {number} [options.latestRelease.uploadTime]
    *
-   * @param {string} [options.latestRelease.targetBinaryRange]
-   *
-   * @param {string} [options.latestRelease.description]
-   *
-   * @param {boolean} [options.latestRelease.isDisabled]
-   *
-   * @param {boolean} [options.latestRelease.isMandatory]
-   *
-   * @param {number} [options.latestRelease.rollout]
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1561,7 +1566,7 @@ class CodePushDeployments {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Deployment} - The deserialized result object.
+   *                      @resolve {CreateCreatedResponseModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1570,7 +1575,8 @@ class CodePushDeployments {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Deployment} for more information.
+   *                      See {@link CreateCreatedResponseModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

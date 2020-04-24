@@ -29,7 +29,7 @@ export default class OrgAppsListCommand extends Command {
     try {
       const httpResponse = await out.progress(
         "Loading list of organization apps...",
-        clientRequest<models.AppResponse[]>((cb) => client.apps.listForOrg(this.name, cb))
+        clientRequest<models.AppResponse[]>((cb) => client.appsOperations.listForOrg(this.name, cb))
       );
       if (httpResponse.response.statusCode < 400) {
         const table = httpResponse.result.map((app) => [app.displayName, app.name, app.os, app.platform]);

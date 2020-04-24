@@ -10,19 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TeamAppResponse.
- * @extends models['TeamResponse']
  */
-class TeamAppResponse extends models['TeamResponse'] {
+class TeamAppResponse {
   /**
    * Create a TeamAppResponse.
+   * @property {uuid} id The internal unique id (UUID) of the team.
+   * @property {string} name The name of the team
+   * @property {string} displayName The display name of the team
+   * @property {string} [description] The description of the team
    * @property {array} [permissions] The permissions the team has for the app
    */
   constructor() {
-    super();
   }
 
   /**

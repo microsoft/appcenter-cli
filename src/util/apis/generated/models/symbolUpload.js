@@ -31,11 +31,13 @@ class SymbolUpload {
    * @property {string} symbolType The type of the symbol for the current
    * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
    * 'AndroidProguard', 'UWP'
-   * @property {array} [symbolsUploaded] The symbols found in the upload
+   * @property {array} [symbolsUploaded] The symbols found in the upload. This
+   * may be empty until the status is indexed
    * @property {string} [origin] The origin of the symbol upload. Possible
    * values include: 'User', 'System'
    * @property {string} [fileName] The file name for the symbol upload
-   * @property {number} [fileSize] The size of the file in Mebibytes
+   * @property {number} [fileSize] The size of the file in Mebibytes. This may
+   * be 0 until the status is indexed
    * @property {date} [timestamp] When the symbol upload was committed, or last
    * transaction time if not committed
    */
@@ -75,7 +77,7 @@ class SymbolUpload {
             serializedName: 'user',
             type: {
               name: 'Composite',
-              className: 'SymbolUploadUserInfo'
+              className: 'SymbolUploadUser'
             }
           },
           status: {
@@ -99,10 +101,10 @@ class SymbolUpload {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'UploadedSymbolInfoElementType',
+                  serializedName: 'SymbolUploadSymbolsUploadedItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'UploadedSymbolInfo'
+                    className: 'SymbolUploadSymbolsUploadedItem'
                   }
               }
             }

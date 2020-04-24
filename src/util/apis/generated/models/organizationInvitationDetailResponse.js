@@ -79,7 +79,7 @@ class OrganizationInvitationDetailResponse {
             serializedName: 'organization',
             type: {
               name: 'Composite',
-              className: 'OrganizationResponse'
+              className: 'OrganizationInvitationDetailResponseOrganization'
             }
           },
           email: {
@@ -94,7 +94,7 @@ class OrganizationInvitationDetailResponse {
             serializedName: 'invited_by',
             type: {
               name: 'Composite',
-              className: 'UserProfileResponse'
+              className: 'OrganizationInvitationDetailResponseInvitedBy'
             }
           },
           isExistingUser: {

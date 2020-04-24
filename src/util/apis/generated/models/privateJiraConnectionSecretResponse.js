@@ -10,23 +10,24 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * private Jira connection secrets response
  *
- * @extends models['PrivateSharedConnectionResponse']
  */
-class PrivateJiraConnectionSecretResponse extends models['PrivateSharedConnectionResponse'] {
+class PrivateJiraConnectionSecretResponse {
   /**
    * Create a PrivateJiraConnectionSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data jira secret details
    * @property {string} [data.baseUrl] baseUrl to connect to jira instance
    * @property {string} [data.username] username to connect to jira instance
    * @property {string} [data.password] password to connect to jira instance
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -45,7 +46,7 @@ class PrivateJiraConnectionSecretResponse extends models['PrivateSharedConnectio
           serializedName: 'serviceType',
           clientName: 'serviceType'
         },
-        uberParent: 'PrivateSharedConnectionResponse',
+        uberParent: 'PrivateJiraConnectionSecretResponse',
         className: 'PrivateJiraConnectionSecretResponse',
         modelProperties: {
           id: {
@@ -76,20 +77,20 @@ class PrivateJiraConnectionSecretResponse extends models['PrivateSharedConnectio
               name: 'Boolean'
             }
           },
+          data: {
+            required: true,
+            serializedName: 'data',
+            type: {
+              name: 'Composite',
+              className: 'PrivateJiraConnectionSecretResponseData'
+            }
+          },
           serviceType: {
             required: true,
             serializedName: 'serviceType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
-            }
-          },
-          data: {
-            required: true,
-            serializedName: 'data',
-            type: {
-              name: 'Composite',
-              className: 'JiraSecretDetails'
             }
           }
         }

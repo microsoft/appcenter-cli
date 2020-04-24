@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Boolean property.
  *
- * @extends models['CustomProperty']
  */
-class BooleanProperty extends models['CustomProperty'] {
+class BooleanProperty {
   /**
    * Create a BooleanProperty.
+   * @property {string} type
+   * @property {string} name
    * @property {boolean} value Boolean property value.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,13 +36,15 @@ class BooleanProperty extends models['CustomProperty'] {
       serializedName: 'boolean',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'CustomProperty',
         className: 'BooleanProperty',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -52,14 +52,6 @@ class BooleanProperty extends models['CustomProperty'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

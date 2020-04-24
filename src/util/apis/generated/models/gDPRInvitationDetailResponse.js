@@ -32,6 +32,28 @@ class GDPRInvitationDetailResponse {
    * @property {string} [organization.updatedAt] The date the organization was
    * last updated at
    * @property {object} [app]
+   * @property {uuid} [app.id] The unique ID (UUID) of the app
+   * @property {string} [app.description] The description of the app
+   * @property {string} [app.displayName] The display name of the app
+   * @property {string} [app.releaseType] A one-word descriptive release-type
+   * value that starts with a capital letter but is otherwise lowercase
+   * @property {string} [app.iconUrl] The string representation of the URL
+   * pointing to the app's icon
+   * @property {string} [app.iconSource] The string representation of the
+   * source of the app's icon
+   * @property {string} [app.name] The name of the app used in URLs
+   * @property {string} [app.os] The OS the app will be running on. Possible
+   * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows',
+   * 'Linux', 'Custom'
+   * @property {object} [app.owner] The information about the app's owner
+   * @property {uuid} [app.owner.id] The unique id (UUID) of the owner
+   * @property {string} [app.owner.avatarUrl] The avatar URL of the owner
+   * @property {string} [app.owner.displayName] The owner's display name
+   * @property {string} [app.owner.email] The owner's email address
+   * @property {string} [app.owner.name] The unique name that used to identify
+   * the owner
+   * @property {string} [app.owner.type] The owner type. Can either be 'org' or
+   * 'user'. Possible values include: 'org', 'user'
    * @property {string} [app.appSecret] A unique and secret key used to
    * identify the app in communication with the ingestion endpoint for crash
    * reporting and analytics
@@ -50,7 +72,7 @@ class GDPRInvitationDetailResponse {
    * subscription is internal Microsoft subscription
    * @property {string} [app.platform] The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown'
+   * 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown', 'Custom'
    * @property {string} [app.origin] The creation origin of this app. Possible
    * values include: 'appcenter', 'hockeyapp', 'codepush'
    * @property {string} [app.createdAt] The created date of this app
@@ -87,7 +109,7 @@ class GDPRInvitationDetailResponse {
             serializedName: 'organization',
             type: {
               name: 'Composite',
-              className: 'OrganizationResponse'
+              className: 'GDPRInvitationDetailResponseOrganization'
             }
           },
           app: {
@@ -95,7 +117,7 @@ class GDPRInvitationDetailResponse {
             serializedName: 'app',
             type: {
               name: 'Composite',
-              className: 'AppResponse'
+              className: 'GDPRInvitationDetailResponseApp'
             }
           }
         }

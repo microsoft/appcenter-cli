@@ -44,7 +44,7 @@ class ErrorResponsev2 {
             serializedName: 'error',
             type: {
               name: 'Composite',
-              className: 'ErrorDetailsv2'
+              className: 'ErrorResponsev2Error'
             }
           }
         }

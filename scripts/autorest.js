@@ -20,9 +20,11 @@ function runAutorest() {
   console.log(`Running ${autorestScript} "${configFilePath}"`);
 
   return new Promise((resolve, reject) => {
-    const arp = childProcess.spawn(path.join(__dirname, "..", "node_modules", ".bin", autorestScript), [configFilePath], {
-      cwd: path.join(__dirname, ".."),
-    });
+    const arp = childProcess.spawn(
+      "node",
+      ["--max-old-space-size=16384", path.join(__dirname, "..", "node_modules", ".bin", autorestScript), configFilePath, "--debug"],
+      { cwd: path.join(__dirname, "..") }
+    );
 
     arp.stdout.on("data", (data) => console.log(data.toString()));
     arp.stderr.on("error", (data) => console.error(data.toString()));

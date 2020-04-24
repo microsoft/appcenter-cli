@@ -43,10 +43,10 @@ class AlertEmailSettings {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'EventSettingElementType',
+                  serializedName: 'AlertEmailSettingsSettingsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'EventSetting'
+                    className: 'AlertEmailSettingsSettingsItem'
                   }
               }
             }

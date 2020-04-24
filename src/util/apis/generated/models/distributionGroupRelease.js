@@ -32,6 +32,8 @@ class DistributionGroupRelease {
    * time.
    * @property {boolean} enabled This value determines the whether a release
    * currently is enabled or disabled.
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -95,6 +97,13 @@ class DistributionGroupRelease {
           enabled: {
             required: true,
             serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
             type: {
               name: 'Boolean'
             }

@@ -85,7 +85,7 @@ function _sent(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['SentErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -112,10 +112,10 @@ function _sent(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'GDPRInvitationDetailResponseElementType',
+                  serializedName: 'SentOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'GDPRInvitationDetailResponse'
+                    className: 'SentOKResponseItem'
                   }
               }
             }

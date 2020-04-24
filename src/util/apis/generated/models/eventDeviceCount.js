@@ -66,10 +66,10 @@ class EventDeviceCount {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'EventDeviceCountDevicesCountItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'EventDeviceCountDevicesCountItem'
                   }
               }
             }

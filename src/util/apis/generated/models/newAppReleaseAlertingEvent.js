@@ -10,16 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * New app release alerting event
  *
- * @extends models['AlertingEvent']
  */
-class NewAppReleaseAlertingEvent extends models['AlertingEvent'] {
+class NewAppReleaseAlertingEvent {
   /**
    * Create a NewAppReleaseAlertingEvent.
+   * @property {string} eventTimestamp ISO 8601 date time when event was
+   * generated
+   * @property {string} eventId A unique identifier for this event instance.
+   * Useful for deduplication
+   * @property {object} [properties] Obsolete. Use emailProperties.
    * @property {array} [userIds] List of users who need to receive an email
    * notification. If this is not null, then only sending emails will be
    * triggered even if the event requires calling webhooks or doing other
@@ -50,7 +52,6 @@ class NewAppReleaseAlertingEvent extends models['AlertingEvent'] {
    * @property {boolean} [appReleaseProperties.installable]
    */
   constructor() {
-    super();
   }
 
   /**

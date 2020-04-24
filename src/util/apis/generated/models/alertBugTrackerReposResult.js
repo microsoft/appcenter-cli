@@ -52,10 +52,10 @@ class AlertBugTrackerReposResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AlertBugTrackerRepoElementType',
+                  serializedName: 'AlertBugTrackerReposResultRepositoriesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AlertBugTrackerRepo'
+                    className: 'AlertBugTrackerReposResultRepositoriesItem'
                   }
               }
             }

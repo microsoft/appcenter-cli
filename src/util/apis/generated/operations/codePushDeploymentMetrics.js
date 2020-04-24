@@ -108,7 +108,7 @@ function _get(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetErrorModel6']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -135,10 +135,10 @@ function _get(deploymentName, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CodePushReleaseMetricElementType',
+                  serializedName: 'GetOKResponseItemModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CodePushReleaseMetric'
+                    className: 'GetOKResponseItemModelModel'
                   }
               }
             }

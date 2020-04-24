@@ -30,7 +30,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link OrganizationResponse} for more information.
+ *                      See {@link GetOKResponseModel} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -97,7 +97,7 @@ function _get(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -117,7 +117,7 @@ function _get(orgName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['OrganizationResponse']().mapper();
+          let resultMapper = new client.models['GetOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -154,7 +154,8 @@ function _get(orgName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link OrganizationResponse} for more information.
+ *                      See {@link UpdateOKResponseModelModel} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -188,7 +189,7 @@ function _update(orgName, options, callback) {
   }
   let org;
   if ((displayName !== null && displayName !== undefined) || (name !== null && name !== undefined)) {
-    org = new client.models['OrganizationPatchRequest']();
+    org = new client.models['Org']();
     org.displayName = displayName;
     org.name = name;
   }
@@ -217,7 +218,7 @@ function _update(orgName, options, callback) {
   let requestModel = null;
   try {
     if (org !== null && org !== undefined) {
-      let requestModelMapper = new client.models['OrganizationPatchRequest']().mapper();
+      let requestModelMapper = new client.models['Org']().mapper();
       requestModel = client.serialize(requestModelMapper, org, 'org');
       requestContent = JSON.stringify(requestModel);
     }
@@ -249,7 +250,7 @@ function _update(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -269,7 +270,7 @@ function _update(orgName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['OrganizationResponse']().mapper();
+          let resultMapper = new client.models['UpdateOKResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -367,7 +368,7 @@ function _deleteMethod(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -404,7 +405,8 @@ function _deleteMethod(orgName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link OrganizationResponse} for more information.
+ *                      See {@link CreateOrUpdateCreatedResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -435,7 +437,7 @@ function _createOrUpdate(options, callback) {
   }
   let organization;
   if ((displayName !== null && displayName !== undefined) || (name !== null && name !== undefined)) {
-    organization = new client.models['OrganizationRequest']();
+    organization = new client.models['Organization']();
     organization.displayName = displayName;
     organization.name = name;
   }
@@ -463,7 +465,7 @@ function _createOrUpdate(options, callback) {
   let requestModel = null;
   try {
     if (organization !== null && organization !== undefined) {
-      let requestModelMapper = new client.models['OrganizationRequest']().mapper();
+      let requestModelMapper = new client.models['Organization']().mapper();
       requestModel = client.serialize(requestModelMapper, organization, 'organization');
       requestContent = JSON.stringify(requestModel);
     }
@@ -495,7 +497,7 @@ function _createOrUpdate(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateOrUpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -515,7 +517,7 @@ function _createOrUpdate(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['OrganizationResponse']().mapper();
+          let resultMapper = new client.models['CreateOrUpdateCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -602,7 +604,7 @@ function _list(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -666,7 +668,7 @@ function _list(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AdministeredOrgsResponse} for more
+ *                      See {@link ListAdministeredOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -725,7 +727,7 @@ function _listAdministered(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListAdministeredErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -745,7 +747,7 @@ function _listAdministered(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AdministeredOrgsResponse']().mapper();
+          let resultMapper = new client.models['ListAdministeredOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -788,7 +790,7 @@ class Organizations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -823,7 +825,7 @@ class Organizations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {OrganizationResponse} - The deserialized result object.
+   *                      @resolve {GetOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -832,7 +834,7 @@ class Organizations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link OrganizationResponse} for more information.
+   *                      See {@link GetOKResponseModel} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -875,7 +877,7 @@ class Organizations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponseModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -915,7 +917,7 @@ class Organizations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {OrganizationResponse} - The deserialized result object.
+   *                      @resolve {UpdateOKResponseModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -924,7 +926,8 @@ class Organizations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link OrganizationResponse} for more information.
+   *                      See {@link UpdateOKResponseModelModel} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1045,7 +1048,7 @@ class Organizations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOrUpdateCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1082,7 +1085,7 @@ class Organizations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {OrganizationResponse} - The deserialized result object.
+   *                      @resolve {CreateOrUpdateCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1091,7 +1094,8 @@ class Organizations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link OrganizationResponse} for more information.
+   *                      See {@link CreateOrUpdateCreatedResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1204,7 +1208,7 @@ class Organizations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AdministeredOrgsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListAdministeredOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1237,7 +1241,7 @@ class Organizations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AdministeredOrgsResponse} - The deserialized result object.
+   *                      @resolve {ListAdministeredOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1246,7 +1250,7 @@ class Organizations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AdministeredOrgsResponse} for more
+   *                      See {@link ListAdministeredOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

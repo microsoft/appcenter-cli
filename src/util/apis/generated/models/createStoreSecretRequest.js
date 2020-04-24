@@ -45,7 +45,7 @@ class CreateStoreSecretRequest {
             serializedName: 'secret_json',
             type: {
               name: 'Composite',
-              className: 'SecretDetails'
+              className: 'CreateStoreSecretRequestSecretJson'
             }
           },
           tenantId: {

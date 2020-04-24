@@ -22,7 +22,7 @@ class AlertBugTrackerRepo {
    * @property {string} id
    * @property {string} [description]
    * @property {boolean} [privateProperty]
-   * @property {object} [owner]
+   * @property {object} [owner] Repository owner object
    * @property {string} [owner.name]
    * @property {string} [owner.id]
    * @property {string} [owner.login]

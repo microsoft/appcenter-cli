@@ -10,16 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Apple connection secrets
  *
- * @extends models['SharedConnectionResponse']
  */
-class AppleCertificateSecretDetailsResponse extends models['SharedConnectionResponse'] {
+class AppleCertificateSecretDetailsResponse {
   /**
    * Create a AppleCertificateSecretDetailsResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} credentialType the type of the credential. Possible
+   * values include: 'credentials', 'certificate'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data apple certificate secret details.
    * @property {string} [data.base64Certificate] The certificate contents in
    * base 64 encoded string
@@ -30,9 +33,9 @@ class AppleCertificateSecretDetailsResponse extends models['SharedConnectionResp
    * which the certificate is valid
    * @property {string} [data.certificateValidityEndDate] The date-time till
    * which the certificate is valid
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -51,7 +54,7 @@ class AppleCertificateSecretDetailsResponse extends models['SharedConnectionResp
           serializedName: 'serviceType',
           clientName: 'serviceType'
         },
-        uberParent: 'SharedConnectionResponse',
+        uberParent: 'AppleCertificateSecretDetailsResponse',
         className: 'AppleCertificateSecretDetailsResponse',
         modelProperties: {
           id: {
@@ -89,20 +92,20 @@ class AppleCertificateSecretDetailsResponse extends models['SharedConnectionResp
               name: 'Boolean'
             }
           },
+          data: {
+            required: true,
+            serializedName: 'data',
+            type: {
+              name: 'Composite',
+              className: 'AppleCertificateSecretDetailsResponseData'
+            }
+          },
           serviceType: {
             required: true,
             serializedName: 'serviceType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
-            }
-          },
-          data: {
-            required: true,
-            serializedName: 'data',
-            type: {
-              name: 'Composite',
-              className: 'AppleCertificateSecretDetails'
             }
           }
         }

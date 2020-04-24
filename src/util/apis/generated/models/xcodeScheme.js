@@ -71,7 +71,7 @@ class XcodeScheme {
             serializedName: 'archiveProject',
             type: {
               name: 'Composite',
-              className: 'XcodeArchiveProject'
+              className: 'XcodeSchemeArchiveProject'
             }
           }
         }

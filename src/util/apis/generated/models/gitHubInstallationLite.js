@@ -18,7 +18,7 @@ class GitHubInstallationLite {
   /**
    * Create a GitHubInstallationLite.
    * @property {number} [id] GitHub Installation Id
-   * @property {object} [account]
+   * @property {object} [account] The GitHub Installation
    * @property {string} [account.id] GitHub Account Id
    * @property {string} [account.login] GitHub Account Login Name
    * @property {string} [account.type] GitHub Account Type
@@ -54,7 +54,7 @@ class GitHubInstallationLite {
             serializedName: 'account',
             type: {
               name: 'Composite',
-              className: 'GitHubAccountLite'
+              className: 'GitHubInstallationLiteAccount'
             }
           },
           appId: {

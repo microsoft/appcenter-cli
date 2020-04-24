@@ -108,7 +108,7 @@ function _enable(exportConfigurationId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['EnableErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -221,7 +221,7 @@ function _disable(exportConfigurationId, ownerName, appName, options, callback) 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DisableErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -260,8 +260,8 @@ function _disable(exportConfigurationId, ownerName, appName, options, callback) 
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExportConfigurationResult} for more
- *                      information.
+ *                      See {@link GetOKResponseModelModelModelModelModel} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -336,7 +336,7 @@ function _get(exportConfigurationId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -356,7 +356,7 @@ function _get(exportConfigurationId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExportConfigurationResult']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -384,6 +384,10 @@ function _get(exportConfigurationId, ownerName, appName, options, callback) {
  *
  * @param {string} [properties.resourceGroup] The resource group name on azure
  *
+ * @param {boolean} [properties.backfill] Field to determine if backfilling
+ * should occur. The default value is true. If set to false export starts from
+ * date and time of config creation.
+ *
  * @param {string} properties.type Polymorphic Discriminator
  *
  * @param {string} ownerName The name of the owner
@@ -402,7 +406,7 @@ function _get(exportConfigurationId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExportConfigurationResult} for more
+ *                      See {@link PartialUpdateOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -463,7 +467,7 @@ function _partialUpdate(exportConfigurationId, properties, ownerName, appName, o
   let requestModel = null;
   try {
     if (properties !== null && properties !== undefined) {
-      let requestModelMapper = new client.models['ExportConfiguration']().mapper();
+      let requestModelMapper = new client.models['PropertiesModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, properties, 'properties');
       requestContent = JSON.stringify(requestModel);
     }
@@ -495,7 +499,7 @@ function _partialUpdate(exportConfigurationId, properties, ownerName, appName, o
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['PartialUpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -515,7 +519,7 @@ function _partialUpdate(exportConfigurationId, properties, ownerName, appName, o
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExportConfigurationResult']().mapper();
+          let resultMapper = new client.models['PartialUpdateOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -625,7 +629,7 @@ function _deleteMethod(exportConfigurationId, ownerName, appName, options, callb
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -662,7 +666,7 @@ function _deleteMethod(exportConfigurationId, ownerName, appName, options, callb
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExportConfigurationListResult} for more
+ *                      See {@link ListOKResponseModelModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -734,7 +738,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -754,7 +758,7 @@ function _list(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExportConfigurationListResult']().mapper();
+          let resultMapper = new client.models['ListOKResponseModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -780,6 +784,10 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {string} [properties.resourceGroup] The resource group name on azure
  *
+ * @param {boolean} [properties.backfill] Field to determine if backfilling
+ * should occur. The default value is true. If set to false export starts from
+ * date and time of config creation.
+ *
  * @param {string} properties.type Polymorphic Discriminator
  *
  * @param {string} ownerName The name of the owner
@@ -798,7 +806,7 @@ function _list(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExportConfigurationResult} for more
+ *                      See {@link CreateAcceptedResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -855,7 +863,7 @@ function _create(properties, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (properties !== null && properties !== undefined) {
-      let requestModelMapper = new client.models['ExportConfiguration']().mapper();
+      let requestModelMapper = new client.models['PropertiesModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, properties, 'properties');
       requestContent = JSON.stringify(requestModel);
     }
@@ -887,7 +895,7 @@ function _create(properties, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -907,7 +915,7 @@ function _create(properties, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExportConfigurationResult']().mapper();
+          let resultMapper = new client.models['CreateAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1133,7 +1141,7 @@ class ExportConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExportConfigurationResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1172,7 +1180,7 @@ class ExportConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExportConfigurationResult} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1181,8 +1189,8 @@ class ExportConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExportConfigurationResult} for more
-   *                      information.
+   *                      See {@link GetOKResponseModelModelModelModelModel} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1221,6 +1229,10 @@ class ExportConfigurations {
    *
    * @param {string} [properties.resourceGroup] The resource group name on azure
    *
+   * @param {boolean} [properties.backfill] Field to determine if backfilling
+   * should occur. The default value is true. If set to false export starts from
+   * date and time of config creation.
+   *
    * @param {string} properties.type Polymorphic Discriminator
    *
    * @param {string} ownerName The name of the owner
@@ -1234,7 +1246,7 @@ class ExportConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExportConfigurationResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<PartialUpdateOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1265,6 +1277,10 @@ class ExportConfigurations {
    *
    * @param {string} [properties.resourceGroup] The resource group name on azure
    *
+   * @param {boolean} [properties.backfill] Field to determine if backfilling
+   * should occur. The default value is true. If set to false export starts from
+   * date and time of config creation.
+   *
    * @param {string} properties.type Polymorphic Discriminator
    *
    * @param {string} ownerName The name of the owner
@@ -1283,7 +1299,7 @@ class ExportConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExportConfigurationResult} - The deserialized result object.
+   *                      @resolve {PartialUpdateOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1292,7 +1308,7 @@ class ExportConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExportConfigurationResult} for more
+   *                      See {@link PartialUpdateOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1422,7 +1438,7 @@ class ExportConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExportConfigurationListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListOKResponseModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1459,7 +1475,7 @@ class ExportConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExportConfigurationListResult} - The deserialized result object.
+   *                      @resolve {ListOKResponseModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1468,7 +1484,7 @@ class ExportConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExportConfigurationListResult} for more
+   *                      See {@link ListOKResponseModelModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1506,6 +1522,10 @@ class ExportConfigurations {
    *
    * @param {string} [properties.resourceGroup] The resource group name on azure
    *
+   * @param {boolean} [properties.backfill] Field to determine if backfilling
+   * should occur. The default value is true. If set to false export starts from
+   * date and time of config creation.
+   *
    * @param {string} properties.type Polymorphic Discriminator
    *
    * @param {string} ownerName The name of the owner
@@ -1519,7 +1539,7 @@ class ExportConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExportConfigurationResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateAcceptedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1548,6 +1568,10 @@ class ExportConfigurations {
    *
    * @param {string} [properties.resourceGroup] The resource group name on azure
    *
+   * @param {boolean} [properties.backfill] Field to determine if backfilling
+   * should occur. The default value is true. If set to false export starts from
+   * date and time of config creation.
+   *
    * @param {string} properties.type Polymorphic Discriminator
    *
    * @param {string} ownerName The name of the owner
@@ -1566,7 +1590,7 @@ class ExportConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExportConfigurationResult} - The deserialized result object.
+   *                      @resolve {CreateAcceptedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1575,7 +1599,7 @@ class ExportConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExportConfigurationResult} for more
+   *                      See {@link CreateAcceptedResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

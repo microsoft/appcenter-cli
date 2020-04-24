@@ -33,7 +33,8 @@ class TestRun {
    * @property {string} [status] Deprecated. Use resultStatus instead.
    * @property {string} [description] Human readable explanation of the current
    * test status
-   * @property {object} [stats]
+   * @property {object} [stats] Test Run Statistics. Summary single test run on
+   * Xamarin Test Cloud
    * @property {number} [stats.devices] Number of devices running the test
    * @property {number} [stats.devicesFinished] Number of finished devices
    * @property {number} [stats.devicesFailed] Number of failed devices
@@ -140,7 +141,7 @@ class TestRun {
             serializedName: 'stats',
             type: {
               name: 'Composite',
-              className: 'TestRunStatistics'
+              className: 'TestRunStats'
             }
           },
           testType: {

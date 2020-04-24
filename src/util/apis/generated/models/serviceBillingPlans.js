@@ -21,15 +21,16 @@ class ServiceBillingPlans {
    * for that service (if it exists)?
    * @property {string} [lastTrialPlanExpirationTime] Expiration time of the
    * last selected trial plan. Will be null if trial plan was not used.
-   * @property {object} [currentBillingPeriod]
+   * @property {object} [currentBillingPeriod] Billing plans for a given period
    * @property {string} [currentBillingPeriod.startTime] Inclusive start of the
    * period
    * @property {string} [currentBillingPeriod.endTime] Exclusive end of the
    * period.
-   * @property {object} [currentBillingPeriod.byAccount]
+   * @property {object} [currentBillingPeriod.byAccount] Selection of a billing
+   * plan
    * @property {number} [currentBillingPeriod.byAccount.count] Number of
    * instances of the billing plan.
-   * @property {object} [currentBillingPeriod.byAccount.plan]
+   * @property {object} [currentBillingPeriod.byAccount.plan] Billing Plan
    * @property {string} [currentBillingPeriod.byAccount.plan.id] The Billing
    * Plan ID
    * @property {string} [currentBillingPeriod.byAccount.plan.version] Version
@@ -42,8 +43,10 @@ class ServiceBillingPlans {
    * @property {string} [currentBillingPeriod.byAccount.plan.service] Name of
    * the service that the plan applies to. Possible values include: 'Build',
    * 'Test'
-   * @property {object} [currentBillingPeriod.byAccount.plan.limits]
+   * @property {object} [currentBillingPeriod.byAccount.plan.limits] A
+   * collection of named numeric values
    * @property {object} [currentBillingPeriod.byAccount.plan.attributes]
+   * Collection of attribute values.
    * @property {string} [currentBillingPeriod.byAccount.plan.parentId]
    */
   constructor() {
@@ -82,7 +85,7 @@ class ServiceBillingPlans {
             serializedName: 'currentBillingPeriod',
             type: {
               name: 'Composite',
-              className: 'BillingPeriod'
+              className: 'ServiceBillingPlansCurrentBillingPeriod'
             }
           }
         }

@@ -76,7 +76,7 @@ export interface Failure {
   message: string;
 }
 
-export interface ErrorDetails {
+export interface ErrorResponseError {
   /**
    * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
    * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
@@ -86,26 +86,20 @@ export interface ErrorDetails {
 }
 
 export interface ErrorResponse {
-  error: ErrorDetails;
+  error: ErrorResponseError;
+}
+
+export interface ErrorDetails {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
 }
 
 export interface SuccessResponse {
   message: string;
-}
-
-export interface AADGroupUserSyncRequest {
-  /**
-   * user id
-  */
-  userId: string;
-  /**
-   * The appcenter AAD group id
-  */
-  aadGroupId: string;
-  /**
-   * role. Possible values include: 'admin', 'collaborator', 'member'
-  */
-  role: string;
 }
 
 export interface AADTenantAddRequest {
@@ -281,12 +275,12 @@ export interface AppRequest {
   name?: string;
   /**
    * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
-   * 'Tizen', 'tvOS', 'Windows', 'Linux'
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
   */
   os: string;
   /**
    * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
-   * 'Cordova', 'React-Native', 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+   * 'Cordova', 'React-Native', 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms', 'Custom'
   */
   platform: string;
 }
@@ -378,18 +372,32 @@ export interface DistributionGroupUserRequest {
   userEmails?: string[];
 }
 
+export interface DistributionGroupAppAddRequestAppsItem {
+  /**
+   * The name of the app to be added to the distribution group
+  */
+  name: string;
+}
+
 export interface DistributionGroupAppAddRequest {
   /**
    * The list of apps to add to distribution group
   */
-  apps?: AppAddRequest[];
+  apps?: DistributionGroupAppAddRequestAppsItem[];
+}
+
+export interface DistributionGroupAppsDeleteRequestAppsItem {
+  /**
+   * The name of the app to be deleted from the distribution group
+  */
+  name: string;
 }
 
 export interface DistributionGroupAppsDeleteRequest {
   /**
    * The list of apps to delete from the distribution group
   */
-  apps?: AppDeleteRequest[];
+  apps?: DistributionGroupAppsDeleteRequestAppsItem[];
 }
 
 export interface DistributionGroupAADGroupsDeleteRequest {
@@ -406,7 +414,7 @@ export interface DataDeletionRequest {
   dataDeletionType?: string;
 }
 
-export interface DistributionGroupAADGroupBase {
+export interface DistributionGroupAADGroupRequestAadGroupsItem {
   /**
    * The id of the aad group
   */
@@ -421,10 +429,21 @@ export interface DistributionGroupAADGroupRequest {
   /**
    * The list of aad group ids and names to add
   */
-  aadGroups?: DistributionGroupAADGroupBase[];
+  aadGroups?: DistributionGroupAADGroupRequestAadGroupsItem[];
 }
 
-export interface DistributionGroupIdRequest {
+export interface DistributionGroupAADGroupBase {
+  /**
+   * The id of the aad group
+  */
+  aadGroupId?: string;
+  /**
+   * The display name of the aad group
+  */
+  displayName?: string;
+}
+
+export interface DistributionGroupsUserVerifyRequestDistributionGroupIdsItem {
   /**
    * The id of the distribution group
   */
@@ -435,7 +454,14 @@ export interface DistributionGroupsUserVerifyRequest {
   /**
    * An array of distribution group ids
   */
-  distributionGroupIds: DistributionGroupIdRequest[];
+  distributionGroupIds: DistributionGroupsUserVerifyRequestDistributionGroupIdsItem[];
+}
+
+export interface DistributionGroupIdRequest {
+  /**
+   * The id of the distribution group
+  */
+  id: string;
 }
 
 export interface EmailVerificationRequest {
@@ -535,77 +561,6 @@ export interface InternalBulkAppResponse {
    * The display name of the owner
   */
   ownerDisplayName?: string;
-}
-
-export interface InternalHockeyAppCompatibilityResponse {
-  /**
-   * The owner type of the app. Possible values include: 'user', 'organization'
-  */
-  ownerType?: string;
-  /**
-   * The OS of the app. Possible values include: 'Android', 'iOS', 'macOS', 'Windows', 'Linux',
-   * 'Custom'
-  */
-  os?: string;
-  /**
-   * The OS of the app. Possible values include: 'Java', 'Objective-C-Swift', 'Cordova',
-   * 'React-Native', 'Unity', 'Electron', 'Xamarin', 'Unknown'
-  */
-  platform?: string;
-  /**
-   * Does the HockeyApp app have crashes from within the last 90 days?
-  */
-  hasCrashes?: boolean;
-  /**
-   * Does the HockeyApp app have feedback from within the last 90 days?
-  */
-  hasFeedback?: boolean;
-  /**
-   * Does the HockeyApp app have metrics from within the last 30 days?
-  */
-  hasMetrics?: boolean;
-  /**
-   * Does the HockeyApp app have any external builds?
-  */
-  hasExternalBuilds?: boolean;
-  /**
-   * Does the HockeyApp app have any build server URLs specified?
-  */
-  hasSpecifiedBuildServerUrl?: boolean;
-  /**
-   * Does the HockeyApp app have an associated Distribution Group that is owned by a different
-   * owner?
-  */
-  hasDistributionGroupsOutsideOfOwnership?: boolean;
-  /**
-   * Does the HockeyApp app's owner own any Distribution Groups?
-  */
-  ownerHasDistributionGroups?: boolean;
-  /**
-   * Does the HockeyApp app have any bugtracker configured? Which type?. Possible values include:
-   * 'none', 'vso', 'jira5', 'github', 'other'
-  */
-  bugtrackerType?: string;
-  /**
-   * Does the HockeyApp app have any webhooks configured? Which types?
-  */
-  webhookTypes?: string[];
-  /**
-   * Does the HockeyApp app export any data to Application Insights?
-  */
-  hasAiExport?: boolean;
-}
-
-export interface InternalHockeyAppCutoverStatusResponse {
-  /**
-   * The ID of the app
-  */
-  id: string;
-  /**
-   * Does the HockeyApp app have crashes from within the last 90 days?. Possible values include:
-   * 'not_requested', 'requested', 'in_progress', 'failed', 'completed', 'cleaned'
-  */
-  status: string;
 }
 
 export interface InternalUserRequest {
@@ -757,7 +712,7 @@ export interface UserInvitationPermissionsUpdateRequest {
   permissions: string[];
 }
 
-export interface UserEmailRequest {
+export interface UserEmailOrgRoleRequest {
   /**
    * The user's email address
   */
@@ -766,6 +721,13 @@ export interface UserEmailRequest {
    * The user's role. Possible values include: 'admin', 'collaborator', 'member'
   */
   role?: string;
+}
+
+export interface UserEmailRequest {
+  /**
+   * The user's email address
+  */
+  userEmail: string;
 }
 
 export interface UserNameUpdateRequest {
@@ -870,6 +832,45 @@ export interface ApiTokenGetUserResponse {
   userOrigin: string;
 }
 
+export interface ValidatedApiTokenResponseClaimsItem {
+  /**
+   * Possible values include: 'user_email', 'user_origin', 'app_owner_name', 'app_name'
+  */
+  claimType?: string;
+  claimValue?: string;
+}
+
+export interface ValidatedApiTokenResponse {
+  /**
+   * The token's unique id (UUID)
+  */
+  tokenId: string;
+  /**
+   * The token's scope. A list of allowed roles.
+  */
+  tokenScope: string[];
+  /**
+   * The ID of the owner of the API Token (user_id or app_id)
+  */
+  principalId: string;
+  /**
+   * Indicates the type of the principal (app or user). Possible values include: 'app', 'user'
+  */
+  principalType: string;
+  /**
+   * Collection of attributes that describe the principal of the specified API Token
+  */
+  claims: ValidatedApiTokenResponseClaimsItem[];
+}
+
+export interface ApiTokenClaim {
+  /**
+   * Possible values include: 'user_email', 'user_origin', 'app_owner_name', 'app_name'
+  */
+  claimType?: string;
+  claimValue?: string;
+}
+
 export interface ApiTokenResponse {
   /**
    * The unique id (UUID) of the api token
@@ -923,12 +924,43 @@ export interface AppGroupResponse {
   os: string;
   /**
    * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
-   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown'
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
   */
   platform: string;
 }
 
-export interface AzureSubscriptionResponse {
+/**
+ * The information about the app's owner
+*/
+export interface AppInvitationDetailResponseAppOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface AppInvitationDetailResponseAppAzureSubscription {
   /**
    * The azure subscription id
   */
@@ -955,7 +987,7 @@ export interface AzureSubscriptionResponse {
   isMicrosoftInternal?: boolean;
 }
 
-export interface BasicAppResponse {
+export interface AppInvitationDetailResponseApp {
   /**
    * The unique ID (UUID) of the app
   */
@@ -990,19 +1022,20 @@ export interface BasicAppResponse {
    * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
   */
   os: string;
-  owner: Owner;
-}
-
-export interface AppResponse extends BasicAppResponse {
+  /**
+   * The information about the app's owner
+  */
+  owner: AppInvitationDetailResponseAppOwner;
   /**
    * A unique and secret key used to identify the app in communication with the ingestion endpoint
    * for crash reporting and analytics
   */
   appSecret: string;
-  azureSubscription?: AzureSubscriptionResponse;
+  azureSubscription?: AppInvitationDetailResponseAppAzureSubscription;
   /**
    * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
-   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown'
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
   */
   platform: string;
   /**
@@ -1023,7 +1056,7 @@ export interface AppResponse extends BasicAppResponse {
   memberPermissions?: string[];
 }
 
-export interface UserProfileResponse {
+export interface AppInvitationDetailResponseInvitedBy {
   /**
    * The unique id (UUID) of the user
   */
@@ -1062,7 +1095,7 @@ export interface UserProfileResponse {
 /**
  * The information about the app's owner
 */
-export interface Owner {
+export interface AppInvitationDetailResponseDistributionGroupOwner {
   /**
    * The unique id (UUID) of the owner
   */
@@ -1093,7 +1126,10 @@ export interface Owner {
  * The organization that owns the distribution group, if it exists
 */
 export interface AppInvitationDetailResponseDistributionGroup {
-  owner?: Owner;
+  /**
+   * The information about the app's owner
+  */
+  owner?: AppInvitationDetailResponseDistributionGroupOwner;
 }
 
 export interface AppInvitationDetailResponse {
@@ -1101,7 +1137,7 @@ export interface AppInvitationDetailResponse {
    * The unique ID (UUID) of the invitation
   */
   id: string;
-  app: AppResponse;
+  app: AppInvitationDetailResponseApp;
   /**
    * The email address of the invited user
   */
@@ -1110,7 +1146,7 @@ export interface AppInvitationDetailResponse {
    * The invitation type. Possible values include: 'developer', 'tester'
   */
   inviteType: string;
-  invitedBy: UserProfileResponse;
+  invitedBy: AppInvitationDetailResponseInvitedBy;
   /**
    * Indicates whether the invited user already exists
   */
@@ -1169,7 +1205,272 @@ export interface AppRepoResponse {
   serviceConnectionId?: string;
 }
 
-export interface TesterAppResponse extends BasicAppResponse {
+/**
+ * The information about the app's owner
+*/
+export interface BasicAppResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface BasicAppResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: BasicAppResponseOwner;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface AppResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface AppResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface AppResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: AppResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: AppResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface TesterAppResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface TesterAppResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: TesterAppResponseOwner;
   /**
    * it indicates if the app is microsoft internal
   */
@@ -1180,7 +1481,75 @@ export interface TesterAppResponse extends BasicAppResponse {
   permissions?: string[];
 }
 
-export interface OrgDistributionGroupAppResponse extends BasicAppResponse {
+/**
+ * The information about the app's owner
+*/
+export interface OrgDistributionGroupAppResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface OrgDistributionGroupAppResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: OrgDistributionGroupAppResponseOwner;
   /**
    * The platform of the app
   */
@@ -1191,12 +1560,143 @@ export interface OrgDistributionGroupAppResponse extends BasicAppResponse {
   origin?: string;
 }
 
+/**
+ * The information about the app's owner
+*/
+export interface AppResponseInternalOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface AppResponseInternalAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
 export interface AppResponseInternalRepositoriesItem {
   repoProvider?: string;
   repoUrl?: string;
 }
 
-export interface AppResponseInternal extends AppResponse {
+/**
+ * the permissions for the specified app user
+*/
+export interface AppResponseInternalUserPermissions {
+  permissions?: string[];
+  userId?: string;
+}
+
+export interface AppResponseInternal {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: AppResponseInternalOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: AppResponseInternalAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
   /**
    * The feature flags that are enabled for this app
   */
@@ -1205,6 +1705,10 @@ export interface AppResponseInternal extends AppResponse {
    * The repositories associated with this app
   */
   repositories?: AppResponseInternalRepositoriesItem[];
+  /**
+   * the permissions for the specified app user
+  */
+  userPermissions?: AppResponseInternalUserPermissions;
   /**
    * The cutover date of this app
   */
@@ -1229,7 +1733,7 @@ export interface AppUserPermissionResponse {
   */
   userId: string;
   /**
-   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+   * The creation origin of this app. Possible values include: 'appcenter', 'codepush'
   */
   appOrigin: string;
   /**
@@ -1237,13 +1741,132 @@ export interface AppUserPermissionResponse {
    * for crash reporting and analytics
   */
   appSecret: string;
-  /**
-   * Whether the app had a 'hockeyapp' origin before being "cut over" to App Center
-  */
-  isCutoverFromHockeyapp: boolean;
 }
 
-export interface AppWithTeamPermissionsResponse extends AppResponse {
+/**
+ * The information about the app's owner
+*/
+export interface AppWithTeamPermissionsResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface AppWithTeamPermissionsResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface AppWithTeamPermissionsResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: AppWithTeamPermissionsResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: AppWithTeamPermissionsResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
   /**
    * The permissions the team has for the app
   */
@@ -1259,6 +1882,33 @@ export interface OrgUserPermissionResponse {
    * The user role for the org. Possible values include: 'admin', 'collaborator'
   */
   userRole: string;
+}
+
+export interface AzureSubscriptionResponse {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
 }
 
 export interface DistributionGroupResponse {
@@ -1285,7 +1935,35 @@ export interface DistributionGroupResponse {
   isPublic: boolean;
 }
 
-export interface DistributionGroupUserGetResponse {
+export interface DistributionGroupPrivateResponse {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+  /**
+   * Type of group. Possible values include: 'Default', 'HockeyAppDefault', 'MicrosoftDogfooding'
+  */
+  groupType?: string;
+}
+
+export interface DistributionGroupDetailsResponseUsersItem {
   /**
    * The unique id (UUID) of the user
   */
@@ -1317,7 +1995,28 @@ export interface DistributionGroupUserGetResponse {
   name?: string;
 }
 
-export interface DistributionGroupDetailsResponse extends DistributionGroupResponse {
+export interface DistributionGroupDetailsResponse {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
   /**
    * Whether the distribution group is shared group or not
   */
@@ -1342,10 +2041,157 @@ export interface DistributionGroupDetailsResponse extends DistributionGroupRespo
   /**
    * The distribution group users
   */
-  users: DistributionGroupUserGetResponse[];
+  users: DistributionGroupDetailsResponseUsersItem[];
 }
 
-export interface OrgDistributionGroupDetailsResponse extends DistributionGroupResponse {
+/**
+ * The information about the app's owner
+*/
+export interface OrgDistributionGroupDetailsResponseAppsItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface OrgDistributionGroupDetailsResponseAppsItemAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface OrgDistributionGroupDetailsResponseAppsItem {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: OrgDistributionGroupDetailsResponseAppsItemOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: OrgDistributionGroupDetailsResponseAppsItemAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface OrgDistributionGroupDetailsResponse {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
   /**
    * The count of apps associated with this distribution group
   */
@@ -1357,10 +2203,31 @@ export interface OrgDistributionGroupDetailsResponse extends DistributionGroupRe
   /**
    * The apps associated with the distribution group
   */
-  apps: AppResponse[];
+  apps: OrgDistributionGroupDetailsResponseAppsItem[];
 }
 
-export interface GeneralDistributionGroupDetailsResponse extends DistributionGroupResponse {
+export interface GeneralDistributionGroupDetailsResponse {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
   /**
    * Whether the distribution group is shared group or not
   */
@@ -1394,7 +2261,7 @@ export interface DistributionGroupUserDeleteResponse {
   userEmail?: string;
 }
 
-export interface OrganizationResponse {
+export interface CloseAccountOrganizationResponse {
   /**
    * The internal unique id (UUID) of the organization.
   */
@@ -1423,13 +2290,42 @@ export interface OrganizationResponse {
    * The date the organization was last updated at
   */
   updatedAt: string;
-}
-
-export interface CloseAccountOrganizationResponse extends OrganizationResponse {
   /**
    * The number of collaborators from the organization
   */
   collaboratorsCount: number;
+}
+
+export interface DistributionGroupUserGetResponse {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id?: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name?: string;
 }
 
 export interface DistributionGroupUserPostResponse {
@@ -1486,6 +2382,26 @@ export interface DistributionGroupAADGroupPostResponse {
   displayName?: string;
 }
 
+export interface DistributionGroupAADGroupResponse {
+  /**
+   * The internal unique id (UUID) of the AAD group.
+  */
+  id?: string;
+  /**
+   * The AAD unique id (UUID) of the AAD group.
+  */
+  aadGroupId?: string;
+  /**
+   * The display name of the AAD group
+  */
+  displayName?: string;
+  isAadGroup?: boolean;
+  /**
+   * The distribution group of the AAD group
+  */
+  distributionGroupName?: string;
+}
+
 export interface DistributionGroupAadGroupsDeleteResponse {
   /**
    * The code of the result
@@ -1503,6 +2419,53 @@ export interface DistributionGroupAadGroupsDeleteResponse {
    * The aad id of the group
   */
   aadGroupId?: string;
+}
+
+export interface DistributionGroupWithUsersResponseUsersItem {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id?: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name?: string;
+}
+
+export interface DistributionGroupWithUsersResponseAadGroupsItem {
+  /**
+   * The internal unique id (UUID) of the AAD group.
+  */
+  id?: string;
+  /**
+   * The AAD unique id (UUID) of the AAD group.
+  */
+  aadGroupId?: string;
+  /**
+   * The display name of the AAD group
+  */
+  displayName?: string;
 }
 
 export interface DistributionGroupWithUsersResponse {
@@ -1533,11 +2496,11 @@ export interface DistributionGroupWithUsersResponse {
   /**
    * The distribution group users
   */
-  users: DistributionGroupUserGetResponse[];
+  users: DistributionGroupWithUsersResponseUsersItem[];
   /**
    * The distribution group aad groups
   */
-  aadGroups?: DistributionGroupAADGroupPostResponse[];
+  aadGroups?: DistributionGroupWithUsersResponseAadGroupsItem[];
 }
 
 export interface FeatureFlagsResponse {
@@ -1610,14 +2573,364 @@ export interface InternalUserSignupResponse {
   status?: string;
 }
 
+export interface InvitationDetailResponseInvitedBy {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+export interface InvitationDetailResponseOrganization {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface InvitationDetailResponseAppOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface InvitationDetailResponseAppAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface InvitationDetailResponseApp {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: InvitationDetailResponseAppOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: InvitationDetailResponseAppAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
 export interface InvitationDetailResponse {
   /**
    * The id of the invitation
   */
   invitationId: string;
-  invitedBy: UserProfileResponse;
-  organization?: OrganizationResponse;
-  app?: AppResponse;
+  invitedBy: InvitationDetailResponseInvitedBy;
+  organization?: InvitationDetailResponseOrganization;
+  app?: InvitationDetailResponseApp;
+}
+
+export interface GDPRInvitationDetailResponseOrganization {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface GDPRInvitationDetailResponseAppOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface GDPRInvitationDetailResponseAppAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface GDPRInvitationDetailResponseApp {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: GDPRInvitationDetailResponseAppOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: GDPRInvitationDetailResponseAppAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
 }
 
 export interface GDPRInvitationDetailResponse {
@@ -1625,8 +2938,8 @@ export interface GDPRInvitationDetailResponse {
    * The id of the invitation
   */
   invitationId: string;
-  organization?: OrganizationResponse;
-  app?: AppResponse;
+  organization?: GDPRInvitationDetailResponseOrganization;
+  app?: GDPRInvitationDetailResponseApp;
 }
 
 export interface OrgNameAvailabilityResponse {
@@ -1640,17 +2953,84 @@ export interface OrgNameAvailabilityResponse {
   name: string;
 }
 
+export interface OrganizationInvitationDetailResponseOrganization {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface OrganizationInvitationDetailResponseInvitedBy {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
 export interface OrganizationInvitationDetailResponse {
   /**
    * The unique ID (UUID) of the invitation
   */
   id: string;
-  organization: OrganizationResponse;
+  organization: OrganizationInvitationDetailResponseOrganization;
   /**
    * The email address of the invited user
   */
   email: string;
-  invitedBy: UserProfileResponse;
+  invitedBy: OrganizationInvitationDetailResponseInvitedBy;
   /**
    * Indicates whether the invited user already exists
   */
@@ -1676,18 +3056,140 @@ export interface OrganizationInvitationSimpleDetailResponse {
   role: string;
 }
 
-export interface AdministeredOrgsResponse {
-  organizations: OrganizationResponse;
+export interface AdministeredOrgsResponseOrganizations {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
 }
 
-export interface OrganizationResponseInternal extends OrganizationResponse {
+export interface AdministeredOrgsResponse {
+  organizations: AdministeredOrgsResponseOrganizations;
+}
+
+export interface OrganizationResponse {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface OrganizationResponseInternal {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
   /**
    * The feature flags that are enabled for this organization
   */
   featureFlags?: string[];
 }
 
-export interface OrganizationResponseManagement extends OrganizationResponseInternal {
+export interface OrganizationResponseManagement {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+  /**
+   * The feature flags that are enabled for this organization
+  */
+  featureFlags?: string[];
   /**
    * The organization email, if the app was synced from HockeyApp
   */
@@ -1717,25 +3219,6 @@ export interface OrganizationUserResponse {
   role: string;
 }
 
-export interface OrganizationAADGroupResponse {
-  /**
-   * The id of the aad group
-  */
-  aadGroupId: string;
-  /**
-   * The azure id of the aad group
-  */
-  azureAadGroupId: string;
-  /**
-   * The role the user has within the organization
-  */
-  role: string;
-  /**
-   * The display name of the aad group
-  */
-  displayName: string;
-}
-
 export interface TeamAppUpdateRequest {
   /**
    * The permissions all members of the team have on the app
@@ -1758,6 +3241,13 @@ export interface TeamRequest {
   description?: string;
 }
 
+export interface TeamUpdateRequest {
+  /**
+   * The new display name of the team
+  */
+  displayName: string;
+}
+
 export interface TeamResponse {
   /**
    * The internal unique id (UUID) of the team.
@@ -1777,7 +3267,23 @@ export interface TeamResponse {
   description?: string;
 }
 
-export interface TeamAppResponse extends TeamResponse {
+export interface TeamAppResponse {
+  /**
+   * The internal unique id (UUID) of the team.
+  */
+  id: string;
+  /**
+   * The name of the team
+  */
+  name: string;
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
   /**
    * The permissions the team has for the app
   */
@@ -1792,7 +3298,7 @@ export interface PurgeResponse {
   status: string;
 }
 
-export interface SubscriptionMetrics {
+export interface ServiceBusStatusResponseSubscriptionsItem {
   /**
    * The name of the subsciption (prefixed with the topic name)
   */
@@ -1805,7 +3311,18 @@ export interface SubscriptionMetrics {
 
 export interface ServiceBusStatusResponse {
   status: string;
-  subscriptions?: SubscriptionMetrics[];
+  subscriptions?: ServiceBusStatusResponseSubscriptionsItem[];
+}
+
+export interface SubscriptionMetrics {
+  /**
+   * The name of the subsciption (prefixed with the topic name)
+  */
+  name: string;
+  /**
+   * The number of messages in the subscription
+  */
+  messageCount: number;
 }
 
 export interface TeamUserResponse {
@@ -1907,7 +3424,7 @@ export interface AppIntegrationResponse {
   appId: string;
 }
 
-export interface AppMembership {
+export interface AppMembershipsResponseMembershipsItem {
   appId?: string;
   userId?: string;
   permissions?: string[];
@@ -1931,13 +3448,80 @@ export interface AppMembershipsResponse {
   /**
    * An array of all ways a user has access to the app, based on the app_memberships table.
   */
-  memberships?: AppMembership[];
+  memberships?: AppMembershipsResponseMembershipsItem[];
+}
+
+export interface AppMembership {
+  appId?: string;
+  userId?: string;
+  permissions?: string[];
+  /**
+   * Possible values include: 'appcenter', 'hockeyapp', 'codepush', 'testcloud',
+   * 'hockeyapp-dogfood'
+  */
+  origin?: string;
+  /**
+   * Possible values include: 'user', 'org', 'distribution_group', 'team', 'release'
+  */
+  sourceType?: string;
+  sourceId?: string;
+}
+
+export interface AppMembershipsValidationResponseExcessAppMembershipsAppUsersMembershipsItem {
+  appId?: string;
+  userId?: string;
+  permissions?: string[];
+  /**
+   * Possible values include: 'appcenter', 'hockeyapp', 'codepush', 'testcloud',
+   * 'hockeyapp-dogfood'
+  */
+  origin?: string;
+  /**
+   * Possible values include: 'user', 'org', 'distribution_group', 'team', 'release'
+  */
+  sourceType?: string;
+  sourceId?: string;
+}
+
+export interface AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMembershipsItem {
+  appId?: string;
+  userId?: string;
+  permissions?: string[];
+  /**
+   * Possible values include: 'appcenter', 'hockeyapp', 'codepush', 'testcloud',
+   * 'hockeyapp-dogfood'
+  */
+  origin?: string;
+  /**
+   * Possible values include: 'user', 'org', 'distribution_group', 'team', 'release'
+  */
+  sourceType?: string;
+  sourceId?: string;
+}
+
+export interface AppMembershipsValidationResponseExcessAppMembershipsOrganizationAdminMembershipsItem {
+  appId?: string;
+  userId?: string;
+  permissions?: string[];
+  /**
+   * Possible values include: 'appcenter', 'hockeyapp', 'codepush', 'testcloud',
+   * 'hockeyapp-dogfood'
+  */
+  origin?: string;
+  /**
+   * Possible values include: 'user', 'org', 'distribution_group', 'team', 'release'
+  */
+  sourceType?: string;
+  sourceId?: string;
 }
 
 export interface AppMembershipsValidationResponseExcessAppMemberships {
-  appUsersMemberships?: AppMembership[];
-  distributionGroupMemberships?: AppMembership[];
-  organizationAdminMemberships?: AppMembership[];
+  appUsersMemberships?:
+  AppMembershipsValidationResponseExcessAppMembershipsAppUsersMembershipsItem[];
+  distributionGroupMemberships?:
+  AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMembershipsItem[];
+  organizationAdminMemberships?:
+  AppMembershipsValidationResponseExcessAppMembershipsOrganizationAdminMembershipsItem[];
 }
 
 export interface AppMembershipsValidationResponseAppUsersWithMissingMembershipsItem {
@@ -1970,11 +3554,81 @@ export interface AppMembershipsValidationResponse {
   AppMembershipsValidationResponseOrganizationAdminsWithMissingMembershipsItem[];
 }
 
-export interface UserProfileAdminResponse extends UserProfileResponse {
+export interface UserProfileResponse {
   /**
-   * Indicating whether the user should be added as a Manager to all apps owned by the organization
+   * The unique id (UUID) of the user
   */
-  addToAllApps?: boolean;
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+export interface UserProfileAdminResponse {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+  /**
+   * The user's role in the organization. Possible values include: 'admin', 'collaborator',
+   * 'member'
+  */
+  role?: string;
 }
 
 /**
@@ -1987,7 +3641,40 @@ export interface UserProfileResponseInternalSettings {
   marketingOptIn?: string;
 }
 
-export interface UserProfileResponseInternal extends UserProfileResponse {
+export interface UserProfileResponseInternal {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
   /**
    * The feature flags that are enabled for this app
   */
@@ -2003,6 +3690,16 @@ export interface UserProfileResponseInternal extends UserProfileResponse {
   settings?: UserProfileResponseInternalSettings;
 }
 
+/**
+ * The user's settings
+*/
+export interface UserProfileResponseManagementSettings {
+  /**
+   * The marketing opt-in setting
+  */
+  marketingOptIn?: string;
+}
+
 export interface UserProfileResponseManagementIdentityProvidersItem {
   /**
    * The name of the identity provider type. Possible values include: 'github', 'aad', 'facebook',
@@ -2015,7 +3712,53 @@ export interface UserProfileResponseManagementIdentityProvidersItem {
   origin?: string;
 }
 
-export interface UserProfileResponseManagement extends UserProfileResponseInternal {
+export interface UserProfileResponseManagement {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+  /**
+   * The feature flags that are enabled for this app
+  */
+  featureFlags?: string[];
+  /**
+   * The new admin_role. Possible values include: 'superAdmin', 'admin', 'devOps',
+   * 'customerSupport', 'notAdmin'
+  */
+  adminRole?: string;
+  /**
+   * The user's settings
+  */
+  settings?: UserProfileResponseManagementSettings;
   /**
    * The date when the app was last updated
   */
@@ -2038,6 +3781,36 @@ export interface UserSettingResponse {
    * The marketing opt-in setting
   */
   marketingOptIn?: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface Owner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
 }
 
 export interface AADGroup {
@@ -2204,7 +3977,296 @@ export interface PrivateSharedConnectionResponse {
 /**
  * Apple connection secrets
 */
-export interface AppleConnectionSecretRequest extends SharedConnectionRequest {
+export interface AppleConnectionSecretRequest {
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * Polymorphic Discriminator
+  */
+  credentialType: string;
+}
+
+/**
+ * apple secret details
+*/
+export interface AppleCredentialsMultifactorSecretRequestData {
+  /**
+   * username to connect to apple store.
+  */
+  username: string;
+  /**
+   * password to connect to apple store.
+  */
+  password: string;
+  /**
+   * The 6 digit Apple OTP for Multifactor accounts
+  */
+  authCode: string;
+  /**
+   * The app specific password required for app publishing for 2FA accounts
+  */
+  appSpecificPassword?: string;
+}
+
+/**
+ * Apple connection secrets
+*/
+export interface AppleCredentialsMultifactorSecretRequest {
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * credential type of the shared connection. Values can be credentials|certificate. Possible
+   * values include: 'credentials', 'certificate'
+  */
+  credentialType?: string;
+  /**
+   * apple secret details
+  */
+  data: AppleCredentialsMultifactorSecretRequestData;
+}
+
+/**
+ * apple secret details
+*/
+export interface AppleCredentialsSecretRequestData {
+  /**
+   * username to connect to apple store.
+  */
+  username?: string;
+  /**
+   * 6 digit auth code
+  */
+  authCode?: string;
+  /**
+   * password to connect to apple store.
+  */
+  password?: string;
+}
+
+/**
+ * Apple connection secrets
+*/
+export interface AppleCredentialsSecretRequest {
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * credential type of the shared connection. Values can be credentials|certificate. Possible
+   * values include: 'credentials', 'certificate'
+  */
+  credentialType?: string;
+  /**
+   * apple secret details
+  */
+  data: AppleCredentialsSecretRequestData;
+}
+
+/**
+ * apple secret details
+*/
+export interface AppleCertificateSecretRequestData {
+  /**
+   * The certificate contents in base 64 encoded string
+  */
+  base64Certificate: string;
+  /**
+   * The password for the certificate
+  */
+  password: string;
+}
+
+/**
+ * Apple certificate secrets
+*/
+export interface AppleCertificateSecretRequest {
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * credential type of the shared connection. Values can be credentials|certificate. Possible
+   * values include: 'credentials', 'certificate'
+  */
+  credentialType?: string;
+  /**
+   * apple secret details
+  */
+  data: AppleCertificateSecretRequestData;
+}
+
+/**
+ * private Apple connection secrets response
+*/
+export interface PrivateAppleSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+}
+
+/**
+ * apple secret details
+*/
+export interface PrivateAppleCredentialsSecretResponseData {
+  /**
+   * username to connect to apple store.
+  */
+  username?: string;
+  /**
+   * 6 digit auth code
+  */
+  authCode?: string;
+  /**
+   * password to connect to apple store.
+  */
+  password?: string;
+}
+
+/**
+ * private Apple connection secrets response
+*/
+export interface PrivateAppleCredentialsSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * apple secret details
+  */
+  data: PrivateAppleCredentialsSecretResponseData;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
+}
+
+/**
+ * apple secret details
+*/
+export interface PrivateAppleCertificateSecretResponseData {
+  /**
+   * The certificate contents in base 64 encoded string
+  */
+  base64Certificate: string;
+  /**
+   * The password for the certificate
+  */
+  password: string;
+  /**
+   * The display name (CN) of the certificate
+  */
+  displayName: string;
+  /**
+   * The date-time from which the certificate is valid
+  */
+  certificateValidityStartDate: string;
+  /**
+   * The date-time till which the certificate is valid
+  */
+  certificateValidityEndDate: string;
+}
+
+/**
+ * private Apple connection secrets response
+*/
+export interface PrivateAppleCertificateSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * apple secret details
+  */
+  data: PrivateAppleCertificateSecretResponseData;
+}
+
+/**
+ * Apple secret details
+*/
+export interface AppleSecretDetails {
+  /**
+   * username to connect to apple store.
+  */
+  username?: string;
+  /**
+   * 6 digit auth code
+  */
+  authCode?: string;
+  /**
+   * password to connect to apple store.
+  */
+  password?: string;
 }
 
 /**
@@ -2230,47 +4292,192 @@ export interface AppleMultifactorSecretDetails {
 }
 
 /**
- * Apple connection secrets
-*/
-export interface AppleCredentialsMultifactorSecretRequest extends AppleConnectionSecretRequest {
-  /**
-   * apple secret details
-  */
-  data: AppleMultifactorSecretDetails;
-}
-
-/**
  * Apple secret details
 */
-export interface AppleSecretDetails {
+export interface AppleSecretDetailsResponse {
   /**
-   * username to connect to apple store.
+   * username to connect to apple store
   */
-  username?: string;
+  username: string;
+}
+
+/**
+ * apple secret details
+*/
+export interface AppleConnectionSecretResponseData {
   /**
-   * 6 digit auth code
+   * username to connect to apple store
   */
-  authCode?: string;
-  /**
-   * password to connect to apple store.
-  */
-  password?: string;
+  username: string;
 }
 
 /**
  * Apple connection secrets
 */
-export interface AppleCredentialsSecretRequest extends AppleConnectionSecretRequest {
+export interface AppleConnectionSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
   /**
    * apple secret details
   */
-  data: AppleSecretDetails;
+  data: AppleConnectionSecretResponseData;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
 }
 
 /**
- * Apple Certificate Details
+ * Apple connection secrets
 */
-export interface AppleCertificateDetails {
+export interface AppleConnectionNonSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  credentialType: string;
+}
+
+/**
+ * Apple credentials non-secret data
+*/
+export interface AppleCredentialNonSecretDetailsResponseData {
+  /**
+   * username to connect to apple store
+  */
+  username: string;
+}
+
+/**
+ * Apple credentials non-secret details
+*/
+export interface AppleCredentialNonSecretDetailsResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * Apple credentials non-secret data
+  */
+  data: AppleCredentialNonSecretDetailsResponseData;
+}
+
+/**
+ * apple certificate non-secret details
+*/
+export interface AppleCertificateNonSecretDetailsResponseData {
+  /**
+   * The display name (CN) of the certificate
+  */
+  displayName: string;
+  /**
+   * The date-time from which the certificate is valid
+  */
+  certificateValidityStartDate: string;
+  /**
+   * The date-time till which the certificate is valid
+  */
+  certificateValidityEndDate: string;
+}
+
+/**
+ * Apple certificate non-secret details
+*/
+export interface AppleCertificateNonSecretDetailsResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * apple certificate non-secret details
+  */
+  data: AppleCertificateNonSecretDetailsResponseData;
+}
+
+/**
+ * apple certificate secret details.
+*/
+export interface AppleCertificateSecretDetailsResponseData {
   /**
    * The certificate contents in base 64 encoded string
   */
@@ -2279,32 +4486,52 @@ export interface AppleCertificateDetails {
    * The password for the certificate
   */
   password: string;
-}
-
-/**
- * Apple certificate secrets
-*/
-export interface AppleCertificateSecretRequest extends AppleConnectionSecretRequest {
   /**
-   * apple secret details
+   * The display name (CN) of the certificate
   */
-  data: AppleCertificateDetails;
-}
-
-/**
- * private Apple connection secrets response
-*/
-export interface PrivateAppleSecretResponse extends PrivateSharedConnectionResponse {
-}
-
-/**
- * private Apple connection secrets response
-*/
-export interface PrivateAppleCredentialsSecretResponse extends PrivateAppleSecretResponse {
+  displayName: string;
   /**
-   * apple secret details
+   * The date-time from which the certificate is valid
   */
-  data: AppleSecretDetails;
+  certificateValidityStartDate: string;
+  /**
+   * The date-time till which the certificate is valid
+  */
+  certificateValidityEndDate: string;
+}
+
+/**
+ * Apple connection secrets
+*/
+export interface AppleCertificateSecretDetailsResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * apple certificate secret details.
+  */
+  data: AppleCertificateSecretDetailsResponseData;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
 }
 
 /**
@@ -2334,49 +4561,17 @@ export interface AppleCertificateSecretDetails {
 }
 
 /**
- * private Apple connection secrets response
+ * Apple Certificate Details
 */
-export interface PrivateAppleCertificateSecretResponse extends PrivateAppleSecretResponse {
+export interface AppleCertificateDetails {
   /**
-   * apple secret details
+   * The certificate contents in base 64 encoded string
   */
-  data: AppleCertificateSecretDetails;
-}
-
-/**
- * Apple secret details
-*/
-export interface AppleSecretDetailsResponse {
+  base64Certificate: string;
   /**
-   * username to connect to apple store
+   * The password for the certificate
   */
-  username: string;
-}
-
-/**
- * Apple connection secrets
-*/
-export interface AppleConnectionSecretResponse extends SharedConnectionResponse {
-  /**
-   * apple secret details
-  */
-  data: AppleSecretDetailsResponse;
-}
-
-/**
- * Apple connection secrets
-*/
-export interface AppleConnectionNonSecretResponse extends SharedConnectionResponse {
-}
-
-/**
- * Apple credentials non-secret details
-*/
-export interface AppleCredentialNonSecretDetailsResponse extends AppleConnectionNonSecretResponse {
-  /**
-   * Apple credentials non-secret data
-  */
-  data: AppleSecretDetailsResponse;
+  password: string;
 }
 
 /**
@@ -2398,24 +4593,141 @@ export interface AppleCertificateNonSecretDetails {
 }
 
 /**
- * Apple certificate non-secret details
+ * jira secret details
 */
-export interface AppleCertificateNonSecretDetailsResponse extends AppleConnectionNonSecretResponse
-{
+export interface JiraConnectionSecretRequestData {
   /**
-   * apple certificate non-secret details
+   * baseUrl to connect to jira instance
   */
-  data: AppleCertificateNonSecretDetails;
+  baseUrl: string;
+  /**
+   * username to connect to jira instance
+  */
+  username: string;
+  /**
+   * password to connect to jira instance
+  */
+  password: string;
 }
 
 /**
- * Apple connection secrets
+ * Jira connection secrets
 */
-export interface AppleCertificateSecretDetailsResponse extends SharedConnectionResponse {
+export interface JiraConnectionSecretRequest {
   /**
-   * apple certificate secret details.
+   * display name of shared connection
   */
-  data: AppleCertificateSecretDetails;
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * credential type of the shared connection. Values can be credentials|certificate. Possible
+   * values include: 'credentials', 'certificate'
+  */
+  credentialType?: string;
+  /**
+   * jira secret details
+  */
+  data: JiraConnectionSecretRequestData;
+}
+
+/**
+ * jira secret details
+*/
+export interface JiraConnectionSecretResponseData {
+  /**
+   * baseUrl to connect to jira instance
+  */
+  baseUrl: string;
+  /**
+   * username to connect to jira instance
+  */
+  username: string;
+}
+
+/**
+ * Jira connection secrets
+*/
+export interface JiraConnectionSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * jira secret details
+  */
+  data: JiraConnectionSecretResponseData;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
+}
+
+/**
+ * jira secret details
+*/
+export interface PrivateJiraConnectionSecretResponseData {
+  /**
+   * baseUrl to connect to jira instance
+  */
+  baseUrl: string;
+  /**
+   * username to connect to jira instance
+  */
+  username: string;
+  /**
+   * password to connect to jira instance
+  */
+  password: string;
+}
+
+/**
+ * private Jira connection secrets response
+*/
+export interface PrivateJiraConnectionSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * jira secret details
+  */
+  data: PrivateJiraConnectionSecretResponseData;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
 }
 
 /**
@@ -2437,16 +4749,6 @@ export interface JiraSecretDetails {
 }
 
 /**
- * Jira connection secrets
-*/
-export interface JiraConnectionSecretRequest extends SharedConnectionRequest {
-  /**
-   * jira secret details
-  */
-  data: JiraSecretDetails;
-}
-
-/**
  * Jira secret details
 */
 export interface JiraSecretDetailsResponse {
@@ -2461,30 +4763,24 @@ export interface JiraSecretDetailsResponse {
 }
 
 /**
- * Jira connection secrets
-*/
-export interface JiraConnectionSecretResponse extends SharedConnectionResponse {
-  /**
-   * jira secret details
-  */
-  data: JiraSecretDetailsResponse;
-}
-
-/**
- * private Jira connection secrets response
-*/
-export interface PrivateJiraConnectionSecretResponse extends PrivateSharedConnectionResponse {
-  /**
-   * jira secret details
-  */
-  data: JiraSecretDetails;
-}
-
-/**
  * Google Play connection secrets this should be the JSON file data which is provided by google
  * play
 */
-export interface GooglePlayConnectionSecretRequest extends SharedConnectionRequest {
+export interface GooglePlayConnectionSecretRequest {
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate.
+   * Possible values include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * credential type of the shared connection. Values can be credentials|certificate. Possible
+   * values include: 'credentials', 'certificate'
+  */
+  credentialType?: string;
   /**
    * google secret details
   */
@@ -2494,35 +4790,127 @@ export interface GooglePlayConnectionSecretRequest extends SharedConnectionReque
 /**
  * Google Play connection secrets
 */
-export interface GooglePlayConnectionSecretResponse extends SharedConnectionResponse {
+export interface GooglePlayConnectionSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
   /**
    * google play secret details
   */
   data: any;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
 }
 
 /**
  * private google connection secrets response
 */
-export interface PrivateGooglePlayConnectionSecretResponse extends PrivateSharedConnectionResponse
-{
+export interface PrivateGooglePlayConnectionSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
   /**
    * google secret details
   */
   data: any;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
 }
 
 /**
  * Google Play non-secret data
 */
-export interface GooglePlayConnectionNonSecretResponse extends SharedConnectionResponse {
+export interface GooglePlayConnectionNonSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  credentialType: string;
 }
 
 /**
  * Google Play credentials non-secret details
 */
-export interface GooglePlayCredentialNonSecretDetailsResponse extends
-GooglePlayConnectionNonSecretResponse {
+export interface GooglePlayCredentialNonSecretDetailsResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
   /**
    * Google Play credentials non-secret details
   */
@@ -2532,18 +4920,81 @@ GooglePlayConnectionNonSecretResponse {
 /**
  * Jira non-secret data
 */
-export interface JiraConnectionNonSecretResponse extends SharedConnectionResponse {
+export interface JiraConnectionNonSecretResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  credentialType: string;
 }
 
 /**
  * Jira credentials non-secret details
 */
-export interface JiraCredentialNonSecretDetailsResponse extends
-GooglePlayConnectionNonSecretResponse {
+export interface JiraCredentialNonSecretDetailsResponseData {
+  /**
+   * baseUrl to connect to jira instance
+  */
+  baseUrl: string;
+  /**
+   * username to connect to jira instance
+  */
+  username: string;
+}
+
+/**
+ * Jira credentials non-secret details
+*/
+export interface JiraCredentialNonSecretDetailsResponse {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * service type of shared connection can be apple|gitlab|googleplay|jira. Possible values
+   * include: 'apple', 'jira', 'googleplay', 'gitlab'
+  */
+  serviceType: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
   /**
    * Jira credentials non-secret details
   */
-  data: JiraSecretDetailsResponse;
+  data: JiraCredentialNonSecretDetailsResponseData;
 }
 
 export interface ApiTokenResponsev2 {
@@ -2589,6 +5040,63 @@ export interface UserDataResponse {
   avatarUrl?: string;
 }
 
+export interface UserProfileResponsev2 {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The created date of the user
+  */
+  createdAt?: string;
+  /**
+   * The date in the future when the user should be checked again for NPS eligibility
+  */
+  nextNpsSurveyDate?: string;
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+  /**
+   * The feature flags that are enabled for this user
+  */
+  featureFlags?: string[];
+  /**
+   * The new admin_role. Possible values include: 'superAdmin', 'admin', 'devOps',
+   * 'customerSupport', 'notAdmin'
+  */
+  adminRole?: string;
+  /**
+   * The user's settings
+  */
+  settings?: any;
+  /**
+   * The session hash of the user
+  */
+  sessionHash?: string;
+}
+
 export interface MbaasSurveyDataResponse {
   /**
    * The next mbaas survey date for the user
@@ -2605,8 +5113,26 @@ export interface ErrorDetailsv2 {
   message: string;
 }
 
+export interface ErrorResponsev2Error {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized'
+  */
+  code: string;
+  message: string;
+}
+
 export interface ErrorResponsev2 {
-  error: ErrorDetailsv2;
+  error: ErrorResponsev2Error;
+}
+
+export interface OptimizelyUserMetaDataResponse {
+  userId?: string;
+  metadata?: any;
+}
+
+export interface OptimizelyUserMetaDataRequest {
+  metadata?: any;
 }
 
 export interface FileAsset {
@@ -2633,9 +5159,23 @@ export interface SourceRepository {
 }
 
 /**
+ * The source repository
+*/
+export interface SourceRepositoriesItem {
+  /**
+   * The repository name
+  */
+  name?: string;
+  /**
+   * URL used to clone the repository
+  */
+  cloneUrl?: string;
+}
+
+/**
  * The GitHub Installation
 */
-export interface GitHubAccountLite {
+export interface GitHubInstallationLiteAccount {
   /**
    * GitHub Account Id
   */
@@ -2662,7 +5202,10 @@ export interface GitHubInstallationLite {
    * GitHub Installation Id
   */
   id?: number;
-  account?: GitHubAccountLite;
+  /**
+   * The GitHub Installation
+  */
+  account?: GitHubInstallationLiteAccount;
   /**
    * GitHub Installation App Id
   */
@@ -2670,9 +5213,65 @@ export interface GitHubInstallationLite {
 }
 
 /**
+ * The GitHub Installation
+*/
+export interface GitHubAccountLite {
+  /**
+   * GitHub Account Id
+  */
+  id?: string;
+  /**
+   * GitHub Account Login Name
+  */
+  login?: string;
+  /**
+   * GitHub Account Type
+  */
+  type?: string;
+  /**
+   * GitHub Account Url
+  */
+  url?: string;
+}
+
+/**
  * The repository which is accessiable by GitHub App Installation
 */
 export interface GitHubInstallationRepository {
+  /**
+   * The repository name
+  */
+  name?: string;
+  /**
+   * The discription of repository
+  */
+  description?: string;
+  /**
+   * URL used to clone the repository
+  */
+  cloneUrl?: string;
+  /**
+   * The default branch for the repo
+  */
+  defaultBranch?: string;
+  /**
+   * The language in the repository
+  */
+  language?: string;
+  /**
+   * The repository updated time
+  */
+  updatedAt?: string;
+  /**
+   * Whether the repository is a fork
+  */
+  fork?: boolean;
+}
+
+/**
+ * The repository which is accessiable by GitHub App Installation
+*/
+export interface GitHubInstallationRepositoriesItem {
   /**
    * The repository name
   */
@@ -2728,7 +5327,77 @@ export interface GitHubBillingAccount {
 /**
  * The lite version of GitHub repository
 */
-export interface GitHubRepositoryLite {
+export interface GitHubPullRequestLiteHeadRepo {
+  /**
+   * The repository id
+  */
+  id?: number;
+}
+
+/**
+ * The lite version of GitHub branch
+*/
+export interface GitHubPullRequestLiteHead {
+  /**
+   * The repository name
+  */
+  ref?: string;
+  /**
+   * The discription of repository
+  */
+  sha?: string;
+  /**
+   * The lite version of GitHub repository
+  */
+  repo?: GitHubPullRequestLiteHeadRepo;
+}
+
+/**
+ * The lite version of GitHub repository
+*/
+export interface GitHubPullRequestLiteBaseRepo {
+  /**
+   * The repository id
+  */
+  id?: number;
+}
+
+/**
+ * The lite version of GitHub branch
+*/
+export interface GitHubPullRequestLiteBase {
+  /**
+   * The repository name
+  */
+  ref?: string;
+  /**
+   * The discription of repository
+  */
+  sha?: string;
+  /**
+   * The lite version of GitHub repository
+  */
+  repo?: GitHubPullRequestLiteBaseRepo;
+}
+
+/**
+ * The lite version of GitHub pull request
+*/
+export interface GitHubPullRequestLite {
+  /**
+   * The lite version of GitHub branch
+  */
+  head?: GitHubPullRequestLiteHead;
+  /**
+   * The lite version of GitHub branch
+  */
+  base?: GitHubPullRequestLiteBase;
+}
+
+/**
+ * The lite version of GitHub repository
+*/
+export interface GitHubBranchLiteRepo {
   /**
    * The repository id
   */
@@ -2747,15 +5416,20 @@ export interface GitHubBranchLite {
    * The discription of repository
   */
   sha?: string;
-  repo?: GitHubRepositoryLite;
+  /**
+   * The lite version of GitHub repository
+  */
+  repo?: GitHubBranchLiteRepo;
 }
 
 /**
- * The lite version of GitHub pull request
+ * The lite version of GitHub repository
 */
-export interface GitHubPullRequestLite {
-  head?: GitHubBranchLite;
-  base?: GitHubBranchLite;
+export interface GitHubRepositoryLite {
+  /**
+   * The repository id
+  */
+  id?: number;
 }
 
 /**
@@ -2847,6 +5521,58 @@ export interface VSTSProject {
 }
 
 /**
+ * VSTS user profile
+*/
+export interface VSTSAccountUser {
+  /**
+   * Profile id
+  */
+  id?: string;
+  /**
+   * Profile display name
+  */
+  displayName?: string;
+  /**
+   * Profile alias
+  */
+  publicAlias?: string;
+  /**
+   * Profile email
+  */
+  emailAddress?: string;
+}
+
+/**
+ * VSTS project
+*/
+export interface VSTSAccountProjectsItem {
+  /**
+   * Project id
+  */
+  id?: string;
+  /**
+   * Project name
+  */
+  name?: string;
+  /**
+   * Project description
+  */
+  description?: string;
+  /**
+   * Project URL
+  */
+  url?: string;
+  /**
+   * Project state
+  */
+  state?: string;
+  /**
+   * Project visibility
+  */
+  visibility?: string;
+}
+
+/**
  * VSTS account with projects list and user info
 */
 export interface VSTSAccount {
@@ -2870,11 +5596,100 @@ export interface VSTSAccount {
    * Account status
   */
   accountStatus?: string;
-  user?: VSTSProfile;
+  /**
+   * VSTS user profile
+  */
+  user?: VSTSAccountUser;
   /**
    * Account projects
   */
-  projects?: VSTSProject[];
+  projects?: VSTSAccountProjectsItem[];
+}
+
+/**
+ * VSTS user profile
+*/
+export interface VSTSAccountsItemUser {
+  /**
+   * Profile id
+  */
+  id?: string;
+  /**
+   * Profile display name
+  */
+  displayName?: string;
+  /**
+   * Profile alias
+  */
+  publicAlias?: string;
+  /**
+   * Profile email
+  */
+  emailAddress?: string;
+}
+
+/**
+ * VSTS project
+*/
+export interface VSTSAccountsItemProjectsItem {
+  /**
+   * Project id
+  */
+  id?: string;
+  /**
+   * Project name
+  */
+  name?: string;
+  /**
+   * Project description
+  */
+  description?: string;
+  /**
+   * Project URL
+  */
+  url?: string;
+  /**
+   * Project state
+  */
+  state?: string;
+  /**
+   * Project visibility
+  */
+  visibility?: string;
+}
+
+/**
+ * VSTS account with projects list and user info
+*/
+export interface VSTSAccountsItem {
+  /**
+   * Account id
+  */
+  accountId?: string;
+  /**
+   * Account uri
+  */
+  accountUri?: string;
+  /**
+   * Account name
+  */
+  accountName?: string;
+  /**
+   * Account type
+  */
+  accountType?: string;
+  /**
+   * Account status
+  */
+  accountStatus?: string;
+  /**
+   * VSTS user profile
+  */
+  user?: VSTSAccountsItemUser;
+  /**
+   * Account projects
+  */
+  projects?: VSTSAccountsItemProjectsItem[];
 }
 
 /**
@@ -2912,6 +5727,21 @@ export interface XcodeArchiveProject {
   projectPath?: string;
 }
 
+export interface XcodeSchemeArchiveProject {
+  /**
+   * The Id of the target to archive
+  */
+  archiveTargetId: string;
+  /**
+   * The project to archive container name
+  */
+  projectName: string;
+  /**
+   * Full path of the target project
+  */
+  projectPath?: string;
+}
+
 export interface XcodeScheme {
   /**
    * Scheme name
@@ -2925,10 +5755,55 @@ export interface XcodeScheme {
    * Build configuration set in Archive action
   */
   archiveConfiguration?: string;
-  archiveProject?: XcodeArchiveProject;
+  archiveProject?: XcodeSchemeArchiveProject;
 }
 
-export interface XcodeSchemeContainer {
+export interface XcodeToolsetXcodeSchemeContainersItemSharedSchemesItemArchiveProject {
+  /**
+   * The Id of the target to archive
+  */
+  archiveTargetId: string;
+  /**
+   * The project to archive container name
+  */
+  projectName: string;
+  /**
+   * Full path of the target project
+  */
+  projectPath?: string;
+}
+
+export interface XcodeToolsetXcodeSchemeContainersItemSharedSchemesItem {
+  /**
+   * Scheme name
+  */
+  name: string;
+  /**
+   * Does scheme have a test action?
+  */
+  hasTestAction: boolean;
+  /**
+   * Build configuration set in Archive action
+  */
+  archiveConfiguration?: string;
+  archiveProject?: XcodeToolsetXcodeSchemeContainersItemSharedSchemesItemArchiveProject;
+}
+
+/**
+ * App extension information
+*/
+export interface XcodeToolsetXcodeSchemeContainersItemAppExtensionTargetsItem {
+  /**
+   * App extension name
+  */
+  name: string;
+  /**
+   * App extension bundle identifier
+  */
+  targetBundleIdentifier: string;
+}
+
+export interface XcodeToolsetXcodeSchemeContainersItem {
   /**
    * Path to project
   */
@@ -2936,7 +5811,7 @@ export interface XcodeSchemeContainer {
   /**
    * Project schemes
   */
-  sharedSchemes: XcodeScheme[];
+  sharedSchemes: XcodeToolsetXcodeSchemeContainersItemSharedSchemesItem[];
   /**
    * Path to CocoaPods file, if present
   */
@@ -2956,17 +5831,93 @@ export interface XcodeSchemeContainer {
   /**
    * Information regarding project app extensions, if present
   */
-  appExtensionTargets?: IosAppExtensionInfo[];
+  appExtensionTargets?: XcodeToolsetXcodeSchemeContainersItemAppExtensionTargetsItem[];
 }
 
 export interface XcodeToolset {
   /**
    * The Xcode scheme containers
   */
-  xcodeSchemeContainers: XcodeSchemeContainer[];
+  xcodeSchemeContainers: XcodeToolsetXcodeSchemeContainersItem[];
 }
 
-export interface XamarinSolution {
+export interface XcodeSchemeContainerSharedSchemesItemArchiveProject {
+  /**
+   * The Id of the target to archive
+  */
+  archiveTargetId: string;
+  /**
+   * The project to archive container name
+  */
+  projectName: string;
+  /**
+   * Full path of the target project
+  */
+  projectPath?: string;
+}
+
+export interface XcodeSchemeContainerSharedSchemesItem {
+  /**
+   * Scheme name
+  */
+  name: string;
+  /**
+   * Does scheme have a test action?
+  */
+  hasTestAction: boolean;
+  /**
+   * Build configuration set in Archive action
+  */
+  archiveConfiguration?: string;
+  archiveProject?: XcodeSchemeContainerSharedSchemesItemArchiveProject;
+}
+
+/**
+ * App extension information
+*/
+export interface XcodeSchemeContainerAppExtensionTargetsItem {
+  /**
+   * App extension name
+  */
+  name: string;
+  /**
+   * App extension bundle identifier
+  */
+  targetBundleIdentifier: string;
+}
+
+export interface XcodeSchemeContainer {
+  /**
+   * Path to project
+  */
+  path: string;
+  /**
+   * Project schemes
+  */
+  sharedSchemes: XcodeSchemeContainerSharedSchemesItem[];
+  /**
+   * Path to CocoaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  /**
+   * repo object Id of the pbxproject
+  */
+  xcodeProjectSha?: string;
+  /**
+   * Related projects paths for xcworkspace
+  */
+  workspaceProjectPaths?: string;
+  /**
+   * Information regarding project app extensions, if present
+  */
+  appExtensionTargets?: XcodeSchemeContainerAppExtensionTargetsItem[];
+}
+
+export interface XamarinToolsetXamarinSolutionsItem {
   /**
    * Path to solution
   */
@@ -2985,7 +5936,107 @@ export interface XamarinToolset {
   /**
    * Xamarin solutions for the toolset
   */
-  xamarinSolutions: XamarinSolution[];
+  xamarinSolutions: XamarinToolsetXamarinSolutionsItem[];
+}
+
+export interface XamarinSolution {
+  /**
+   * Path to solution
+  */
+  path: string;
+  /**
+   * Solution configurations
+  */
+  configurations: string[];
+  /**
+   * Solution default configuration
+  */
+  defaultConfiguration?: string;
+}
+
+/**
+ * Android signing config. Null if not specified
+*/
+export interface AndroidProjectAndroidModulesItemBuildConfigurationsItemSigningConfig {
+  /**
+   * Indicates if storeFile is specified in the signing configuration
+  */
+  hasStoreFile?: boolean;
+}
+
+export interface AndroidProjectAndroidModulesItemBuildConfigurationsItem {
+  /**
+   * Name of build configuration (the same as a build type name)
+  */
+  name: string;
+  /**
+   * Android signing config. Null if not specified
+  */
+  signingConfig?: AndroidProjectAndroidModulesItemBuildConfigurationsItemSigningConfig;
+}
+
+export interface AndroidProjectAndroidModulesItem {
+  /**
+   * Name of the Android module
+  */
+  name: string;
+  /**
+   * Module contains bundle settings
+  */
+  hasBundle?: boolean;
+  /**
+   * The product flavors of the Android module
+  */
+  productFlavors?: string[];
+  /**
+   * The detected build variants of the Android module (matrix of product flavor + build type
+   * (debug|release))
+  */
+  buildVariants?: string[];
+  /**
+   * The detected build types of the Android module
+  */
+  buildTypes?: string[];
+  /**
+   * The detected build configurations of the Android module
+  */
+  buildConfigurations?: AndroidProjectAndroidModulesItemBuildConfigurationsItem[];
+  /**
+   * Whether the module is at the root level of the project
+  */
+  isRoot?: boolean;
+}
+
+export interface AndroidProject {
+  /**
+   * Android Gradle modules
+  */
+  androidModules: AndroidProjectAndroidModulesItem[];
+  /**
+   * The path of the Gradle wrapper
+  */
+  gradleWrapperPath?: string;
+}
+
+/**
+ * Android signing config. Null if not specified
+*/
+export interface AndroidModuleBuildConfigurationsItemSigningConfig {
+  /**
+   * Indicates if storeFile is specified in the signing configuration
+  */
+  hasStoreFile?: boolean;
+}
+
+export interface AndroidModuleBuildConfigurationsItem {
+  /**
+   * Name of build configuration (the same as a build type name)
+  */
+  name: string;
+  /**
+   * Android signing config. Null if not specified
+  */
+  signingConfig?: AndroidModuleBuildConfigurationsItemSigningConfig;
 }
 
 export interface AndroidModule {
@@ -3007,27 +6058,48 @@ export interface AndroidModule {
   */
   buildVariants?: string[];
   /**
-   * The detected build types fo the Android module
+   * The detected build types of the Android module
   */
   buildTypes?: string[];
+  /**
+   * The detected build configurations of the Android module
+  */
+  buildConfigurations?: AndroidModuleBuildConfigurationsItem[];
   /**
    * Whether the module is at the root level of the project
   */
   isRoot?: boolean;
 }
 
-export interface AndroidProject {
+/**
+ * Android signing config. Null if not specified
+*/
+export interface BuildConfigurationSigningConfig {
   /**
-   * Android Gradle modules
+   * Indicates if storeFile is specified in the signing configuration
   */
-  androidModules: AndroidModule[];
-  /**
-   * The path of the Gradle wrapper
-  */
-  gradleWrapperPath?: string;
+  hasStoreFile?: boolean;
 }
 
-export interface JavaScriptSolution {
+export interface BuildConfiguration {
+  /**
+   * Name of build configuration (the same as a build type name)
+  */
+  name: string;
+  /**
+   * Android signing config. Null if not specified
+  */
+  signingConfig?: BuildConfigurationSigningConfig;
+}
+
+export interface SigningConfig {
+  /**
+   * Indicates if storeFile is specified in the signing configuration
+  */
+  hasStoreFile?: boolean;
+}
+
+export interface JavaScriptToolsetJavascriptSolutionsItem {
   /**
    * The path to the detected package.json
   */
@@ -3046,10 +6118,21 @@ export interface JavaScriptToolset {
   /**
    * The React Native solutions detected
   */
-  javascriptSolutions?: JavaScriptSolution[];
+  javascriptSolutions?: JavaScriptToolsetJavascriptSolutionsItem[];
 }
 
-export interface UWPSolution {
+export interface JavaScriptSolution {
+  /**
+   * The path to the detected package.json
+  */
+  packageJsonPath: string;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+export interface UWPToolsetUwpSolutionsItem {
   /**
    * The path to the UWP solution
   */
@@ -3064,7 +6147,41 @@ export interface UWPToolset {
   /**
    * The UWP solutions detected
   */
-  uwpSolutions: UWPSolution[];
+  uwpSolutions: UWPToolsetUwpSolutionsItem[];
+}
+
+export interface UWPSolution {
+  /**
+   * The path to the UWP solution
+  */
+  path: string;
+  /**
+   * The possible configurations detected for the UWP solution
+  */
+  configurations: string[];
+}
+
+export interface TestCloudToolsetProjectsItemFrameworkProperties {
+  configurations?: string[];
+}
+
+export interface TestCloudToolsetProjectsItem {
+  /**
+   * The path to the TestCloud project
+  */
+  path: string;
+  /**
+   * Possible values include: 'Appium', 'Calabash', 'Espresso', 'UITest', 'Generated'
+  */
+  frameworkType: string;
+  frameworkProperties?: TestCloudToolsetProjectsItemFrameworkProperties;
+}
+
+export interface TestCloudToolset {
+  /**
+   * The TestCloud projects detected
+  */
+  projects: TestCloudToolsetProjectsItem[];
 }
 
 export interface TestCloudProjectFrameworkProperties {
@@ -3083,19 +6200,248 @@ export interface TestCloudProject {
   frameworkProperties?: TestCloudProjectFrameworkProperties;
 }
 
-export interface TestCloudToolset {
+export interface TestCloudProjectFrameworkPropertiesModel {
+  configurations?: string[];
+}
+
+export interface ToolsetProjectsXcodeXcodeSchemeContainersItemSharedSchemesItemArchiveProject {
   /**
-   * The TestCloud projects detected
+   * The Id of the target to archive
   */
-  projects: TestCloudProject[];
+  archiveTargetId: string;
+  /**
+   * The project to archive container name
+  */
+  projectName: string;
+  /**
+   * Full path of the target project
+  */
+  projectPath?: string;
+}
+
+export interface ToolsetProjectsXcodeXcodeSchemeContainersItemSharedSchemesItem {
+  /**
+   * Scheme name
+  */
+  name: string;
+  /**
+   * Does scheme have a test action?
+  */
+  hasTestAction: boolean;
+  /**
+   * Build configuration set in Archive action
+  */
+  archiveConfiguration?: string;
+  archiveProject?: ToolsetProjectsXcodeXcodeSchemeContainersItemSharedSchemesItemArchiveProject;
+}
+
+/**
+ * App extension information
+*/
+export interface ToolsetProjectsXcodeXcodeSchemeContainersItemAppExtensionTargetsItem {
+  /**
+   * App extension name
+  */
+  name: string;
+  /**
+   * App extension bundle identifier
+  */
+  targetBundleIdentifier: string;
+}
+
+export interface ToolsetProjectsXcodeXcodeSchemeContainersItem {
+  /**
+   * Path to project
+  */
+  path: string;
+  /**
+   * Project schemes
+  */
+  sharedSchemes: ToolsetProjectsXcodeXcodeSchemeContainersItemSharedSchemesItem[];
+  /**
+   * Path to CocoaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  /**
+   * repo object Id of the pbxproject
+  */
+  xcodeProjectSha?: string;
+  /**
+   * Related projects paths for xcworkspace
+  */
+  workspaceProjectPaths?: string;
+  /**
+   * Information regarding project app extensions, if present
+  */
+  appExtensionTargets?: ToolsetProjectsXcodeXcodeSchemeContainersItemAppExtensionTargetsItem[];
+}
+
+export interface ToolsetProjectsXcode {
+  /**
+   * The Xcode scheme containers
+  */
+  xcodeSchemeContainers: ToolsetProjectsXcodeXcodeSchemeContainersItem[];
+}
+
+export interface ToolsetProjectsJavascriptJavascriptSolutionsItem {
+  /**
+   * The path to the detected package.json
+  */
+  packageJsonPath: string;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+export interface ToolsetProjectsJavascript {
+  /**
+   * Paths for detected package.json files
+  */
+  packageJsonPaths: string[];
+  /**
+   * The React Native solutions detected
+  */
+  javascriptSolutions?: ToolsetProjectsJavascriptJavascriptSolutionsItem[];
+}
+
+export interface ToolsetProjectsXamarinXamarinSolutionsItem {
+  /**
+   * Path to solution
+  */
+  path: string;
+  /**
+   * Solution configurations
+  */
+  configurations: string[];
+  /**
+   * Solution default configuration
+  */
+  defaultConfiguration?: string;
+}
+
+export interface ToolsetProjectsXamarin {
+  /**
+   * Xamarin solutions for the toolset
+  */
+  xamarinSolutions: ToolsetProjectsXamarinXamarinSolutionsItem[];
+}
+
+/**
+ * Android signing config. Null if not specified
+*/
+export interface ToolsetProjectsAndroidAndroidModulesItemBuildConfigurationsItemSigningConfig {
+  /**
+   * Indicates if storeFile is specified in the signing configuration
+  */
+  hasStoreFile?: boolean;
+}
+
+export interface ToolsetProjectsAndroidAndroidModulesItemBuildConfigurationsItem {
+  /**
+   * Name of build configuration (the same as a build type name)
+  */
+  name: string;
+  /**
+   * Android signing config. Null if not specified
+  */
+  signingConfig?: ToolsetProjectsAndroidAndroidModulesItemBuildConfigurationsItemSigningConfig;
+}
+
+export interface ToolsetProjectsAndroidAndroidModulesItem {
+  /**
+   * Name of the Android module
+  */
+  name: string;
+  /**
+   * Module contains bundle settings
+  */
+  hasBundle?: boolean;
+  /**
+   * The product flavors of the Android module
+  */
+  productFlavors?: string[];
+  /**
+   * The detected build variants of the Android module (matrix of product flavor + build type
+   * (debug|release))
+  */
+  buildVariants?: string[];
+  /**
+   * The detected build types of the Android module
+  */
+  buildTypes?: string[];
+  /**
+   * The detected build configurations of the Android module
+  */
+  buildConfigurations?: ToolsetProjectsAndroidAndroidModulesItemBuildConfigurationsItem[];
+  /**
+   * Whether the module is at the root level of the project
+  */
+  isRoot?: boolean;
+}
+
+export interface ToolsetProjectsAndroid {
+  /**
+   * Android Gradle modules
+  */
+  androidModules: ToolsetProjectsAndroidAndroidModulesItem[];
+  /**
+   * The path of the Gradle wrapper
+  */
+  gradleWrapperPath?: string;
 }
 
 /**
  * Abstract platform project
 */
-export interface ToolsetProject {
+export interface ToolsetProjectsBuildscriptsValue {
   name?: string;
   path?: string;
+}
+
+export interface ToolsetProjectsUwpUwpSolutionsItem {
+  /**
+   * The path to the UWP solution
+  */
+  path: string;
+  /**
+   * The possible configurations detected for the UWP solution
+  */
+  configurations: string[];
+}
+
+export interface ToolsetProjectsUwp {
+  /**
+   * The UWP solutions detected
+  */
+  uwpSolutions: ToolsetProjectsUwpUwpSolutionsItem[];
+}
+
+export interface ToolsetProjectsTestcloudProjectsItemFrameworkProperties {
+  configurations?: string[];
+}
+
+export interface ToolsetProjectsTestcloudProjectsItem {
+  /**
+   * The path to the TestCloud project
+  */
+  path: string;
+  /**
+   * Possible values include: 'Appium', 'Calabash', 'Espresso', 'UITest', 'Generated'
+  */
+  frameworkType: string;
+  frameworkProperties?: ToolsetProjectsTestcloudProjectsItemFrameworkProperties;
+}
+
+export interface ToolsetProjectsTestcloud {
+  /**
+   * The TestCloud projects detected
+  */
+  projects: ToolsetProjectsTestcloudProjectsItem[];
 }
 
 /**
@@ -3106,16 +6452,35 @@ export interface ToolsetProjects {
    * The commit hash of the analyzed commit
   */
   commit?: string;
-  xcode?: XcodeToolset;
-  javascript?: JavaScriptToolset;
-  xamarin?: XamarinToolset;
-  android?: AndroidProject;
-  buildscripts?: { [propertyName: string]: ToolsetProject };
-  uwp?: UWPToolset;
-  testcloud?: TestCloudToolset;
+  xcode?: ToolsetProjectsXcode;
+  javascript?: ToolsetProjectsJavascript;
+  xamarin?: ToolsetProjectsXamarin;
+  android?: ToolsetProjectsAndroid;
+  /**
+   * A collection of detected pre/post buildscripts for current platform toolset
+  */
+  buildscripts?: { [propertyName: string]: ToolsetProjectsBuildscriptsValue };
+  uwp?: ToolsetProjectsUwp;
+  testcloud?: ToolsetProjectsTestcloud;
 }
 
-export interface Commit {
+/**
+ * Abstract platform project
+*/
+export interface BuildScriptsValue {
+  name?: string;
+  path?: string;
+}
+
+/**
+ * Abstract platform project
+*/
+export interface ToolsetProject {
+  name?: string;
+  path?: string;
+}
+
+export interface BranchStatusCollectionItemValueBranchCommit {
   /**
    * The commit SHA
   */
@@ -3126,23 +6491,107 @@ export interface Commit {
   url?: string;
 }
 
-export interface Branch {
+export interface BranchStatusCollectionItemValueBranch {
   /**
    * The branch name
   */
   name: string;
-  commit: Commit;
+  commit: BranchStatusCollectionItemValueBranchCommit;
 }
 
 /**
  * The branch build core properties
 */
-export interface BranchProperties {
-  branch?: Branch;
+export interface BranchStatusCollectionItemValue {
+  branch?: BranchStatusCollectionItemValueBranch;
   enabled?: boolean;
 }
 
-export interface Build {
+export interface BranchStatusCollectionItemLastBuild {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
+/**
+ * The branch build status
+*/
+export interface BranchStatusCollectionItem {
+  configured: boolean;
+  lastBuild?: BranchStatusCollectionItemLastBuild;
+  /**
+   * Describes unknown properties. The value of an unknown property MUST be of type
+   * "BranchStatusCollectionItemValue". Due to valid TS constraints we have modeled this as a union
+   * of `BranchStatusCollectionItemValue | any`.
+  */
+  [additionalPropertyName: string]: BranchStatusCollectionItemValue | any;
+}
+
+export interface BranchStatusValueBranchCommit {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+}
+
+export interface BranchStatusValueBranch {
+  /**
+   * The branch name
+  */
+  name: string;
+  commit: BranchStatusValueBranchCommit;
+}
+
+/**
+ * The branch build core properties
+*/
+export interface BranchStatusValue {
+  branch?: BranchStatusValueBranch;
+  enabled?: boolean;
+}
+
+export interface BranchStatusLastBuild {
   /**
    * The build ID
   */
@@ -3190,19 +6639,95 @@ export interface Build {
 */
 export interface BranchStatus {
   configured: boolean;
-  lastBuild?: Build;
+  lastBuild?: BranchStatusLastBuild;
   /**
    * Describes unknown properties. The value of an unknown property MUST be of type
-   * "BranchProperties". Due to valid TS constraints we have modeled this as a union of
-   * `BranchProperties | any`.
+   * "BranchStatusValue". Due to valid TS constraints we have modeled this as a union of
+   * `BranchStatusValue | any`.
   */
-  [additionalPropertyName: string]: BranchProperties | any;
+  [additionalPropertyName: string]: BranchStatusValue | any;
+}
+
+export interface BranchPropertiesBranchCommit {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+}
+
+export interface BranchPropertiesBranch {
+  /**
+   * The branch name
+  */
+  name: string;
+  commit: BranchPropertiesBranchCommit;
+}
+
+/**
+ * The branch build core properties
+*/
+export interface BranchProperties {
+  branch?: BranchPropertiesBranch;
+  enabled?: boolean;
+}
+
+export interface BranchConfigurationValueBranchCommit {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+}
+
+export interface BranchConfigurationValueBranch {
+  /**
+   * The branch name
+  */
+  name: string;
+  commit: BranchConfigurationValueBranchCommit;
+}
+
+/**
+ * The branch build core properties
+*/
+export interface BranchConfigurationValue {
+  branch?: BranchConfigurationValueBranch;
+  enabled?: boolean;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface BranchConfigurationToolsetsXcodeAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
 }
 
 /**
  * Build configuration when Xcode is part of the build steps
 */
-export interface XcodeBranchConfigurationProperties {
+export interface BranchConfigurationToolsetsXcode {
   /**
    * Xcode project/workspace path
   */
@@ -3220,7 +6745,8 @@ export interface XcodeBranchConfigurationProperties {
   provisioningProfileFileId?: string;
   certificateFileId?: string;
   provisioningProfileUploadId?: string;
-  appExtensionProvisioningProfileFiles?: ProvisioningProfileFile[];
+  appExtensionProvisioningProfileFiles?:
+  BranchConfigurationToolsetsXcodeAppExtensionProvisioningProfileFilesItem[];
   certificateUploadId?: string;
   certificatePassword?: string;
   scheme?: string;
@@ -3258,7 +6784,7 @@ export interface XcodeBranchConfigurationProperties {
 /**
  * Build configuration when React Native, or other JavaScript tech, is part of the build steps
 */
-export interface JavaScriptBranchConfigurationProperties {
+export interface BranchConfigurationToolsetsJavascript {
   /**
    * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
   */
@@ -3276,7 +6802,7 @@ export interface JavaScriptBranchConfigurationProperties {
 /**
  * Build configuration for Xamarin projects
 */
-export interface XamarinBranchConfigurationProperties {
+export interface BranchConfigurationToolsetsXamarin {
   slnPath?: string;
   isSimBuild?: boolean;
   args?: string;
@@ -3294,6 +6820,695 @@ export interface XamarinBranchConfigurationProperties {
 
   */
   symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface BranchConfigurationToolsetsAndroid {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface BranchConfigurationToolsets {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: BranchConfigurationToolsetsXcode;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: BranchConfigurationToolsetsJavascript;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: BranchConfigurationToolsetsXamarin;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: BranchConfigurationToolsetsAndroid;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface BranchConfigurationArtifactVersioning {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+/**
+ * The branch build configuration
+*/
+export interface BranchConfiguration {
+  /**
+   * Possible values include: 'continous', 'continuous', 'manual'
+  */
+  trigger?: string;
+  testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
+  signed?: boolean;
+  /**
+   * A configured branch name to clone from. If provided, all other parameters will be ignored.
+   * Only supported in POST requests.
+  */
+  cloneFromBranch?: string;
+  /**
+   * The branch build configuration for each toolset
+  */
+  toolsets?: BranchConfigurationToolsets;
+  /**
+   * The versioning configuration for artifacts built for this branch
+  */
+  artifactVersioning?: BranchConfigurationArtifactVersioning;
+  /**
+   * Describes unknown properties. The value of an unknown property MUST be of type
+   * "BranchConfigurationValue". Due to valid TS constraints we have modeled this as a union of
+   * `BranchConfigurationValue | any`.
+  */
+  [additionalPropertyName: string]: BranchConfigurationValue | any;
+}
+
+/**
+ * user who made a change in branch configuration
+*/
+export interface BranchConfigurationRevisionsItemChangedBy {
+  displayName?: string;
+  url?: string;
+}
+
+/**
+ * branch configuration revision
+*/
+export interface BranchConfigurationRevisionsItem {
+  id?: string;
+  revision?: number;
+  changedDate?: string;
+  name?: string;
+  changeType?: string;
+  definitionUrl?: string;
+  /**
+   * user who made a change in branch configuration
+  */
+  changedBy?: BranchConfigurationRevisionsItemChangedBy;
+}
+
+/**
+ * user who made a change in branch configuration
+*/
+export interface BranchConfigurationRevisionChangedBy {
+  displayName?: string;
+  url?: string;
+}
+
+/**
+ * branch configuration revision
+*/
+export interface BranchConfigurationRevision {
+  id?: string;
+  revision?: number;
+  changedDate?: string;
+  name?: string;
+  changeType?: string;
+  definitionUrl?: string;
+  /**
+   * user who made a change in branch configuration
+  */
+  changedBy?: BranchConfigurationRevisionChangedBy;
+}
+
+/**
+ * user who made a change in branch configuration
+*/
+export interface BranchConfigurationRevisionAuthor {
+  displayName?: string;
+  url?: string;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface BranchConfigurationWithIdToolsetsXcodeAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface BranchConfigurationWithIdToolsetsXcode {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  BranchConfigurationWithIdToolsetsXcodeAppExtensionProvisioningProfileFilesItem[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
+}
+
+/**
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+*/
+export interface BranchConfigurationWithIdToolsetsJavascript {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+/**
+ * Build configuration for Xamarin projects
+*/
+export interface BranchConfigurationWithIdToolsetsXamarin {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
+  /**
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
+  */
+  symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface BranchConfigurationWithIdToolsetsAndroid {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface BranchConfigurationWithIdToolsets {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: BranchConfigurationWithIdToolsetsXcode;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: BranchConfigurationWithIdToolsetsJavascript;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: BranchConfigurationWithIdToolsetsXamarin;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: BranchConfigurationWithIdToolsetsAndroid;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface BranchConfigurationWithIdArtifactVersioning {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+export interface BranchConfigurationWithId {
+  /**
+   * Possible values include: 'continous', 'continuous', 'manual'
+  */
+  trigger?: string;
+  testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
+  signed?: boolean;
+  /**
+   * A configured branch name to clone from. If provided, all other parameters will be ignored.
+   * Only supported in POST requests.
+  */
+  cloneFromBranch?: string;
+  /**
+   * The branch build configuration for each toolset
+  */
+  toolsets?: BranchConfigurationWithIdToolsets;
+  /**
+   * The versioning configuration for artifacts built for this branch
+  */
+  artifactVersioning?: BranchConfigurationWithIdArtifactVersioning;
+  id: number;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface BranchConfigurationToolsetsXcodeAppExtensionProvisioningProfileFilesItemModel {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface BranchConfigurationToolsetsXcodeModel {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  BranchConfigurationToolsetsXcodeAppExtensionProvisioningProfileFilesItemModel[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
+}
+
+/**
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+*/
+export interface BranchConfigurationToolsetsJavascriptModel {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+/**
+ * Build configuration for Xamarin projects
+*/
+export interface BranchConfigurationToolsetsXamarinModel {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
+  /**
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
+  */
+  symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface BranchConfigurationToolsetsAndroidModel {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface BranchConfigurationToolsetsModel {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: BranchConfigurationToolsetsXcodeModel;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: BranchConfigurationToolsetsJavascriptModel;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: BranchConfigurationToolsetsXamarinModel;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: BranchConfigurationToolsetsAndroidModel;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface BranchConfigurationArtifactVersioningModel {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface XcodeBranchConfigurationPropertiesAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface XcodeBranchConfigurationProperties {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  XcodeBranchConfigurationPropertiesAppExtensionProvisioningProfileFilesItem[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
 }
 
 /**
@@ -3351,53 +7566,74 @@ export interface AndroidBranchConfigurationProperties {
 }
 
 /**
- * The branch build configuration for each toolset
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
 */
-export interface BranchConfigurationToolsets {
-  xcode?: XcodeBranchConfigurationProperties;
-  javascript?: JavaScriptBranchConfigurationProperties;
-  xamarin?: XamarinBranchConfigurationProperties;
-  android?: AndroidBranchConfigurationProperties;
+export interface JavaScriptBranchConfigurationProperties {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
 }
 
 /**
- * The versioning configuration for artifacts built for this branch
+ * Build configuration for Xamarin projects
 */
-export interface BranchConfigurationArtifactVersioning {
+export interface XamarinBranchConfigurationProperties {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
   /**
-   * Possible values include: 'buildId', 'timestamp'
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
   */
-  buildNumberFormat?: string;
+  symlink?: string;
 }
 
-/**
- * The branch build configuration
-*/
-export interface BranchConfiguration {
+export interface BranchCommit {
   /**
-   * Possible values include: 'continous', 'continuous', 'manual'
+   * The commit SHA
   */
-  trigger?: string;
-  testsEnabled?: boolean;
-  badgeIsEnabled?: boolean;
-  signed?: boolean;
+  sha?: string;
   /**
-   * A configured branch name to clone from. If provided, all other parameters will be ignored.
-   * Only supported in POST requests.
+   * The URL to the commit
   */
-  cloneFromBranch?: string;
-  toolsets?: BranchConfigurationToolsets;
-  artifactVersioning?: BranchConfigurationArtifactVersioning;
-  /**
-   * Describes unknown properties. The value of an unknown property MUST be of type
-   * "BranchProperties". Due to valid TS constraints we have modeled this as a union of
-   * `BranchProperties | any`.
-  */
-  [additionalPropertyName: string]: BranchProperties | any;
+  url?: string;
 }
 
-export interface BranchConfigurationWithId extends BranchConfiguration {
-  id: number;
+export interface Branch {
+  /**
+   * The branch name
+  */
+  name: string;
+  commit: BranchCommit;
+}
+
+export interface Commit {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
 }
 
 export interface CommitDetailsCommitAuthor {
@@ -3423,8 +7659,115 @@ export interface CommitDetailsCommit {
   author?: CommitDetailsCommitAuthor;
 }
 
-export interface CommitDetails extends Commit {
+export interface CommitDetails {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
   commit?: CommitDetailsCommit;
+}
+
+export interface CommitDetailsListItemCommitAuthor {
+  /**
+   * Date and time of the commit
+  */
+  date?: string;
+  /**
+   * Author name
+  */
+  name?: string;
+  /**
+   * Author's email
+  */
+  email?: string;
+}
+
+export interface CommitDetailsListItemCommit {
+  /**
+   * Commit message
+  */
+  message?: string;
+  author?: CommitDetailsListItemCommitAuthor;
+}
+
+export interface CommitDetailsListItem {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+  commit?: CommitDetailsListItemCommit;
+}
+
+export interface RepoConfig {
+  /**
+   * The repository's git url, must be a HTTPS URL
+  */
+  repoUrl: string;
+  /**
+   * The repository id from the repository provider. Required for repositories connected from
+   * GitHub App and GitLab.com
+  */
+  repoId?: string;
+  /**
+   * The external user id from the repository provider. Required for GitLab.com repositories
+  */
+  externalUserId?: string;
+  /**
+   * The id of the service connection (private). Required for GitLab self-hosted repositories
+  */
+  serviceConnectionId?: string;
+  /**
+   * The GitHub App Installation id. Required for repositories connected from GitHub App
+  */
+  installationId?: string;
+  /**
+   * Repository configuration identifier
+  */
+  id: string;
+  /**
+   * Type of repository
+  */
+  type: string;
+  /**
+   * State of the configuration. Possible values include: 'unauthorized', 'inactive', 'active'
+  */
+  state: string;
+  /**
+   * Email of the user who linked the repository
+  */
+  userEmail?: string;
+}
+
+export interface RepoConfigPostRequest {
+  /**
+   * The repository's git url, must be a HTTPS URL
+  */
+  repoUrl: string;
+  /**
+   * The repository id from the repository provider. Required for repositories connected from
+   * GitHub App and GitLab.com
+  */
+  repoId?: string;
+  /**
+   * The external user id from the repository provider. Required for GitLab.com repositories
+  */
+  externalUserId?: string;
+  /**
+   * The id of the service connection (private). Required for GitLab self-hosted repositories
+  */
+  serviceConnectionId?: string;
+  /**
+   * The GitHub App Installation id. Required for repositories connected from GitHub App
+  */
+  installationId?: string;
 }
 
 export interface RepoConfigCommon {
@@ -3447,14 +7790,28 @@ export interface RepoConfigCommon {
   serviceConnectionId?: string;
 }
 
-export interface RepoConfigPostRequest extends RepoConfigCommon {
+export interface RepoConfigsItem {
+  /**
+   * The repository's git url, must be a HTTPS URL
+  */
+  repoUrl: string;
+  /**
+   * The repository id from the repository provider. Required for repositories connected from
+   * GitHub App and GitLab.com
+  */
+  repoId?: string;
+  /**
+   * The external user id from the repository provider. Required for GitLab.com repositories
+  */
+  externalUserId?: string;
+  /**
+   * The id of the service connection (private). Required for GitLab self-hosted repositories
+  */
+  serviceConnectionId?: string;
   /**
    * The GitHub App Installation id. Required for repositories connected from GitHub App
   */
   installationId?: string;
-}
-
-export interface RepoConfig extends RepoConfigPostRequest {
   /**
    * Repository configuration identifier
   */
@@ -3494,7 +7851,7 @@ export interface PatchRepoInfo {
 /**
  * The Xamarin SDK bundle
 */
-export interface XamarinSDKBundle {
+export interface ToolsetsXamarinItem {
   /**
    * The Mono version
   */
@@ -3520,6 +7877,66 @@ export interface XamarinSDKBundle {
 /**
  * The Xcode version
 */
+export interface ToolsetsXcodeItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Xcode is latest stable
+  */
+  current?: boolean;
+}
+
+/**
+ * The Node version
+*/
+export interface ToolsetsNodeItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Node version is default for AppCenter
+  */
+  current?: boolean;
+}
+
+/**
+ * Set of toolsets available for app
+*/
+export interface Toolsets {
+  /**
+   * A list of Xamarin SDK bundles
+  */
+  xamarin?: ToolsetsXamarinItem[];
+  /**
+   * A list of Xcode versions
+  */
+  xcode?: ToolsetsXcodeItem[];
+  /**
+   * A list of Node versions
+  */
+  node?: ToolsetsNodeItem[];
+}
+
+/**
+ * The Xcode version
+*/
+export interface XcodeVersionsItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Xcode is latest stable
+  */
+  current?: boolean;
+}
+
+/**
+ * The Xcode version
+*/
 export interface XcodeVersion {
   /**
    * The version name
@@ -3527,6 +7944,72 @@ export interface XcodeVersion {
   name?: string;
   /**
    * If the Xcode is latest stable
+  */
+  current?: boolean;
+}
+
+/**
+ * The Xamarin SDK bundle
+*/
+export interface XamarinSDKBundlesItem {
+  /**
+   * The Mono version
+  */
+  monoVersion?: string;
+  /**
+   * The Xamarin SDK version
+  */
+  sdkBundle?: string;
+  /**
+   * If the SDK is latest stable
+  */
+  current?: boolean;
+  /**
+   * If the SDK is stable
+  */
+  stable?: boolean;
+  /**
+   * Specific for iOS SDK. A list of Xcode versions supported by current SDK version
+  */
+  xcodeVersions?: string[];
+}
+
+/**
+ * The Xamarin SDK bundle
+*/
+export interface XamarinSDKBundle {
+  /**
+   * The Mono version
+  */
+  monoVersion?: string;
+  /**
+   * The Xamarin SDK version
+  */
+  sdkBundle?: string;
+  /**
+   * If the SDK is latest stable
+  */
+  current?: boolean;
+  /**
+   * If the SDK is stable
+  */
+  stable?: boolean;
+  /**
+   * Specific for iOS SDK. A list of Xcode versions supported by current SDK version
+  */
+  xcodeVersions?: string[];
+}
+
+/**
+ * The Node version
+*/
+export interface NodeVersionsItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Node version is default for AppCenter
   */
   current?: boolean;
 }
@@ -3545,13 +8028,47 @@ export interface NodeVersion {
   current?: boolean;
 }
 
-/**
- * Set of toolsets available for app
-*/
-export interface Toolsets {
-  xamarin?: XamarinSDKBundle[];
-  xcode?: XcodeVersion[];
-  node?: NodeVersion[];
+export interface BuildsItem {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
 }
 
 export interface BuildParams {
@@ -3565,6 +8082,49 @@ export interface BuildParams {
   debug?: boolean;
 }
 
+export interface Build {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
 export interface BuildPatch {
   /**
    * The build status; used to cancel builds. Possible values include: 'cancelling'
@@ -3576,10 +8136,65 @@ export interface BuildLog {
   value?: string[];
 }
 
+export interface BuildTimelineRecordsItemIssuesItem {
+  category?: string;
+  message?: string;
+  type?: string;
+}
+
+export interface BuildTimelineRecordsItem {
+  id?: string;
+  name?: string;
+  order?: number;
+  percentComplete?: number;
+  currentOperation?: string;
+  state?: string;
+  result?: string;
+  errorCount?: number;
+  warningCount?: number;
+  issues?: BuildTimelineRecordsItemIssuesItem[];
+  startTime?: string;
+  finishTime?: string;
+  type?: string;
+}
+
+export interface BuildTimeline {
+  id?: string;
+  records?: BuildTimelineRecordsItem[];
+}
+
+export interface BuildTimelineRecordIssuesItem {
+  category?: string;
+  message?: string;
+  type?: string;
+}
+
+export interface BuildTimelineRecord {
+  id?: string;
+  name?: string;
+  order?: number;
+  percentComplete?: number;
+  currentOperation?: string;
+  state?: string;
+  result?: string;
+  errorCount?: number;
+  warningCount?: number;
+  issues?: BuildTimelineRecordIssuesItem[];
+  startTime?: string;
+  finishTime?: string;
+  type?: string;
+}
+
+export interface BuildIssue {
+  category?: string;
+  message?: string;
+  type?: string;
+}
+
 /**
  * Destination details for distributing build releases
 */
-export interface DestinationDetails {
+export interface DistributionRequestDestinationsItem {
   id: string;
   /**
    * Possible values include: 'store', 'group', 'tester'
@@ -3592,7 +8207,7 @@ export interface DistributionRequest {
    * Array of objects {id:string, type:string} with "id" being the distribution group ID, store ID,
    * or tester email, and "type" being "group", "store", or "tester"
   */
-  destinations?: DestinationDetails[];
+  destinations?: DistributionRequestDestinationsItem[];
   /**
    * The release notes
   */
@@ -3634,6 +8249,20 @@ export interface ValidationErrorResponse {
 /**
  * Queue configured in build definition
 */
+export interface BuildAgentQueuesResponseItem {
+  /**
+   * Name of the build definition
+  */
+  buildDefinition?: string;
+  /**
+   * Name of the queue
+  */
+  name?: string;
+}
+
+/**
+ * Queue configured in build definition
+*/
 export interface BuildAgentQueueResponse {
   /**
    * Name of the build definition
@@ -3648,6 +8277,14 @@ export interface BuildAgentQueueResponse {
 /**
  * Agent queue
 */
+export interface AgentQueuesResponseItem {
+  id?: number;
+  name?: string;
+}
+
+/**
+ * Agent queue
+*/
 export interface AgentQueueResponse {
   id?: number;
   name?: string;
@@ -3656,9 +8293,28 @@ export interface AgentQueueResponse {
 /**
  * supported feature
 */
+export interface AppBuildFeaturesItem {
+  name?: string;
+  value?: boolean;
+}
+
+/**
+ * supported feature
+*/
 export interface AppBuildFeature {
   name?: string;
   value?: boolean;
+}
+
+/**
+ * Destination details for distributing build releases
+*/
+export interface DestinationDetails {
+  id: string;
+  /**
+   * Possible values include: 'store', 'group', 'tester'
+  */
+  type: string;
 }
 
 /**
@@ -3736,6 +8392,17 @@ export interface PatchReleaseUploadStatusRequest {
   uploadStatus: string;
 }
 
+export interface PostCreateReleaseUploadRequest {
+  /**
+   * User defined build version
+  */
+  buildVersion?: string;
+  /**
+   * User defined build number
+  */
+  buildNumber?: string;
+}
+
 export interface PatchReleaseUploadStatusResponse {
   /**
    * The ID for the upload.
@@ -3748,10 +8415,7 @@ export interface PatchReleaseUploadStatusResponse {
   uploadStatus: string;
 }
 
-/**
- * Response for getting a list of releases in a distribution group
-*/
-export interface DistributionGroupRelease {
+export interface TesterAppWithReleaseResponseRelease {
   /**
    * ID identifying this unique release.
   */
@@ -3786,9 +8450,10 @@ export interface DistributionGroupRelease {
    * This value determines the whether a release currently is enabled or disabled.
   */
   enabled: boolean;
-}
-
-export interface TesterAppRelease extends DistributionGroupRelease {
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
   /**
    * The release's size in bytes.
   */
@@ -3839,7 +8504,7 @@ export interface TesterAppWithReleaseResponse {
    * The unique ID (UUID) of the app
   */
   id?: string;
-  release?: TesterAppRelease;
+  release?: TesterAppWithReleaseResponseRelease;
   /**
    * The app's name.
   */
@@ -3864,6 +8529,60 @@ export interface TesterAppWithReleaseResponse {
    * The information about the app's owner
   */
   owner?: TesterAppWithReleaseResponseOwner;
+}
+
+export interface TesterAppRelease {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * A boolean which determines whether the release is a mandatory update or not.
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+  /**
+   * The release's size in bytes.
+  */
+  size: number;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`
+  */
+  installUrl?: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
 }
 
 export interface SendNotificationRequest {
@@ -3908,6 +8627,13 @@ export interface ReleaseUpdateResponse {
 */
 export interface ReleaseDetailsUpdateResponse {
   releaseNotes?: string;
+}
+
+/**
+ * Response for updating release external url
+*/
+export interface ReleaseExternalUrlUpdateResponse {
+  externalDownloadUrl?: string;
 }
 
 /**
@@ -4039,6 +8765,10 @@ export interface PrivateReleaseDetailsResponse {
    * . Possible values include: 'group', 'store', 'tester'
   */
   destinationType?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
 }
 
 /**
@@ -4096,9 +8826,101 @@ export interface PrivateBasicReleaseDetailsResponse {
    * the publishing status of the distributed release
   */
   publishingStatus?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
 }
 
-export interface DistributionGroupWithoutIsLatest {
+/**
+ * Response for getting a list of releases in a distribution group
+*/
+export interface DistributionGroupReleasesResponseItem {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * A boolean which determines whether the release is a mandatory update or not.
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+/**
+ * Response for getting a list of releases in a distribution group
+*/
+export interface DistributionGroupRelease {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * A boolean which determines whether the release is a mandatory update or not.
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface BasicReleaseDetailsResponseDistributionGroupsItem {
   /**
    * ID identifying a unique distribution group.
   */
@@ -4107,16 +8929,13 @@ export interface DistributionGroupWithoutIsLatest {
    * A name identifying a unique distribution group.
   */
   name?: string;
-}
-
-export interface DistributionGroup extends DistributionGroupWithoutIsLatest {
   /**
    * Is the containing release the latest one in this distribution group.
   */
   isLatest?: boolean;
 }
 
-export interface DistributionStoreWithoutIsLatest {
+export interface BasicReleaseDetailsResponseDistributionStoresItem {
   /**
    * ID identifying a unique distribution store.
   */
@@ -4134,33 +8953,34 @@ export interface DistributionStoreWithoutIsLatest {
    * publishing status of the release in the store.
   */
   publishingStatus?: string;
-}
-
-export interface DistributionStore extends DistributionStoreWithoutIsLatest {
   /**
    * Is the containing release the latest one in this distribution store.
   */
   isLatest?: boolean;
 }
 
-export interface Destination {
+export interface BasicReleaseDetailsResponseDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
   /**
    * Is the containing release the latest one in this distribution group.
   */
   isLatest?: boolean;
   /**
-   * Name of a distribution group / distribution store. The release will be associated with this
-   * distribution group or store. If the distribution group / store doesn't exist a 400 is
-   * returned. If both distribution group / store name and id are passed, the id is taking
-   * precedence.
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
   */
-  name?: string;
+  type?: string;
   /**
-   * Id of a distribution group / store. The release will be associated with this distribution
-   * group / store. If the distribution group / store doesn't exist a 400 is returned. If both
-   * distribution group / store name and id are passed, the id is taking precedence.
+   * publishing status of the release in the store.
   */
-  id?: string;
+  publishingStatus?: string;
   /**
    * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
   */
@@ -4172,9 +8992,10 @@ export interface Destination {
 }
 
 /**
- * Contains metadata about the build that produced the release being uploaded
+ * Build information for the release
+
 */
-export interface BuildInfo {
+export interface BasicReleaseDetailsResponseBuild {
   /**
    * The branch name of the build producing the release
   */
@@ -4236,21 +9057,106 @@ export interface BasicReleaseDetailsResponse {
    * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
    * with this release.
   */
-  distributionGroups?: DistributionGroup[];
+  distributionGroups?: BasicReleaseDetailsResponseDistributionGroupsItem[];
   /**
    * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
    * with this release.
   */
-  distributionStores?: DistributionStore[];
+  distributionStores?: BasicReleaseDetailsResponseDistributionStoresItem[];
   /**
    * A list of distribution groups or stores.
   */
-  destinations?: Destination[];
+  destinations?: BasicReleaseDetailsResponseDestinationsItem[];
   /**
    * Build information for the release
 
   */
-  build?: BuildInfo;
+  build?: BasicReleaseDetailsResponseBuild;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface ReleaseDetailsResponseDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+}
+
+export interface ReleaseDetailsResponseDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+export interface ReleaseDetailsResponseDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface ReleaseDetailsResponseBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
 }
 
 /**
@@ -4371,16 +9277,16 @@ export interface ReleaseDetailsResponse {
    * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
    * with this release.
   */
-  distributionGroups?: DistributionGroupWithoutIsLatest[];
+  distributionGroups?: ReleaseDetailsResponseDistributionGroupsItem[];
   /**
    * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
    * with this release.
   */
-  distributionStores?: DistributionStoreWithoutIsLatest[];
+  distributionStores?: ReleaseDetailsResponseDistributionStoresItem[];
   /**
    * A list of distribution groups or stores.
   */
-  destinations?: Destination[];
+  destinations?: ReleaseDetailsResponseDestinationsItem[];
   /**
    * In calls that allow passing `udid` in the query string, this value will hold the provisioning
    * status of that UDID in this release. Will be ignored for non-iOS platforms.
@@ -4392,7 +9298,10 @@ export interface ReleaseDetailsResponse {
    * his registered devices. Will not be returned for non-iOS platforms.
   */
   canResign?: boolean;
-  build?: BuildInfo;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: ReleaseDetailsResponseBuild;
   /**
    * This value determines the whether a release currently is enabled or disabled.
   */
@@ -4401,6 +9310,54 @@ export interface ReleaseDetailsResponse {
    * Status of the release.
   */
   status?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface ManagementReleaseDetailsResponse {
+  /**
+   * ID identifying this unique release.
+  */
+  distinctId?: number;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  version?: string;
+  /**
+   * The release's buildVersion.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  buildVersion?: string;
+  /**
+   * The release's sortVersion.
+  */
+  sortVersion?: string;
+  /**
+   * UTC time the release was created in ISO 8601 format.
+  */
+  createdAt?: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled?: boolean;
+  /**
+   * UTC time the release was created in ISO 8601 format.
+  */
+  deletedAt?: string;
 }
 
 /**
@@ -4434,9 +9391,17 @@ export interface ReleaseUploadBeginResponse {
 */
 export interface GDPRValidationRequest {
   /**
-   * a list of release ids to validate
+   * a list of release ids to validate (AC flow)
   */
   releaseIds: number[];
+  /**
+   * a list of release ids to validate (HA flow)
+  */
+  hockeyappReleaseIds?: number[];
+  /**
+   * a list of release uploads ids to validate
+  */
+  releaseUploadIds?: string[];
 }
 
 /**
@@ -4444,15 +9409,15 @@ export interface GDPRValidationRequest {
 */
 export interface ReleaseUploadBeginRequest {
   /**
-   * The ID of the release.
+   * Optional value for explicitly specifying the ID of existing release.
   */
   releaseId?: number;
   /**
-   * The build version of the uploaded binary
+   * The build version of the uploaded binary, used for macOS, Windows and Custom app support.
   */
   buildVersion?: string;
   /**
-   * The build number of the uploaded binary
+   * The build number of the uploaded binary, used with build_version for macOS app support.
   */
   buildNumber?: string;
 }
@@ -4484,7 +9449,7 @@ export interface ReleaseUploadEndResponse {
 /**
  * An object containing a UUID for an architecture for an iOS app.
 */
-export interface ArchIdentifier {
+export interface ReleaseCreateRequestIpaUuidsItem {
   /**
    * The architecture that the UUID belongs to, i.e. armv7 or arm64.
   */
@@ -4498,7 +9463,34 @@ export interface ArchIdentifier {
 /**
  * An object containing information about an iOS provisioning profile.
 */
-export interface ProvisioningProfile {
+export interface ReleaseCreateRequestProvision {
+  /**
+   * The name of the provisioning profile.
+  */
+  name: string;
+  /**
+   * The application identifier.
+  */
+  applicationIdentifier: string;
+  /**
+   * The team identifier.
+  */
+  teamIdentifier: string;
+  /**
+   * Possible values include: 'adhoc', 'enterprise', 'other'
+  */
+  profileType: string;
+  /**
+   * The profile's expiration date in RFC 3339 format, i.e. 2017-07-21T17:32:28Z
+  */
+  expiredAt: Date;
+  udids?: string[];
+}
+
+/**
+ * An object containing information about an iOS provisioning profile.
+*/
+export interface ReleaseCreateRequestAppexProvisioningProfilesItem {
   /**
    * The name of the provisioning profile.
   */
@@ -4567,7 +9559,7 @@ export interface ReleaseCreateRequest {
   /**
    * The URL to the release's binary.
   */
-  packageUrl: string;
+  packageUrl?: string;
   /**
    * The file extension of the asset. Does not include the initial period.
   */
@@ -4583,12 +9575,47 @@ export interface ReleaseCreateRequest {
   /**
    * A list of UUIDs for architectures for an iOS app.
   */
-  ipaUuids?: ArchIdentifier[];
-  provision?: ProvisioningProfile;
+  ipaUuids?: ReleaseCreateRequestIpaUuidsItem[];
+  /**
+   * An object containing information about an iOS provisioning profile.
+  */
+  provision?: ReleaseCreateRequestProvision;
   /**
    * iOS app extension provisioning profiles included in the release.
   */
-  appexProvisioningProfiles?: ProvisioningProfile[];
+  appexProvisioningProfiles?: ReleaseCreateRequestAppexProvisioningProfilesItem[];
+  /**
+   * If true this release was uploaded to the AKS upload proxy
+  */
+  proxyFlow?: boolean;
+}
+
+/**
+ * A request containing information for creating an externally hosted release.
+*/
+export interface ExternallyHostedReleaseCreateRequest {
+  /**
+   * The build version of the uploaded binary
+  */
+  buildVersion: string;
+  /**
+   * The build number of the uploaded binary
+  */
+  buildNumber?: string;
+  /**
+   * The external URL to the release's binary.
+  */
+  externalDownloadUrl: string;
+}
+
+/**
+ * A request containing information for creating an externally hosted release.
+*/
+export interface UpdateExternalUrlRequest {
+  /**
+   * The external URL to the release's binary.
+  */
+  externalDownloadUrl: string;
 }
 
 /**
@@ -4596,7 +9623,7 @@ export interface ReleaseCreateRequest {
  * name. DestinationId encapsulates both options. A destination can be either a distribution group
  * or a store.
 */
-export interface DestinationId {
+export interface ReleaseUpdateRequestDestinationsItem {
   /**
    * Name of a distribution group / distribution store. The release will be associated with this
    * distribution group or store. If the distribution group / store doesn't exist a 400 is
@@ -4610,6 +9637,38 @@ export interface DestinationId {
    * distribution group / store name and id are passed, the id is taking precedence.
   */
   id?: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface ReleaseUpdateRequestBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * An object containing all the release metadata.
+*/
+export interface ReleaseUpdateRequestMetadata {
+  /**
+   * dsa signature of the release for the sparkle feed.
+  */
+  dsaSignature?: string;
+  /**
+   * edDSA signature of the release for the sparkle feed.
+  */
+  edSignature?: string;
 }
 
 /**
@@ -4663,12 +9722,37 @@ export interface ReleaseUpdateRequest {
    * Distribute this release under the following list of destinations (store groups or distribution
    * groups).
   */
-  destinations?: DestinationId[];
-  build?: BuildInfo;
+  destinations?: ReleaseUpdateRequestDestinationsItem[];
   /**
-   * A boolean which determines whether to notify testers of a new release, default to false.
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: ReleaseUpdateRequestBuild;
+  /**
+   * A boolean which determines whether to notify testers of a new release, default to true.
   */
   notifyTesters?: boolean;
+  /**
+   * An object containing all the release metadata.
+  */
+  metadata?: ReleaseUpdateRequestMetadata;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface ReleaseDetailsUpdateRequestBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
 }
 
 /**
@@ -4683,17 +9767,70 @@ export interface ReleaseDetailsUpdateRequest {
    * Release notes for this release.
   */
   releaseNotes?: string;
-  build?: BuildInfo;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: ReleaseDetailsUpdateRequestBuild;
 }
 
-export interface ReleaseStoreDestinationRequest {
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface BuildInfo {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * An object containing all the release metadata.
+*/
+export interface ReleaseMetadata {
+  /**
+   * dsa signature of the release for the sparkle feed.
+  */
+  dsaSignature?: string;
+  /**
+   * edDSA signature of the release for the sparkle feed.
+  */
+  edSignature?: string;
+}
+
+/**
+ * A unique identifier for a destination. A destination can be identified by an ID (guid) or by a
+ * name. DestinationId encapsulates both options. A destination can be either a distribution group
+ * or a store.
+*/
+export interface DestinationId {
+  /**
+   * Name of a distribution group / distribution store. The release will be associated with this
+   * distribution group or store. If the distribution group / store doesn't exist a 400 is
+   * returned. If both distribution group / store name and id are passed, the id is taking
+   * precedence.
+  */
+  name?: string;
+  /**
+   * Id of a distribution group / store. The release will be associated with this distribution
+   * group / store. If the distribution group / store doesn't exist a 400 is returned. If both
+   * distribution group / store name and id are passed, the id is taking precedence.
+  */
+  id?: string;
+}
+
+export interface ReleaseDestinationRequest {
   /**
    * Unique id of the release destination
   */
   id: string;
-}
-
-export interface ReleaseDestinationRequest extends ReleaseStoreDestinationRequest {
   /**
    * Flag to mark the release for the provided destinations as mandatory
   */
@@ -4702,6 +9839,13 @@ export interface ReleaseDestinationRequest extends ReleaseStoreDestinationReques
    * Flag to enable or disable notifications to testers
   */
   notifyTesters?: boolean;
+}
+
+export interface ReleaseStoreDestinationRequest {
+  /**
+   * Unique id of the release destination
+  */
+  id: string;
 }
 
 export interface ReleaseTesterDestinationRequest {
@@ -4719,14 +9863,11 @@ export interface ReleaseTesterDestinationRequest {
   notifyTesters?: boolean;
 }
 
-export interface ReleaseStoreDestinationResponse {
+export interface ReleaseDestinationResponse {
   /**
    * Unique id for the release destination
   */
   id: string;
-}
-
-export interface ReleaseDestinationResponse extends ReleaseStoreDestinationResponse {
   /**
    * Flag to mark the release for the provided destinations as mandatory
   */
@@ -4735,6 +9876,45 @@ export interface ReleaseDestinationResponse extends ReleaseStoreDestinationRespo
    * The url to check provisioning status.
   */
   provisioningStatusUrl?: string;
+}
+
+export interface ReleaseStoreDestinationResponse {
+  /**
+   * Unique id for the release destination
+  */
+  id: string;
+}
+
+export interface Destination {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
 }
 
 /**
@@ -4746,6 +9926,117 @@ export interface PrivateReleaseUpdateRequest {
    * 'timeout'
   */
   publishingStatus?: string;
+}
+
+export interface DistributionGroup {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+}
+
+export interface DistributionGroupWithoutIsLatest {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+}
+
+export interface DistributionStore {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Is the containing release the latest one in this distribution store.
+  */
+  isLatest?: boolean;
+}
+
+export interface DistributionStoreWithoutIsLatest {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+/**
+ * An object containing a UUID for an architecture for an iOS app.
+*/
+export interface ArchIdentifier {
+  /**
+   * The architecture that the UUID belongs to, i.e. armv7 or arm64.
+  */
+  architecture: string;
+  /**
+   * The unique identifier.
+  */
+  uuid: string;
+}
+
+/**
+ * An object containing information about an iOS provisioning profile.
+*/
+export interface ProvisioningProfile {
+  /**
+   * The name of the provisioning profile.
+  */
+  name: string;
+  /**
+   * The application identifier.
+  */
+  applicationIdentifier: string;
+  /**
+   * The team identifier.
+  */
+  teamIdentifier: string;
+  /**
+   * Possible values include: 'adhoc', 'enterprise', 'other'
+  */
+  profileType: string;
+  /**
+   * The profile's expiration date in RFC 3339 format, i.e. 2017-07-21T17:32:28Z
+  */
+  expiredAt: Date;
+  udids?: string[];
 }
 
 /**
@@ -4775,7 +10066,7 @@ export interface ProvisioningProfileResponse {
   appexProfiles?: ProvisioningProfileResponse[];
 }
 
-export interface DestinationError {
+export interface ReleaseUpdateErrorDestinationsItem {
   /**
    * Error Codes:<br>
    * <b>invalid_store_secrets</b>: While distributing to store, secrets provided for store are not
@@ -4802,10 +10093,43 @@ export interface DestinationError {
   name?: string;
 }
 
-export interface ReleaseUpdateError extends ErrorDetails {
+export interface ReleaseUpdateError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
   releaseNotes?: string;
   mandatoryUpdate?: boolean;
-  destinations?: DestinationError[];
+  destinations?: ReleaseUpdateErrorDestinationsItem[];
+}
+
+export interface DestinationError {
+  /**
+   * Error Codes:<br>
+   * <b>invalid_store_secrets</b>: While distributing to store, secrets provided for store are not
+   * valid.<br>
+   * <b>store_release_bad_request</b>: Proper package release details for the store is not
+   * provided.<br>
+   * <b>store_release_unauthorized</b>: User is not authorized to publish to store due to invalid
+   * developer credentials.<br>
+   * <b>store_release_forbidden</b>: Publish to store is forbidden due to conflicts/errors in the
+   * release version and already existing version in the store.<br>
+   * <b>store_release_promotion</b>: Release already distributed, promoting a release is not
+   * supported.<br>
+   * <b>store_track_deactivated</b>: One or more tracks would be deactivated with this release.
+   * This is not supported yet.<br>
+   * <b>store_release_not_found</b>: App with the given package name is not found in the store.<br>
+   * <b>store_release_not_available</b>: The release is not available.<br>
+   * <b>internal_server_error</b>: Failed to distribute to a destination due to an internal server
+   * error.
+
+  */
+  code?: string;
+  message?: string;
+  id?: string;
+  name?: string;
 }
 
 /**
@@ -4862,7 +10186,7 @@ export interface AutoProvisioningConfigResponse {
   allowAutoProvisioning?: boolean;
 }
 
-export interface AnalyticsReleasesParameter {
+export interface AnalyticsReleasesResponseReleasesItem {
   /**
    * release id
   */
@@ -4878,7 +10202,22 @@ export interface AnalyticsReleasesParameter {
 }
 
 export interface AnalyticsReleasesResponse {
-  releases?: AnalyticsReleasesParameter[];
+  releases?: AnalyticsReleasesResponseReleasesItem[];
+}
+
+export interface AnalyticsReleasesParameter {
+  /**
+   * release id
+  */
+  releaseId: number;
+  /**
+   * distribution group id
+  */
+  distributionGroupId: string;
+  /**
+   * user id
+  */
+  userId: string;
 }
 
 export interface HockeyAppCompatibilityReleaseResponse {
@@ -4892,6 +10231,8 @@ export interface HockeyAppCompatibilityReleaseResponse {
   external?: boolean;
   deviceFamily?: string;
   minimumOsVersion?: string;
+  installUrl?: string;
+  bundleIdentifier?: string;
 }
 
 /**
@@ -4933,59 +10274,6 @@ export interface ProvisioningProfileMigration {
 }
 
 /**
- * A single HockeyApp release to migrate to App Center
-*/
-export interface HockeyAppMigrationRelease {
-  id?: number;
-  shortversion?: string;
-  version?: string;
-  appsize?: number;
-  minimumOsVersion?: string;
-  md5Fingerprint?: string;
-  createdAt?: Date;
-  buildUrl?: string;
-  bundleIdentifier?: string;
-  deviceFamily?: string;
-  /**
-   * The languages supported by the release. Limited to 510 characters in a serialized array.
-  */
-  languages?: string[];
-  /**
-   * For iOS apps, a dictionary of UUIDs for architectures (in format `{"armv7":
-   * "353df799-d450-3308-8492-928ecf1ebf53", "arm64": "e67c0e93-b6d6-3f5a-b3a7-68d2b215bf27"}`)
-  */
-  uuids?: { [propertyName: string]: string };
-  isExternalBuild?: boolean;
-  mandatory?: boolean;
-  /**
-   * The status of the release in HockeyApp. Maps to HockeyAppSchema.AppVersionStatus. Possible
-   * values: Deleted = -1, New = 0, Inactive = 1, Active = 2, Hidden = 3, SonomaActive = 4
-  */
-  status?: number;
-  notes?: string;
-  /**
-   * Send out notifications to the destination groups and/or testers
-  */
-  notify?: boolean;
-  /**
-   * List of DistributionGroup IDs the release is distributed to
-  */
-  distributionGroupIds?: string[];
-  /**
-   * List of User IDs the release is distributed to
-  */
-  distributionUserIds?: string[];
-  provisioningProfiles?: ProvisioningProfileMigration[];
-}
-
-/**
- * A list of HockeyApp releases to migrate to App Center
-*/
-export interface MigrateReleaseRequest {
-  releases?: HockeyAppMigrationRelease[];
-}
-
-/**
  * Details of the upload to patch
 */
 export interface PrivateUpdateUploadDetails {
@@ -5001,6 +10289,34 @@ export interface PrivateUpdateUploadDetails {
 }
 
 /**
+ * Set the download URL of an external build
+*/
+export interface PostExternalDownloadUrl {
+  /**
+   * The new download URL
+  */
+  downloadUrl?: string;
+}
+
+/**
+ * Patch the asset id of a release request body
+*/
+export interface PatchReleaseAssetIdRequest {
+  /**
+   * The release new package id in ACFUS
+  */
+  packageAssetId: string;
+  /**
+   * The release upload id used to upload the release
+  */
+  uploadId: string;
+  /**
+   * The ipa UUIDs for this release, as a serialized JSON array
+  */
+  ipaUuids?: string;
+}
+
+/**
  * Malware scan result from Malware Scan service
 */
 export interface MalwareScanResultPayload {
@@ -5012,13 +10328,6 @@ export interface MalwareScanResultPayload {
    * Scan result. Possible values include: 'clean', 'infected', 'error'
   */
   result: string;
-}
-
-export interface AabAndroidManifestXml {
-  /**
-   * The contents of the binary XML file encoded as base64.
-  */
-  xml: string;
 }
 
 export interface DistributionSettingsResponse {
@@ -5173,6 +10482,86 @@ export interface ResignInfo {
    * The expiration date of the certificate used for the resign attempt
   */
   certificateExpiration?: string;
+}
+
+/**
+ * The information for a single distribution group member and their ios device
+*/
+export interface MemberDevicesInfoResponse {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name?: string;
+  /**
+   * The Unique Device IDentifier of the device
+  */
+  udid: string;
+  /**
+   * The model identifier of the device, in the format iDeviceM,N
+  */
+  model: string;
+  /**
+   * The device description, in the format "iPhone 7 Plus (A1784)"
+  */
+  deviceName: string;
+  /**
+   * A combination of the device model name and the owner name.
+  */
+  fullDeviceName?: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osBuild: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osVersion: string;
+  /**
+   * The device's serial number. Always empty or undefined at present.
+  */
+  serial?: string;
+  /**
+   * The device's International Mobile Equipment Identity number. Always empty or undefined at
+   * present.
+  */
+  imei?: string;
+  /**
+   * The user ID of the device owner.
+  */
+  ownerId?: string;
+  /**
+   * The provisioning status of the device.
+  */
+  status: string;
+  /**
+   * Timestamp of when the device was registered in ISO format.
+  */
+  registeredAt?: string;
 }
 
 /**
@@ -5509,14 +10898,62 @@ export interface DeviceAvailability {
 }
 
 /**
+ * ...
+*/
+export interface AvailabilityOfDevicesResponseIphones {
+  registered: number;
+  available: number;
+  maximum: number;
+}
+
+/**
+ * ...
+*/
+export interface AvailabilityOfDevicesResponseIpads {
+  registered: number;
+  available: number;
+  maximum: number;
+}
+
+/**
+ * ...
+*/
+export interface AvailabilityOfDevicesResponseIpods {
+  registered: number;
+  available: number;
+  maximum: number;
+}
+
+/**
+ * ...
+*/
+export interface AvailabilityOfDevicesResponseWatches {
+  registered: number;
+  available: number;
+  maximum: number;
+}
+
+/**
  * The current device availability (registered, available and maxmimum) for iPhones, iPads, iPods
  * and Watches from Apple Developer Portal
 */
 export interface AvailabilityOfDevicesResponse {
-  iphones: DeviceAvailability;
-  ipads: DeviceAvailability;
-  ipods: DeviceAvailability;
-  watches: DeviceAvailability;
+  /**
+   * ...
+  */
+  iphones: AvailabilityOfDevicesResponseIphones;
+  /**
+   * ...
+  */
+  ipads: AvailabilityOfDevicesResponseIpads;
+  /**
+   * ...
+  */
+  ipods: AvailabilityOfDevicesResponseIpods;
+  /**
+   * ...
+  */
+  watches: AvailabilityOfDevicesResponseWatches;
 }
 
 export interface UpdateDevicesRequestDestinationsItem {
@@ -5674,7 +11111,7 @@ export interface ResignAttemptResponse {
   errorMessage?: string;
 }
 
-export interface StoresBasicDetails {
+export interface StoresReleaseDetailsDistributionStoresItem {
   /**
    * ID identifying a unique distribution store.
   */
@@ -5775,7 +11212,7 @@ export interface StoresReleaseDetails {
   /**
    * a list of distribution stores that are associated with this release.
   */
-  distributionStores?: StoresBasicDetails[];
+  distributionStores?: StoresReleaseDetailsDistributionStoresItem[];
 }
 
 export interface StorePatchRequest {
@@ -5785,7 +11222,7 @@ export interface StorePatchRequest {
   serviceConnectionId: string;
 }
 
-export interface IntuneSecretDetails {
+export interface ExternalStoreRequestIntuneDetailsSecretJson {
   /**
    * the id token of user
   */
@@ -5800,24 +11237,24 @@ export interface IntuneSecretDetails {
   refreshTokenExpiry?: string;
 }
 
-export interface IntuneTargetAudience {
+export interface ExternalStoreRequestIntuneDetailsTargetAudience {
   /**
    * display name for the target audience/group
   */
   name?: string;
 }
 
-export interface IntuneAppCategory {
+export interface ExternalStoreRequestIntuneDetailsAppCategory {
   /**
    * display name for the app category
   */
   name?: string;
 }
 
-export interface IntuneStoreRequest {
-  secretJson?: IntuneSecretDetails;
-  targetAudience?: IntuneTargetAudience;
-  appCategory?: IntuneAppCategory;
+export interface ExternalStoreRequestIntuneDetails {
+  secretJson?: ExternalStoreRequestIntuneDetailsSecretJson;
+  targetAudience?: ExternalStoreRequestIntuneDetailsTargetAudience;
+  appCategory?: ExternalStoreRequestIntuneDetailsAppCategory;
   /**
    * tenant id of the intune store
   */
@@ -5842,7 +11279,7 @@ export interface ExternalStoreRequest {
    * 'production', 'alpha', 'beta', 'testflight-internal', 'testflight-external'
   */
   track?: string;
-  intuneDetails?: IntuneStoreRequest;
+  intuneDetails?: ExternalStoreRequestIntuneDetails;
   /**
    * Id for the shared service connection. In case of Apple AppStore, this connection will be used
    * to create and connect to the Apple AppStore in Mobile Center.
@@ -5919,9 +11356,23 @@ export interface AppleTestFlightGroupsResponse {
   name?: string;
 }
 
-export interface PrivateIntuneStoreRequest {
-  targetAudience?: IntuneTargetAudience;
-  appCategory?: IntuneAppCategory;
+export interface PrivateCreateStoreRequestIntuneDetailsTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+}
+
+export interface PrivateCreateStoreRequestIntuneDetailsAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+}
+
+export interface PrivateCreateStoreRequestIntuneDetails {
+  targetAudience?: PrivateCreateStoreRequestIntuneDetailsTargetAudience;
+  appCategory?: PrivateCreateStoreRequestIntuneDetailsAppCategory;
   /**
    * tenant id of the intune store
   */
@@ -5940,10 +11391,25 @@ export interface PrivateCreateStoreRequest {
    * name of the store.
   */
   name?: string;
-  intuneDetails?: PrivateIntuneStoreRequest;
+  intuneDetails?: PrivateCreateStoreRequestIntuneDetails;
 }
 
-export interface IntuneCategoryValue {
+export interface IntuneSecretDetails {
+  /**
+   * the id token of user
+  */
+  idToken?: string;
+  /**
+   * the refresh token for user
+  */
+  refreshToken?: string;
+  /**
+   * the expiry of refresh token
+  */
+  refreshTokenExpiry?: string;
+}
+
+export interface IntuneCategoriesValueItem {
   /**
    * the id of the category
   */
@@ -5966,10 +11432,25 @@ export interface IntuneCategories {
   /**
    * categories for intune app
   */
-  value?: IntuneCategoryValue[];
+  value?: IntuneCategoriesValueItem[];
 }
 
-export interface IntuneGroupValue {
+export interface IntuneCategoryValue {
+  /**
+   * the id of the category
+  */
+  id?: string;
+  /**
+   * the display name for the category
+  */
+  displayName?: string;
+  /**
+   * modified date for category
+  */
+  lastModifiedDateTime?: string;
+}
+
+export interface IntuneGroupsValueItem {
   /**
    * the id of the Group
   */
@@ -5988,7 +11469,18 @@ export interface IntuneGroups {
   /**
    * categories for intune app
   */
-  value?: IntuneGroupValue[];
+  value?: IntuneGroupsValueItem[];
+}
+
+export interface IntuneGroupValue {
+  /**
+   * the id of the Group
+  */
+  id?: string;
+  /**
+   * the display name of the group
+  */
+  displayName?: string;
 }
 
 export interface IntuneGroup {
@@ -6006,7 +11498,7 @@ export interface IntuneGroup {
   securityEnabled?: boolean;
 }
 
-export interface SecretDetails {
+export interface CreateStoreSecretRequestSecretJson {
   /**
    * the id token of user
   */
@@ -6022,7 +11514,7 @@ export interface SecretDetails {
 }
 
 export interface CreateStoreSecretRequest {
-  secretJson?: SecretDetails;
+  secretJson?: CreateStoreSecretRequestSecretJson;
   /**
    * the tenant id for user
   */
@@ -6034,6 +11526,21 @@ export interface CreateStoreSecretResponse {
    * the secret id for store secret
   */
   secretId?: string;
+}
+
+export interface SecretDetails {
+  /**
+   * the id token of user
+  */
+  idToken?: string;
+  /**
+   * the refresh token for user
+  */
+  refreshToken?: string;
+  /**
+   * the expiry of refresh token
+  */
+  refreshTokenExpiry?: string;
 }
 
 /**
@@ -6053,7 +11560,7 @@ export interface ReleasePublishErrorResponse {
 /**
  * Status Data from store
 */
-export interface StatusData {
+export interface ReleaseRealTimeStatusResponseStatus {
   /**
    * status from store
   */
@@ -6084,7 +11591,32 @@ export interface ReleaseRealTimeStatusResponse {
    * app id
   */
   appId?: string;
-  status?: StatusData;
+  /**
+   * Status Data from store
+  */
+  status?: ReleaseRealTimeStatusResponseStatus;
+}
+
+/**
+ * Status Data from store
+*/
+export interface ValidationResponseStatus {
+  /**
+   * status from store
+  */
+  status?: string;
+  /**
+   * store type
+  */
+  storetype?: string;
+  /**
+   * track information from store
+  */
+  track?: string;
+  /**
+   * version of the app from store
+  */
+  version?: string;
 }
 
 /**
@@ -6095,7 +11627,10 @@ export interface ValidationResponse {
    * app id
   */
   appId?: string;
-  status?: StatusData;
+  /**
+   * Status Data from store
+  */
+  status?: ValidationResponseStatus;
 }
 
 /**
@@ -6128,7 +11663,29 @@ export interface SkipValidationRequest {
   skipValidation?: boolean;
 }
 
-export interface IntuneTargetAudienceResponse {
+/**
+ * Status Data from store
+*/
+export interface StatusData {
+  /**
+   * status from store
+  */
+  status?: string;
+  /**
+   * store type
+  */
+  storetype?: string;
+  /**
+   * track information from store
+  */
+  track?: string;
+  /**
+   * version of the app from store
+  */
+  version?: string;
+}
+
+export interface ExternalStoreResponseIntuneDetailsTargetAudience {
   /**
    * display name for the target audience/group
   */
@@ -6139,7 +11696,7 @@ export interface IntuneTargetAudienceResponse {
   id?: string;
 }
 
-export interface IntuneAppCategoryResponse {
+export interface ExternalStoreResponseIntuneDetailsAppCategory {
   /**
    * display name for the app category
   */
@@ -6150,9 +11707,12 @@ export interface IntuneAppCategoryResponse {
   id?: string;
 }
 
-export interface IntuneStoreResponse {
-  targetAudience?: IntuneTargetAudienceResponse;
-  appCategory?: IntuneAppCategoryResponse;
+/**
+ * Store details for intune
+*/
+export interface ExternalStoreResponseIntuneDetails {
+  targetAudience?: ExternalStoreResponseIntuneDetailsTargetAudience;
+  appCategory?: ExternalStoreResponseIntuneDetailsAppCategory;
 }
 
 /**
@@ -6179,16 +11739,20 @@ export interface ExternalStoreResponse {
   /**
    * Store details for intune
   */
-  intuneDetails?: IntuneStoreResponse;
+  intuneDetails?: ExternalStoreResponseIntuneDetails;
   /**
    * Id for the shared service connection. In case of Apple / GooglePlay stores, this connection
    * will be used to connect to the Apple / Google stores in App Center.
   */
   serviceConnectionId?: string;
   /**
-   * user id of the user who created the store.
+   * The ID of the principal that created the store.
   */
   createdBy?: string;
+  /**
+   * The type of the principal that created the store.
+  */
+  createdByPrincipalType?: string;
 }
 
 /**
@@ -6215,6 +11779,131 @@ export interface StoreSecretResponse {
    * Tenant Id for Intune
   */
   tenantId?: string;
+}
+
+export interface IntuneStoreResponseTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+  /**
+   * ID for the target audience/group.
+  */
+  id?: string;
+}
+
+export interface IntuneStoreResponseAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+  /**
+   * ID for the category.
+  */
+  id?: string;
+}
+
+export interface IntuneStoreResponse {
+  targetAudience?: IntuneStoreResponseTargetAudience;
+  appCategory?: IntuneStoreResponseAppCategory;
+}
+
+export interface IntuneStoreRequestSecretJson {
+  /**
+   * the id token of user
+  */
+  idToken?: string;
+  /**
+   * the refresh token for user
+  */
+  refreshToken?: string;
+  /**
+   * the expiry of refresh token
+  */
+  refreshTokenExpiry?: string;
+}
+
+export interface IntuneStoreRequestTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+}
+
+export interface IntuneStoreRequestAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+}
+
+export interface IntuneStoreRequest {
+  secretJson?: IntuneStoreRequestSecretJson;
+  targetAudience?: IntuneStoreRequestTargetAudience;
+  appCategory?: IntuneStoreRequestAppCategory;
+  /**
+   * tenant id of the intune store
+  */
+  tenantId?: string;
+}
+
+export interface PrivateIntuneStoreRequestTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+}
+
+export interface PrivateIntuneStoreRequestAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+}
+
+export interface PrivateIntuneStoreRequest {
+  targetAudience?: PrivateIntuneStoreRequestTargetAudience;
+  appCategory?: PrivateIntuneStoreRequestAppCategory;
+  /**
+   * tenant id of the intune store
+  */
+  tenantId?: string;
+}
+
+export interface IntuneTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+}
+
+export interface IntuneAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+}
+
+export interface IntuneTargetAudienceResponse {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+  /**
+   * ID for the target audience/group.
+  */
+  id?: string;
+}
+
+export interface IntuneAppCategoryResponse {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+  /**
+   * ID for the category.
+  */
+  id?: string;
 }
 
 export interface PatchReleaseRequest {
@@ -6244,7 +11933,7 @@ export interface PatchReleaseRequest {
   isWrapperRequest?: boolean;
 }
 
-export interface StoresDetails {
+export interface StoresBasicReleaseDetailsDistributionStoresItem {
   /**
    * ID identifying a unique distribution store.
   */
@@ -6301,7 +11990,31 @@ export interface StoresBasicReleaseDetails {
   /**
    * a list of distribution stores that are associated with this release.
   */
-  distributionStores?: StoresDetails[];
+  distributionStores?: StoresBasicReleaseDetailsDistributionStoresItem[];
+}
+
+export interface StoresDetails {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id?: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * A type identifying the type of distribution store. Possible values include: 'googleplay',
+   * 'intune', 'apple'
+  */
+  type?: string;
+  /**
+   * A status identifying the status of release in the distribution store.
+  */
+  publishingStatus?: string;
+  /**
+   * Is the containing release the latest one in this distribution store.
+  */
+  isLatest?: boolean;
 }
 
 export interface StoreDestinationDetails {
@@ -6317,6 +12030,26 @@ export interface StoreDestinationDetails {
    * app id of application.
   */
   appId?: string;
+}
+
+export interface StoresBasicDetails {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id?: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune or googleplay. Possible
+   * values include: 'intune', 'googleplay'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
 }
 
 /**
@@ -6443,6 +12176,54 @@ export interface Symbol {
   symbolUploadId: string;
 }
 
+export interface SymbolsItem {
+  /**
+   * The unique id for this symbol (uuid)
+  */
+  symbolId: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  type: string;
+  /**
+   * The application that this symbol belongs to
+  */
+  appId: string;
+  /**
+   * The platform that this symbol is associated with
+  */
+  platform: string;
+  /**
+   * The path name of the symbol file in blob storage
+  */
+  url: string;
+  /**
+   * The origin of the symbol file. Possible values include: 'System', 'User'
+  */
+  origin: string;
+  /**
+   * The other symbols in the same file
+  */
+  alternateSymbolIds: string[];
+  /**
+   * Whether the symbol is ignored. Possible values include: 'available', 'ignored'
+  */
+  status: string;
+  /**
+   * The version number. Optional for Apple. Required for Android.
+  */
+  version?: string;
+  /**
+   * The build number. Optional for Apple. Required for Android.
+  */
+  build?: string;
+  /**
+   * The id of the symbol upload this symbol belongs to.
+  */
+  symbolUploadId: string;
+}
+
 /**
  * A response containing information pertaining to a symbol status
 */
@@ -6461,7 +12242,10 @@ export interface SymbolStatusResponse {
   status: string;
 }
 
-export interface SymbolUploadUserInfo {
+/**
+ * User information of the one who intitiated the symbol upload
+*/
+export interface SymbolUploadUser {
   /**
    * The email of the user
   */
@@ -6472,7 +12256,7 @@ export interface SymbolUploadUserInfo {
   displayName?: string;
 }
 
-export interface UploadedSymbolInfo {
+export interface SymbolUploadSymbolsUploadedItem {
   /**
    * The symbol id of the symbol binary
   */
@@ -6498,7 +12282,7 @@ export interface SymbolUpload {
   /**
    * User information of the one who intitiated the symbol upload
   */
-  user?: SymbolUploadUserInfo;
+  user?: SymbolUploadUser;
   /**
    * The current status for the symbol upload. Possible values include: 'created', 'committed',
    * 'aborted', 'processing', 'indexed', 'failed'
@@ -6510,9 +12294,9 @@ export interface SymbolUpload {
   */
   symbolType: string;
   /**
-   * The symbols found in the upload
+   * The symbols found in the upload. This may be empty until the status is indexed
   */
-  symbolsUploaded?: UploadedSymbolInfo[];
+  symbolsUploaded?: SymbolUploadSymbolsUploadedItem[];
   /**
    * The origin of the symbol upload. Possible values include: 'User', 'System'
   */
@@ -6522,7 +12306,80 @@ export interface SymbolUpload {
   */
   fileName?: string;
   /**
-   * The size of the file in Mebibytes
+   * The size of the file in Mebibytes. This may be 0 until the status is indexed
+  */
+  fileSize?: number;
+  /**
+   * When the symbol upload was committed, or last transaction time if not committed
+  */
+  timestamp?: Date;
+}
+
+/**
+ * User information of the one who intitiated the symbol upload
+*/
+export interface SymbolUploadsItemUser {
+  /**
+   * The email of the user
+  */
+  email?: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface SymbolUploadsItemSymbolsUploadedItem {
+  /**
+   * The symbol id of the symbol binary
+  */
+  symbolId: string;
+  /**
+   * The platform the symbol is associated with
+  */
+  platform: string;
+}
+
+/**
+ * A single symbol upload entity
+*/
+export interface SymbolUploadsItem {
+  /**
+   * The id for the current symbol upload
+  */
+  symbolUploadId: string;
+  /**
+   * The application that this symbol upload belongs to
+  */
+  appId: string;
+  /**
+   * User information of the one who intitiated the symbol upload
+  */
+  user?: SymbolUploadsItemUser;
+  /**
+   * The current status for the symbol upload. Possible values include: 'created', 'committed',
+   * 'aborted', 'processing', 'indexed', 'failed'
+  */
+  status: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  symbolType: string;
+  /**
+   * The symbols found in the upload. This may be empty until the status is indexed
+  */
+  symbolsUploaded?: SymbolUploadsItemSymbolsUploadedItem[];
+  /**
+   * The origin of the symbol upload. Possible values include: 'User', 'System'
+  */
+  origin?: string;
+  /**
+   * The file name for the symbol upload
+  */
+  fileName?: string;
+  /**
+   * The size of the file in Mebibytes. This may be 0 until the status is indexed
   */
   fileSize?: number;
   /**
@@ -6601,6 +12458,28 @@ export interface SymbolUploadEndRequest {
   status: string;
 }
 
+export interface SymbolUploadUserInfo {
+  /**
+   * The email of the user
+  */
+  email?: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface UploadedSymbolInfo {
+  /**
+   * The symbol id of the symbol binary
+  */
+  symbolId: string;
+  /**
+   * The platform the symbol is associated with
+  */
+  platform: string;
+}
+
 /**
  * A response represents information about symbol name group
 */
@@ -6610,6 +12489,49 @@ export interface SystemVersionNameGroup {
   */
   name?: string;
   versions?: string[];
+}
+
+/**
+ * A response represents information about symbol name group
+*/
+export interface SystemVersionNameGroupsItem {
+  /**
+   * Name of version group
+  */
+  name?: string;
+  versions?: string[];
+}
+
+export interface AppCrashesInfoFeatures {
+  /**
+   * App supports modification of crashgroup status
+  */
+  crashgroupModifyStatus?: boolean;
+  /**
+   * App supports modification of crashgroup annotation
+  */
+  crashgroupModifyAnnotation?: boolean;
+  /**
+   * App supports search API
+  */
+  search?: boolean;
+  /**
+   * App supports the 'crash free user' metric
+  */
+  crashgroupAnalyticsCrashfreeusers?: boolean;
+  /**
+   * App supports the 'impacted users' metric
+  */
+  crashgroupAnalyticsImpactedusers?: boolean;
+  /**
+   * App supports download of raw crashes
+  */
+  crashDownloadRaw?: boolean;
+}
+
+export interface AppCrashesInfo {
+  hasCrashes: boolean;
+  features: AppCrashesInfoFeatures;
 }
 
 export interface AppFeatures {
@@ -6639,11 +12561,6 @@ export interface AppFeatures {
   crashDownloadRaw?: boolean;
 }
 
-export interface AppCrashesInfo {
-  hasCrashes: boolean;
-  features: AppFeatures;
-}
-
 export interface AppVersion {
   appVersionId: string;
   appId: string;
@@ -6655,7 +12572,7 @@ export interface AppVersion {
 /**
  * a single frame of a stack trace
 */
-export interface StackFrame {
+export interface ExceptionFramesItem {
   /**
    * address of the frame
   */
@@ -6726,7 +12643,7 @@ export interface Exception {
   /**
    * frames of the excetpion
   */
-  frames: StackFrame[];
+  frames: ExceptionFramesItem[];
   /**
    * relevant exception (crashed)
   */
@@ -6740,6 +12657,65 @@ export interface Exception {
 }
 
 /**
+ * a single frame of a stack trace
+*/
+export interface ThreadFramesItem {
+  /**
+   * address of the frame
+  */
+  address?: string;
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Raw frame string
+  */
+  codeRaw: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * frame should be shown always
+  */
+  relevant?: boolean;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+}
+
+/**
  * a thread representation
 */
 export interface Thread {
@@ -6750,7 +12726,7 @@ export interface Thread {
   /**
    * frames of that thread
   */
-  frames: StackFrame[];
+  frames: ThreadFramesItem[];
   /**
    * potential additional exception happened in that thread (Last Exception Backtrace)
   */
@@ -6778,6 +12754,65 @@ export interface Stacktrace {
   reason?: string;
   threads?: Thread[];
   exception?: Exception;
+}
+
+/**
+ * a single frame of a stack trace
+*/
+export interface StackFrame {
+  /**
+   * address of the frame
+  */
+  address?: string;
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Raw frame string
+  */
+  codeRaw: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * frame should be shown always
+  */
+  relevant?: boolean;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
 }
 
 /**
@@ -6868,6 +12903,160 @@ export interface CrashAttachmentLocation {
   uri: string;
 }
 
+/**
+ * frame belonging to the reason of the crash
+*/
+export interface CrashGroupsContainerCrashGroupsItemReasonFrame {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface CrashGroupsContainerCrashGroupsItem {
+  crashGroupId: string;
+  newCrashGroupId: string;
+  displayId: string;
+  appVersion: string;
+  build: string;
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  status: string;
+  count: number;
+  impactedUsers?: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exception?: string;
+  crashReason: string;
+  /**
+   * frame belonging to the reason of the crash
+  */
+  reasonFrame?: CrashGroupsContainerCrashGroupsItemReasonFrame;
+  /**
+   * Crash or handled exception
+  */
+  fatal: boolean;
+  annotation: string;
+}
+
+export interface CrashGroupsContainer {
+  limitedResultSet: boolean;
+  /**
+   * Cassandra request continuation token. The token is used for pagination.
+  */
+  continuationToken?: string;
+  crashGroups: CrashGroupsContainerCrashGroupsItem[];
+}
+
+/**
+ * frame belonging to the reason of the crash
+*/
+export interface CrashGroupReasonFrame {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
 export interface CrashGroup {
   crashGroupId: string;
   newCrashGroupId: string;
@@ -6884,21 +13073,15 @@ export interface CrashGroup {
   lastOccurrence: Date;
   exception?: string;
   crashReason: string;
-  reasonFrame?: ReasonStackFrame;
+  /**
+   * frame belonging to the reason of the crash
+  */
+  reasonFrame?: CrashGroupReasonFrame;
   /**
    * Crash or handled exception
   */
   fatal: boolean;
   annotation: string;
-}
-
-export interface CrashGroupsContainer {
-  limitedResultSet: boolean;
-  /**
-   * Cassandra request continuation token. The token is used for pagination.
-  */
-  continuationToken?: string;
-  crashGroups: CrashGroup[];
 }
 
 export interface CrashGroupChange {
@@ -6962,12 +13145,42 @@ export interface Crash {
   userEmail?: string;
 }
 
-export interface HockeyAppCrashForwardingInfo {
-  forwardingEnabled: boolean;
-}
+export interface CrashDetailsModel {
+  /**
+   * Carrier country code (for mobile devices).
 
-export interface HockeyAppCrashForwardingChange {
-  enableForwarding?: boolean;
+  */
+  carrierCountry?: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * Whether the device where the crash occurred is rooted or jailbroken
+
+  */
+  rooted: boolean;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize: string;
+  /**
+   * Application launch timestamp (example: 1985-04-12T23:20:50.52Z).
+
+  */
+  appStartTimestamp?: Date;
 }
 
 export interface AlertingCrashGroup {
@@ -7018,6 +13231,28 @@ export interface V2MissingSymbol {
 }
 
 /**
+ * missing symbol
+*/
+export interface V2MissingSymbolsItem {
+  /**
+   * symbol id
+  */
+  symbolId: string;
+  /**
+   * symbol name
+  */
+  name: string;
+  /**
+   * symbol plarform
+  */
+  platform?: string;
+  /**
+   * symbol status. Possible values include: 'missing', 'ignored', 'available'
+  */
+  status: string;
+}
+
+/**
  * symbol update message
 */
 export interface V2SymbolUpdateInfo {
@@ -7036,6 +13271,28 @@ export interface V2SymbolUpdateInfo {
 }
 
 /**
+ * missing symbol
+*/
+export interface V2MissingSymbolCrashGroupMissingSymbolsItem {
+  /**
+   * symbol id
+  */
+  symbolId: string;
+  /**
+   * symbol name
+  */
+  name: string;
+  /**
+   * symbol plarform
+  */
+  platform?: string;
+  /**
+   * symbol status. Possible values include: 'missing', 'ignored', 'available'
+  */
+  status: string;
+}
+
+/**
  * missing symbol crash group object
 */
 export interface V2MissingSymbolCrashGroup {
@@ -7047,6 +13304,10 @@ export interface V2MissingSymbolCrashGroup {
    * number of crashes that belong to this group
   */
   crashCount?: number;
+  /**
+   * number of errors that belong to this group
+  */
+  errorCount?: number;
   /**
    * application id
   */
@@ -7066,7 +13327,135 @@ export interface V2MissingSymbolCrashGroup {
   /**
    * list of missing symbols
   */
-  missingSymbols: V2MissingSymbol[];
+  missingSymbols: V2MissingSymbolCrashGroupMissingSymbolsItem[];
+  /**
+   * group status. Possible values include: 'active', 'pending', 'closed'
+  */
+  status: string;
+}
+
+/**
+ * missing symbol
+*/
+export interface V2MissingSymbolCrashGroupsItemMissingSymbolsItem {
+  /**
+   * symbol id
+  */
+  symbolId: string;
+  /**
+   * symbol name
+  */
+  name: string;
+  /**
+   * symbol plarform
+  */
+  platform?: string;
+  /**
+   * symbol status. Possible values include: 'missing', 'ignored', 'available'
+  */
+  status: string;
+}
+
+/**
+ * missing symbol crash group object
+*/
+export interface V2MissingSymbolCrashGroupsItem {
+  /**
+   * id of the symbol group
+  */
+  symbolGroupId: string;
+  /**
+   * number of crashes that belong to this group
+  */
+  crashCount?: number;
+  /**
+   * number of errors that belong to this group
+  */
+  errorCount?: number;
+  /**
+   * application id
+  */
+  appId: string;
+  /**
+   * application version
+  */
+  appVer: string;
+  /**
+   * application build
+  */
+  appBuild: string;
+  /**
+   * last update date for the group
+  */
+  lastModified: Date;
+  /**
+   * list of missing symbols
+  */
+  missingSymbols: V2MissingSymbolCrashGroupsItemMissingSymbolsItem[];
+  /**
+   * group status. Possible values include: 'active', 'pending', 'closed'
+  */
+  status: string;
+}
+
+/**
+ * missing symbol
+*/
+export interface V2MissingSymbolCrashGroupsResponseGroupsItemMissingSymbolsItem {
+  /**
+   * symbol id
+  */
+  symbolId: string;
+  /**
+   * symbol name
+  */
+  name: string;
+  /**
+   * symbol plarform
+  */
+  platform?: string;
+  /**
+   * symbol status. Possible values include: 'missing', 'ignored', 'available'
+  */
+  status: string;
+}
+
+/**
+ * missing symbol crash group object
+*/
+export interface V2MissingSymbolCrashGroupsResponseGroupsItem {
+  /**
+   * id of the symbol group
+  */
+  symbolGroupId: string;
+  /**
+   * number of crashes that belong to this group
+  */
+  crashCount?: number;
+  /**
+   * number of errors that belong to this group
+  */
+  errorCount?: number;
+  /**
+   * application id
+  */
+  appId: string;
+  /**
+   * application version
+  */
+  appVer: string;
+  /**
+   * application build
+  */
+  appBuild: string;
+  /**
+   * last update date for the group
+  */
+  lastModified: Date;
+  /**
+   * list of missing symbols
+  */
+  missingSymbols: V2MissingSymbolCrashGroupsResponseGroupsItemMissingSymbolsItem[];
   /**
    * group status. Possible values include: 'active', 'pending', 'closed'
   */
@@ -7078,13 +13467,13 @@ export interface V2MissingSymbolCrashGroup {
 */
 export interface V2MissingSymbolCrashGroupsResponse {
   /**
-   * total number of cashes for all the groups
+   * total number of crashes for all the groups
   */
   totalCrashCount: number;
   /**
    * list of crash groups formed by missing symbols combination
   */
-  groups: V2MissingSymbolCrashGroup[];
+  groups: V2MissingSymbolCrashGroupsResponseGroupsItem[];
 }
 
 /**
@@ -7112,7 +13501,7 @@ export interface V2FailureResponse {
   message: string;
 }
 
-export interface CrashingAppDetail {
+export interface ActiveCrashingAppDetailsAppsWithCrashesItem {
   /**
    * application identifier
   */
@@ -7132,7 +13521,7 @@ export interface ActiveCrashingAppDetails {
   /**
    * details of the apps with crashes
   */
-  appsWithCrashes?: CrashingAppDetail[];
+  appsWithCrashes?: ActiveCrashingAppDetailsAppsWithCrashesItem[];
 }
 
 export interface LogTraceDefinition {
@@ -7141,10 +13530,596 @@ export interface LogTraceDefinition {
   expiration?: Date;
 }
 
+export interface CrashingAppDetail {
+  /**
+   * application identifier
+  */
+  appId?: string;
+  /**
+   * application version
+  */
+  appVersion?: string;
+  /**
+   * crash group identifier
+  */
+  crashGroupId?: string;
+}
+
 /**
  * Device characteristics.
 */
-export interface Device {
+export interface LogContainerLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+export interface LogContainerLogsItem {
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogContainerLogsItemDevice;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+export interface LogContainer {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: LogContainerLogsItem[];
+}
+
+/**
+ * Device characteristics.
+*/
+export interface GenericLogContainerLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface GenericLogContainerLogsItem {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: GenericLogContainerLogsItemDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
+}
+
+export interface GenericLogContainer {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: GenericLogContainerLogsItem[];
+}
+
+/**
+ * Device characteristics.
+*/
+export interface GenericLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface GenericLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: GenericLogDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogDevice {
   /**
    * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
    * "hockeysdk.android".
@@ -7284,33 +14259,149 @@ export interface Log {
 
   */
   installId: string;
-  device: Device;
+  /**
+   * Device characteristics.
+  */
+  device: LogDevice;
   /**
    * Polymorphic Discriminator
   */
   type: string;
 }
 
-export interface LogContainer {
+/**
+ * Device characteristics.
+*/
+export interface LogWithPropertiesDevice {
   /**
-   * indicates if the number of available logs are more than the max allowed return limit(100).
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
   */
-  exceededMaxLimit?: boolean;
+  sdkName: string;
   /**
-   * the timestamp of the last log received. This value can be used as the start time parameter in
-   * the consecutive API call.
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
   */
-  lastReceivedLogTimestamp?: Date;
+  sdkVersion: string;
   /**
-   * the list of logs
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
   */
-  logs: Log[];
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
-/**
- * Generic log.
-*/
-export interface GenericLog {
+export interface LogWithProperties {
   /**
    * Log type.
    * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
@@ -7328,60 +14419,9 @@ export interface GenericLog {
   */
   installId: string;
   /**
-   * Session ID.
-
+   * Device characteristics.
   */
-  sessionId?: string;
-  /**
-   * Event ID.
-
-  */
-  eventId?: string;
-  /**
-   * Event name.
-
-  */
-  eventName?: string;
-  /**
-   * Message ID.
-
-  */
-  messageId?: string;
-  /**
-   * event specific properties.
-
-  */
-  properties?: { [propertyName: string]: string };
-  device: Device;
-  /**
-   * Auth service provider.
-
-  */
-  authProvider?: string;
-  /**
-   * Account ID of the authenticated user.
-
-  */
-  accountId?: string;
-}
-
-export interface GenericLogContainer {
-  /**
-   * indicates if the number of available logs are more than the max allowed return limit(100).
-  */
-  exceededMaxLimit?: boolean;
-  /**
-   * the timestamp of the last log received. This value can be used as the start time parameter in
-   * the consecutive API call.
-  */
-  lastReceivedLogTimestamp?: Date;
-  /**
-   * the list of logs
-  */
-  logs: GenericLog[];
-}
-
-export interface LogWithProperties extends Log {
+  device: LogWithPropertiesDevice;
   /**
    * Additional key/value pair parameters.
 
@@ -7390,9 +14430,293 @@ export interface LogWithProperties extends Log {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface Device {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface StartSessionLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Required explicit begin session log (a marker event for analytics service).
 */
-export interface StartSessionLog extends Log {
+export interface StartSessionLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: StartSessionLogDevice;
   /**
    * Session ID.
 
@@ -7401,9 +14725,325 @@ export interface StartSessionLog extends Log {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface DistributionStartSessionLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Log is used to update distribution group identifier for session (a marker event for analytics
+ * service).
+*/
+export interface DistributionStartSessionLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: DistributionStartSessionLogDevice;
+  /**
+   * Distribution Group ID.
+
+  */
+  distributionGroupId: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface HandledErrorLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Required explicit begin session log (a marker event for analytics service).
 */
-export interface HandledErrorLog extends Log {
+export interface HandledErrorLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: HandledErrorLogDevice;
   /**
    * Error ID.
 
@@ -7412,24 +15052,498 @@ export interface HandledErrorLog extends Log {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface UnhandledErrorLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Required explicit begin session log (a marker event for analytics service).
 */
-export interface UnhandledErrorLog extends Log {
+export interface UnhandledErrorLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: UnhandledErrorLogDevice;
   /**
    * Error ID.
 
   */
   errorId: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface StartServiceLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
 /**
  * Describe a AppCenter.Start API call from the SDK.
 */
-export interface StartServiceLog extends Log {
+export interface StartServiceLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: StartServiceLogDevice;
   /**
    * The list of services of the AppCenter Start API call.
   */
   services?: string[];
+}
+
+/**
+ * Device characteristics.
+*/
+export interface CustomPropertyLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+export interface CustomPropertyLogPropertiesItem {
+  name: string;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Set or remove custom properties.
+*/
+export interface CustomPropertyLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: CustomPropertyLogDevice;
+  /**
+   * Custom property changes.
+  */
+  properties?: CustomPropertyLogPropertiesItem[];
 }
 
 export interface CustomProperty {
@@ -7441,19 +15555,11 @@ export interface CustomProperty {
 }
 
 /**
- * Set or remove custom properties.
-*/
-export interface CustomPropertyLog extends Log {
-  /**
-   * Custom property changes.
-  */
-  properties?: CustomProperty[];
-}
-
-/**
  * String property.
 */
-export interface StringProperty extends CustomProperty {
+export interface StringProperty {
+  type: string;
+  name: string;
   /**
    * String property value.
   */
@@ -7463,7 +15569,9 @@ export interface StringProperty extends CustomProperty {
 /**
  * Number property.
 */
-export interface NumberProperty extends CustomProperty {
+export interface NumberProperty {
+  type: string;
+  name: string;
   /**
    * Number property value.
   */
@@ -7473,7 +15581,9 @@ export interface NumberProperty extends CustomProperty {
 /**
  * Boolean property.
 */
-export interface BooleanProperty extends CustomProperty {
+export interface BooleanProperty {
+  type: string;
+  name: string;
   /**
    * Boolean property value.
   */
@@ -7483,7 +15593,9 @@ export interface BooleanProperty extends CustomProperty {
 /**
  * Date and time property.
 */
-export interface DateTimeProperty extends CustomProperty {
+export interface DateTimeProperty {
+  type: string;
+  name: string;
   /**
    * Date time property value.
   */
@@ -7493,13 +15605,172 @@ export interface DateTimeProperty extends CustomProperty {
 /**
  * Clear an existing property.
 */
-export interface ClearProperty extends CustomProperty {
+export interface ClearProperty {
+  type: string;
+  name: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface PageLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
 /**
  * Page view log (as in screens or activities).
 */
-export interface PageLog extends LogWithProperties {
+export interface PageLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: PageLogDevice;
+  /**
+   * Additional key/value pair parameters.
+
+  */
+  properties?: { [propertyName: string]: string };
   /**
    * Session ID.
 
@@ -7513,9 +15784,166 @@ export interface PageLog extends LogWithProperties {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface EventLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Event log.
 */
-export interface EventLog extends LogWithProperties {
+export interface EventLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: EventLogDevice;
+  /**
+   * Additional key/value pair parameters.
+
+  */
+  properties?: { [propertyName: string]: string };
   /**
    * Session ID.
 
@@ -7534,9 +15962,161 @@ export interface EventLog extends LogWithProperties {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface PushInstallationLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Push installation Information.
 */
-export interface PushInstallationLog extends Log {
+export interface PushInstallationLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: PushInstallationLogDevice;
   /**
    * The PNS handle for this installation.
 
@@ -7545,9 +16125,161 @@ export interface PushInstallationLog extends Log {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface ErrorLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Error log.
 */
-export interface ErrorLog extends Log {
+export interface ErrorLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: ErrorLogDevice;
   /**
    * Session ID.
 
@@ -7568,7 +16300,7 @@ export interface ErrorLog extends Log {
 /**
  * Audience definition.
 */
-export interface AudienceSummary {
+export interface AudienceListResultValuesItem {
   /**
    * Audience name.
   */
@@ -7598,14 +16330,60 @@ export interface AudienceListResult {
   /**
    * List of audiences.
   */
-  values: AudienceSummary[];
+  values: AudienceListResultValuesItem[];
   nextLink?: string;
+}
+
+/**
+ * Audience definition.
+*/
+export interface AudienceSummary {
+  /**
+   * Audience name.
+  */
+  name?: string;
+  /**
+   * Audience description.
+  */
+  description?: string;
+  /**
+   * Estimated audience size.
+  */
+  estimatedCount?: number;
+  /**
+   * Audience definition in OData format.
+  */
+  definition?: string;
+  /**
+   * Audience state. Possible values include: 'Calculating', 'Ready', 'Disabled'
+  */
+  state?: string;
 }
 
 /**
  * Audience with details.
 */
-export interface Audience extends AudienceSummary {
+export interface Audience {
+  /**
+   * Audience name.
+  */
+  name?: string;
+  /**
+   * Audience description.
+  */
+  description?: string;
+  /**
+   * Estimated audience size.
+  */
+  estimatedCount?: number;
+  /**
+   * Audience definition in OData format.
+  */
+  definition?: string;
+  /**
+   * Audience state. Possible values include: 'Calculating', 'Ready', 'Disabled'
+  */
+  state?: string;
   enabled?: boolean;
   /**
    * Custom properties used in the definition.
@@ -7717,7 +16495,7 @@ export interface AudienceDevicePropertyValuesListResult {
   values: string[];
 }
 
-export interface DateTimeCounts {
+export interface CrashCountsCrashesItem {
   /**
    * The ISO 8601 datetime.
   */
@@ -7736,28 +16514,61 @@ export interface CrashCounts {
   /**
    * The total crash count for day.
   */
-  crashes?: DateTimeCounts[];
+  crashes?: CrashCountsCrashesItem[];
+}
+
+export interface ActiveDeviceCountsDailyItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface ActiveDeviceCountsWeeklyItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface ActiveDeviceCountsMonthlyItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
 }
 
 export interface ActiveDeviceCounts {
   /**
    * The active device count for each interval.
   */
-  daily?: DateTimeCounts[];
+  daily?: ActiveDeviceCountsDailyItem[];
   /**
    * The active device count for each interval with a week's retention.
   */
-  weekly?: DateTimeCounts[];
+  weekly?: ActiveDeviceCountsWeeklyItem[];
   /**
    * The active device count for each interval with a month's retention.
   */
-  monthly?: DateTimeCounts[];
+  monthly?: ActiveDeviceCountsMonthlyItem[];
 }
 
 /**
  * The place code and the count.
 */
-export interface Place {
+export interface PlacesPlacesItem {
   /**
    * The place code.
   */
@@ -7777,7 +16588,25 @@ export interface Place {
 */
 export interface Places {
   total?: number;
-  places?: Place[];
+  places?: PlacesPlacesItem[];
+}
+
+/**
+ * The place code and the count.
+*/
+export interface Place {
+  /**
+   * The place code.
+  */
+  code?: string;
+  /**
+   * The count of the this place.
+  */
+  count?: number;
+  /**
+   * The count of previous time range of the place.
+  */
+  previousCount?: number;
 }
 
 export interface ErrorError {
@@ -7824,7 +16653,7 @@ export interface SessionDurationsDistribution {
   averageDuration?: string;
 }
 
-export interface Version {
+export interface VersionsVersionsItem {
   /**
    * Version.
   */
@@ -7843,11 +16672,37 @@ export interface Versions {
   /**
    * List of version count.
   */
-  versions?: Version[];
+  versions?: VersionsVersionsItem[];
   /**
    * The total count of versions.
   */
   total?: number;
+}
+
+export interface Version {
+  /**
+   * Version.
+  */
+  version?: string;
+  /**
+   * Version count.
+  */
+  count?: number;
+  /**
+   * The count of previous time range of the version.
+  */
+  previousCount?: number;
+}
+
+export interface SessionCountsItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
 }
 
 export interface SessionsPerDeviceSessionsPerUserItem {
@@ -7884,7 +16739,7 @@ export interface SessionsPerDevice {
   sessionsPerUser?: SessionsPerDeviceSessionsPerUserItem[];
 }
 
-export interface Model {
+export interface AnalyticsModelsModelsItem {
   /**
    * Model's name.
   */
@@ -7901,7 +16756,42 @@ export interface Model {
 
 export interface AnalyticsModels {
   total?: number;
-  modelsProperty?: Model[];
+  modelsProperty?: AnalyticsModelsModelsItem[];
+}
+
+export interface Model {
+  /**
+   * Model's name.
+  */
+  modelName?: string;
+  /**
+   * Count current of model.
+  */
+  count?: number;
+  /**
+   * Count of previous model.
+  */
+  previousCount?: number;
+}
+
+export interface LanguagesLanguagesItem {
+  /**
+   * Language's name.
+  */
+  languageName?: string;
+  /**
+   * Count current of language.
+  */
+  count?: number;
+  /**
+   * Count of previous lanugage.
+  */
+  previousCount?: number;
+}
+
+export interface Languages {
+  total?: number;
+  languages?: LanguagesLanguagesItem[];
 }
 
 export interface Language {
@@ -7919,9 +16809,24 @@ export interface Language {
   previousCount?: number;
 }
 
-export interface Languages {
+export interface OSesOsesItem {
+  /**
+   * OS name.
+  */
+  osName?: string;
+  /**
+   * Count current of OS.
+  */
+  count?: number;
+  /**
+   * Count of previous OS.
+  */
+  previousCount?: number;
+}
+
+export interface OSes {
   total?: number;
-  languages?: Language[];
+  oses?: OSesOsesItem[];
 }
 
 export interface OS {
@@ -7939,9 +16844,15 @@ export interface OS {
   previousCount?: number;
 }
 
-export interface OSes {
-  total?: number;
-  oses?: OS[];
+export interface DateTimeCounts {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
 }
 
 export interface DateTimeDecimalCounts {
@@ -7973,7 +16884,7 @@ export interface AvailableAppBuilds {
   appBuilds?: string[];
 }
 
-export interface DateTimePercentages {
+export interface CrashFreeDevicePercentagesDailyPercentagesItem {
   /**
    * The ISO 8601 datetime.
   */
@@ -7992,14 +16903,25 @@ export interface CrashFreeDevicePercentages {
   /**
    * The crash-free percentage per day.
   */
-  dailyPercentages?: DateTimePercentages[];
+  dailyPercentages?: CrashFreeDevicePercentagesDailyPercentagesItem[];
 }
 
 export interface Modules {
   modules?: { [propertyName: string]: { [propertyName: string]: boolean } };
 }
 
-export interface CrashOverall {
+export interface DateTimePercentages {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Percentage of the object.
+  */
+  percentage?: number;
+}
+
+export interface CrashesOverallItemOverall {
   crashCount?: number;
   deviceCount?: number;
 }
@@ -8007,7 +16929,28 @@ export interface CrashOverall {
 export interface CrashesOverallItem {
   crashGroupId?: string;
   appVersion?: string;
-  overall?: CrashOverall;
+  overall?: CrashesOverallItemOverall;
+}
+
+export interface CrashOverall {
+  crashCount?: number;
+  deviceCount?: number;
+}
+
+export interface CrashGroupModelsModelsItem {
+  /**
+   * Model's name.
+  */
+  modelName?: string;
+  /**
+   * Count of model.
+  */
+  crashCount?: number;
+}
+
+export interface CrashGroupModels {
+  crashCount?: number;
+  modelsProperty?: CrashGroupModelsModelsItem[];
 }
 
 export interface CrashGroupModel {
@@ -8021,9 +16964,20 @@ export interface CrashGroupModel {
   crashCount?: number;
 }
 
-export interface CrashGroupModels {
+export interface CrashGroupOperatingSystemsOperatingSystemsItem {
+  /**
+   * OS name.
+  */
+  operatingSystemName?: string;
+  /**
+   * Count of OS.
+  */
   crashCount?: number;
-  modelsProperty?: CrashGroupModel[];
+}
+
+export interface CrashGroupOperatingSystems {
+  crashCount?: number;
+  operatingSystems?: CrashGroupOperatingSystemsOperatingSystemsItem[];
 }
 
 export interface CrashGroupOperatingSystem {
@@ -8037,9 +16991,20 @@ export interface CrashGroupOperatingSystem {
   crashCount?: number;
 }
 
-export interface CrashGroupOperatingSystems {
+export interface CrashGroupPlacesPlacesItem {
+  /**
+   * Place name.
+  */
+  placeName?: string;
+  /**
+   * Count of places.
+  */
   crashCount?: number;
-  operatingSystems?: CrashGroupOperatingSystem[];
+}
+
+export interface CrashGroupPlaces {
+  crashCount?: number;
+  places?: CrashGroupPlacesPlacesItem[];
 }
 
 export interface CrashGroupPlace {
@@ -8053,9 +17018,20 @@ export interface CrashGroupPlace {
   crashCount?: number;
 }
 
-export interface CrashGroupPlaces {
+export interface CrashGroupLanguagesLanguagesItem {
+  /**
+   * Language name.
+  */
+  languageName?: string;
+  /**
+   * Count of languages.
+  */
   crashCount?: number;
-  places?: CrashGroupPlace[];
+}
+
+export interface CrashGroupLanguages {
+  crashCount?: number;
+  languages?: CrashGroupLanguagesLanguagesItem[];
 }
 
 export interface CrashGroupLanguage {
@@ -8069,9 +17045,20 @@ export interface CrashGroupLanguage {
   crashCount?: number;
 }
 
-export interface CrashGroupLanguages {
+export interface CrashGroupCarriersCarriersItem {
+  /**
+   * Carrier name.
+  */
+  carrierName?: string;
+  /**
+   * Crash count of carrier.
+  */
   crashCount?: number;
-  languages?: CrashGroupLanguage[];
+}
+
+export interface CrashGroupCarriers {
+  crashCount?: number;
+  carriers?: CrashGroupCarriersCarriersItem[];
 }
 
 export interface CrashGroupCarrier {
@@ -8085,9 +17072,13 @@ export interface CrashGroupCarrier {
   crashCount?: number;
 }
 
-export interface CrashGroupCarriers {
-  crashCount?: number;
-  carriers?: CrashGroupCarrier[];
+export interface CrashGroupContainerCrashGroupsItem {
+  crashGroupId?: string;
+  appVersion?: string;
+}
+
+export interface CrashGroupContainer {
+  crashGroups: CrashGroupContainerCrashGroupsItem[];
 }
 
 export interface CrashGroupAndVersion {
@@ -8095,8 +17086,33 @@ export interface CrashGroupAndVersion {
   appVersion?: string;
 }
 
-export interface CrashGroupContainer {
-  crashGroups: CrashGroupAndVersion[];
+export interface EventsEventsItem {
+  id?: string;
+  name?: string;
+  deviceCount?: number;
+  /**
+   * The device count of previous time range of the event.
+  */
+  previousDeviceCount?: number;
+  count?: number;
+  /**
+   * The event count of previous time range of the event.
+  */
+  previousCount?: number;
+  countPerDevice?: number;
+  countPerSession?: number;
+}
+
+export interface Events {
+  events?: EventsEventsItem[];
+  /**
+   * The total count of events.
+  */
+  total?: number;
+  /**
+   * The active device over this period.
+  */
+  totalDevices?: number;
 }
 
 export interface Event {
@@ -8116,41 +17132,73 @@ export interface Event {
   countPerSession?: number;
 }
 
-export interface Events {
-  events?: Event[];
+export interface EventCountCountItem {
   /**
-   * The total count of events.
+   * The ISO 8601 datetime.
   */
-  total?: number;
+  datetime?: string;
   /**
-   * The active device over this period.
+   * Count of the object.
   */
-  totalDevices?: number;
+  count?: number;
 }
 
 export interface EventCount {
   totalCount?: number;
   previousTotalCount?: number;
-  count?: DateTimeCounts[];
+  count?: EventCountCountItem[];
+}
+
+export interface EventDeviceCountDevicesCountItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
 }
 
 export interface EventDeviceCount {
   totalDevices?: number;
   totalDevicesWithEvent?: number;
   previousTotalDevicesWithEvent?: number;
-  devicesCount?: DateTimeCounts[];
+  devicesCount?: EventDeviceCountDevicesCountItem[];
+}
+
+export interface EventCountPerDeviceCountPerDeviceItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Decimal count of the object.
+  */
+  count?: number;
 }
 
 export interface EventCountPerDevice {
   avgCountPerDevice?: number;
   previousAvgCountPerDevice?: number;
-  countPerDevice?: DateTimeDecimalCounts[];
+  countPerDevice?: EventCountPerDeviceCountPerDeviceItem[];
+}
+
+export interface EventCountPerSessionCountPerSessionItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Decimal count of the object.
+  */
+  count?: number;
 }
 
 export interface EventCountPerSession {
   avgCountPerSession?: number;
   previousAvgCountPerSession?: number;
-  countPerSession?: DateTimeDecimalCounts[];
+  countPerSession?: EventCountPerSessionCountPerSessionItem[];
 }
 
 /**
@@ -8163,7 +17211,7 @@ export interface EventProperties {
 /**
  * An event property value with counts.
 */
-export interface EventPropertyValue {
+export interface EventPropertyValuesValuesItem {
   /**
    * The event property value name.
   */
@@ -8189,26 +17237,38 @@ export interface EventPropertyValues {
   /**
    * The event property values.
   */
-  values?: EventPropertyValue[];
+  values?: EventPropertyValuesValuesItem[];
 }
 
-export interface Release {
+/**
+ * An event property value with counts.
+*/
+export interface EventPropertyValue {
+  /**
+   * The event property value name.
+  */
+  name?: string;
+  /**
+   * The count of the the event property value.
+  */
+  count?: number;
+  /**
+   * The count of previous time range of the event property value.
+  */
+  previousCount?: number;
+}
+
+export interface NotifyReleasesContainerReleasesItem {
   /**
    * Release Id.
 
   */
   release: string;
-}
-
-export interface ReleaseWithDistributionGroup extends Release {
   /**
    * Distribution group Id.
 
   */
   distributionGroup?: string;
-}
-
-export interface ReleaseWithDistributionGroupAndUserId extends ReleaseWithDistributionGroup {
   /**
    * Unique user Id.  Will generate a new user Id if not provided.
 
@@ -8217,19 +17277,48 @@ export interface ReleaseWithDistributionGroupAndUserId extends ReleaseWithDistri
 }
 
 export interface NotifyReleasesContainer {
-  releases: ReleaseWithDistributionGroupAndUserId[];
+  releases: NotifyReleasesContainerReleasesItem[];
+}
+
+export interface DeleteReleasesContainerReleasesItem {
+  /**
+   * Release Id.
+
+  */
+  release: string;
 }
 
 export interface DeleteReleasesContainer {
-  releases: Release[];
+  releases: DeleteReleasesContainerReleasesItem[];
+}
+
+export interface GetReleasesContainerReleasesItem {
+  /**
+   * Release Id.
+
+  */
+  release: string;
+  /**
+   * Distribution group Id.
+
+  */
+  distributionGroup?: string;
 }
 
 export interface GetReleasesContainer {
-  releases: ReleaseWithDistributionGroup[];
+  releases: GetReleasesContainerReleasesItem[];
+}
+
+export interface FilterReleasesContainerReleasesItem {
+  /**
+   * Release Id.
+
+  */
+  release: string;
 }
 
 export interface FilterReleasesContainer {
-  releases?: Release[];
+  releases?: FilterReleasesContainerReleasesItem[];
 }
 
 export interface FilterVersionsContainerVersionsItem {
@@ -8247,6 +17336,121 @@ export interface FilterVersionsContainerVersionsItem {
 
 export interface FilterVersionsContainer {
   versions?: FilterVersionsContainerVersionsItem[];
+}
+
+export interface Release {
+  /**
+   * Release Id.
+
+  */
+  release: string;
+}
+
+export interface ReleaseWithDistributionGroup {
+  /**
+   * Release Id.
+
+  */
+  release: string;
+  /**
+   * Distribution group Id.
+
+  */
+  distributionGroup?: string;
+}
+
+export interface ReleaseWithDistributionGroupAndUserId {
+  /**
+   * Release Id.
+
+  */
+  release: string;
+  /**
+   * Distribution group Id.
+
+  */
+  distributionGroup?: string;
+  /**
+   * Unique user Id.  Will generate a new user Id if not provided.
+
+  */
+  userId?: string;
+}
+
+export interface ReleaseCountsCountsItem {
+  releaseId: string;
+  /**
+   * Distribution group queried.
+
+  */
+  distributionGroup?: string;
+  /**
+   * Count of unique downloads against user id.
+
+  */
+  uniqueCount: number;
+  /**
+   * Total count of downloads.
+
+  */
+  totalCount: number;
+}
+
+export interface ReleaseCounts {
+  total?: number;
+  counts: ReleaseCountsCountsItem[];
+}
+
+export interface ReleaseDailySessionsSessionsItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  count?: number;
+}
+
+export interface ReleaseDailySessions {
+  totalSessionCounts?: number;
+  avgSessionsPerDay?: number;
+  /**
+   * Sessions per day.
+  */
+  sessions?: ReleaseDailySessionsSessionsItem[];
+}
+
+export interface DailySession {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  count?: number;
+}
+
+export interface DateTimeDownloadReleaseCountsCountsItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  total?: number;
+  unique?: number;
+}
+
+export interface DateTimeDownloadReleaseCounts {
+  total?: number;
+  unique?: number;
+  /**
+   * Release counts per day.
+  */
+  counts?: DateTimeDownloadReleaseCountsCountsItem[];
+}
+
+export interface DateTimeDownloadReleaseCount {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  total?: number;
+  unique?: number;
 }
 
 export interface ReleaseCount {
@@ -8268,50 +17472,581 @@ export interface ReleaseCount {
   totalCount: number;
 }
 
-export interface ReleaseCounts {
-  total?: number;
-  counts: ReleaseCount[];
+/**
+ * Device characteristics.
+*/
+export interface LogFlowLogContainerLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
-export interface DailySession {
+export interface LogFlowLogContainerLogsItem {
   /**
-   * The ISO 8601 datetime.
+   * Log creation timestamp.
+
   */
-  datetime?: string;
-  count?: number;
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowLogContainerLogsItemDevice;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
 }
 
-export interface ReleaseDailySessions {
-  totalSessionCounts?: number;
-  avgSessionsPerDay?: number;
+export interface LogFlowLogContainer {
   /**
-   * Sessions per day.
+   * indicates if the number of available logs are more than the max allowed return limit(100).
   */
-  sessions?: DailySession[];
-}
-
-export interface DateTimeDownloadReleaseCount {
+  exceededMaxLimit?: boolean;
   /**
-   * The ISO 8601 datetime.
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
   */
-  datetime?: string;
-  total?: number;
-  unique?: number;
-}
-
-export interface DateTimeDownloadReleaseCounts {
-  total?: number;
-  unique?: number;
+  lastReceivedLogTimestamp?: Date;
   /**
-   * Release counts per day.
+   * the list of logs
   */
-  counts?: DateTimeDownloadReleaseCount[];
+  logs: LogFlowLogContainerLogsItem[];
 }
 
 /**
  * Device characteristics.
 */
-export interface LogFlowDevice {
+export interface LogFlowGenericLogContainerLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface LogFlowGenericLogContainerLogsItem {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowGenericLogContainerLogsItemDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
+}
+
+export interface LogFlowGenericLogContainer {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: LogFlowGenericLogContainerLogsItem[];
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogFlowGenericLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface LogFlowGenericLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowGenericLogDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogFlowLogDevice {
   /**
    * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
    * "hockeysdk.android".
@@ -8451,33 +18186,149 @@ export interface LogFlowLog {
 
   */
   installId: string;
-  device: LogFlowDevice;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowLogDevice;
   /**
    * Polymorphic Discriminator
   */
   type: string;
 }
 
-export interface LogFlowLogContainer {
+/**
+ * Device characteristics.
+*/
+export interface LogFlowLogWithPropertiesDevice {
   /**
-   * indicates if the number of available logs are more than the max allowed return limit(100).
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
   */
-  exceededMaxLimit?: boolean;
+  sdkName: string;
   /**
-   * the timestamp of the last log received. This value can be used as the start time parameter in
-   * the consecutive API call.
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
   */
-  lastReceivedLogTimestamp?: Date;
+  sdkVersion: string;
   /**
-   * the list of logs
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
   */
-  logs: LogFlowLog[];
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
-/**
- * Generic log.
-*/
-export interface LogFlowGenericLog {
+export interface LogFlowLogWithProperties {
   /**
    * Log type.
    * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
@@ -8495,50 +18346,9 @@ export interface LogFlowGenericLog {
   */
   installId: string;
   /**
-   * Session ID.
-
+   * Device characteristics.
   */
-  sessionId?: string;
-  /**
-   * Event ID.
-
-  */
-  eventId?: string;
-  /**
-   * Event name.
-
-  */
-  eventName?: string;
-  /**
-   * Message ID.
-
-  */
-  messageId?: string;
-  /**
-   * event specific properties.
-
-  */
-  properties?: { [propertyName: string]: string };
-  device: LogFlowDevice;
-}
-
-export interface LogFlowGenericLogContainer {
-  /**
-   * indicates if the number of available logs are more than the max allowed return limit(100).
-  */
-  exceededMaxLimit?: boolean;
-  /**
-   * the timestamp of the last log received. This value can be used as the start time parameter in
-   * the consecutive API call.
-  */
-  lastReceivedLogTimestamp?: Date;
-  /**
-   * the list of logs
-  */
-  logs: LogFlowGenericLog[];
-}
-
-export interface LogFlowLogWithProperties extends LogFlowLog {
+  device: LogFlowLogWithPropertiesDevice;
   /**
    * Additional key/value pair parameters.
 
@@ -8547,9 +18357,293 @@ export interface LogFlowLogWithProperties extends LogFlowLog {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface LogFlowDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogFlowStartSessionLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Required explicit begin session log (a marker event for analytics service).
 */
-export interface LogFlowStartSessionLog extends LogFlowLog {
+export interface LogFlowStartSessionLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowStartSessionLogDevice;
   /**
    * Session ID.
 
@@ -8558,13 +18652,335 @@ export interface LogFlowStartSessionLog extends LogFlowLog {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface LogFlowStartServiceLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Describe a AppCenter.Start API call from the SDK.
 */
-export interface LogFlowStartServiceLog extends LogFlowLog {
+export interface LogFlowStartServiceLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowStartServiceLogDevice;
   /**
    * The list of services of the AppCenter Start API call.
   */
   services?: string[];
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogFlowCustomPropertyLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+export interface LogFlowCustomPropertyLogPropertiesItem {
+  name: string;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Set or remove custom properties.
+*/
+export interface LogFlowCustomPropertyLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowCustomPropertyLogDevice;
+  /**
+   * Custom property changes.
+  */
+  properties?: LogFlowCustomPropertyLogPropertiesItem[];
 }
 
 export interface LogFlowCustomProperty {
@@ -8576,19 +18992,11 @@ export interface LogFlowCustomProperty {
 }
 
 /**
- * Set or remove custom properties.
-*/
-export interface LogFlowCustomPropertyLog extends LogFlowLog {
-  /**
-   * Custom property changes.
-  */
-  properties?: LogFlowCustomProperty[];
-}
-
-/**
  * String property.
 */
-export interface LogFlowStringProperty extends LogFlowCustomProperty {
+export interface LogFlowStringProperty {
+  type: string;
+  name: string;
   /**
    * String property value.
   */
@@ -8598,7 +19006,9 @@ export interface LogFlowStringProperty extends LogFlowCustomProperty {
 /**
  * Number property.
 */
-export interface LogFlowNumberProperty extends LogFlowCustomProperty {
+export interface LogFlowNumberProperty {
+  type: string;
+  name: string;
   /**
    * Number property value.
   */
@@ -8608,7 +19018,9 @@ export interface LogFlowNumberProperty extends LogFlowCustomProperty {
 /**
  * Boolean property.
 */
-export interface LogFlowBooleanProperty extends LogFlowCustomProperty {
+export interface LogFlowBooleanProperty {
+  type: string;
+  name: string;
   /**
    * Boolean property value.
   */
@@ -8618,7 +19030,9 @@ export interface LogFlowBooleanProperty extends LogFlowCustomProperty {
 /**
  * Date and time property.
 */
-export interface LogFlowDateTimeProperty extends LogFlowCustomProperty {
+export interface LogFlowDateTimeProperty {
+  type: string;
+  name: string;
   /**
    * Date time property value.
   */
@@ -8628,13 +19042,172 @@ export interface LogFlowDateTimeProperty extends LogFlowCustomProperty {
 /**
  * Clear an existing property.
 */
-export interface LogFlowClearProperty extends LogFlowCustomProperty {
+export interface LogFlowClearProperty {
+  type: string;
+  name: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogFlowPageLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
 /**
  * Page view log (as in screens or activities).
 */
-export interface LogFlowPageLog extends LogFlowLogWithProperties {
+export interface LogFlowPageLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowPageLogDevice;
+  /**
+   * Additional key/value pair parameters.
+
+  */
+  properties?: { [propertyName: string]: string };
   /**
    * Session ID.
 
@@ -8648,9 +19221,166 @@ export interface LogFlowPageLog extends LogFlowLogWithProperties {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface LogFlowEventLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Event log.
 */
-export interface LogFlowEventLog extends LogFlowLogWithProperties {
+export interface LogFlowEventLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowEventLogDevice;
+  /**
+   * Additional key/value pair parameters.
+
+  */
+  properties?: { [propertyName: string]: string };
   /**
    * Session ID.
 
@@ -8669,9 +19399,161 @@ export interface LogFlowEventLog extends LogFlowLogWithProperties {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface LogFlowPushInstallationLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Push installation Information.
 */
-export interface LogFlowPushInstallationLog extends LogFlowLog {
+export interface LogFlowPushInstallationLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowPushInstallationLogDevice;
   /**
    * The PNS handle for this installation.
 
@@ -8680,9 +19562,161 @@ export interface LogFlowPushInstallationLog extends LogFlowLog {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface LogFlowErrorLogDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Error log.
 */
-export interface LogFlowErrorLog extends LogFlowLog {
+export interface LogFlowErrorLog {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowErrorLogDevice;
   /**
    * Session ID.
 
@@ -8700,70 +19734,7 @@ export interface LogFlowErrorLog extends LogFlowLog {
   appLaunchToffset?: number;
 }
 
-export interface ErrorGroupState {
-  /**
-   * Possible values include: 'open', 'closed', 'ignored'
-  */
-  state: string;
-  annotation?: string;
-}
-
-export interface ErrorGroup extends ErrorGroupState {
-  errorGroupId: string;
-  appVersion: string;
-  appBuild?: string;
-  count: number;
-  deviceCount: number;
-  firstOccurrence: Date;
-  lastOccurrence: Date;
-  exceptionType?: string;
-  exceptionMessage?: string;
-  exceptionClassName?: string;
-  exceptionClassMethod?: boolean;
-  exceptionMethod?: string;
-  exceptionAppCode?: boolean;
-  exceptionFile?: string;
-  exceptionLine?: string;
-  codeRaw?: string;
-  reasonFrames?: HandledErrorReasonFrame[];
-}
-
-export interface ErrorGroupListItem extends ErrorGroup {
-}
-
-export interface ErrorGroups {
-  nextLink?: string;
-  errorGroups?: ErrorGroupListItem[];
-}
-
-export interface ErrorGroupsSearchResult {
-  hasMoreResults?: boolean;
-  errorGroups?: ErrorGroupListItem[];
-}
-
-export interface ErrorDateTimeCounts {
-  /**
-   * the ISO 8601 datetime
-  */
-  datetime?: string;
-  /**
-   * count of the object
-  */
-  count?: number;
-}
-
-export interface ErrorCounts {
-  /**
-   * total error count
-  */
-  count?: number;
-  /**
-   * the total error count for day
-  */
-  errors?: ErrorDateTimeCounts[];
-}
-
-export interface HandledErrorReasonFrame {
+export interface ErrorGroupsErrorGroupsItemReasonFramesItem {
   /**
    * name of the class
   */
@@ -8819,6 +19790,310 @@ export interface HandledErrorReasonFrame {
   osExceptionType?: string;
 }
 
+export interface ErrorGroupsErrorGroupsItem {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: ErrorGroupsErrorGroupsItemReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface ErrorGroups {
+  nextLink?: string;
+  errorGroups?: ErrorGroupsErrorGroupsItem[];
+}
+
+export interface ErrorGroupsSearchResultErrorGroupsItemReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface ErrorGroupsSearchResultErrorGroupsItem {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: ErrorGroupsSearchResultErrorGroupsItemReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface ErrorGroupsSearchResult {
+  hasMoreResults?: boolean;
+  errorGroups?: ErrorGroupsSearchResultErrorGroupsItem[];
+}
+
+export interface ErrorCountsErrorsItem {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * count of the object
+  */
+  count?: number;
+}
+
+export interface ErrorCounts {
+  /**
+   * total error count
+  */
+  count?: number;
+  /**
+   * the total error count for day
+  */
+  errors?: ErrorCountsErrorsItem[];
+}
+
+export interface ErrorGroupListItemReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface ErrorGroupListItem {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: ErrorGroupListItemReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface ErrorGroupReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface ErrorGroup {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: ErrorGroupReasonFramesItem[];
+  hidden?: boolean;
+}
+
 export interface ErrorDateTimePercentages {
   /**
    * the ISO 8601 datetime
@@ -8830,6 +20105,25 @@ export interface ErrorDateTimePercentages {
   percentage?: number;
 }
 
+export interface ErrorDateTimeCounts {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * count of the object
+  */
+  count?: number;
+}
+
+export interface ErrorGroupState {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+}
+
 export interface ErrorDownloadLink {
   link: string;
 }
@@ -8837,7 +20131,7 @@ export interface ErrorDownloadLink {
 /**
  * a single frame of a stack trace
 */
-export interface DiagnosticsStackFrame {
+export interface DiagnosticsExceptionFramesItem {
   /**
    * address of the frame
   */
@@ -8908,7 +20202,7 @@ export interface DiagnosticsException {
   /**
    * frames of the excetpion
   */
-  frames: DiagnosticsStackFrame[];
+  frames: DiagnosticsExceptionFramesItem[];
   /**
    * relevant exception (crashed)
   */
@@ -8922,6 +20216,65 @@ export interface DiagnosticsException {
 }
 
 /**
+ * a single frame of a stack trace
+*/
+export interface DiagnosticsThreadFramesItem {
+  /**
+   * address of the frame
+  */
+  address?: string;
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Raw frame string
+  */
+  codeRaw: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * frame should be shown always
+  */
+  relevant?: boolean;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+}
+
+/**
  * a thread representation
 */
 export interface DiagnosticsThread {
@@ -8932,7 +20285,7 @@ export interface DiagnosticsThread {
   /**
    * frames of that thread
   */
-  frames: DiagnosticsStackFrame[];
+  frames: DiagnosticsThreadFramesItem[];
   /**
    * potential additional exception happened in that thread (Last Exception Backtrace)
   */
@@ -8962,6 +20315,132 @@ export interface DiagnosticsStackTrace {
   exception?: DiagnosticsException;
 }
 
+/**
+ * a single frame of a stack trace
+*/
+export interface DiagnosticsStackFrame {
+  /**
+   * address of the frame
+  */
+  address?: string;
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Raw frame string
+  */
+  codeRaw: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * frame should be shown always
+  */
+  relevant?: boolean;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+}
+
+export interface HandledErrorReasonFrame {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface ErrorFreeDevicePercentagesDailyPercentagesItem {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * percentage of the object
+  */
+  percentage?: number;
+}
+
 export interface ErrorFreeDevicePercentages {
   /**
    * Average percentage
@@ -8970,7 +20449,46 @@ export interface ErrorFreeDevicePercentages {
   /**
    * The error-free percentage per day.
   */
-  dailyPercentages?: ErrorDateTimePercentages[];
+  dailyPercentages?: ErrorFreeDevicePercentagesDailyPercentagesItem[];
+}
+
+export interface HandledErrorsErrorsItem {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
+}
+
+export interface HandledErrors {
+  nextLink?: string;
+  /**
+   * Errors list.
+  */
+  errors?: HandledErrorsErrorsItem[];
+}
+
+export interface ErrorsSearchResultErrorsItem {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
+}
+
+export interface ErrorsSearchResult {
+  hasMoreResults?: boolean;
+  errors?: ErrorsSearchResultErrorsItem[];
 }
 
 export interface HandledError {
@@ -8982,24 +20500,79 @@ export interface HandledError {
   country?: string;
   language?: string;
   userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
 }
 
-export interface HandledErrors {
-  nextLink?: string;
+export interface HandledErrorDetailsReasonFramesItem {
   /**
-   * Errors list.
+   * name of the class
   */
-  errors?: HandledError[];
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
 }
 
-export interface ErrorsSearchResult {
-  hasMoreResults?: boolean;
-  errors?: HandledError[];
-}
-
-export interface HandledErrorDetails extends HandledError {
+export interface HandledErrorDetails {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
   name?: string;
-  reasonFrames?: HandledErrorReasonFrame[];
+  reasonFrames?: HandledErrorDetailsReasonFramesItem[];
   /**
    * Timestamp when the app was launched, example: '2017-03-13T18:05:42Z'.
 
@@ -9032,6 +20605,17 @@ export interface ErrorLocation {
   uri?: string;
 }
 
+export interface ErrorAttachmentsItem {
+  appId?: string;
+  attachmentId?: string;
+  crashId?: string;
+  blobLocation?: string;
+  contentType?: string;
+  fileName?: string;
+  createdTime?: Date;
+  size?: number;
+}
+
 export interface ErrorAttachment {
   appId?: string;
   attachmentId?: string;
@@ -9043,12 +20627,36 @@ export interface ErrorAttachment {
   size?: number;
 }
 
+export interface ErrorAppBuilds {
+  appBuilds?: string[];
+}
+
 export interface ErrorAttachmentText {
   content?: string;
 }
 
 export interface ErrorAttachmentLocation {
   uri?: string;
+}
+
+export interface ErrorGroupModelsModelsItem {
+  /**
+   * model name
+  */
+  modelName?: string;
+  /**
+   * model code
+  */
+  modelCode?: string;
+  /**
+   * count of errors in a model
+  */
+  errorCount?: number;
+}
+
+export interface ErrorGroupModels {
+  errorCount?: number;
+  modelsProperty?: ErrorGroupModelsModelsItem[];
 }
 
 export interface ErrorGroupModel {
@@ -9066,9 +20674,20 @@ export interface ErrorGroupModel {
   errorCount?: number;
 }
 
-export interface ErrorGroupModels {
+export interface ErrorGroupOperatingSystemsOperatingSystemsItem {
+  /**
+   * OS name
+  */
+  operatingSystemName?: string;
+  /**
+   * count of OS
+  */
   errorCount?: number;
-  modelsProperty?: ErrorGroupModel[];
+}
+
+export interface ErrorGroupOperatingSystems {
+  errorCount?: number;
+  operatingSystems?: ErrorGroupOperatingSystemsOperatingSystemsItem[];
 }
 
 export interface ErrorGroupOperatingSystem {
@@ -9082,15 +20701,209 @@ export interface ErrorGroupOperatingSystem {
   errorCount?: number;
 }
 
-export interface ErrorGroupOperatingSystems {
-  errorCount?: number;
-  operatingSystems?: ErrorGroupOperatingSystem[];
+/**
+ * Device characteristics.
+*/
+export interface GenericLogContainerDiagnosticsLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface GenericLogContainerDiagnosticsLogsItem {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: GenericLogContainerDiagnosticsLogsItemDevice;
+}
+
+export interface GenericLogContainerDiagnostics {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: GenericLogContainerDiagnosticsLogsItem[];
 }
 
 /**
  * Device characteristics.
 */
-export interface DeviceDiagnostics {
+export interface GenericLogDiagnosticsDevice {
   /**
    * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
    * "hockeysdk.android".
@@ -9264,23 +21077,142 @@ export interface GenericLogDiagnostics {
 
   */
   properties?: { [propertyName: string]: string };
-  device: DeviceDiagnostics;
+  /**
+   * Device characteristics.
+  */
+  device: GenericLogDiagnosticsDevice;
 }
 
-export interface GenericLogContainerDiagnostics {
+/**
+ * Device characteristics.
+*/
+export interface LogDiagnosticsDevice {
   /**
-   * indicates if the number of available logs are more than the max allowed return limit(100).
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
   */
-  exceededMaxLimit?: boolean;
+  sdkName: string;
   /**
-   * the timestamp of the last log received. This value can be used as the start time parameter in
-   * the consecutive API call.
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
   */
-  lastReceivedLogTimestamp?: Date;
+  sdkVersion: string;
   /**
-   * the list of logs
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
   */
-  logs: GenericLogDiagnostics[];
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
 export interface LogDiagnostics {
@@ -9294,14 +21226,169 @@ export interface LogDiagnostics {
 
   */
   installId: string;
-  device: DeviceDiagnostics;
+  /**
+   * Device characteristics.
+  */
+  device: LogDiagnosticsDevice;
   /**
    * Polymorphic Discriminator
   */
   type: string;
 }
 
-export interface LogWithPropertiesDiagnostics extends LogDiagnostics {
+/**
+ * Device characteristics.
+*/
+export interface LogWithPropertiesDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+export interface LogWithPropertiesDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogWithPropertiesDiagnosticsDevice;
   /**
    * Additional key/value pair parameters.
 
@@ -9310,9 +21397,293 @@ export interface LogWithPropertiesDiagnostics extends LogDiagnostics {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface DeviceDiagnostics {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface StartSessionLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Required explicit begin session log (a marker event for analytics service).
 */
-export interface StartSessionLogDiagnostics extends LogDiagnostics {
+export interface StartSessionLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: StartSessionLogDiagnosticsDevice;
   /**
    * Session ID.
 
@@ -9321,9 +21692,161 @@ export interface StartSessionLogDiagnostics extends LogDiagnostics {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface HanledErrorLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Required explicit begin session log (a marker event for analytics service).
 */
-export interface HanledErrorLogDiagnostics extends LogDiagnostics {
+export interface HanledErrorLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: HanledErrorLogDiagnosticsDevice;
   /**
    * Error ID.
 
@@ -9332,13 +21855,335 @@ export interface HanledErrorLogDiagnostics extends LogDiagnostics {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface StartServiceLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Describe a AppCenter.Start API call from the SDK.
 */
-export interface StartServiceLogDiagnostics extends LogDiagnostics {
+export interface StartServiceLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: StartServiceLogDiagnosticsDevice;
   /**
    * The list of services of the AppCenter Start API call.
   */
   services?: string[];
+}
+
+/**
+ * Device characteristics.
+*/
+export interface CustomPropertyLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+export interface CustomPropertyLogDiagnosticsPropertiesItem {
+  name: string;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Set or remove custom properties.
+*/
+export interface CustomPropertyLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: CustomPropertyLogDiagnosticsDevice;
+  /**
+   * Custom property changes.
+  */
+  properties?: CustomPropertyLogDiagnosticsPropertiesItem[];
 }
 
 export interface CustomPropertyDiagnostics {
@@ -9350,19 +22195,11 @@ export interface CustomPropertyDiagnostics {
 }
 
 /**
- * Set or remove custom properties.
-*/
-export interface CustomPropertyLogDiagnostics extends LogDiagnostics {
-  /**
-   * Custom property changes.
-  */
-  properties?: CustomPropertyDiagnostics[];
-}
-
-/**
  * String property.
 */
-export interface StringPropertyDiagnostics extends CustomPropertyDiagnostics {
+export interface StringPropertyDiagnostics {
+  type: string;
+  name: string;
   /**
    * String property value.
   */
@@ -9372,7 +22209,9 @@ export interface StringPropertyDiagnostics extends CustomPropertyDiagnostics {
 /**
  * Number property.
 */
-export interface NumberPropertyDiagnostics extends CustomPropertyDiagnostics {
+export interface NumberPropertyDiagnostics {
+  type: string;
+  name: string;
   /**
    * Number property value.
   */
@@ -9382,7 +22221,9 @@ export interface NumberPropertyDiagnostics extends CustomPropertyDiagnostics {
 /**
  * Boolean property.
 */
-export interface BooleanPropertyDiagnostics extends CustomPropertyDiagnostics {
+export interface BooleanPropertyDiagnostics {
+  type: string;
+  name: string;
   /**
    * Boolean property value.
   */
@@ -9392,7 +22233,9 @@ export interface BooleanPropertyDiagnostics extends CustomPropertyDiagnostics {
 /**
  * Date and time property.
 */
-export interface DateTimePropertyDiagnostics extends CustomPropertyDiagnostics {
+export interface DateTimePropertyDiagnostics {
+  type: string;
+  name: string;
   /**
    * Date time property value.
   */
@@ -9402,13 +22245,172 @@ export interface DateTimePropertyDiagnostics extends CustomPropertyDiagnostics {
 /**
  * Clear an existing property.
 */
-export interface ClearPropertyDiagnostics extends CustomPropertyDiagnostics {
+export interface ClearPropertyDiagnostics {
+  type: string;
+  name: string;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface PageLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
 }
 
 /**
  * Page view log (as in screens or activities).
 */
-export interface PageLogDiagnostics extends LogWithPropertiesDiagnostics {
+export interface PageLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: PageLogDiagnosticsDevice;
+  /**
+   * Additional key/value pair parameters.
+
+  */
+  properties?: { [propertyName: string]: string };
   /**
    * Session ID.
 
@@ -9422,9 +22424,166 @@ export interface PageLogDiagnostics extends LogWithPropertiesDiagnostics {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface EventLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Event log.
 */
-export interface EventLogDiagnostics extends LogWithPropertiesDiagnostics {
+export interface EventLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: EventLogDiagnosticsDevice;
+  /**
+   * Additional key/value pair parameters.
+
+  */
+  properties?: { [propertyName: string]: string };
   /**
    * Session ID.
 
@@ -9443,9 +22602,161 @@ export interface EventLogDiagnostics extends LogWithPropertiesDiagnostics {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface PushInstallationLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Push installation Information.
 */
-export interface PushInstallationLogDiagnostics extends LogDiagnostics {
+export interface PushInstallationLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: PushInstallationLogDiagnosticsDevice;
   /**
    * The PNS handle for this installation.
 
@@ -9454,9 +22765,161 @@ export interface PushInstallationLogDiagnostics extends LogDiagnostics {
 }
 
 /**
+ * Device characteristics.
+*/
+export interface ErrorLogDiagnosticsDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
  * Error log.
 */
-export interface ErrorLogDiagnostics extends LogDiagnostics {
+export interface ErrorLogDiagnostics {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: ErrorLogDiagnosticsDevice;
   /**
    * Session ID.
 
@@ -9474,7 +22937,7 @@ export interface ErrorLogDiagnostics extends LogDiagnostics {
   appLaunchToffset?: number;
 }
 
-export interface VersionDiagnostics {
+export interface VersionsDiagnosticsVersionsItem {
   /**
    * version
   */
@@ -9493,11 +22956,26 @@ export interface VersionsDiagnostics {
   /**
    * list of version count
   */
-  versions?: VersionDiagnostics[];
+  versions?: VersionsDiagnosticsVersionsItem[];
   /**
    * the total count of versions
   */
   total?: number;
+}
+
+export interface VersionDiagnostics {
+  /**
+   * version
+  */
+  version?: string;
+  /**
+   * version count
+  */
+  count?: number;
+  /**
+   * the count of previous time range of the version
+  */
+  previousCount?: number;
 }
 
 export interface AvailableVersionsDiagnostics {
@@ -9529,6 +23007,11 @@ export interface ExportConfiguration {
   */
   resourceGroup?: string;
   /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
    * Polymorphic Discriminator
   */
   type: string;
@@ -9537,7 +23020,27 @@ export interface ExportConfiguration {
 /**
  * Configuration for export to Blob Storage with blob format
 */
-export interface ExportBlobConfiguration extends ExportConfiguration {
+export interface ExportBlobConfiguration {
+  /**
+   * Type of export configuration. Possible values include: 'blob_storage_connection_string',
+   * 'application_insights_instrumentation_key', 'blob_storage_linked_subscription',
+   * 'application_insights_linked_subscription'
+  */
+  type: string;
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
   /**
    * The path to the blob when enum set to 'WithoutAppId' is 'year/month/day/hour/minute' and when
    * set to 'WithAppId' is 'appId/year/month/day/hour/minute'. Possible values include:
@@ -9549,7 +23052,33 @@ export interface ExportBlobConfiguration extends ExportConfiguration {
 /**
  * Configuration for export to Blob Storage with customer provided connection string
 */
-export interface ExportConfigurationBlobStorageConnectionString extends ExportBlobConfiguration {
+export interface ExportConfigurationBlobStorageConnectionString {
+  /**
+   * Type of export configuration. Possible values include: 'blob_storage_connection_string',
+   * 'application_insights_instrumentation_key', 'blob_storage_linked_subscription',
+   * 'application_insights_linked_subscription'
+  */
+  type: string;
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * The path to the blob when enum set to 'WithoutAppId' is 'year/month/day/hour/minute' and when
+   * set to 'WithAppId' is 'appId/year/month/day/hour/minute'. Possible values include:
+   * 'WithoutAppId', 'WithAppId'
+  */
+  blobPathFormatKind?: string;
   /**
    * Connection string for blob storage account
   */
@@ -9560,7 +23089,27 @@ export interface ExportConfigurationBlobStorageConnectionString extends ExportBl
  * Configuration for export to Application Insights resource with customer provided intrumentation
  * key
 */
-export interface ExportConfigurationAppInsightsKey extends ExportConfiguration {
+export interface ExportConfigurationAppInsightsKey {
+  /**
+   * Type of export configuration. Possible values include: 'blob_storage_connection_string',
+   * 'application_insights_instrumentation_key', 'blob_storage_linked_subscription',
+   * 'application_insights_linked_subscription'
+  */
+  type: string;
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
   /**
    * Instrumentation key for Application Insights resource
   */
@@ -9570,7 +23119,33 @@ export interface ExportConfigurationAppInsightsKey extends ExportConfiguration {
 /**
  * Configuration for export to Blob Storage with customer linked subscription.
 */
-export interface ExportConfigurationBlobStorageLinkedSubscription extends ExportBlobConfiguration {
+export interface ExportConfigurationBlobStorageLinkedSubscription {
+  /**
+   * Type of export configuration. Possible values include: 'blob_storage_connection_string',
+   * 'application_insights_instrumentation_key', 'blob_storage_linked_subscription',
+   * 'application_insights_linked_subscription'
+  */
+  type: string;
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * The path to the blob when enum set to 'WithoutAppId' is 'year/month/day/hour/minute' and when
+   * set to 'WithAppId' is 'appId/year/month/day/hour/minute'. Possible values include:
+   * 'WithoutAppId', 'WithAppId'
+  */
+  blobPathFormatKind?: string;
   /**
    * Id of customer subscription linked in App Center
   */
@@ -9580,11 +23155,55 @@ export interface ExportConfigurationBlobStorageLinkedSubscription extends Export
 /**
  * Configuration for export to Application Insights resource with customer linked subscription.
 */
-export interface ExportConfigurationAppInsightsLinkedSubscription extends ExportConfiguration {
+export interface ExportConfigurationAppInsightsLinkedSubscription {
+  /**
+   * Type of export configuration. Possible values include: 'blob_storage_connection_string',
+   * 'application_insights_instrumentation_key', 'blob_storage_linked_subscription',
+   * 'application_insights_linked_subscription'
+  */
+  type: string;
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
   /**
    * Id of customer subscription linked in App Center
   */
   subscriptionId: string;
+}
+
+/**
+ * Export configuration
+*/
+export interface ExportConfigurationResultExportConfiguration {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
 }
 
 /**
@@ -9626,14 +23245,86 @@ export interface ExportConfigurationResult {
    * Storage accout or Appinsights resource name
   */
   resourceName?: string;
-  exportConfiguration?: ExportConfiguration;
+  /**
+   * Export configuration
+  */
+  exportConfiguration?: ExportConfigurationResultExportConfiguration;
+}
+
+/**
+ * Export configuration
+*/
+export interface ExportConfigurationListResultValuesItemExportConfiguration {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Export configuration result
+*/
+export interface ExportConfigurationListResultValuesItem {
+  /**
+   * Export configuration id
+  */
+  id: string;
+  /**
+   * Target resource type of export configuration. Possible values include: 'BlobStorage',
+   * 'AppInsights'
+  */
+  exportType: string;
+  /**
+   * Creation time in ISO 8601 format
+  */
+  creationTime: string;
+  /**
+   * Latest time in ISO 8601 format when export completed successfully
+  */
+  lastRunTime?: string;
+  exportEntities?: string[];
+  /**
+   * State of the export job. Possible values include: 'Enabled', 'Disabled', 'Pending', 'Deleted',
+   * 'Invalid'
+  */
+  state: string;
+  /**
+   * Additional information about export configuration state
+  */
+  stateInfo?: string;
+  /**
+   * resource group for the storage account/App Insights resource
+  */
+  resourceGroup?: string;
+  /**
+   * Storage accout or Appinsights resource name
+  */
+  resourceName?: string;
+  /**
+   * Export configuration
+  */
+  exportConfiguration?: ExportConfigurationListResultValuesItemExportConfiguration;
 }
 
 /**
  * List of export configurations
 */
 export interface ExportConfigurationListResult {
-  values: ExportConfigurationResult[];
+  values: ExportConfigurationListResultValuesItem[];
   /**
    * the total count of exports
   */
@@ -9645,7 +23336,7 @@ export interface ExportConfigurationListResult {
  * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
  * must include the correct properties for the specified target type except for broadcast.
 */
-export interface NotificationTarget {
+export interface NotificationsListResultValuesItemNotificationTarget {
   /**
    * Polymorphic Discriminator
   */
@@ -9655,7 +23346,7 @@ export interface NotificationTarget {
 /**
  * Notification statistics
 */
-export interface NotificationOverviewResult {
+export interface NotificationsListResultValuesItem {
   /**
    * Notification id.
   */
@@ -9664,7 +23355,11 @@ export interface NotificationOverviewResult {
    * Notification name
   */
   name?: string;
-  notificationTarget?: NotificationTarget;
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: NotificationsListResultValuesItemNotificationTarget;
   /**
    * Notification send time
   */
@@ -9688,12 +23383,208 @@ export interface NotificationOverviewResult {
  * List of notifications
 */
 export interface NotificationsListResult {
-  values: NotificationOverviewResult[];
+  values: NotificationsListResultValuesItem[];
   /**
    * the total count of notifications
   */
   total?: number;
   nextLink?: string;
+}
+
+/**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface NotificationOverviewResultNotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Notification statistics
+*/
+export interface NotificationOverviewResult {
+  /**
+   * Notification id.
+  */
+  notificationId: string;
+  /**
+   * Notification name
+  */
+  name?: string;
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: NotificationOverviewResultNotificationTarget;
+  /**
+   * Notification send time
+  */
+  sendTime?: Date;
+  /**
+   * Number of the notifications failed to send to the push provider.
+  */
+  pnsSendFailure?: number;
+  /**
+   * Number of the notifications successfully sent to push the provider.
+  */
+  pnsSendSuccess?: number;
+  /**
+   * State of the notification. Possible values include: 'Queued', 'Sending', 'Completed',
+   * 'Failed', 'NoTargetFound'
+  */
+  state: string;
+}
+
+/**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface NotificationDetailsResultNotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Notification definition object
+*/
+export interface NotificationDetailsResultNotificationContent {
+  /**
+   * Notification name
+  */
+  name: string;
+  /**
+   * Notification title
+  */
+  title?: string;
+  /**
+   * Notification body
+  */
+  body?: string;
+  /**
+   * Notification custom data (such as badge, color, sound, etc.)
+  */
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * Notification failure outcome count
+*/
+export interface NotificationDetailsResultFailureOutcomesItem {
+  /**
+   * The reason of the notification failure
+  */
+  failureReason?: string;
+  /**
+   * count of this type of failure
+  */
+  count?: number;
+}
+
+/**
+ * Notification statistics
+*/
+export interface NotificationDetailsResult {
+  /**
+   * Notification id.
+  */
+  notificationId: string;
+  /**
+   * Notification name
+  */
+  name?: string;
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: NotificationDetailsResultNotificationTarget;
+  /**
+   * Notification send time
+  */
+  sendTime?: Date;
+  /**
+   * Number of the notifications failed to send to the push provider.
+  */
+  pnsSendFailure?: number;
+  /**
+   * Number of the notifications successfully sent to push the provider.
+  */
+  pnsSendSuccess?: number;
+  /**
+   * State of the notification. Possible values include: 'Queued', 'Sending', 'Completed',
+   * 'Failed', 'NoTargetFound'
+  */
+  state: string;
+  /**
+   * Notification definition object
+  */
+  notificationContent: NotificationDetailsResultNotificationContent;
+  /**
+   * Failture outcome counts
+  */
+  failureOutcomes?: NotificationDetailsResultFailureOutcomesItem[];
+}
+
+/**
+ * List of notification Ids
+*/
+export interface NotificationIdList {
+  /**
+   * List of notification Ids.
+  */
+  values: string[];
+}
+
+/**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface NotificationDefinitionNotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Notification definition object
+*/
+export interface NotificationDefinitionNotificationContent {
+  /**
+   * Notification name
+  */
+  name: string;
+  /**
+   * Notification title
+  */
+  title?: string;
+  /**
+   * Notification body
+  */
+  body?: string;
+  /**
+   * Notification custom data (such as badge, color, sound, etc.)
+  */
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * Notification definition object
+*/
+export interface NotificationDefinition {
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: NotificationDefinitionNotificationTarget;
+  /**
+   * Notification definition object
+  */
+  notificationContent: NotificationDefinitionNotificationContent;
 }
 
 /**
@@ -9711,54 +23602,11 @@ export interface NotificationContent {
   /**
    * Notification body
   */
-  body: string;
+  body?: string;
   /**
    * Notification custom data (such as badge, color, sound, etc.)
   */
   customData?: { [propertyName: string]: string };
-}
-
-/**
- * Notification failure outcome count
-*/
-export interface NotificationFailureOutcomeCount {
-  /**
-   * The reason of the notification failure
-  */
-  failureReason?: string;
-  /**
-   * count of this type of failure
-  */
-  count?: number;
-}
-
-/**
- * Notification statistics
-*/
-export interface NotificationDetailsResult extends NotificationOverviewResult {
-  notificationContent: NotificationContent;
-  /**
-   * Failture outcome counts
-  */
-  failureOutcomes?: NotificationFailureOutcomeCount[];
-}
-
-/**
- * List of notification Ids
-*/
-export interface NotificationIdList {
-  /**
-   * List of notification Ids.
-  */
-  values: string[];
-}
-
-/**
- * Notification definition object
-*/
-export interface NotificationDefinition {
-  notificationTarget?: NotificationTarget;
-  notificationContent: NotificationContent;
 }
 
 /**
@@ -9772,15 +23620,36 @@ export interface NotificationSendSucceededResult {
 }
 
 /**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface NotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
  * Broadcast notification to all the devices
 */
-export interface NotificationTargetBroadcast extends NotificationTarget {
+export interface NotificationTargetBroadcast {
+  /**
+   * Possible values include: 'audiences_target', 'devices_target', 'user_ids_target',
+   * 'account_ids_target', 'broadcast_target'
+  */
+  type: string;
 }
 
 /**
  * Notification per User IDs
 */
-export interface NotificationTargetUserIds extends NotificationTarget {
+export interface NotificationTargetUserIds {
+  /**
+   * Possible values include: 'audiences_target', 'devices_target', 'user_ids_target',
+   * 'account_ids_target', 'broadcast_target'
+  */
+  type: string;
   /**
    * List of user IDs to target
   */
@@ -9790,7 +23659,12 @@ export interface NotificationTargetUserIds extends NotificationTarget {
 /**
  * Notification per Account IDs
 */
-export interface NotificationTargetAccountIds extends NotificationTarget {
+export interface NotificationTargetAccountIds {
+  /**
+   * Possible values include: 'audiences_target', 'devices_target', 'user_ids_target',
+   * 'account_ids_target', 'broadcast_target'
+  */
+  type: string;
   /**
    * List of account IDs to target
   */
@@ -9800,7 +23674,12 @@ export interface NotificationTargetAccountIds extends NotificationTarget {
 /**
  * Notification target audiences.
 */
-export interface NotificationTargetAudiences extends NotificationTarget {
+export interface NotificationTargetAudiences {
+  /**
+   * Possible values include: 'audiences_target', 'devices_target', 'user_ids_target',
+   * 'account_ids_target', 'broadcast_target'
+  */
+  type: string;
   /**
    * List of target audiences.
   */
@@ -9810,7 +23689,12 @@ export interface NotificationTargetAudiences extends NotificationTarget {
 /**
  * Notification target devices. If null, all devices will be targeted(broadcast).
 */
-export interface NotificationTargetDevices extends NotificationTarget {
+export interface NotificationTargetDevices {
+  /**
+   * Possible values include: 'audiences_target', 'devices_target', 'user_ids_target',
+   * 'account_ids_target', 'broadcast_target'
+  */
+  type: string;
   /**
    * List of target devices.
   */
@@ -9832,9 +23716,14 @@ export interface NotificationConfig {
 /**
  * Apple notification certificate configuration.
 */
-export interface NotificationConfigApple extends NotificationConfig {
+export interface NotificationConfigApple {
   /**
-   * Possible values include: 'production', 'sandbox'
+   * Possible values include: 'apns_token_config', 'gcm_config', 'wns_config'
+  */
+  type: string;
+  /**
+   * Type of endpoint the certificate or token are associated with. Possible values include:
+   * 'production', 'sandbox'
   */
   endpointType: string;
   /**
@@ -9855,7 +23744,11 @@ export interface NotificationConfigApple extends NotificationConfig {
  * Apple notification auth token configuration. The 'type' property must be set to
  * 'apns_token_config'.
 */
-export interface NotificationConfigAppleToken extends NotificationConfig {
+export interface NotificationConfigAppleToken {
+  /**
+   * Possible values include: 'apns_token_config', 'gcm_config', 'wns_config'
+  */
+  type: string;
   /**
    * A 10-character key identifier (kid).
   */
@@ -9873,7 +23766,8 @@ export interface NotificationConfigAppleToken extends NotificationConfig {
   */
   token: string;
   /**
-   * Possible values include: 'production', 'sandbox'
+   * Type of endpoint the certificate or token are associated with. Possible values include:
+   * 'production', 'sandbox'
   */
   endpointType: string;
 }
@@ -9881,7 +23775,11 @@ export interface NotificationConfigAppleToken extends NotificationConfig {
 /**
  * Google notification configuration. The 'type' property must be set to 'gcm_config'
 */
-export interface NotificationConfigGoogle extends NotificationConfig {
+export interface NotificationConfigGoogle {
+  /**
+   * Possible values include: 'apns_token_config', 'gcm_config', 'wns_config'
+  */
+  type: string;
   /**
    * GCM API key.
   */
@@ -9891,7 +23789,11 @@ export interface NotificationConfigGoogle extends NotificationConfig {
 /**
  * WNS notification configuration. The 'type' property must be set to 'wns_config'
 */
-export interface NotificationConfigWindows extends NotificationConfig {
+export interface NotificationConfigWindows {
+  /**
+   * Possible values include: 'apns_token_config', 'gcm_config', 'wns_config'
+  */
+  type: string;
   /**
    * Package security identifier (SID).
   */
@@ -9915,9 +23817,11 @@ export interface NotificationConfigResult {
 /**
  * Apple notification certificate configuration result.
 */
-export interface NotificationConfigAppleResult extends NotificationConfigResult {
+export interface NotificationConfigAppleResult {
+  type: string;
   /**
-   * Possible values include: 'production', 'sandbox'
+   * Type of endpoint the certificate or token are associated with. Possible values include:
+   * 'production', 'sandbox'
   */
   endpointType: string;
   /**
@@ -9933,7 +23837,8 @@ export interface NotificationConfigAppleResult extends NotificationConfigResult 
 /**
  * Apple notification auth token configuration result.
 */
-export interface NotificationConfigAppleTokenResult extends NotificationConfigResult {
+export interface NotificationConfigAppleTokenResult {
+  type: string;
   /**
    * A 10-character key identifier (kid).
   */
@@ -9947,7 +23852,8 @@ export interface NotificationConfigAppleTokenResult extends NotificationConfigRe
   */
   prefix: string;
   /**
-   * Possible values include: 'production', 'sandbox'
+   * Type of endpoint the certificate or token are associated with. Possible values include:
+   * 'production', 'sandbox'
   */
   endpointType: string;
 }
@@ -9955,7 +23861,8 @@ export interface NotificationConfigAppleTokenResult extends NotificationConfigRe
 /**
  * Google notification configuration result.
 */
-export interface NotificationConfigGoogleResult extends NotificationConfigResult {
+export interface NotificationConfigGoogleResult {
+  type: string;
   /**
    * GCM API key.
   */
@@ -9965,7 +23872,8 @@ export interface NotificationConfigGoogleResult extends NotificationConfigResult
 /**
  * WNS notification configuration result.
 */
-export interface NotificationConfigWindowsResult extends NotificationConfigResult {
+export interface NotificationConfigWindowsResult {
+  type: string;
   /**
    * Package security identifier (SID).
   */
@@ -9974,6 +23882,20 @@ export interface NotificationConfigWindowsResult extends NotificationConfigResul
    * windows push configuration secret key.
   */
   secretKey?: string;
+}
+
+/**
+ * Notification failure outcome count
+*/
+export interface NotificationFailureOutcomeCount {
+  /**
+   * The reason of the notification failure
+  */
+  failureReason?: string;
+  /**
+   * count of this type of failure
+  */
+  count?: number;
 }
 
 /**
@@ -10025,10 +23947,244 @@ export interface DeviceConfigurationImage {
 /**
  * Physical device dimensions
 */
-export interface DeviceDimensions {
+export interface DeviceConfigurationModelDimensions {
   depth?: any;
   height?: any;
   width?: any;
+}
+
+/**
+ * Device screen resolution
+*/
+export interface DeviceConfigurationModelResolution {
+  height?: string;
+  width?: string;
+  ppi?: string;
+}
+
+/**
+ * Physical device screen dimensions
+*/
+export interface DeviceConfigurationModelScreenSize {
+  cm?: string;
+  inProperty?: string;
+}
+
+/**
+ * CPU data for device
+*/
+export interface DeviceConfigurationModelCpu {
+  frequency?: string;
+  core?: string;
+  text?: string;
+}
+
+/**
+ * Memory data for device
+*/
+export interface DeviceConfigurationModelMemory {
+  formattedSize?: string;
+}
+
+export interface DeviceConfigurationModelDeviceFrameGrid {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface DeviceConfigurationModelDeviceFrameFull {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface DeviceConfigurationModelDeviceFrame {
+  grid?: DeviceConfigurationModelDeviceFrameGrid;
+  full?: DeviceConfigurationModelDeviceFrameFull;
+}
+
+export interface DeviceConfigurationModel {
+  name?: string;
+  manufacturer?: string;
+  model?: string;
+  platform?: string;
+  /**
+   * Physical device dimensions
+  */
+  dimensions?: DeviceConfigurationModelDimensions;
+  /**
+   * Device screen resolution
+  */
+  resolution?: DeviceConfigurationModelResolution;
+  releaseDate?: string;
+  formFactor?: string;
+  /**
+   * Physical device screen dimensions
+  */
+  screenSize?: DeviceConfigurationModelScreenSize;
+  /**
+   * CPU data for device
+  */
+  cpu?: DeviceConfigurationModelCpu;
+  /**
+   * Memory data for device
+  */
+  memory?: DeviceConfigurationModelMemory;
+  screenRotation?: number;
+  deviceFrame?: DeviceConfigurationModelDeviceFrame;
+  availabilityCount?: number;
+}
+
+export interface DeviceConfiguration {
+  /**
+   * The name of the device model and OS version
+  */
+  name?: string;
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  /**
+   * The tier
+  */
+  tier?: number;
+  image?: DeviceConfigurationImage;
+  model?: DeviceConfigurationModel;
+  os?: string;
+  osName?: string;
+  marketShare?: number;
+}
+
+export interface DeviceSetConfigurationImage {
+  thumb?: string;
+}
+
+export interface DeviceSetConfigurationModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface DeviceSetConfiguration {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: DeviceSetConfigurationImage;
+  model?: DeviceSetConfigurationModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * Physical device dimensions
+*/
+export interface DeviceModelDimensions {
+  depth?: any;
+  height?: any;
+  width?: any;
+}
+
+/**
+ * Device screen resolution
+*/
+export interface DeviceModelResolution {
+  height?: string;
+  width?: string;
+  ppi?: string;
+}
+
+/**
+ * Physical device screen dimensions
+*/
+export interface DeviceModelScreenSize {
+  cm?: string;
+  inProperty?: string;
+}
+
+/**
+ * CPU data for device
+*/
+export interface DeviceModelCpu {
+  frequency?: string;
+  core?: string;
+  text?: string;
+}
+
+/**
+ * Memory data for device
+*/
+export interface DeviceModelMemory {
+  formattedSize?: string;
+}
+
+export interface DeviceModelDeviceFrameGrid {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface DeviceModelDeviceFrameFull {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface DeviceModelDeviceFrame {
+  grid?: DeviceModelDeviceFrameGrid;
+  full?: DeviceModelDeviceFrameFull;
+}
+
+export interface DeviceModel {
+  name?: string;
+  manufacturer?: string;
+  model?: string;
+  platform?: string;
+  /**
+   * Physical device dimensions
+  */
+  dimensions?: DeviceModelDimensions;
+  /**
+   * Device screen resolution
+  */
+  resolution?: DeviceModelResolution;
+  releaseDate?: string;
+  formFactor?: string;
+  /**
+   * Physical device screen dimensions
+  */
+  screenSize?: DeviceModelScreenSize;
+  /**
+   * CPU data for device
+  */
+  cpu?: DeviceModelCpu;
+  /**
+   * Memory data for device
+  */
+  memory?: DeviceModelMemory;
+  screenRotation?: number;
+  deviceFrame?: DeviceModelDeviceFrame;
+  availabilityCount?: number;
+}
+
+export interface DeviceSetModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+/**
+ * Physical device screen dimensions
+*/
+export interface DeviceScreenSize {
+  cm?: string;
+  inProperty?: string;
 }
 
 /**
@@ -10041,11 +24197,12 @@ export interface DeviceResolution {
 }
 
 /**
- * Physical device screen dimensions
+ * Physical device dimensions
 */
-export interface DeviceScreenSize {
-  cm?: string;
-  inProperty?: string;
+export interface DeviceDimensions {
+  depth?: any;
+  height?: any;
+  width?: any;
 }
 
 /**
@@ -10064,7 +24221,14 @@ export interface DeviceMemory {
   formattedSize?: string;
 }
 
-export interface DeviceFrameDefinition {
+export interface DeviceFrameGrid {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface DeviceFrameFull {
   width?: number;
   height?: number;
   frameUrl?: string;
@@ -10072,74 +24236,22 @@ export interface DeviceFrameDefinition {
 }
 
 export interface DeviceFrame {
-  grid?: DeviceFrameDefinition;
-  full?: DeviceFrameDefinition;
+  grid?: DeviceFrameGrid;
+  full?: DeviceFrameFull;
 }
 
-export interface DeviceModel {
-  name?: string;
-  manufacturer?: string;
-  model?: string;
-  platform?: string;
-  dimensions?: DeviceDimensions;
-  resolution?: DeviceResolution;
-  releaseDate?: string;
-  formFactor?: string;
-  screenSize?: DeviceScreenSize;
-  cpu?: DeviceCpu;
-  memory?: DeviceMemory;
-  screenRotation?: number;
-  deviceFrame?: DeviceFrame;
-  availabilityCount?: number;
-}
-
-export interface DeviceConfiguration {
-  /**
-   * The name of the device model and OS version
-  */
-  name?: string;
-  /**
-   * The unique id of the device configuration
-  */
-  id?: string;
-  /**
-   * The tier
-  */
-  tier?: number;
-  image?: DeviceConfigurationImage;
-  model?: DeviceModel;
-  os?: string;
-  osName?: string;
-  marketShare?: number;
-}
-
-export interface DeviceSetConfigurationImage {
-  thumb?: string;
-}
-
-export interface DeviceSetModel {
-  name?: string;
-  manufacturer?: string;
-  releaseDate?: string;
-  formFactor?: string;
-}
-
-export interface DeviceSetConfiguration {
-  /**
-   * The unique id of the device configuration
-  */
-  id?: string;
-  image?: DeviceSetConfigurationImage;
-  model?: DeviceSetModel;
-  os?: string;
-  osName?: string;
+export interface DeviceFrameDefinition {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
 }
 
 /**
  * @summary Test Run Statistics
  * @description Summary single test run on Xamarin Test Cloud
 */
-export interface TestRunStatistics {
+export interface TestRunStats {
   /**
    * Number of devices running the test
   */
@@ -10223,7 +24335,11 @@ export interface TestRun {
    * Human readable explanation of the current test status
   */
   description?: string;
-  stats?: TestRunStatistics;
+  /**
+   * @summary Test Run Statistics
+   * @description Summary single test run on Xamarin Test Cloud
+  */
+  stats?: TestRunStats;
   /**
    * The name of the test framework used to run this test
   */
@@ -10231,10 +24347,53 @@ export interface TestRun {
 }
 
 /**
+ * @summary Test Run Statistics
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface TestRunStatistics {
+  /**
+   * Number of devices running the test
+  */
+  devices?: number;
+  /**
+   * Number of finished devices
+  */
+  devicesFinished?: number;
+  /**
+   * Number of failed devices
+  */
+  devicesFailed?: number;
+  /**
+   * Number of tests in total
+  */
+  total?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of skipped tests
+  */
+  skipped?: number;
+  /**
+   * The max amount of MB used during the test run
+  */
+  peakMemory?: number;
+  /**
+   * The number of minutes of device time the test has been runnign
+  */
+  totalDeviceMinutes?: number;
+}
+
+/**
  * @summary Test Run Summary
  * @description Most important information about a test run.
 */
-export interface TestRunSummary {
+export interface TestSeriesTestRunsItem {
   /**
    * Date of the test run.
   */
@@ -10277,7 +24436,7 @@ export interface TestSeries {
   /**
    * Most recent test runs
   */
-  testRuns?: TestRunSummary[];
+  testRuns?: TestSeriesTestRunsItem[];
 }
 
 /**
@@ -10288,6 +24447,33 @@ export interface TestSeriesName {
    * Name of the new test series
   */
   name: string;
+}
+
+/**
+ * @summary Test Run Summary
+ * @description Most important information about a test run.
+*/
+export interface TestRunSummary {
+  /**
+   * Date of the test run.
+  */
+  date?: string;
+  /**
+   * Human-readable status of the test run.
+  */
+  statusDescription?: string;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Tells whether the test run has completed
+  */
+  completed?: boolean;
 }
 
 /**
@@ -10347,6 +24533,28 @@ export interface DeviceSetOwner {
   name: string;
 }
 
+export interface DeviceSetDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface DeviceSetDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface DeviceSetDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: DeviceSetDeviceConfigurationsItemImage;
+  model?: DeviceSetDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
 /**
  * @summary Device Set
  * @description The name and devices of the device set
@@ -10368,18 +24576,45 @@ export interface DeviceSet {
    * Slug of the device set
   */
   slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
   owner: DeviceSetOwner;
   /**
    * The number of os versions in the device set's device selection
   */
   osVersionCount?: number;
-  deviceConfigurations: DeviceSetConfiguration[];
+  deviceConfigurations: DeviceSetDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface DeviceSetOwnerModel {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
 }
 
 /**
  * @summary Subscription Tier
 */
-export interface Tier {
+export interface SubscriptionTier {
   /**
    * The name of the tier
   */
@@ -10403,7 +24638,10 @@ export interface Subscription {
    * The number of days left in the subscription
   */
   daysLeft?: number;
-  tier?: Tier;
+  /**
+   * @summary Subscription Tier
+  */
+  tier?: SubscriptionTier;
   /**
    * Is the subscription currently active?
   */
@@ -10412,6 +24650,16 @@ export interface Subscription {
    * Id of the subscription
   */
   id?: string;
+}
+
+/**
+ * @summary Subscription Tier
+*/
+export interface Tier {
+  /**
+   * The name of the tier
+  */
+  name?: string;
 }
 
 export interface TestReportStats {
@@ -10591,9 +24839,9 @@ export interface TestCloudFileHash {
 
 /**
  * @summary Test Cloud Hash Upload Status
- * @description Result of uploading a single file hash
+ * @description Status of the upload
 */
-export interface TestCloudHashUploadStatus {
+export interface TestCloudFileHashResponseUploadStatus {
   /**
    * HTTP status code that represent result of upload
   */
@@ -10623,9 +24871,26 @@ export interface TestCloudFileHashResponse {
   */
   relativePath?: string;
   /**
-   * Status of the upload
+   * @summary Test Cloud Hash Upload Status
+   * @description Status of the upload
   */
-  uploadStatus: TestCloudHashUploadStatus;
+  uploadStatus: TestCloudFileHashResponseUploadStatus;
+}
+
+/**
+ * @summary Test Cloud Hash Upload Status
+ * @description Result of uploading a single file hash
+*/
+export interface TestCloudHashUploadStatus {
+  /**
+   * HTTP status code that represent result of upload
+  */
+  statusCode: number;
+  /**
+   * URI that should be used to make POST request if file with given hash doesn't exist. This is
+   * set when status_code is equal to 412
+  */
+  location?: string;
 }
 
 /**
@@ -10800,6 +25065,10 @@ export interface TestGDPRResourceList {
   resources?: TestGDPRResourceListResourcesItem[];
 }
 
+export interface TestGDPRApp {
+  hashFilesUrl?: string;
+}
+
 export interface TestGDPRHashFile {
   id?: string;
   filename?: string;
@@ -10827,7 +25096,10 @@ export interface TestGDPRFileSetFile {
   hashFileUrl?: string;
 }
 
-export interface CodePushReleaseUpload {
+/**
+ * The upload metadata from the release initialization step.
+*/
+export interface CodePushUploadedReleaseReleaseUpload {
   /**
    * The ID for the newly created upload. It is going to be required later in the process.
   */
@@ -10846,7 +25118,7 @@ export interface CodePushUploadedRelease {
   /**
    * The upload metadata from the release initialization step.
   */
-  releaseUpload: CodePushReleaseUpload;
+  releaseUpload: CodePushUploadedReleaseReleaseUpload;
   /**
    * the binary version of the application
   */
@@ -10880,24 +25152,36 @@ export interface CodePushUploadedRelease {
   rollout?: number;
 }
 
-export interface BlobInfo {
+export interface CodePushReleaseUpload {
+  /**
+   * The ID for the newly created upload. It is going to be required later in the process.
+  */
+  id: string;
+  /**
+   * The URL domain used to upload the release.
+  */
+  uploadDomain: string;
+  /**
+   * The URL encoded token used for upload permissions.
+  */
+  token: string;
+}
+
+export interface DeploymentLatestReleaseDiffPackageMapValue {
   size: number;
   url: string;
 }
 
-export interface CodePushReleaseInfo {
+export interface DeploymentLatestRelease {
   targetBinaryRange?: string;
   description?: string;
   isDisabled?: boolean;
   isMandatory?: boolean;
   rollout?: number;
-}
-
-export interface CodePushRelease extends CodePushReleaseInfo {
   label?: string;
   packageHash?: string;
   blobUrl?: string;
-  diffPackageMap?: { [propertyName: string]: BlobInfo };
+  diffPackageMap?: { [propertyName: string]: DeploymentLatestReleaseDiffPackageMapValue };
   /**
    * Set on 'Promote'
   */
@@ -10919,10 +25203,46 @@ export interface CodePushRelease extends CodePushReleaseInfo {
 export interface Deployment {
   key?: string;
   name: string;
-  latestRelease?: CodePushRelease;
+  latestRelease?: DeploymentLatestRelease;
 }
 
-export interface DeploymentInternal extends Deployment {
+export interface DeploymentInternalLatestReleaseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface DeploymentInternalLatestRelease {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: DeploymentInternalLatestReleaseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface DeploymentInternal {
+  key?: string;
+  name: string;
+  latestRelease?: DeploymentInternalLatestRelease;
   id?: string;
 }
 
@@ -10934,10 +25254,79 @@ export interface CodePushReleaseLabel {
   label?: string;
 }
 
-export interface CodePushReleaseModification extends CodePushReleaseInfo {
+export interface BlobInfo {
+  size: number;
+  url: string;
 }
 
-export interface CodePushReleasePromote extends CodePushReleaseInfo {
+export interface PackageHashToBlobInfoMapValue {
+  size: number;
+  url: string;
+}
+
+export interface CodePushReleaseInfo {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+}
+
+export interface LegacyCodePushReleaseInfo {
+  appVersion?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+}
+
+export interface CodePushReleaseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface CodePushRelease {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: CodePushReleaseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface CodePushReleaseModification {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+}
+
+export interface CodePushReleasePromote {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
   label?: string;
 }
 
@@ -10959,7 +25348,22 @@ export interface CodePushStatusMetricMetadata {
   clientUniqueId?: string;
 }
 
-export interface UpdateInfoData extends CodePushReleaseInfo {
+export interface LegacyCodePushStatusMetricMetadata {
+  deploymentKey?: string;
+  label?: string;
+  appVersion?: string;
+  previousDeploymentKey?: string;
+  previousLabelOrAppVersion?: string;
+  status?: string;
+  clientUniqueId?: string;
+}
+
+export interface UpdateCheckResponseUpdateInfo {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
   downloadUrl?: string;
   isAvailable: boolean;
   packageSize?: number;
@@ -10970,7 +25374,60 @@ export interface UpdateInfoData extends CodePushReleaseInfo {
 }
 
 export interface UpdateCheckResponse {
-  updateInfo: UpdateInfoData;
+  updateInfo: UpdateCheckResponseUpdateInfo;
+}
+
+export interface LegacyUpdateCheckResponseUpdateInfo {
+  appVersion?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  downloadURL?: string;
+  isAvailable: boolean;
+  packageSize?: number;
+  shouldRunBinaryVersion?: boolean;
+  updateAppVersion?: boolean;
+  packageHash?: string;
+  label?: string;
+}
+
+export interface LegacyUpdateCheckResponse {
+  updateInfo: LegacyUpdateCheckResponseUpdateInfo;
+}
+
+export interface UpdateInfoData {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  downloadUrl?: string;
+  isAvailable: boolean;
+  packageSize?: number;
+  shouldRunBinaryVersion?: boolean;
+  updateAppVersion?: boolean;
+  packageHash?: string;
+  label?: string;
+}
+
+export interface LegacyUpdateInfoData {
+  appVersion?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  downloadURL?: string;
+  isAvailable: boolean;
+  packageSize?: number;
+  shouldRunBinaryVersion?: boolean;
+  updateAppVersion?: boolean;
+  packageHash?: string;
+  label?: string;
+}
+
+export interface AppName {
+  name: string;
 }
 
 export interface AcquisitionStatusSuccessResponse {
@@ -11000,6 +25457,428 @@ export interface GDPRPurgeVerifyResponse {
    * indicate whether GDPR purge operation succeeds or not
   */
   success: boolean;
+}
+
+export interface LegacyDeploymentsResponseDeploymentsItemPackage {
+  /**
+   * The version of the release
+  */
+  appVersion?: string;
+  /**
+   * Flag used to determine if release is disabled
+  */
+  isDisabled?: boolean;
+  /**
+   * Flag used to determine if release is mandatory
+  */
+  isMandatory?: boolean;
+  /**
+   * Percentage (out of 100) that release is deployed to
+  */
+  rollout?: number;
+  /**
+   * Location (URL) of release package
+  */
+  blobUrl?: string;
+  /**
+   * Size of release package
+  */
+  size?: number;
+  /**
+   * Method used to deploy release
+  */
+  releaseMethod?: string;
+  /**
+   * Release upload time as epoch Unix timestamp
+  */
+  uploadTime?: number;
+  /**
+   * Release label (aka release name)
+  */
+  label?: string;
+  /**
+   * User ID that triggered most recent release
+  */
+  releasedByUserId?: string;
+  /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
+   * Object containing URL and size of changed package hashes contained in the release
+  */
+  diffPackageMap?: any;
+}
+
+export interface LegacyDeploymentsResponseDeploymentsItem {
+  /**
+   * Time at which the deployment was created as a Unix timestamp.
+  */
+  createdTime?: number;
+  /**
+   * The ID of the deployment (internal use only).
+  */
+  id?: string;
+  /**
+   * Deployment key (aka Deployment Id)
+  */
+  key?: string;
+  /**
+   * Updated deployment name
+  */
+  name: string;
+  packageProperty?: LegacyDeploymentsResponseDeploymentsItemPackage;
+}
+
+export interface LegacyDeploymentsResponse {
+  deployments?: LegacyDeploymentsResponseDeploymentsItem[];
+}
+
+export interface LegacyDeploymentResponseDeploymentValuePackage {
+  /**
+   * The version of the release
+  */
+  appVersion?: string;
+  /**
+   * Flag used to determine if release is disabled
+  */
+  isDisabled?: boolean;
+  /**
+   * Flag used to determine if release is mandatory
+  */
+  isMandatory?: boolean;
+  /**
+   * Percentage (out of 100) that release is deployed to
+  */
+  rollout?: number;
+  /**
+   * Location (URL) of release package
+  */
+  blobUrl?: string;
+  /**
+   * Size of release package
+  */
+  size?: number;
+  /**
+   * Method used to deploy release
+  */
+  releaseMethod?: string;
+  /**
+   * Release upload time as epoch Unix timestamp
+  */
+  uploadTime?: number;
+  /**
+   * Release label (aka release name)
+  */
+  label?: string;
+  /**
+   * User ID that triggered most recent release
+  */
+  releasedByUserId?: string;
+  /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
+   * Object containing URL and size of changed package hashes contained in the release
+  */
+  diffPackageMap?: any;
+}
+
+export interface LegacyDeploymentResponseDeploymentValue {
+  /**
+   * Time at which the deployment was created as a Unix timestamp.
+  */
+  createdTime?: number;
+  /**
+   * The ID of the deployment (internal use only).
+  */
+  id?: string;
+  /**
+   * Deployment key (aka Deployment Id)
+  */
+  key?: string;
+  /**
+   * Updated deployment name
+  */
+  name: string;
+  packageProperty?: LegacyDeploymentResponseDeploymentValuePackage;
+}
+
+export interface LegacyDeploymentResponse {
+  deployment?: { [propertyName: string]: LegacyDeploymentResponseDeploymentValue };
+}
+
+export interface LegacyDeploymentPackage {
+  /**
+   * The version of the release
+  */
+  appVersion?: string;
+  /**
+   * Flag used to determine if release is disabled
+  */
+  isDisabled?: boolean;
+  /**
+   * Flag used to determine if release is mandatory
+  */
+  isMandatory?: boolean;
+  /**
+   * Percentage (out of 100) that release is deployed to
+  */
+  rollout?: number;
+  /**
+   * Location (URL) of release package
+  */
+  blobUrl?: string;
+  /**
+   * Size of release package
+  */
+  size?: number;
+  /**
+   * Method used to deploy release
+  */
+  releaseMethod?: string;
+  /**
+   * Release upload time as epoch Unix timestamp
+  */
+  uploadTime?: number;
+  /**
+   * Release label (aka release name)
+  */
+  label?: string;
+  /**
+   * User ID that triggered most recent release
+  */
+  releasedByUserId?: string;
+  /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
+   * Object containing URL and size of changed package hashes contained in the release
+  */
+  diffPackageMap?: any;
+}
+
+export interface LegacyDeployment {
+  /**
+   * Time at which the deployment was created as a Unix timestamp.
+  */
+  createdTime?: number;
+  /**
+   * The ID of the deployment (internal use only).
+  */
+  id?: string;
+  /**
+   * Deployment key (aka Deployment Id)
+  */
+  key?: string;
+  /**
+   * Updated deployment name
+  */
+  name: string;
+  packageProperty?: LegacyDeploymentPackage;
+}
+
+export interface LegacyDeploymentHistoryResponseHistoryItemAllOf {
+  /**
+   * The version of the release
+  */
+  appVersion?: string;
+  /**
+   * Flag used to determine if release is disabled
+  */
+  isDisabled?: boolean;
+  /**
+   * Flag used to determine if release is mandatory
+  */
+  isMandatory?: boolean;
+  /**
+   * Percentage (out of 100) that release is deployed to
+  */
+  rollout?: number;
+  /**
+   * Location (URL) of release package
+  */
+  blobUrl?: string;
+  /**
+   * Size of release package
+  */
+  size?: number;
+  /**
+   * Method used to deploy release
+  */
+  releaseMethod?: string;
+  /**
+   * Release upload time as epoch Unix timestamp
+  */
+  uploadTime?: number;
+  /**
+   * Release label (aka release name)
+  */
+  label?: string;
+  /**
+   * User ID that triggered most recent release
+  */
+  releasedByUserId?: string;
+  /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
+   * Object containing URL and size of changed package hashes contained in the release
+  */
+  diffPackageMap?: any;
+}
+
+/**
+ * Information about a specific release.
+*/
+export interface LegacyDeploymentHistoryResponseHistoryItem {
+  allOf?: LegacyDeploymentHistoryResponseHistoryItemAllOf;
+  /**
+   * The description of the release.
+  */
+  description?: string;
+  /**
+   * The original deployment of the release, if it's ever been promoted.
+  */
+  originalDeployment?: string;
+  /**
+   * The original label of the release, if it's ever been updated.
+  */
+  originalLabel?: string;
+  /**
+   * The package's hash value (internal use).
+  */
+  packageHash?: string;
+}
+
+export interface LegacyDeploymentHistoryResponse {
+  /**
+   * Array containing the deployment's package history.
+  */
+  history?: LegacyDeploymentHistoryResponseHistoryItem[];
+}
+
+export interface LegacyDeploymentHistoryAllOf {
+  /**
+   * The version of the release
+  */
+  appVersion?: string;
+  /**
+   * Flag used to determine if release is disabled
+  */
+  isDisabled?: boolean;
+  /**
+   * Flag used to determine if release is mandatory
+  */
+  isMandatory?: boolean;
+  /**
+   * Percentage (out of 100) that release is deployed to
+  */
+  rollout?: number;
+  /**
+   * Location (URL) of release package
+  */
+  blobUrl?: string;
+  /**
+   * Size of release package
+  */
+  size?: number;
+  /**
+   * Method used to deploy release
+  */
+  releaseMethod?: string;
+  /**
+   * Release upload time as epoch Unix timestamp
+  */
+  uploadTime?: number;
+  /**
+   * Release label (aka release name)
+  */
+  label?: string;
+  /**
+   * User ID that triggered most recent release
+  */
+  releasedByUserId?: string;
+  /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
+   * Object containing URL and size of changed package hashes contained in the release
+  */
+  diffPackageMap?: any;
+}
+
+/**
+ * Information about a specific release.
+*/
+export interface LegacyDeploymentHistory {
+  allOf?: LegacyDeploymentHistoryAllOf;
+  /**
+   * The description of the release.
+  */
+  description?: string;
+  /**
+   * The original deployment of the release, if it's ever been promoted.
+  */
+  originalDeployment?: string;
+  /**
+   * The original label of the release, if it's ever been updated.
+  */
+  originalLabel?: string;
+  /**
+   * The package's hash value (internal use).
+  */
+  packageHash?: string;
+}
+
+export interface LegacyDeploymentMetricsResponseMetricsValue {
+  /**
+   * The number of devices that have this release installed currently
+  */
+  active: number;
+  /**
+   * The number of times this release has been installed on a device
+  */
+  installed?: number;
+  /**
+   * The number of times this release has been downloaded
+  */
+  downloaded?: number;
+  /**
+   * The number of times this release has failed to be installed on a device
+  */
+  failed?: number;
+}
+
+export interface LegacyDeploymentMetricsResponse {
+  /**
+   * Object containing a property named after each release label, which contains an object that
+   * contains that release's metrics.
+  */
+  metrics?: { [propertyName: string]: LegacyDeploymentMetricsResponseMetricsValue };
+}
+
+export interface LegacyDeploymentMetric {
+  /**
+   * The number of devices that have this release installed currently
+  */
+  active: number;
+  /**
+   * The number of times this release has been installed on a device
+  */
+  installed?: number;
+  /**
+   * The number of times this release has been downloaded
+  */
+  downloaded?: number;
+  /**
+   * The number of times this release has failed to be installed on a device
+  */
+  failed?: number;
 }
 
 export interface LegacyCodePushRelease {
@@ -11053,96 +25932,18 @@ export interface LegacyCodePushRelease {
   diffPackageMap?: any;
 }
 
-export interface LegacyDeploymentResponse {
+export interface LegacyCodePushReleaseModification {
   /**
-   * Time at which the deployment was created as a Unix timestamp.
+   * The release package information
   */
-  createdTime?: number;
-  /**
-   * The ID of the deployment (internal use only).
-  */
-  id?: string;
-  /**
-   * Deployment key (aka Deployment Id)
-  */
-  key?: string;
-  /**
-   * Updated deployment name
-  */
-  name: string;
-  packageProperty?: LegacyCodePushRelease;
+  packageInfo: any;
 }
 
-export interface LegacyDeploymentsResponse {
-  deployments?: LegacyDeploymentResponse[];
-}
-
-/**
- * Information about a specific release.
-*/
-export interface LegacyDeploymentHistory {
-  allOf?: LegacyCodePushRelease;
-  /**
-   * The description of the release.
-  */
-  description?: string;
-  /**
-   * The original deployment of the release, if it's ever been promoted.
-  */
-  originalDeployment?: string;
-  /**
-   * The original label of the release, if it's ever been updated.
-  */
-  originalLabel?: string;
-  /**
-   * The package's hash value (internal use).
-  */
-  packageHash?: string;
-}
-
-export interface LegacyDeploymentHistoryResponse {
-  /**
-   * Array containing the deployment's package history.
-  */
-  history?: LegacyDeploymentHistory[];
-}
-
-export interface LegacyDeploymentMetric {
-  /**
-   * The number of devices that have this release installed currently
-  */
-  active: number;
-  /**
-   * The number of times this release has been installed on a device
-  */
-  installed?: number;
-  /**
-   * The number of times this release has been downloaded
-  */
-  downloaded?: number;
-  /**
-   * The number of times this release has failed to be installed on a device
-  */
-  failed?: number;
-}
-
-export interface LegacyDeploymentMetricsResponse {
-  /**
-   * Object containing a property named after each release label, which contains an object that
-   * contains that release's metrics.
-  */
-  metrics?: { [propertyName: string]: LegacyDeploymentMetric };
-}
-
-export interface LegacyCodePushReleaseInfo {
+export interface LegacyCodePushReleaseResponsePackage {
   /**
    * The version of the release
   */
   appVersion?: string;
-  /**
-   * The description of the release
-  */
-  description?: string;
   /**
    * Flag used to determine if release is disabled
   */
@@ -11151,22 +25952,334 @@ export interface LegacyCodePushReleaseInfo {
    * Flag used to determine if release is mandatory
   */
   isMandatory?: boolean;
+  /**
+   * Percentage (out of 100) that release is deployed to
+  */
   rollout?: number;
+  /**
+   * Location (URL) of release package
+  */
+  blobUrl?: string;
+  /**
+   * Size of release package
+  */
+  size?: number;
+  /**
+   * Method used to deploy release
+  */
+  releaseMethod?: string;
+  /**
+   * Release upload time as epoch Unix timestamp
+  */
+  uploadTime?: number;
   /**
    * Release label (aka release name)
   */
   label?: string;
-}
-
-export interface LegacyCodePushReleaseModification {
   /**
-   * The release package information
+   * User ID that triggered most recent release
   */
-  packageInfo: LegacyCodePushReleaseInfo;
+  releasedByUserId?: string;
+  /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
+   * Object containing URL and size of changed package hashes contained in the release
+  */
+  diffPackageMap?: any;
 }
 
 export interface LegacyCodePushReleaseResponse {
-  packageProperty: LegacyCodePushRelease;
+  packageProperty: LegacyCodePushReleaseResponsePackage;
+}
+
+export interface LegacyAuthenticationResponse {
+  /**
+   * The authentication status of the user.
+  */
+  authenticated?: boolean;
+}
+
+export interface LegacyAccountResponseAccountValue {
+  /**
+   * The account name of the calling user.
+  */
+  name?: string;
+  /**
+   * The calling user's email.
+  */
+  email?: string;
+  /**
+   * Array of linked authentication providers associated with the account.
+  */
+  linkedProviders?: string[];
+}
+
+export interface LegacyAccountResponse {
+  /**
+   * Object containing the account information.
+  */
+  account?: { [propertyName: string]: LegacyAccountResponseAccountValue };
+}
+
+export interface LegacyAccount {
+  /**
+   * The account name of the calling user.
+  */
+  name?: string;
+  /**
+   * The calling user's email.
+  */
+  email?: string;
+  /**
+   * Array of linked authentication providers associated with the account.
+  */
+  linkedProviders?: string[];
+}
+
+export interface LegacyAppListResponseAppsItemCollaboratorsValue {
+  /**
+   * Is current collaborator the same as current account.
+  */
+  isCurrentAccount?: boolean;
+  /**
+   * Which permission does current account has.
+  */
+  permission?: string;
+}
+
+export interface LegacyAppListResponseAppsItem {
+  /**
+   * The app name.
+  */
+  name?: string;
+  collaborators?: { [propertyName: string]: LegacyAppListResponseAppsItemCollaboratorsValue };
+  deployments?: string[];
+}
+
+export interface LegacyAppListResponse {
+  apps?: LegacyAppListResponseAppsItem[];
+}
+
+export interface LegacyAppResponseAppCollaboratorsValue {
+  /**
+   * Is current collaborator the same as current account.
+  */
+  isCurrentAccount?: boolean;
+  /**
+   * Which permission does current account has.
+  */
+  permission?: string;
+}
+
+export interface LegacyAppResponseApp {
+  /**
+   * The app name.
+  */
+  name?: string;
+  collaborators?: { [propertyName: string]: LegacyAppResponseAppCollaboratorsValue };
+  deployments?: string[];
+}
+
+export interface LegacyAppResponse {
+  app?: LegacyAppResponseApp;
+}
+
+export interface LegacyAppCollaboratorsValue {
+  /**
+   * Is current collaborator the same as current account.
+  */
+  isCurrentAccount?: boolean;
+  /**
+   * Which permission does current account has.
+  */
+  permission?: string;
+}
+
+export interface LegacyApp {
+  /**
+   * The app name.
+  */
+  name?: string;
+  collaborators?: { [propertyName: string]: LegacyAppCollaboratorsValue };
+  deployments?: string[];
+}
+
+export interface LegacyCollaborator {
+  /**
+   * Is current collaborator the same as current account.
+  */
+  isCurrentAccount?: boolean;
+  /**
+   * Which permission does current account has.
+  */
+  permission?: string;
+}
+
+export interface LegacyCollaboratorsCollaboratorsValue {
+  /**
+   * Is current collaborator the same as current account.
+  */
+  isCurrentAccount?: boolean;
+  /**
+   * Which permission does current account has.
+  */
+  permission?: string;
+}
+
+export interface LegacyCollaborators {
+  collaborators?: { [propertyName: string]: LegacyCollaboratorsCollaboratorsValue };
+}
+
+export interface LegacyCodePushApp {
+  /**
+   * The app name.
+  */
+  name: string;
+  /**
+   * The app os.
+  */
+  os?: string;
+  /**
+   * The app platform.
+  */
+  platform?: string;
+  /**
+   * Whether the user provided their own deployments. Not currently in use.
+  */
+  manuallyProvisionDeployments?: boolean;
+}
+
+export interface CreateAccessKeyRequest {
+  /**
+   * Name of creator current access key
+  */
+  createdBy?: string;
+  /**
+   * Friendly name of the access key
+  */
+  friendlyName?: string;
+  /**
+   * Time to live of the access key
+  */
+  ttl?: number;
+}
+
+export interface CreateAccessKeyResponseAccessKey {
+  /**
+   * Key of access key
+  */
+  name?: string;
+  /**
+   * Account name of creator.
+  */
+  createdBy?: string;
+  /**
+   * Description of access key
+  */
+  description?: string;
+  /**
+   * Friendly name of access key
+  */
+  friendlyName?: string;
+  /**
+   * Created time of access key
+  */
+  createdTime?: number;
+  /**
+   * Time of expiry of access key
+  */
+  expires?: number;
+  /**
+   * Id of accessKey
+  */
+  id?: string;
+  /**
+   * Legacy property which indicate if accessKey was created from session
+  */
+  isSession?: boolean;
+}
+
+export interface CreateAccessKeyResponse {
+  accessKey?: CreateAccessKeyResponseAccessKey;
+}
+
+export interface AccessKey {
+  /**
+   * Key of access key
+  */
+  name?: string;
+  /**
+   * Account name of creator.
+  */
+  createdBy?: string;
+  /**
+   * Description of access key
+  */
+  description?: string;
+  /**
+   * Friendly name of access key
+  */
+  friendlyName?: string;
+  /**
+   * Created time of access key
+  */
+  createdTime?: number;
+  /**
+   * Time of expiry of access key
+  */
+  expires?: number;
+  /**
+   * Id of accessKey
+  */
+  id?: string;
+  /**
+   * Legacy property which indicate if accessKey was created from session
+  */
+  isSession?: boolean;
+}
+
+export interface AccessKeyListResponseAccessKeysItem {
+  /**
+   * Key of access key
+  */
+  name?: string;
+  /**
+   * Account name of creator.
+  */
+  createdBy?: string;
+  /**
+   * Description of access key
+  */
+  description?: string;
+  /**
+   * Friendly name of access key
+  */
+  friendlyName?: string;
+  /**
+   * Created time of access key
+  */
+  createdTime?: number;
+  /**
+   * Time of expiry of access key
+  */
+  expires?: number;
+  /**
+   * Id of accessKey
+  */
+  id?: string;
+  /**
+   * Legacy property which indicate if accessKey was created from session
+  */
+  isSession?: boolean;
+}
+
+export interface AccessKeyListResponse {
+  /**
+   * Array containing the list of existing AccessKeys
+  */
+  accessKeys?: AccessKeyListResponseAccessKeysItem[];
 }
 
 /**
@@ -11206,16 +26319,46 @@ export interface AlertWebhook {
 }
 
 /**
+ * Alerting webhook
+*/
+export interface AlertWebhookListResultValuesItem {
+  /**
+   * The unique id (UUID) of the webhook
+  */
+  id?: string;
+  /**
+   * display name of the webhook
+  */
+  name: string;
+  /**
+   * target url of the webhook
+  */
+  url: string;
+  /**
+   * Allows eanble/disable webhook
+  */
+  enabled?: boolean;
+  /**
+   * Event types enabled for webhook
+  */
+  eventTypes: string[];
+}
+
+/**
  * List of alerting webhooks wrapped as operation result
 */
 export interface AlertWebhookListResult {
-  values: AlertWebhook[];
+  values: AlertWebhookListResultValuesItem[];
 }
 
 /**
  * Alerting webhook ping operation result
 */
-export interface AlertWebhookPingResult extends AlertOperationResult {
+export interface AlertWebhookPingResult {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
   /**
    * HTTP status code returned in response from calling webhook
   */
@@ -11229,7 +26372,7 @@ export interface AlertWebhookPingResult extends AlertOperationResult {
 /**
  * Event Setting
 */
-export interface EventSetting {
+export interface AlertEmailSettingsSettingsItem {
   /**
    * Frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
    * 'DailyAndIndividual', 'Default'
@@ -11249,13 +26392,33 @@ export interface AlertEmailSettings {
   /**
    * The settings the user has for the app
   */
-  settings: EventSetting[];
+  settings: AlertEmailSettingsSettingsItem[];
+}
+
+/**
+ * Event Setting
+*/
+export interface AlertUserEmailSettingsResultSettingsItem {
+  /**
+   * Frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual', 'Default'
+  */
+  value: string;
+  /**
+   * Default frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual'
+  */
+  defaultValue?: string;
 }
 
 /**
  * Alerting Default Email Settings of the user
 */
-export interface AlertUserEmailSettingsResult extends AlertOperationResult {
+export interface AlertUserEmailSettingsResult {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
   /**
    * The ETag of the entity
   */
@@ -11271,13 +26434,49 @@ export interface AlertUserEmailSettingsResult extends AlertOperationResult {
   /**
    * The settings the user has for the app
   */
-  settings: EventSetting[];
+  settings: AlertUserEmailSettingsResultSettingsItem[];
+}
+
+/**
+ * Event Setting
+*/
+export interface AlertUserAppEmailSettingsResultSettingsItem {
+  /**
+   * Frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual', 'Default'
+  */
+  value: string;
+  /**
+   * Default frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual'
+  */
+  defaultValue?: string;
 }
 
 /**
  * Alerting Email Settings of the user for a particular app
 */
-export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsResult {
+export interface AlertUserAppEmailSettingsResult {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The ETag of the entity
+  */
+  eTag?: string;
+  /**
+   * Allows to forcefully disable emails on app or user level
+  */
+  enabled: boolean;
+  /**
+   * The unique id (UUID) of the user
+  */
+  userId?: string;
+  /**
+   * The settings the user has for the app
+  */
+  settings: AlertUserAppEmailSettingsResultSettingsItem[];
   /**
    * Application ID
   */
@@ -11303,7 +26502,13 @@ export interface AlertingBugtrackerSettings {
 /**
  * VSTS bugtracker specific settings
 */
-export interface AlertingVstsBugtrackerSettings extends AlertingBugtrackerSettings {
+export interface AlertingVstsBugtrackerSettings {
+  callbackUrl?: string;
+  ownerName: string;
+  /**
+   * type of bugtracker. Possible values include: 'github', 'vsts', 'jira'
+  */
+  type: string;
   vstsProjectId: string;
   vstsProjectUri: string;
   vstsProjectName?: string;
@@ -11315,7 +26520,13 @@ export interface AlertingVstsBugtrackerSettings extends AlertingBugtrackerSettin
 /**
  * Github bugtracker specific settings
 */
-export interface AlertingGithubBugtrackerSettings extends AlertingBugtrackerSettings {
+export interface AlertingGithubBugtrackerSettings {
+  callbackUrl?: string;
+  ownerName: string;
+  /**
+   * type of bugtracker. Possible values include: 'github', 'vsts', 'jira'
+  */
+  type: string;
   githubRepoId: number;
   githubRepoName: string;
   githubLabel?: string;
@@ -11324,9 +26535,27 @@ export interface AlertingGithubBugtrackerSettings extends AlertingBugtrackerSett
 /**
  * Jira bugtracker specific settings
 */
-export interface AlertingJiraBugtrackerSettings extends AlertingBugtrackerSettings {
+export interface AlertingJiraBugtrackerSettings {
+  callbackUrl?: string;
+  ownerName: string;
+  /**
+   * type of bugtracker. Possible values include: 'github', 'vsts', 'jira'
+  */
+  type: string;
   jiraProjectId: number;
   jiraProjectName: string;
+}
+
+/**
+ * Bugtracker specific settings
+*/
+export interface AlertingBugtrackerSettingsModel {
+  callbackUrl?: string;
+  ownerName: string;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
 }
 
 /**
@@ -11350,10 +26579,9 @@ export interface AlertingBugtracker {
   */
   eventTypes?: string[];
   /**
-   * Threshold for the number of crashes at which to create a bug
+   * Bugtracker specific settings
   */
-  crashCountThreshold?: number;
-  settings?: AlertingBugtrackerSettings;
+  settings?: AlertingBugtrackerSettingsModel;
 }
 
 /**
@@ -11361,6 +26589,41 @@ export interface AlertingBugtracker {
 */
 export interface BugTrackerTokenId {
   tokenId?: string;
+}
+
+/**
+ * Repository owner object
+*/
+export interface AlertBugTrackerReposResultRepositoriesItemOwner {
+  name?: string;
+  id?: string;
+  login?: string;
+}
+
+/**
+ * Repostiory object
+*/
+export interface AlertBugTrackerReposResultRepositoriesItem {
+  name: string;
+  url: string;
+  id: string;
+  description?: string;
+  privateProperty?: boolean;
+  /**
+   * Repository owner object
+  */
+  owner?: AlertBugTrackerReposResultRepositoriesItemOwner;
+}
+
+/**
+ * List of bug tracker repositories
+*/
+export interface AlertBugTrackerReposResult {
+  /**
+   * Possible values include: 'github', 'vsts', 'jira'
+  */
+  repoType?: string;
+  repositories: AlertBugTrackerReposResultRepositoriesItem[];
 }
 
 /**
@@ -11381,18 +26644,19 @@ export interface AlertBugTrackerRepo {
   id: string;
   description?: string;
   privateProperty?: boolean;
+  /**
+   * Repository owner object
+  */
   owner?: AlertBugTrackerRepoOwner;
 }
 
 /**
- * List of bug tracker repositories
+ * Repository owner object
 */
-export interface AlertBugTrackerReposResult {
-  /**
-   * Possible values include: 'github', 'vsts', 'jira'
-  */
-  repoType?: string;
-  repositories: AlertBugTrackerRepo[];
+export interface AlertBugTrackerRepoOwnerModel {
+  name?: string;
+  id?: string;
+  login?: string;
 }
 
 /**
@@ -11426,6 +26690,22 @@ export interface AlertingAccessTokenResponse {
    * provider or basic auth
   */
   externalAccountName: string;
+}
+
+/**
+ * Event Setting
+*/
+export interface EventSetting {
+  /**
+   * Frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual', 'Default'
+  */
+  value: string;
+  /**
+   * Default frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual'
+  */
+  defaultValue?: string;
 }
 
 /**
@@ -11463,7 +26743,19 @@ export interface NewCrashGroupAlertingEventCrashGroupProperties {
 /**
  * New crash group alerting event
 */
-export interface NewCrashGroupAlertingEvent extends AlertingEvent {
+export interface NewCrashGroupAlertingEvent {
+  /**
+   * ISO 8601 date time when event was generated
+  */
+  eventTimestamp: string;
+  /**
+   * A unique identifier for this event instance. Useful for deduplication
+  */
+  eventId: string;
+  /**
+   * Obsolete. Use emailProperties.
+  */
+  properties?: any;
   /**
    * Properties of new crash group
   */
@@ -11501,7 +26793,19 @@ export interface NewAppReleaseAlertingEventAppReleaseProperties {
 /**
  * New app release alerting event
 */
-export interface NewAppReleaseAlertingEvent extends AlertingEvent {
+export interface NewAppReleaseAlertingEvent {
+  /**
+   * ISO 8601 date time when event was generated
+  */
+  eventTimestamp: string;
+  /**
+   * A unique identifier for this event instance. Useful for deduplication
+  */
+  eventId: string;
+  /**
+   * Obsolete. Use emailProperties.
+  */
+  properties?: any;
   /**
    * List of users who need to receive an email notification. If this is not null, then only
    * sending emails will be triggered even if the event requires calling webhooks or doing other
@@ -11521,7 +26825,7 @@ export interface NewAppReleaseAlertingEvent extends AlertingEvent {
 /**
  * Object returned in response to getting a bug tracker issue related to a crash group id
 */
-export interface BugTrackerIssueResult {
+export interface BugTrackerIssuesResultIssuesItem {
   id?: string;
   url?: string;
   title?: string;
@@ -11538,7 +26842,23 @@ export interface BugTrackerIssueResult {
  * Returns a list of all issues associated with a repo
 */
 export interface BugTrackerIssuesResult {
-  issues?: BugTrackerIssueResult[];
+  issues?: BugTrackerIssuesResultIssuesItem[];
+}
+
+/**
+ * Object returned in response to getting a bug tracker issue related to a crash group id
+*/
+export interface BugTrackerIssueResult {
+  id?: string;
+  url?: string;
+  title?: string;
+  /**
+   * Possible values include: 'github', 'vsts', 'jira'
+  */
+  bugTrackerType?: string;
+  repoName?: string;
+  mobileCenterId?: string;
+  eventType?: string;
 }
 
 /**
@@ -11554,13 +26874,21 @@ export interface BugTrackerStateResult {
 /**
  * Object returned in response to accepting an event occurance
 */
-export interface EventResponseResult extends AlertOperationResult {
+export interface EventResponseResult {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
 }
 
 /**
  * Alerting service error
 */
-export interface AlertingError extends AlertOperationResult {
+export interface AlertingError {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
   /**
    * The status code return by the API. It can be 400 or 404 or 409 or 500.
   */
@@ -11569,6 +26897,925 @@ export interface AlertingError extends AlertOperationResult {
    * The reason for the request failed
   */
   message?: string;
+}
+
+/**
+ * Billing Plan
+*/
+export interface AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriodByAccount
+{
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface AggregatedBillingInformationBillingPlansBuildService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plan
+*/
+export interface AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface AggregatedBillingInformationBillingPlansTestService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plans section in the Billing Information
+*/
+export interface AggregatedBillingInformationBillingPlans {
+  /**
+   * Billing Plans for a single service
+  */
+  buildService?: AggregatedBillingInformationBillingPlansBuildService;
+  /**
+   * Billing Plans for a single service
+  */
+  testService?: AggregatedBillingInformationBillingPlansTestService;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface AggregatedBillingInformationUsageBuildServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface AggregatedBillingInformationUsageBuildService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: AggregatedBillingInformationUsageBuildServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface AggregatedBillingInformationUsageTestServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface AggregatedBillingInformationUsageTestService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: AggregatedBillingInformationUsageTestServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage section in the Billing Information
+*/
+export interface AggregatedBillingInformationUsage {
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  buildService?: AggregatedBillingInformationUsageBuildService;
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  testService?: AggregatedBillingInformationUsageTestService;
+}
+
+/**
+ * Aggregated Billing Information for a user or an organization
+*/
+export interface AggregatedBillingInformation {
+  /**
+   * Version of the Billing Information schema
+  */
+  version?: string;
+  /**
+   * The ISO 8601 datetime of last modification
+  */
+  timestamp?: string;
+  /**
+   * ID of the user or organization
+  */
+  id?: string;
+  /**
+   * Billing Plans section in the Billing Information
+  */
+  billingPlans?: AggregatedBillingInformationBillingPlans;
+  /**
+   * Usage section in the Billing Information
+  */
+  usage?: AggregatedBillingInformationUsage;
+  /**
+   * Unique identifier for the Azure subscription used for billing
+  */
+  azureSubscriptionId?: string;
+  /**
+   * State of the Azure subscription used for billing. Possible values include: 'Enabled',
+   * 'Disabled', 'NotSet'
+  */
+  azureSubscriptionState?: string;
+}
+
+/**
+ * Billing Plan
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan
+{
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount
+{
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriod
+{
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildService
+{
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plan
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan
+{
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount
+{
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriod
+{
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plans section in the Billing Information
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlans {
+  /**
+   * Billing Plans for a single service
+  */
+  buildService?: AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildService;
+  /**
+   * Billing Plans for a single service
+  */
+  testService?: AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestService;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageBuildServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageBuildService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsUsageBuildServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageTestServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageTestService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?:
+  AllAccountsAggregatedBillingInformationAggregatedBillingsUsageTestServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage section in the Billing Information
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsage {
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  buildService?: AllAccountsAggregatedBillingInformationAggregatedBillingsUsageBuildService;
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  testService?: AllAccountsAggregatedBillingInformationAggregatedBillingsUsageTestService;
+}
+
+/**
+ * Aggregated Billing Information for a user or an organization
+*/
+export interface AllAccountsAggregatedBillingInformationAggregatedBillings {
+  /**
+   * Version of the Billing Information schema
+  */
+  version?: string;
+  /**
+   * The ISO 8601 datetime of last modification
+  */
+  timestamp?: string;
+  /**
+   * ID of the user or organization
+  */
+  id?: string;
+  /**
+   * Billing Plans section in the Billing Information
+  */
+  billingPlans?: AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlans;
+  /**
+   * Usage section in the Billing Information
+  */
+  usage?: AllAccountsAggregatedBillingInformationAggregatedBillingsUsage;
+  /**
+   * Unique identifier for the Azure subscription used for billing
+  */
+  azureSubscriptionId?: string;
+  /**
+   * State of the Azure subscription used for billing. Possible values include: 'Enabled',
+   * 'Disabled', 'NotSet'
+  */
+  azureSubscriptionState?: string;
+}
+
+/**
+ * Aggregated Billing Information for a user an the organizations in which the user is an admin.
+*/
+export interface AllAccountsAggregatedBillingInformation {
+  /**
+   * Aggregated Billing Information for a user or an organization
+  */
+  aggregatedBillings?: AllAccountsAggregatedBillingInformationAggregatedBillings;
+}
+
+export interface BillingErrorError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface BillingError {
+  error?: BillingErrorError;
+}
+
+/**
+ * Billing Plan
+*/
+export interface BillingInformationPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface BillingInformationPlansBuildServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: BillingInformationPlansBuildServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface BillingInformationPlansBuildServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: BillingInformationPlansBuildServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface BillingInformationPlansBuildService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: BillingInformationPlansBuildServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plan
+*/
+export interface BillingInformationPlansTestServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface BillingInformationPlansTestServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: BillingInformationPlansTestServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface BillingInformationPlansTestServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: BillingInformationPlansTestServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface BillingInformationPlansTestService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: BillingInformationPlansTestServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plans section in the Billing Information
+*/
+export interface BillingInformationPlans {
+  /**
+   * Billing Plans for a single service
+  */
+  buildService?: BillingInformationPlansBuildService;
+  /**
+   * Billing Plans for a single service
+  */
+  testService?: BillingInformationPlansTestService;
+}
+
+export interface BillingInformationSearchResultsItem {
+  /**
+   * The Account ID
+  */
+  accountId?: string;
+  /**
+   * The Account Name
+  */
+  accountName?: string;
+  /**
+   * The Billing Internal Account ID
+  */
+  billingInternalAccountId?: string;
+  /**
+   * The ID of the Build Billing Plan
+  */
+  buildPlan?: string;
+  /**
+   * The ID of the Test Billing Plan
+  */
+  testPlan?: string;
+}
+
+/**
+ * Billing Plan
+*/
+export interface BillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface BillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: BillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface BillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: BillingPeriodByAccount;
 }
 
 /**
@@ -11596,166 +27843,15 @@ export interface BillingPlan {
    * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
   */
   service?: string;
+  /**
+   * A collection of named numeric values
+  */
   limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
   attributes?: { [propertyName: string]: any };
   parentId?: string;
-}
-
-/**
- * Selection of a billing plan
-*/
-export interface BillingPlanSelection {
-  /**
-   * Number of instances of the billing plan.
-  */
-  count?: number;
-  plan?: BillingPlan;
-}
-
-/**
- * Billing plans for a given period
-*/
-export interface BillingPeriod {
-  /**
-   * Inclusive start of the period
-  */
-  startTime?: string;
-  /**
-   * Exclusive end of the period.
-  */
-  endTime?: string;
-  byAccount?: BillingPlanSelection;
-}
-
-/**
- * Billing Plans for a single service
-*/
-export interface ServiceBillingPlans {
-  /**
-   * Can customer select trial plan for that service (if it exists)?
-  */
-  canSelectTrialPlan?: boolean;
-  /**
-   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
-  */
-  lastTrialPlanExpirationTime?: string;
-  currentBillingPeriod?: BillingPeriod;
-}
-
-/**
- * Billing Plans section in the Billing Information
-*/
-export interface BillingInformationPlans {
-  buildService?: ServiceBillingPlans;
-  testService?: ServiceBillingPlans;
-}
-
-/**
- * Usage for a single period
-*/
-export interface UsagePeriod {
-  /**
-   * Inclusive start time of the usage period
-  */
-  startTime?: string;
-  /**
-   * Exclusive end time of the usage period.
-  */
-  endTime?: string;
-  byAccount?: { [propertyName: string]: number };
-  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
-}
-
-/**
- * Resource usage for a single Mobile Center service
-*/
-export interface ServiceResourceUsage {
-  currentUsagePeriod?: UsagePeriod;
-}
-
-/**
- * Usage section in the Billing Information
-*/
-export interface BillingResourceUsage {
-  buildService?: ServiceResourceUsage;
-  testService?: ServiceResourceUsage;
-}
-
-/**
- * Aggregated Billing Information for a user or an organization
-*/
-export interface AggregatedBillingInformation {
-  /**
-   * Version of the Billing Information schema
-  */
-  version?: string;
-  /**
-   * The ISO 8601 datetime of last modification
-  */
-  timestamp?: string;
-  /**
-   * ID of the user or organization
-  */
-  id?: string;
-  billingPlans?: BillingInformationPlans;
-  usage?: BillingResourceUsage;
-  /**
-   * Unique identifier for the Azure subscription used for billing
-  */
-  azureSubscriptionId?: string;
-  /**
-   * State of the Azure subscription used for billing. Possible values include: 'Enabled',
-   * 'Disabled', 'NotSet'
-  */
-  azureSubscriptionState?: string;
-}
-
-/**
- * Aggregated Billing Information for a user an the organizations in which the user is an admin.
-*/
-export interface AllAccountsAggregatedBillingInformation {
-  aggregatedBillings?: AggregatedBillingInformation;
-}
-
-export interface BillingErrorError {
-  /**
-   * The status code return by the API. It can be 400 or 403 or 500.
-  */
-  code?: number;
-  /**
-   * The reason for the request failed
-  */
-  message?: string;
-}
-
-/**
- * Error
-*/
-export interface BillingError {
-  error?: BillingErrorError;
-}
-
-export interface BillingInformationSearchResultsItem {
-  /**
-   * The Account ID
-  */
-  accountId?: string;
-  /**
-   * The Account Name
-  */
-  accountName?: string;
-  /**
-   * The Billing Internal Account ID
-  */
-  billingInternalAccountId?: string;
-  /**
-   * The ID of the Build Billing Plan
-  */
-  buildPlan?: string;
-  /**
-   * The ID of the Test Billing Plan
-  */
-  testPlan?: string;
 }
 
 /**
@@ -11769,11 +27865,245 @@ export interface BillingPlansChangeTypeResponse {
 }
 
 /**
+ * Billing Plan
+*/
+export interface BillingPlanSelectionPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface BillingPlanSelection {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: BillingPlanSelectionPlan;
+}
+
+/**
+ * Billing Plan
+*/
+export interface BillingPlansSelectionBuildServicePlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface BillingPlansSelectionBuildService {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: BillingPlansSelectionBuildServicePlan;
+}
+
+/**
+ * Billing Plan
+*/
+export interface BillingPlansSelectionTestServicePlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface BillingPlansSelectionTestService {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: BillingPlansSelectionTestServicePlan;
+}
+
+/**
  * Selection of a billing plan for one or more services
 */
 export interface BillingPlansSelection {
-  buildService?: BillingPlanSelection;
-  testService?: BillingPlanSelection;
+  /**
+   * Selection of a billing plan
+  */
+  buildService?: BillingPlansSelectionBuildService;
+  /**
+   * Selection of a billing plan
+  */
+  testService?: BillingPlansSelectionTestService;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface BillingResourceUsageBuildServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface BillingResourceUsageBuildService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: BillingResourceUsageBuildServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface BillingResourceUsageTestServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface BillingResourceUsageTestService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: BillingResourceUsageTestServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage section in the Billing Information
+*/
+export interface BillingResourceUsage {
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  buildService?: BillingResourceUsageBuildService;
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  testService?: BillingResourceUsageTestService;
 }
 
 /**
@@ -11815,11 +28145,181 @@ export interface GitHubMarketplacePlan {
 }
 
 /**
+ * GitHub account information
+*/
+export interface GitHubMarketplacePurchaseAccount {
+  /**
+   * Id of GitHub account
+  */
+  id?: number;
+  /**
+   * Type of GitHub account. Possible values include: 'User', 'Organization'
+  */
+  accountType?: string;
+}
+
+/**
+ * GitHub Marketplace plan
+*/
+export interface GitHubMarketplacePurchasePlan {
+  /**
+   * Id of the GitHub plan
+  */
+  id?: number;
+}
+
+/**
  * GitHub Marketplace purchase
 */
 export interface GitHubMarketplacePurchase {
-  account?: GitHubAccount;
-  plan?: GitHubMarketplacePlan;
+  /**
+   * GitHub account information
+  */
+  account?: GitHubMarketplacePurchaseAccount;
+  /**
+   * GitHub Marketplace plan
+  */
+  plan?: GitHubMarketplacePurchasePlan;
+}
+
+/**
+ * Billing Plan
+*/
+export interface ServiceBillingPlansCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface ServiceBillingPlansCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: ServiceBillingPlansCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface ServiceBillingPlansCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: ServiceBillingPlansCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface ServiceBillingPlans {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: ServiceBillingPlansCurrentBillingPeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface ServiceResourceUsageCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface ServiceResourceUsage {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: ServiceResourceUsageCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface UsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
 }
 
 /**
@@ -11845,10 +28345,49 @@ export interface UsageRecordStatus {
 }
 
 /**
+ * Billing Plan
+*/
+export interface VersionedBillingPlanDocument {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
  * Billing Plan with a version
 */
 export interface VersionedBillingPlan {
-  document?: BillingPlan;
+  /**
+   * Billing Plan
+  */
+  document?: VersionedBillingPlanDocument;
   /**
    * The version of the object
   */
@@ -11924,6 +28463,71 @@ export interface DataSubjectRightStatusResponse {
   message: string;
 }
 
+export interface DataSubjectRightUpdateStatusOperation {
+  /**
+   * Request identifier of the operation
+  */
+  requestId: string;
+  /**
+   * Operation status. Possible values include: 'None', 'Created', 'Queued', 'InProgress',
+   * 'Completed', 'Failed'
+  */
+  status: string;
+  /**
+   * String field to be used by participant for any intermediate statuses or data they need to save
+  */
+  participantData?: string;
+}
+
+export interface DataSubjectRightOperation {
+  /**
+   * Unique request identifier
+  */
+  requestId: string;
+  /**
+   * Unique operation identifier
+  */
+  operationId: string;
+  /**
+   * Request type. Possible values include: 'Unsupported', 'Delete', 'Purge', 'UndoDelete',
+   * 'Scheduled', 'AppDelete', 'AppPurge', 'AppUndoDelete', 'Export', 'CustomerAccountDelete',
+   * 'CustomerAccountExport', 'CustomerUserDelete', 'CustomerUserExport'
+  */
+  requestType: string;
+  /**
+   * Operation status. Possible values include: 'None', 'Created', 'Queued', 'InProgress',
+   * 'Completed', 'Failed'
+  */
+  status: string;
+  /**
+   * Participant to execute the response
+  */
+  participant: string;
+  /**
+   * JSON object decribing what to delete (TODO - make separate definition?)
+  */
+  context: string;
+  /**
+   * Application identifier if applicable
+  */
+  appId?: string;
+  /**
+   * String field to be used by participant for any intermediate statuses or data they need to save
+  */
+  participantData?: string;
+}
+
+export interface DataSubjectRightQueueInfo {
+  sasUri: string;
+  queueName: string;
+  expiresAt: Date;
+}
+
+export interface DataSubjectRighBlobContainerInfo {
+  sasUri: string;
+  blobPath: string;
+}
+
 /**
  * This response contains the Azure AD B2C client ID for an application.
 */
@@ -11936,13 +28540,29 @@ export interface InnerError {
   innererror?: InnerError;
 }
 
-export interface AuthTenant {
+export interface AuthTenantsResponseValueItem {
   id: string;
   name: string;
 }
 
 export interface AuthTenantsResponse {
-  value?: AuthTenant[];
+  value?: AuthTenantsResponseValueItem[];
+}
+
+export interface AuthTenant {
+  id: string;
+  name: string;
+}
+
+export interface ApplicationsResponseValueItem {
+  id?: string;
+  createdAt?: Date;
+  name?: string;
+  signInAudience?: string;
+}
+
+export interface ApplicationsResponse {
+  value?: ApplicationsResponseValueItem[];
 }
 
 export interface ApplicationResponse {
@@ -11952,11 +28572,7 @@ export interface ApplicationResponse {
   signInAudience?: string;
 }
 
-export interface ApplicationsResponse {
-  value?: ApplicationResponse[];
-}
-
-export interface ScopeResponse {
+export interface ScopesResponseValueItem {
   id?: string;
   appName?: string;
   scope?: string;
@@ -11964,7 +28580,14 @@ export interface ScopeResponse {
 }
 
 export interface ScopesResponse {
-  value?: ScopeResponse[];
+  value?: ScopesResponseValueItem[];
+}
+
+export interface ScopeResponse {
+  id?: string;
+  appName?: string;
+  scope?: string;
+  url?: string;
 }
 
 export interface AuthApplicationResponse {
@@ -12006,42 +28629,59 @@ export interface ExistingAuthApplicationPostRequest {
   signInAudience?: string;
 }
 
-export interface TrustFrameworkPolicyResponse {
+export interface TrustFrameworkPoliciesResponseValueItem {
   id?: string;
 }
 
 export interface TrustFrameworkPoliciesResponse {
-  value?: TrustFrameworkPolicyResponse[];
+  value?: TrustFrameworkPoliciesResponseValueItem[];
 }
 
-export interface MetricsData {
+export interface TrustFrameworkPolicyResponse {
+  id?: string;
+}
+
+export interface MetricsResponseMetricsLatencyMetricsReadLatencyMetricsMetricValuesItem {
   timestamp?: Date;
   average?: number;
 }
 
-export interface LatencyData {
+export interface MetricsResponseMetricsLatencyMetricsReadLatencyMetrics {
   name?: string;
   unit?: string;
   startTime?: Date;
   endTime?: Date;
-  metricValues?: MetricsData[];
+  metricValues?: MetricsResponseMetricsLatencyMetricsReadLatencyMetricsMetricValuesItem[];
 }
 
-export interface LatencyMetrics {
-  readLatencyMetrics?: LatencyData;
-  writeLatencyMetrics?: LatencyData;
+export interface MetricsResponseMetricsLatencyMetricsWriteLatencyMetricsMetricValuesItem {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface MetricsResponseMetricsLatencyMetricsWriteLatencyMetrics {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: MetricsResponseMetricsLatencyMetricsWriteLatencyMetricsMetricValuesItem[];
+}
+
+export interface MetricsResponseMetricsLatencyMetrics {
+  readLatencyMetrics?: MetricsResponseMetricsLatencyMetricsReadLatencyMetrics;
+  writeLatencyMetrics?: MetricsResponseMetricsLatencyMetricsWriteLatencyMetrics;
 }
 
 /**
  * Represents database usage metrics.
 */
-export interface DatabaseMetrics {
+export interface MetricsResponseMetrics {
   interval?: number;
   totalRequests?: number;
   totalRequestUnits?: number;
   dataUsage?: number;
   indexUsage?: number;
-  latencyMetrics?: LatencyMetrics;
+  latencyMetrics?: MetricsResponseMetricsLatencyMetrics;
 }
 
 export interface MetricsResponse {
@@ -12057,7 +28697,102 @@ export interface MetricsResponse {
   databaseLocation?: string;
   accountName?: string;
   databaseId?: string;
-  metrics?: DatabaseMetrics;
+  /**
+   * Represents database usage metrics.
+  */
+  metrics?: MetricsResponseMetrics;
+}
+
+export interface DatabaseMetricsLatencyMetricsReadLatencyMetricsMetricValuesItem {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface DatabaseMetricsLatencyMetricsReadLatencyMetrics {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: DatabaseMetricsLatencyMetricsReadLatencyMetricsMetricValuesItem[];
+}
+
+export interface DatabaseMetricsLatencyMetricsWriteLatencyMetricsMetricValuesItem {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface DatabaseMetricsLatencyMetricsWriteLatencyMetrics {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: DatabaseMetricsLatencyMetricsWriteLatencyMetricsMetricValuesItem[];
+}
+
+export interface DatabaseMetricsLatencyMetrics {
+  readLatencyMetrics?: DatabaseMetricsLatencyMetricsReadLatencyMetrics;
+  writeLatencyMetrics?: DatabaseMetricsLatencyMetricsWriteLatencyMetrics;
+}
+
+/**
+ * Represents database usage metrics.
+*/
+export interface DatabaseMetrics {
+  interval?: number;
+  totalRequests?: number;
+  totalRequestUnits?: number;
+  dataUsage?: number;
+  indexUsage?: number;
+  latencyMetrics?: DatabaseMetricsLatencyMetrics;
+}
+
+export interface LatencyMetricsReadLatencyMetricsMetricValuesItem {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface LatencyMetricsReadLatencyMetrics {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: LatencyMetricsReadLatencyMetricsMetricValuesItem[];
+}
+
+export interface LatencyMetricsWriteLatencyMetricsMetricValuesItem {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface LatencyMetricsWriteLatencyMetrics {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: LatencyMetricsWriteLatencyMetricsMetricValuesItem[];
+}
+
+export interface LatencyMetrics {
+  readLatencyMetrics?: LatencyMetricsReadLatencyMetrics;
+  writeLatencyMetrics?: LatencyMetricsWriteLatencyMetrics;
+}
+
+export interface LatencyDataMetricValuesItem {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface LatencyData {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: LatencyDataMetricValuesItem[];
+}
+
+export interface MetricsData {
+  timestamp?: Date;
+  average?: number;
 }
 
 export interface OverviewResponse {
@@ -12089,13 +28824,27 @@ export interface EstimatedPricingResponse {
   currency?: string;
 }
 
-export interface DataInstance {
+export interface DataInstancesResponseValueItem {
   id: string;
   name: string;
 }
 
 export interface DataInstancesResponse {
-  value?: DataInstance[];
+  value?: DataInstancesResponseValueItem[];
+}
+
+export interface DataInstance {
+  id: string;
+  name: string;
+}
+
+export interface InstanceDatabasesResponseValueItem {
+  id: string;
+  name: string;
+}
+
+export interface InstanceDatabasesResponse {
+  value?: InstanceDatabasesResponseValueItem[];
 }
 
 export interface InstanceDatabase {
@@ -12103,8 +28852,13 @@ export interface InstanceDatabase {
   name: string;
 }
 
-export interface InstanceDatabasesResponse {
-  value?: InstanceDatabase[];
+export interface DatabaseCollectionsResponseValueItem {
+  id: string;
+  name: string;
+}
+
+export interface DatabaseCollectionsResponse {
+  value?: DatabaseCollectionsResponseValueItem[];
 }
 
 export interface DatabaseCollection {
@@ -12112,8 +28866,16 @@ export interface DatabaseCollection {
   name: string;
 }
 
-export interface DatabaseCollectionsResponse {
-  value?: DatabaseCollection[];
+export interface NotificationConfiguration {
+  appId?: string;
+  /**
+   * Possible values include: 'Disabled', 'Disabling', 'Enabling', 'Enabled'
+  */
+  state?: string;
+  /**
+   * Possible values include: 'NotSetByUser', 'SetByUser', 'Error'
+  */
+  reason?: string;
 }
 
 export interface DataResourceTokenResponse {
@@ -12123,16 +28885,23 @@ export interface DataResourceTokenResponse {
   accountName?: string;
   token?: string;
   expiresOn?: Date;
+  isReadOnlyToken?: boolean;
 }
 
-export interface UserResponse {
+export interface UsersResponseValueItem {
   accountId: string;
   mail?: string;
   displayName: string;
 }
 
 export interface UsersResponse {
-  value: UserResponse[];
+  value: UsersResponseValueItem[];
+}
+
+export interface UserResponse {
+  accountId: string;
+  mail?: string;
+  displayName: string;
 }
 
 export interface DataProvisioningParameters {
@@ -12174,6 +28943,3927 @@ export interface CosmosDbCorsStatusResponse {
   message?: string;
 }
 
+/**
+ * The information for a single iOS device
+*/
+export interface Body {
+  /**
+   * The Unique Device IDentifier of the device
+  */
+  udid: string;
+  /**
+   * The model identifier of the device, in the format iDeviceM,N
+  */
+  model: string;
+  /**
+   * The build number of the last known OS version running on the device
+  */
+  osBuild?: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osVersion?: string;
+  /**
+   * The device's serial number. Always empty or undefined at present.
+  */
+  serial?: string;
+  /**
+   * The device's International Mobile Equipment Identity number. Always empty or undefined at
+   * present.
+  */
+  imei?: string;
+  /**
+   * The user ID of the device owner.
+  */
+  ownerId?: string;
+}
+
+/**
+ * The information for a single iOS device
+*/
+export interface RegisterUserForDeviceOKResponse {
+  /**
+   * The Unique Device IDentifier of the device
+  */
+  udid: string;
+  /**
+   * The model identifier of the device, in the format iDeviceM,N
+  */
+  model: string;
+  /**
+   * The device description, in the format "iPhone 7 Plus (A1784)"
+  */
+  deviceName: string;
+  /**
+   * A combination of the device model name and the owner name.
+  */
+  fullDeviceName?: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osBuild: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osVersion: string;
+  /**
+   * The device's serial number. Always empty or undefined at present.
+  */
+  serial?: string;
+  /**
+   * The device's International Mobile Equipment Identity number. Always empty or undefined at
+   * present.
+  */
+  imei?: string;
+  /**
+   * The user ID of the device owner.
+  */
+  ownerId?: string;
+  /**
+   * The provisioning status of the device.
+  */
+  status: string;
+  /**
+   * Timestamp of when the device was registered in ISO format.
+  */
+  registeredAt?: string;
+}
+
+export interface RegisterUserForDeviceNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * Event Setting
+*/
+export interface GetUserEmailSettingsOKResponseSettingsItem {
+  /**
+   * Frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual', 'Default'
+  */
+  value: string;
+  /**
+   * Default frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual'
+  */
+  defaultValue?: string;
+}
+
+/**
+ * Alerting Default Email Settings of the user
+*/
+export interface GetUserEmailSettingsOKResponse {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The ETag of the entity
+  */
+  eTag?: string;
+  /**
+   * Allows to forcefully disable emails on app or user level
+  */
+  enabled: boolean;
+  /**
+   * The unique id (UUID) of the user
+  */
+  userId?: string;
+  /**
+   * The settings the user has for the app
+  */
+  settings: GetUserEmailSettingsOKResponseSettingsItem[];
+}
+
+/**
+ * Alerting service error
+*/
+export interface GetUserEmailSettingsErrorModel {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The status code return by the API. It can be 400 or 404 or 409 or 500.
+  */
+  code: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+export interface GetUserMetadataOKResponse {
+  userId?: string;
+  metadata?: any;
+}
+
+export interface GetUserMetadataErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetUserMetadataErrorModel {
+  error: GetUserMetadataErrorModelError;
+}
+
+export interface RejectErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RejectErrorModel {
+  error: RejectErrorModelError;
+}
+
+export interface AcceptErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AcceptErrorModel {
+  error: AcceptErrorModelError;
+}
+
+export interface AcceptAllErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AcceptAllErrorModel {
+  error: AcceptAllErrorModelError;
+}
+
+/**
+ * SharedConnectionResponse
+*/
+export interface ConnectionsOKResponseItem {
+  /**
+   * id of the shared connection
+  */
+  id: string;
+  /**
+   * display name of shared connection
+  */
+  displayName?: string;
+  /**
+   * the type of the credential. Possible values include: 'credentials', 'certificate'
+  */
+  credentialType: string;
+  /**
+   * whether the credentials are valid or not
+  */
+  isValid?: boolean;
+  /**
+   * if the account is a 2FA account or not
+  */
+  is2FA?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  serviceType: string;
+}
+
+export interface ConnectionsErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CancelExportRequestAcceptedResponse {
+  /**
+   * Unique request identifier
+  */
+  token: string;
+  /**
+   * ISO 8601 format timestamp of when request was created.
+  */
+  createdAt: Date;
+}
+
+export interface CancelExportRequestServiceUnavailableResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CancelExportRequestServiceUnavailableResponse {
+  error: CancelExportRequestServiceUnavailableResponseError;
+}
+
+export interface CancelExportRequestErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CancelExportRequestErrorModel {
+  error: CancelExportRequestErrorModelError;
+}
+
+export interface ExportStatusRequestOKResponse {
+  /**
+   * Azure Storage shared access signature (SAS) URL for exported user data.
+  */
+  sasUrl?: string;
+  /**
+   * Whether Azure Storage shared access signature (SAS) URL has expired or not.
+  */
+  sasUrlExpired?: boolean;
+  /**
+   * Status of data subject right request. Possible values include: 'None', 'Created', 'Queued',
+   * 'InProgress', 'Completed', 'Failed'
+  */
+  status: string;
+  /**
+   * explanation message of the status
+  */
+  message: string;
+}
+
+export interface ExportStatusRequestErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ExportStatusRequestErrorModel {
+  error: ExportStatusRequestErrorModelError;
+}
+
+export interface ExportRequestAcceptedResponse {
+  /**
+   * Unique request identifier
+  */
+  token: string;
+  /**
+   * ISO 8601 format timestamp of when request was created.
+  */
+  createdAt: Date;
+}
+
+export interface ExportRequestErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ExportRequestErrorModel {
+  error: ExportRequestErrorModelError;
+}
+
+export interface Email {
+  /**
+   * Email used for cancel delete with x-authz-bypass headers
+  */
+  email: string;
+}
+
+export interface CancelDeleteRequestAcceptedResponse {
+  /**
+   * Unique request identifier
+  */
+  token: string;
+  /**
+   * ISO 8601 format timestamp of when request was created.
+  */
+  createdAt: Date;
+}
+
+export interface CancelDeleteRequestServiceUnavailableResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CancelDeleteRequestServiceUnavailableResponse {
+  error: CancelDeleteRequestServiceUnavailableResponseError;
+}
+
+export interface CancelDeleteRequestErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CancelDeleteRequestErrorModel {
+  error: CancelDeleteRequestErrorModelError;
+}
+
+export interface DeleteStatusRequestOKResponse {
+  /**
+   * Azure Storage shared access signature (SAS) URL for exported user data.
+  */
+  sasUrl?: string;
+  /**
+   * Whether Azure Storage shared access signature (SAS) URL has expired or not.
+  */
+  sasUrlExpired?: boolean;
+  /**
+   * Status of data subject right request. Possible values include: 'None', 'Created', 'Queued',
+   * 'InProgress', 'Completed', 'Failed'
+  */
+  status: string;
+  /**
+   * explanation message of the status
+  */
+  message: string;
+}
+
+export interface DeleteStatusRequestErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteStatusRequestErrorModel {
+  error: DeleteStatusRequestErrorModelError;
+}
+
+export interface DeleteRequestAcceptedResponse {
+  /**
+   * Unique request identifier
+  */
+  token: string;
+  /**
+   * ISO 8601 format timestamp of when request was created.
+  */
+  createdAt: Date;
+}
+
+export interface DeleteRequestErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteRequestErrorModel {
+  error: DeleteRequestErrorModelError;
+}
+
+/**
+ * The information for a single iOS device
+*/
+export interface DeviceDetailsOKResponse {
+  /**
+   * The Unique Device IDentifier of the device
+  */
+  udid: string;
+  /**
+   * The model identifier of the device, in the format iDeviceM,N
+  */
+  model: string;
+  /**
+   * The device description, in the format "iPhone 7 Plus (A1784)"
+  */
+  deviceName: string;
+  /**
+   * A combination of the device model name and the owner name.
+  */
+  fullDeviceName?: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osBuild: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osVersion: string;
+  /**
+   * The device's serial number. Always empty or undefined at present.
+  */
+  serial?: string;
+  /**
+   * The device's International Mobile Equipment Identity number. Always empty or undefined at
+   * present.
+  */
+  imei?: string;
+  /**
+   * The user ID of the device owner.
+  */
+  ownerId?: string;
+  /**
+   * The provisioning status of the device.
+  */
+  status: string;
+  /**
+   * Timestamp of when the device was registered in ISO format.
+  */
+  registeredAt?: string;
+}
+
+export interface DeviceDetailsBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeviceDetailsForbiddenResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeviceDetailsNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RemoveUserDeviceForbiddenResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RemoveUserDeviceNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * The information for a single iOS device
+*/
+export interface UserDevicesListOKResponseItem {
+  /**
+   * The Unique Device IDentifier of the device
+  */
+  udid: string;
+  /**
+   * The model identifier of the device, in the format iDeviceM,N
+  */
+  model: string;
+  /**
+   * The device description, in the format "iPhone 7 Plus (A1784)"
+  */
+  deviceName: string;
+  /**
+   * A combination of the device model name and the owner name.
+  */
+  fullDeviceName?: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osBuild: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osVersion: string;
+  /**
+   * The device's serial number. Always empty or undefined at present.
+  */
+  serial?: string;
+  /**
+   * The device's International Mobile Equipment Identity number. Always empty or undefined at
+   * present.
+  */
+  imei?: string;
+  /**
+   * The user ID of the device owner.
+  */
+  ownerId?: string;
+  /**
+   * The provisioning status of the device.
+  */
+  status: string;
+  /**
+   * Timestamp of when the device was registered in ISO format.
+  */
+  registeredAt?: string;
+}
+
+export interface UserDevicesListBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UserDevicesListForbiddenResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetOKResponse {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+export interface GetErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetErrorModel {
+  error: GetErrorModelError;
+}
+
+export interface User {
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface UpdateOKResponse {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+export interface UpdateErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UpdateErrorModel {
+  error: UpdateErrorModelError;
+}
+
+export interface ListTesterAppsOKResponseItemRelease {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * A boolean which determines whether the release is a mandatory update or not.
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+  /**
+   * The release's size in bytes.
+  */
+  size: number;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`
+  */
+  installUrl?: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface ListTesterAppsOKResponseItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id?: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName?: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name?: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type?: string;
+}
+
+export interface ListTesterAppsOKResponseItem {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id?: string;
+  release?: ListTesterAppsOKResponseItemRelease;
+  /**
+   * The app's name.
+  */
+  name?: string;
+  /**
+   * The app's display name.
+  */
+  displayName?: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * A URL to the app's icon.
+  */
+  iconUrl?: string;
+  /**
+   * The app's os.
+  */
+  os?: string;
+  /**
+   * The information about the app's owner
+  */
+  owner?: ListTesterAppsOKResponseItemOwner;
+}
+
+export interface GetLatestByHashOKResponseDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+}
+
+export interface GetLatestByHashOKResponseDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+export interface GetLatestByHashOKResponseDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface GetLatestByHashOKResponseBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface GetLatestByHashOKResponse {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The app's name (extracted from the uploaded release).
+  */
+  appName: string;
+  /**
+   * The app's display name.
+  */
+  appDisplayName: string;
+  /**
+   * The app's OS.
+  */
+  appOs?: string;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+  /**
+   * The release's provisioning profile name.
+  */
+  provisioningProfileName?: string;
+  /**
+   * The type of the provisioning profile for the requested app version. Possible values include:
+   * 'adhoc', 'enterprise', 'other'
+  */
+  provisioningProfileType?: string;
+  /**
+   * expiration date of provisioning profile in UTC format.
+  */
+  provisioningProfileExpiryDate?: string;
+  /**
+   * A flag that determines whether the release's provisioning profile is still extracted or not.
+  */
+  isProvisioningProfileSyncing?: boolean;
+  /**
+   * The release's size in bytes.
+  */
+  size?: number;
+  /**
+   * The release's minimum required operating system.
+  */
+  minOs?: string;
+  /**
+   * The release's device family.
+  */
+  deviceFamily?: string;
+  /**
+   * The release's minimum required Android API level.
+  */
+  androidMinApiLevel?: string;
+  /**
+   * The identifier of the apps bundle.
+  */
+  bundleIdentifier?: string;
+  /**
+   * Hashes for the packages.
+  */
+  packageHashes?: string[];
+  /**
+   * MD5 checksum of the release binary.
+  */
+  fingerprint?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * The URL that hosts the binary for this release.
+  */
+  downloadUrl?: string;
+  /**
+   * A URL to the app's icon.
+  */
+  appIconUrl: string;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`
+  */
+  installUrl?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned.<br>
+   * <b>tester</b>: The release distributed testers details will be returned.<br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: GetLatestByHashOKResponseDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: GetLatestByHashOKResponseDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: GetLatestByHashOKResponseDestinationsItem[];
+  /**
+   * In calls that allow passing `udid` in the query string, this value will hold the provisioning
+   * status of that UDID in this release. Will be ignored for non-iOS platforms.
+  */
+  isUdidProvisioned?: boolean;
+  /**
+   * In calls that allow passing `udid` in the query string, this value determines if a release can
+   * be re-signed. When true, after a re-sign, the tester will be able to install the release from
+   * his registered devices. Will not be returned for non-iOS platforms.
+  */
+  canResign?: boolean;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: GetLatestByHashOKResponseBuild;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * Status of the release.
+  */
+  status?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface GetLatestByHashNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetLatestPrivateReleaseOKResponseDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+}
+
+export interface GetLatestPrivateReleaseOKResponseDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+export interface GetLatestPrivateReleaseOKResponseDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface GetLatestPrivateReleaseOKResponseBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface GetLatestPrivateReleaseOKResponse {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The app's name (extracted from the uploaded release).
+  */
+  appName: string;
+  /**
+   * The app's display name.
+  */
+  appDisplayName: string;
+  /**
+   * The app's OS.
+  */
+  appOs?: string;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+  /**
+   * The release's provisioning profile name.
+  */
+  provisioningProfileName?: string;
+  /**
+   * The type of the provisioning profile for the requested app version. Possible values include:
+   * 'adhoc', 'enterprise', 'other'
+  */
+  provisioningProfileType?: string;
+  /**
+   * expiration date of provisioning profile in UTC format.
+  */
+  provisioningProfileExpiryDate?: string;
+  /**
+   * A flag that determines whether the release's provisioning profile is still extracted or not.
+  */
+  isProvisioningProfileSyncing?: boolean;
+  /**
+   * The release's size in bytes.
+  */
+  size?: number;
+  /**
+   * The release's minimum required operating system.
+  */
+  minOs?: string;
+  /**
+   * The release's device family.
+  */
+  deviceFamily?: string;
+  /**
+   * The release's minimum required Android API level.
+  */
+  androidMinApiLevel?: string;
+  /**
+   * The identifier of the apps bundle.
+  */
+  bundleIdentifier?: string;
+  /**
+   * Hashes for the packages.
+  */
+  packageHashes?: string[];
+  /**
+   * MD5 checksum of the release binary.
+  */
+  fingerprint?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * The URL that hosts the binary for this release.
+  */
+  downloadUrl?: string;
+  /**
+   * A URL to the app's icon.
+  */
+  appIconUrl: string;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`
+  */
+  installUrl?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned.<br>
+   * <b>tester</b>: The release distributed testers details will be returned.<br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: GetLatestPrivateReleaseOKResponseDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: GetLatestPrivateReleaseOKResponseDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: GetLatestPrivateReleaseOKResponseDestinationsItem[];
+  /**
+   * In calls that allow passing `udid` in the query string, this value will hold the provisioning
+   * status of that UDID in this release. Will be ignored for non-iOS platforms.
+  */
+  isUdidProvisioned?: boolean;
+  /**
+   * In calls that allow passing `udid` in the query string, this value determines if a release can
+   * be re-signed. When true, after a re-sign, the tester will be able to install the release from
+   * his registered devices. Will not be returned for non-iOS platforms.
+  */
+  canResign?: boolean;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: GetLatestPrivateReleaseOKResponseBuild;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * Status of the release.
+  */
+  status?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface GetLatestPrivateReleaseNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface GetForOrgUserOKResponseItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface GetForOrgUserOKResponseItemAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface GetForOrgUserOKResponseItem {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: GetForOrgUserOKResponseItemOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: GetForOrgUserOKResponseItemAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface GetForOrgUserErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetForOrgUserErrorModel {
+  error: GetForOrgUserErrorModelError;
+}
+
+export interface OrganizationUser {
+  /**
+   * The user's role in the organizatiion. Possible values include: 'admin', 'collaborator',
+   * 'member'
+  */
+  role?: string;
+}
+
+export interface UpdateOrgRoleOKResponse {
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The date when the user joined the organization
+  */
+  joinedAt: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The role the user has within the organization
+  */
+  role: string;
+}
+
+export interface UpdateOrgRoleErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UpdateOrgRoleErrorModel {
+  error: UpdateOrgRoleErrorModelError;
+}
+
+export interface RemoveFromOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RemoveFromOrgErrorModel {
+  error: RemoveFromOrgErrorModelError;
+}
+
+export interface GetForOrgOKResponse {
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The date when the user joined the organization
+  */
+  joinedAt: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The role the user has within the organization
+  */
+  role: string;
+}
+
+export interface GetForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetForOrgErrorModel {
+  error: GetForOrgErrorModelError;
+}
+
+export interface ListForOrgOKResponseItem {
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The date when the user joined the organization
+  */
+  joinedAt: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The role the user has within the organization
+  */
+  role: string;
+}
+
+export interface ListForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListForOrgErrorModel {
+  error: ListForOrgErrorModelError;
+}
+
+export interface ListAllTestersForOrgOKResponseItem {
+  /**
+   * The full name of the tester. Might for example be first and last name
+  */
+  displayName?: string;
+  /**
+   * The unique name that is used to identify the tester.
+  */
+  name: string;
+  /**
+   * The email address of the tester
+  */
+  email: string;
+}
+
+export interface ListAllTestersForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListAllTestersForOrgErrorModel {
+  error: ListAllTestersForOrgErrorModelError;
+}
+
+export interface RemoveUserErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RemoveUserErrorModel {
+  error: RemoveUserErrorModelError;
+}
+
+export interface GetUsersOKResponse {
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The role of the user has within the team
+  */
+  role: any;
+}
+
+export interface GetUsersErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetUsersErrorModel {
+  error: GetUsersErrorModelError;
+}
+
+export interface UserEmail {
+  /**
+   * The user's email address
+  */
+  userEmail: string;
+}
+
+export interface AddUserCreatedResponse {
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The role of the user has within the team
+  */
+  role: any;
+}
+
+export interface AddUserErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AddUserErrorModel {
+  error: AddUserErrorModelError;
+}
+
+export interface Team {
+  /**
+   * The permissions all members of the team have on the app
+  */
+  permissions: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface UpdatePermissionsOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface UpdatePermissionsOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface UpdatePermissionsOKResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: UpdatePermissionsOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: UpdatePermissionsOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+  /**
+   * The permissions the team has for the app
+  */
+  teamPermissions?: string[];
+}
+
+export interface UpdatePermissionsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UpdatePermissionsErrorModel {
+  error: UpdatePermissionsErrorModelError;
+}
+
+export interface RemoveAppErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RemoveAppErrorModel {
+  error: RemoveAppErrorModelError;
+}
+
+export interface App {
+  /**
+   * The name of the app to be added to the distribution group
+  */
+  name: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface AddAppCreatedResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface AddAppCreatedResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface AddAppCreatedResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: AddAppCreatedResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: AddAppCreatedResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+  /**
+   * The permissions the team has for the app
+  */
+  teamPermissions?: string[];
+}
+
+export interface AddAppErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AddAppErrorModel {
+  error: AddAppErrorModelError;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface ListAppsOKResponseItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface ListAppsOKResponseItemAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface ListAppsOKResponseItem {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: ListAppsOKResponseItemOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: ListAppsOKResponseItemAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+  /**
+   * The permissions the team has for the app
+  */
+  teamPermissions?: string[];
+}
+
+export interface ListAppsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListAppsErrorModel {
+  error: ListAppsErrorModelError;
+}
+
+export interface GetTeamOKResponse {
+  /**
+   * The internal unique id (UUID) of the team.
+  */
+  id: string;
+  /**
+   * The name of the team
+  */
+  name: string;
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
+}
+
+export interface GetTeamErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetTeamErrorModel {
+  error: GetTeamErrorModelError;
+}
+
+export interface DeleteErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteErrorModel {
+  error: DeleteErrorModelError;
+}
+
+export interface TeamModel {
+  /**
+   * The new display name of the team
+  */
+  displayName: string;
+}
+
+export interface UpdateOKResponseModel {
+  /**
+   * The internal unique id (UUID) of the team.
+  */
+  id: string;
+  /**
+   * The name of the team
+  */
+  name: string;
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
+}
+
+export interface ListAllOKResponseItem {
+  /**
+   * The internal unique id (UUID) of the team.
+  */
+  id: string;
+  /**
+   * The name of the team
+  */
+  name: string;
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
+}
+
+export interface ListAllErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListAllErrorModel {
+  error: ListAllErrorModelError;
+}
+
+export interface TeamModelModel {
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The name of the team
+  */
+  name?: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
+}
+
+export interface CreateTeamCreatedResponseItem {
+  /**
+   * The internal unique id (UUID) of the team.
+  */
+  id: string;
+  /**
+   * The name of the team
+  */
+  name: string;
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
+}
+
+export interface CreateTeamErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CreateTeamErrorModel {
+  error: CreateTeamErrorModelError;
+}
+
+export interface UnnamedMethodErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UnnamedMethodErrorModel {
+  error: UnnamedMethodErrorModelError;
+}
+
+export interface Role {
+  /**
+   * The role of the user to be added. Possible values include: 'admin', 'collaborator', 'member'
+  */
+  role?: string;
+}
+
+export interface SendNewInvitationErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface SendNewInvitationErrorModel {
+  error: SendNewInvitationErrorModelError;
+}
+
+export interface UserRole {
+  /**
+   * The user's role in the organizatiion. Possible values include: 'admin', 'collaborator',
+   * 'member'
+  */
+  role?: string;
+}
+
+export interface UserEmailModel {
+  /**
+   * The user's email address
+  */
+  userEmail: string;
+  /**
+   * The user's role. Possible values include: 'admin', 'collaborator', 'member'
+  */
+  role?: string;
+}
+
+export interface CreateErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CreateErrorModel {
+  error: CreateErrorModelError;
+}
+
+export interface ListPendingOKResponseItem {
+  /**
+   * The unique ID (UUID) of the invitation
+  */
+  id: string;
+  /**
+   * The email address of the invited user
+  */
+  email: string;
+  /**
+   * The role assigned to the invited user
+  */
+  role: string;
+}
+
+export interface ListPendingErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListPendingErrorModel {
+  error: ListPendingErrorModelError;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface DetailsForOrgOKResponseItemAppsItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface DetailsForOrgOKResponseItemAppsItemAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface DetailsForOrgOKResponseItemAppsItem {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: DetailsForOrgOKResponseItemAppsItemOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: DetailsForOrgOKResponseItemAppsItemAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface DetailsForOrgOKResponseItem {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+  /**
+   * The count of apps associated with this distribution group
+  */
+  totalAppsCount: number;
+  /**
+   * The count of users in the distribution group
+  */
+  totalUsersCount: number;
+  /**
+   * The apps associated with the distribution group
+  */
+  apps: DetailsForOrgOKResponseItemAppsItem[];
+}
+
+export interface DetailsForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DetailsForOrgErrorModel {
+  error: DetailsForOrgErrorModelError;
+}
+
+export interface Members {
+  /**
+   * The list of emails of the users
+  */
+  userEmails?: string[];
+}
+
+export interface ResendSharedInviteErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ResendSharedInviteErrorModel {
+  error: ResendSharedInviteErrorModelError;
+}
+
+export interface ListUsersForOrgOKResponseItem {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id?: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name?: string;
+}
+
+export interface ListUsersForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListUsersForOrgErrorModel {
+  error: ListUsersForOrgErrorModelError;
+}
+
+export interface MemberEmails {
+  /**
+   * The list of emails of the users
+  */
+  userEmails?: string[];
+}
+
+export interface AddUsersForOrgOKResponseItem {
+  /**
+   * The code of the result
+  */
+  code?: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The message of the result
+  */
+  message?: string;
+  /**
+   * The status code of the result
+  */
+  status: number;
+  /**
+   * The email of the user
+  */
+  userEmail?: string;
+}
+
+export interface AddUsersForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AddUsersForOrgErrorModel {
+  error: AddUsersForOrgErrorModelError;
+}
+
+export interface AppsAppsItem {
+  /**
+   * The name of the app to be deleted from the distribution group
+  */
+  name: string;
+}
+
+export interface Apps {
+  /**
+   * The list of apps to delete from the distribution group
+  */
+  apps?: AppsAppsItem[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface GetAppsOKResponseItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface GetAppsOKResponseItem {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: GetAppsOKResponseItemOwner;
+  /**
+   * The platform of the app
+  */
+  platform?: string;
+  /**
+   * The creation origin of this app
+  */
+  origin?: string;
+}
+
+export interface AppsAppsItemModel {
+  /**
+   * The name of the app to be added to the distribution group
+  */
+  name: string;
+}
+
+export interface AppsModel {
+  /**
+   * The list of apps to add to distribution group
+  */
+  apps?: AppsAppsItemModel[];
+}
+
+export interface GetForOrgOKResponseModel {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface DistributionGroupModel {
+  /**
+   * The name of the distribution group
+  */
+  name?: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic?: boolean;
+}
+
+export interface PatchForOrgOKResponse {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface PatchForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface PatchForOrgErrorModel {
+  error: PatchForOrgErrorModelError;
+}
+
+export interface DeleteForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteForOrgErrorModel {
+  error: DeleteForOrgErrorModelError;
+}
+
+export interface DistributionGroupModelModel {
+  /**
+   * The name of the distribution group
+  */
+  name: string;
+  /**
+   * The display name of the distribution group. If not specified, the name will be used.
+  */
+  displayName?: string;
+}
+
+export interface CreateForOrgCreatedResponse {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface CreateForOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CreateForOrgErrorModel {
+  error: CreateForOrgErrorModelError;
+}
+
+export interface ListForOrgCreatedResponseItem {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface ListForOrgOKResponseItemModel {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface UpdateAvatarOKResponse {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface UpdateAvatarErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UpdateAvatarErrorModel {
+  error: UpdateAvatarErrorModelError;
+}
+
+export interface DeleteAvatarOKResponse {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface DeleteAvatarErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteAvatarErrorModel {
+  error: DeleteAvatarErrorModelError;
+}
+
+export interface AppModel {
+  /**
+   * A short text describing the app
+  */
+  description?: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The descriptive name of the app. This can contain any characters
+  */
+  displayName: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name?: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms', 'Custom'
+  */
+  platform: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface CreateForOrgOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface CreateForOrgOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface CreateForOrgOKResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: CreateForOrgOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: CreateForOrgOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface CreateForOrgCreatedResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface CreateForOrgCreatedResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface CreateForOrgCreatedResponseModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: CreateForOrgCreatedResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: CreateForOrgCreatedResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface ListForOrgOKResponseItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface ListForOrgOKResponseItemAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface ListForOrgOKResponseItemModelModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: ListForOrgOKResponseItemOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: ListForOrgOKResponseItemAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface GetOKResponseModel {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface Org {
+  /**
+   * The full (friendly) name of the organization.
+  */
+  displayName?: string;
+  /**
+   * The name of the organization used in URLs
+  */
+  name?: string;
+}
+
+export interface UpdateOKResponseModelModel {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+/**
+ * Billing Plan
+*/
+export interface GetForOrgOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface GetForOrgOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: GetForOrgOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface GetForOrgOKResponseBillingPlansBuildServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: GetForOrgOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface GetForOrgOKResponseBillingPlansBuildService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: GetForOrgOKResponseBillingPlansBuildServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plan
+*/
+export interface GetForOrgOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface GetForOrgOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: GetForOrgOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface GetForOrgOKResponseBillingPlansTestServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: GetForOrgOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface GetForOrgOKResponseBillingPlansTestService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: GetForOrgOKResponseBillingPlansTestServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plans section in the Billing Information
+*/
+export interface GetForOrgOKResponseBillingPlans {
+  /**
+   * Billing Plans for a single service
+  */
+  buildService?: GetForOrgOKResponseBillingPlansBuildService;
+  /**
+   * Billing Plans for a single service
+  */
+  testService?: GetForOrgOKResponseBillingPlansTestService;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface GetForOrgOKResponseUsageBuildServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface GetForOrgOKResponseUsageBuildService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: GetForOrgOKResponseUsageBuildServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface GetForOrgOKResponseUsageTestServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface GetForOrgOKResponseUsageTestService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: GetForOrgOKResponseUsageTestServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage section in the Billing Information
+*/
+export interface GetForOrgOKResponseUsage {
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  buildService?: GetForOrgOKResponseUsageBuildService;
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  testService?: GetForOrgOKResponseUsageTestService;
+}
+
+/**
+ * Aggregated Billing Information for a user or an organization
+*/
+export interface GetForOrgOKResponseModelModel {
+  /**
+   * Version of the Billing Information schema
+  */
+  version?: string;
+  /**
+   * The ISO 8601 datetime of last modification
+  */
+  timestamp?: string;
+  /**
+   * ID of the user or organization
+  */
+  id?: string;
+  /**
+   * Billing Plans section in the Billing Information
+  */
+  billingPlans?: GetForOrgOKResponseBillingPlans;
+  /**
+   * Usage section in the Billing Information
+  */
+  usage?: GetForOrgOKResponseUsage;
+  /**
+   * Unique identifier for the Azure subscription used for billing
+  */
+  azureSubscriptionId?: string;
+  /**
+   * State of the Azure subscription used for billing. Possible values include: 'Enabled',
+   * 'Disabled', 'NotSet'
+  */
+  azureSubscriptionState?: string;
+}
+
+export interface GetForOrgErrorModelErrorModel {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface GetForOrgErrorModel1 {
+  error?: GetForOrgErrorModelErrorModel;
+}
+
+export interface Organization {
+  /**
+   * The display name of the organization
+  */
+  displayName?: string;
+  /**
+   * The name of the organization used in URLs
+  */
+  name?: string;
+}
+
+export interface CreateOrUpdateCreatedResponse {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface CreateOrUpdateErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CreateOrUpdateErrorModel {
+  error: CreateOrUpdateErrorModelError;
+}
+
 export interface ListOKResponseItem {
   /**
    * The display name of the organization
@@ -12189,6 +32879,3314 @@ export interface ListOKResponseItem {
   origin: string;
 }
 
+export interface ListErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListErrorModel {
+  error: ListErrorModelError;
+}
+
+export interface UpdateCheckOKResponseUpdateInfo {
+  appVersion?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  downloadURL?: string;
+  isAvailable: boolean;
+  packageSize?: number;
+  shouldRunBinaryVersion?: boolean;
+  updateAppVersion?: boolean;
+  packageHash?: string;
+  label?: string;
+}
+
+export interface UpdateCheckOKResponse {
+  updateInfo: UpdateCheckOKResponseUpdateInfo;
+}
+
+export interface UpdateCheckErrorModel {
+  message: string;
+}
+
+export interface ReleaseMetadataModel {
+  deploymentKey?: string;
+  label?: string;
+  appVersion?: string;
+  previousDeploymentKey?: string;
+  previousLabelOrAppVersion?: string;
+  status?: string;
+  clientUniqueId?: string;
+}
+
+export interface UpdateDownloadStatusErrorModel {
+  message: string;
+}
+
+export interface UpdateInstallsStatusErrorModel {
+  message: string;
+}
+
+export interface SentOKResponseItemOrganization {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface SentOKResponseItemAppOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface SentOKResponseItemAppAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface SentOKResponseItemApp {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: SentOKResponseItemAppOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: SentOKResponseItemAppAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface SentOKResponseItem {
+  /**
+   * The id of the invitation
+  */
+  invitationId: string;
+  organization?: SentOKResponseItemOrganization;
+  app?: SentOKResponseItemApp;
+}
+
+export interface SentErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface SentErrorModel {
+  error: SentErrorModelError;
+}
+
+/**
+ * Billing Plan
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?:
+  GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?:
+  GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?:
+  GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plan
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?:
+  GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?:
+  GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlansTestService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?:
+  GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plans section in the Billing Information
+*/
+export interface GetAllOKResponseAggregatedBillingsBillingPlans {
+  /**
+   * Billing Plans for a single service
+  */
+  buildService?: GetAllOKResponseAggregatedBillingsBillingPlansBuildService;
+  /**
+   * Billing Plans for a single service
+  */
+  testService?: GetAllOKResponseAggregatedBillingsBillingPlansTestService;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface GetAllOKResponseAggregatedBillingsUsageBuildServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface GetAllOKResponseAggregatedBillingsUsageBuildService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: GetAllOKResponseAggregatedBillingsUsageBuildServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface GetAllOKResponseAggregatedBillingsUsageTestServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface GetAllOKResponseAggregatedBillingsUsageTestService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: GetAllOKResponseAggregatedBillingsUsageTestServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage section in the Billing Information
+*/
+export interface GetAllOKResponseAggregatedBillingsUsage {
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  buildService?: GetAllOKResponseAggregatedBillingsUsageBuildService;
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  testService?: GetAllOKResponseAggregatedBillingsUsageTestService;
+}
+
+/**
+ * Aggregated Billing Information for a user or an organization
+*/
+export interface GetAllOKResponseAggregatedBillings {
+  /**
+   * Version of the Billing Information schema
+  */
+  version?: string;
+  /**
+   * The ISO 8601 datetime of last modification
+  */
+  timestamp?: string;
+  /**
+   * ID of the user or organization
+  */
+  id?: string;
+  /**
+   * Billing Plans section in the Billing Information
+  */
+  billingPlans?: GetAllOKResponseAggregatedBillingsBillingPlans;
+  /**
+   * Usage section in the Billing Information
+  */
+  usage?: GetAllOKResponseAggregatedBillingsUsage;
+  /**
+   * Unique identifier for the Azure subscription used for billing
+  */
+  azureSubscriptionId?: string;
+  /**
+   * State of the Azure subscription used for billing. Possible values include: 'Enabled',
+   * 'Disabled', 'NotSet'
+  */
+  azureSubscriptionState?: string;
+}
+
+/**
+ * Aggregated Billing Information for a user an the organizations in which the user is an admin.
+*/
+export interface GetAllOKResponse {
+  /**
+   * Aggregated Billing Information for a user or an organization
+  */
+  aggregatedBillings?: GetAllOKResponseAggregatedBillings;
+}
+
+export interface GetAllErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface GetAllErrorModel {
+  error?: GetAllErrorModelError;
+}
+
+export interface ListForUserOKResponseItem {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface ListForUserErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListForUserErrorModel {
+  error: ListForUserErrorModelError;
+}
+
+/**
+ * The Xcode version
+*/
+export interface ListXcodeVersionsOKResponseItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Xcode is latest stable
+  */
+  current?: boolean;
+}
+
+export interface ListXcodeVersionsErrorModel {
+  id: string;
+  code: string;
+  message: string;
+}
+
+/**
+ * The Xamarin SDK bundle
+*/
+export interface ListXamarinSDKBundlesOKResponseItem {
+  /**
+   * The Mono version
+  */
+  monoVersion?: string;
+  /**
+   * The Xamarin SDK version
+  */
+  sdkBundle?: string;
+  /**
+   * If the SDK is latest stable
+  */
+  current?: boolean;
+  /**
+   * If the SDK is stable
+  */
+  stable?: boolean;
+  /**
+   * Specific for iOS SDK. A list of Xcode versions supported by current SDK version
+  */
+  xcodeVersions?: string[];
+}
+
+export interface ListXamarinSDKBundlesErrorModel {
+  id: string;
+  code: string;
+  message: string;
+}
+
+/**
+ * Alerting webhook
+*/
+export interface ListOKResponseValuesItem {
+  /**
+   * The unique id (UUID) of the webhook
+  */
+  id?: string;
+  /**
+   * display name of the webhook
+  */
+  name: string;
+  /**
+   * target url of the webhook
+  */
+  url: string;
+  /**
+   * Allows eanble/disable webhook
+  */
+  enabled?: boolean;
+  /**
+   * Event types enabled for webhook
+  */
+  eventTypes: string[];
+}
+
+/**
+ * List of alerting webhooks wrapped as operation result
+*/
+export interface ListOKResponse {
+  values: ListOKResponseValuesItem[];
+}
+
+/**
+ * Alerting service error
+*/
+export interface ListErrorModel1 {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The status code return by the API. It can be 400 or 404 or 409 or 500.
+  */
+  code: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+export interface GetAppVersionsOKResponseItem {
+  appVersionId: string;
+  appId: string;
+  displayName: string;
+  appVersion: string;
+  buildNumber?: string;
+}
+
+export interface GetAppVersionsErrorModel {
+  message: string;
+}
+
+export interface UserAppPermissionsData {
+  /**
+   * The permissions the user has for the app
+  */
+  permissions: string[];
+}
+
+export interface UpdateUserPermissionsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UpdateUserPermissionsErrorModel {
+  error: UpdateUserPermissionsErrorModelError;
+}
+
+export interface ListOKResponseItemModel {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface GetDeviceSetOfUserOKResponseOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface GetDeviceSetOfUserOKResponseDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface GetDeviceSetOfUserOKResponseDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface GetDeviceSetOfUserOKResponseDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: GetDeviceSetOfUserOKResponseDeviceConfigurationsItemImage;
+  model?: GetDeviceSetOfUserOKResponseDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface GetDeviceSetOfUserOKResponse {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: GetDeviceSetOfUserOKResponseOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: GetDeviceSetOfUserOKResponseDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Device Set update information
+ * @description The name of the device set and the list of device IDs
+*/
+export interface DeviceSetModelModel {
+  /**
+   * List of device IDs
+  */
+  devices: string[];
+  /**
+   * The name of the device set
+  */
+  name: string;
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface UpdateDeviceSetOfUserOKResponseOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface UpdateDeviceSetOfUserOKResponseDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface UpdateDeviceSetOfUserOKResponseDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface UpdateDeviceSetOfUserOKResponseDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: UpdateDeviceSetOfUserOKResponseDeviceConfigurationsItemImage;
+  model?: UpdateDeviceSetOfUserOKResponseDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface UpdateDeviceSetOfUserOKResponse {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: UpdateDeviceSetOfUserOKResponseOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: UpdateDeviceSetOfUserOKResponseDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Test Cloud Error Details
+ * @description Details of a failed operation
+*/
+export interface UpdateDeviceSetOfUserBadRequestResponse {
+  /**
+   * Status of the operation
+  */
+  status: string;
+  /**
+   * Human-readable message that describes the error
+  */
+  message: string;
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface ListDeviceSetsOfUserOKResponseItemOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface ListDeviceSetsOfUserOKResponseItemDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface ListDeviceSetsOfUserOKResponseItemDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface ListDeviceSetsOfUserOKResponseItemDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: ListDeviceSetsOfUserOKResponseItemDeviceConfigurationsItemImage;
+  model?: ListDeviceSetsOfUserOKResponseItemDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface ListDeviceSetsOfUserOKResponseItem {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: ListDeviceSetsOfUserOKResponseItemOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: ListDeviceSetsOfUserOKResponseItemDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface CreateDeviceSetOfUserCreatedResponseOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface CreateDeviceSetOfUserCreatedResponseDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface CreateDeviceSetOfUserCreatedResponseDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface CreateDeviceSetOfUserCreatedResponseDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: CreateDeviceSetOfUserCreatedResponseDeviceConfigurationsItemImage;
+  model?: CreateDeviceSetOfUserCreatedResponseDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface CreateDeviceSetOfUserCreatedResponse {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: CreateDeviceSetOfUserCreatedResponseOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: CreateDeviceSetOfUserCreatedResponseDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Test Cloud Error Details
+ * @description Details of a failed operation
+*/
+export interface CreateDeviceSetOfUserBadRequestResponse {
+  /**
+   * Status of the operation
+  */
+  status: string;
+  /**
+   * Human-readable message that describes the error
+  */
+  message: string;
+}
+
+export interface TransferToOrgOKResponse {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface TransferToOrgErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface TransferToOrgErrorModel {
+  error: TransferToOrgErrorModelError;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface TransferOwnershipOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface TransferOwnershipOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface TransferOwnershipOKResponse {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: TransferOwnershipOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: TransferOwnershipOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface TransferOwnershipErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface TransferOwnershipErrorModel {
+  error: TransferOwnershipErrorModelError;
+}
+
+/**
+ * The Xamarin SDK bundle
+*/
+export interface ListToolsetsOKResponseXamarinItem {
+  /**
+   * The Mono version
+  */
+  monoVersion?: string;
+  /**
+   * The Xamarin SDK version
+  */
+  sdkBundle?: string;
+  /**
+   * If the SDK is latest stable
+  */
+  current?: boolean;
+  /**
+   * If the SDK is stable
+  */
+  stable?: boolean;
+  /**
+   * Specific for iOS SDK. A list of Xcode versions supported by current SDK version
+  */
+  xcodeVersions?: string[];
+}
+
+/**
+ * The Xcode version
+*/
+export interface ListToolsetsOKResponseXcodeItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Xcode is latest stable
+  */
+  current?: boolean;
+}
+
+/**
+ * The Node version
+*/
+export interface ListToolsetsOKResponseNodeItem {
+  /**
+   * The version name
+  */
+  name?: string;
+  /**
+   * If the Node version is default for AppCenter
+  */
+  current?: boolean;
+}
+
+/**
+ * Set of toolsets available for app
+*/
+export interface ListToolsetsOKResponse {
+  /**
+   * A list of Xamarin SDK bundles
+  */
+  xamarin?: ListToolsetsOKResponseXamarinItem[];
+  /**
+   * A list of Xcode versions
+  */
+  xcode?: ListToolsetsOKResponseXcodeItem[];
+  /**
+   * A list of Node versions
+  */
+  node?: ListToolsetsOKResponseNodeItem[];
+}
+
+export interface ListToolsetsErrorModel {
+  id: string;
+  code: string;
+  message: string;
+}
+
+export interface DeleteTesterFromDestinationsNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListTestersOKResponseItem {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+export interface ListTestersErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListTestersErrorModel {
+  error: ListTestersErrorModelError;
+}
+
+/**
+ * @summary Test Run Statistics
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface GetAllTestRunsForSeriesOKResponseItemStats {
+  /**
+   * Number of devices running the test
+  */
+  devices?: number;
+  /**
+   * Number of finished devices
+  */
+  devicesFinished?: number;
+  /**
+   * Number of failed devices
+  */
+  devicesFailed?: number;
+  /**
+   * Number of tests in total
+  */
+  total?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of skipped tests
+  */
+  skipped?: number;
+  /**
+   * The max amount of MB used during the test run
+  */
+  peakMemory?: number;
+  /**
+   * The number of minutes of device time the test has been runnign
+  */
+  totalDeviceMinutes?: number;
+}
+
+/**
+ * @summary Test Run
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface GetAllTestRunsForSeriesOKResponseItem {
+  /**
+   * The unique id of the test upload
+  */
+  id?: string;
+  /**
+   * The date and time the test was uploaded
+  */
+  date?: string;
+  /**
+   * The compiled version of the app binary
+  */
+  appVersion?: string;
+  /**
+   * The name of the test series with which this test upload is associated
+  */
+  testSeries?: string;
+  /**
+   * The device platform targeted by the test. Possible values are 'ios' or 'android'
+  */
+  platform?: string;
+  /**
+   * The current status of the test run, in relation to the various phases
+  */
+  runStatus?: string;
+  /**
+   * The passed/failed state
+  */
+  resultStatus?: string;
+  /**
+   * Deprecated. Use runStatus instead.
+  */
+  state?: string;
+  /**
+   * Deprecated. Use resultStatus instead.
+  */
+  status?: string;
+  /**
+   * Human readable explanation of the current test status
+  */
+  description?: string;
+  /**
+   * @summary Test Run Statistics
+   * @description Summary single test run on Xamarin Test Cloud
+  */
+  stats?: GetAllTestRunsForSeriesOKResponseItemStats;
+  /**
+   * The name of the test framework used to run this test
+  */
+  testType?: string;
+}
+
+/**
+ * @summary Name of the test series
+*/
+export interface Name {
+  /**
+   * Name of the new test series
+  */
+  name: string;
+}
+
+/**
+ * @summary Test Run Summary
+ * @description Most important information about a test run.
+*/
+export interface PatchTestSeriesOKResponseTestRunsItem {
+  /**
+   * Date of the test run.
+  */
+  date?: string;
+  /**
+   * Human-readable status of the test run.
+  */
+  statusDescription?: string;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Tells whether the test run has completed
+  */
+  completed?: boolean;
+}
+
+/**
+ * @summary Test Series
+ * @description Summary of a single test series
+*/
+export interface PatchTestSeriesOKResponse {
+  /**
+   * Unique, human-readable identifier of the test series
+  */
+  slug: string;
+  /**
+   * Name of the test series
+  */
+  name: string;
+  /**
+   * Date of the latest test run that used this test series
+  */
+  mostRecentActivity?: string;
+  /**
+   * Most recent test runs
+  */
+  testRuns?: PatchTestSeriesOKResponseTestRunsItem[];
+}
+
+/**
+ * @summary Test Run Summary
+ * @description Most important information about a test run.
+*/
+export interface GetAllTestSeriesOKResponseItemTestRunsItem {
+  /**
+   * Date of the test run.
+  */
+  date?: string;
+  /**
+   * Human-readable status of the test run.
+  */
+  statusDescription?: string;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Tells whether the test run has completed
+  */
+  completed?: boolean;
+}
+
+/**
+ * @summary Test Series
+ * @description Summary of a single test series
+*/
+export interface GetAllTestSeriesOKResponseItem {
+  /**
+   * Unique, human-readable identifier of the test series
+  */
+  slug: string;
+  /**
+   * Name of the test series
+  */
+  name: string;
+  /**
+   * Date of the latest test run that used this test series
+  */
+  mostRecentActivity?: string;
+  /**
+   * Most recent test runs
+  */
+  testRuns?: GetAllTestSeriesOKResponseItemTestRunsItem[];
+}
+
+/**
+ * @summary Name of the test series
+*/
+export interface TestSeriesNameModel {
+  /**
+   * Name of the new test series
+  */
+  name: string;
+}
+
+/**
+ * @summary Test Run Summary
+ * @description Most important information about a test run.
+*/
+export interface CreateTestSeriesOKResponseTestRunsItem {
+  /**
+   * Date of the test run.
+  */
+  date?: string;
+  /**
+   * Human-readable status of the test run.
+  */
+  statusDescription?: string;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Tells whether the test run has completed
+  */
+  completed?: boolean;
+}
+
+/**
+ * @summary Test Series
+ * @description Summary of a single test series
+*/
+export interface CreateTestSeriesOKResponse {
+  /**
+   * Unique, human-readable identifier of the test series
+  */
+  slug: string;
+  /**
+   * Name of the test series
+  */
+  name: string;
+  /**
+   * Date of the latest test run that used this test series
+  */
+  mostRecentActivity?: string;
+  /**
+   * Most recent test runs
+  */
+  testRuns?: CreateTestSeriesOKResponseTestRunsItem[];
+}
+
+/**
+ * @summary Test Cloud Error Details
+ * @description Details of a failed operation
+*/
+export interface CreateTestSeriesBadRequestResponse {
+  /**
+   * Status of the operation
+  */
+  status: string;
+  /**
+   * Human-readable message that describes the error
+  */
+  message: string;
+}
+
+/**
+ * @summary Test Run Statistics
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface StopTestRunOKResponseStats {
+  /**
+   * Number of devices running the test
+  */
+  devices?: number;
+  /**
+   * Number of finished devices
+  */
+  devicesFinished?: number;
+  /**
+   * Number of failed devices
+  */
+  devicesFailed?: number;
+  /**
+   * Number of tests in total
+  */
+  total?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of skipped tests
+  */
+  skipped?: number;
+  /**
+   * The max amount of MB used during the test run
+  */
+  peakMemory?: number;
+  /**
+   * The number of minutes of device time the test has been runnign
+  */
+  totalDeviceMinutes?: number;
+}
+
+/**
+ * @summary Test Run
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface StopTestRunOKResponse {
+  /**
+   * The unique id of the test upload
+  */
+  id?: string;
+  /**
+   * The date and time the test was uploaded
+  */
+  date?: string;
+  /**
+   * The compiled version of the app binary
+  */
+  appVersion?: string;
+  /**
+   * The name of the test series with which this test upload is associated
+  */
+  testSeries?: string;
+  /**
+   * The device platform targeted by the test. Possible values are 'ios' or 'android'
+  */
+  platform?: string;
+  /**
+   * The current status of the test run, in relation to the various phases
+  */
+  runStatus?: string;
+  /**
+   * The passed/failed state
+  */
+  resultStatus?: string;
+  /**
+   * Deprecated. Use runStatus instead.
+  */
+  state?: string;
+  /**
+   * Deprecated. Use resultStatus instead.
+  */
+  status?: string;
+  /**
+   * Human readable explanation of the current test status
+  */
+  description?: string;
+  /**
+   * @summary Test Run Statistics
+   * @description Summary single test run on Xamarin Test Cloud
+  */
+  stats?: StopTestRunOKResponseStats;
+  /**
+   * The name of the test framework used to run this test
+  */
+  testType?: string;
+}
+
+/**
+ * @summary Test Run State
+ * @description Current status of a test run
+*/
+export interface GetTestRunStateOKResponse {
+  /**
+   * Multi-line message that describes the status
+  */
+  message?: string[];
+  /**
+   * Time (in seconds) that the client should wait for before checking the status again
+  */
+  waitTime?: number;
+  /**
+   * The exit code that the client should use when exiting. Used for indicating status to the
+   * caller of the client.
+   * 0: test run completes with no failing tests
+   * 1: test run completes with at least one failing test
+   * 2: test run failed to complete. Status for test run is unknown
+
+  */
+  exitCode?: number;
+}
+
+/**
+ * @summary Test Cloud Start Test Run Options
+ * @description Options required to start the test run
+*/
+export interface StartOptions {
+  /**
+   * Test framework used by tests.
+  */
+  testFramework: string;
+  /**
+   * Device selection string.
+  */
+  deviceSelection: string;
+  /**
+   * Language that should be used to run tests.
+  */
+  language?: string;
+  /**
+   * Locale that should be used to run tests.
+  */
+  locale?: string;
+  /**
+   * Name of the test series.
+  */
+  testSeries?: string;
+  /**
+   * A JSON dictionary with additional test parameters
+  */
+  testParameters?: any;
+}
+
+/**
+ * @summary Test Cloud Test Run Start Result
+ * @description Result of starting a test run
+*/
+export interface StartTestRunOKResponse {
+  /**
+   * List with names of accepted devices
+  */
+  acceptedDevices?: string[];
+  /**
+   * List with names and descriptions of rejected devices
+  */
+  rejectedDevices?: string[];
+}
+
+export interface GetTestReportOKResponseStats {
+  os: number;
+  devices: number;
+  filesize: number;
+  totalDeviceMinutes: number;
+  devicesNotRunned: number;
+  failed: number;
+  skipped: number;
+  passed: number;
+  total: number;
+  devicesFinished: number;
+  devicesFailed: number;
+  devicesSkipped: number;
+  stepCount: number;
+  artifacts?: { [propertyName: string]: string };
+}
+
+export interface GetTestReportOKResponseFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem {
+  deviceSnapshotId?: string;
+  status?: string;
+  timestamp?: number;
+}
+
+export interface GetTestReportOKResponseFeaturesItemTestsItemRunsItemStepsItem {
+  stepName?: string;
+  id?: string;
+  stepExecutions?:
+  GetTestReportOKResponseFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem[];
+  failed?: number;
+  skipped?: number;
+  stepReportUrl?: string;
+}
+
+export interface GetTestReportOKResponseFeaturesItemTestsItemRunsItem {
+  number?: number;
+  steps?: GetTestReportOKResponseFeaturesItemTestsItemRunsItemStepsItem[];
+  failed?: number;
+  skipped?: number;
+  reportUrl?: string;
+  id?: string;
+}
+
+export interface GetTestReportOKResponseFeaturesItemTestsItem {
+  testName?: string;
+  runs?: GetTestReportOKResponseFeaturesItemTestsItemRunsItem[];
+  peakMemory?: number;
+  peakDuration?: number;
+}
+
+export interface GetTestReportOKResponseFeaturesItem {
+  name?: string;
+  tests?: GetTestReportOKResponseFeaturesItemTestsItem[];
+  failed?: number;
+  skipped?: number;
+  peakMemory?: number;
+  peakDuration?: number;
+}
+
+export interface GetTestReportOKResponseDeviceLogsItem {
+  deviceSnapshotId?: string;
+  deviceLog?: string;
+  testLog?: string;
+  appiumLog?: string;
+}
+
+export interface GetTestReportOKResponseSnapshotFatalErrorsItem {
+  deviceSnapshotId?: string;
+  errorMessage?: string;
+  errorTitle?: string;
+}
+
+export interface GetTestReportOKResponse {
+  appUploadId: string;
+  date: string;
+  testType: string;
+  platform: string;
+  stats: GetTestReportOKResponseStats;
+  id: string;
+  schemaVersion: number;
+  revision: number;
+  features: GetTestReportOKResponseFeaturesItem[];
+  finishedDeviceSnapshots: string[];
+  deviceLogs: GetTestReportOKResponseDeviceLogsItem[];
+  dateFinished: string;
+  errorMessage?: string;
+  snapshotFatalErrors?: GetTestReportOKResponseSnapshotFatalErrorsItem[];
+}
+
+/**
+ * @summary Test Cloud File Hash
+ * @description Hash, type, path and byte range of a file that is required in test run
+*/
+export interface FileInfoItem {
+  /**
+   * Type of the file. Possible values include: 'dsym-file', 'app-file', 'test-file'
+  */
+  fileType: string;
+  /**
+   * SHA256 hash of the file
+  */
+  checksum: string;
+  /**
+   * Relative path of the file
+  */
+  relativePath: string;
+}
+
+/**
+ * @summary Test Cloud Hash Upload Status
+ * @description Status of the upload
+*/
+export interface UploadHashesBatchOKResponseItemUploadStatus {
+  /**
+   * HTTP status code that represent result of upload
+  */
+  statusCode: number;
+  /**
+   * URI that should be used to make POST request if file with given hash doesn't exist. This is
+   * set when status_code is equal to 412
+  */
+  location?: string;
+}
+
+/**
+ * @summary Test Cloud File Hash Response
+ * @description Response message for single uploaded file hash
+*/
+export interface UploadHashesBatchOKResponseItem {
+  /**
+   * Type of the file. Possible values include: 'dsym-file', 'app-file', 'test-file'
+  */
+  fileType: string;
+  /**
+   * SHA256 hash of the file
+  */
+  checksum: string;
+  /**
+   * Relative path of the file
+  */
+  relativePath?: string;
+  /**
+   * @summary Test Cloud Hash Upload Status
+   * @description Status of the upload
+  */
+  uploadStatus: UploadHashesBatchOKResponseItemUploadStatus;
+}
+
+/**
+ * @summary Test Cloud File Hash
+ * @description Hash, type, path and byte range of a file that is required in test run
+*/
+export interface FileInfo {
+  /**
+   * Type of the file. Possible values include: 'dsym-file', 'app-file', 'test-file'
+  */
+  fileType: string;
+  /**
+   * SHA256 hash of the file
+  */
+  checksum: string;
+  /**
+   * Relative path of the file
+  */
+  relativePath: string;
+  /**
+   * Range of bytes required to verify ownership of the file
+  */
+  byteRange?: string;
+}
+
+/**
+ * @summary Test Run Statistics
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface GetTestRunOKResponseStats {
+  /**
+   * Number of devices running the test
+  */
+  devices?: number;
+  /**
+   * Number of finished devices
+  */
+  devicesFinished?: number;
+  /**
+   * Number of failed devices
+  */
+  devicesFailed?: number;
+  /**
+   * Number of tests in total
+  */
+  total?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of skipped tests
+  */
+  skipped?: number;
+  /**
+   * The max amount of MB used during the test run
+  */
+  peakMemory?: number;
+  /**
+   * The number of minutes of device time the test has been runnign
+  */
+  totalDeviceMinutes?: number;
+}
+
+/**
+ * @summary Test Run
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface GetTestRunOKResponse {
+  /**
+   * The unique id of the test upload
+  */
+  id?: string;
+  /**
+   * The date and time the test was uploaded
+  */
+  date?: string;
+  /**
+   * The compiled version of the app binary
+  */
+  appVersion?: string;
+  /**
+   * The name of the test series with which this test upload is associated
+  */
+  testSeries?: string;
+  /**
+   * The device platform targeted by the test. Possible values are 'ios' or 'android'
+  */
+  platform?: string;
+  /**
+   * The current status of the test run, in relation to the various phases
+  */
+  runStatus?: string;
+  /**
+   * The passed/failed state
+  */
+  resultStatus?: string;
+  /**
+   * Deprecated. Use runStatus instead.
+  */
+  state?: string;
+  /**
+   * Deprecated. Use resultStatus instead.
+  */
+  status?: string;
+  /**
+   * Human readable explanation of the current test status
+  */
+  description?: string;
+  /**
+   * @summary Test Run Statistics
+   * @description Summary single test run on Xamarin Test Cloud
+  */
+  stats?: GetTestRunOKResponseStats;
+  /**
+   * The name of the test framework used to run this test
+  */
+  testType?: string;
+}
+
+/**
+ * @summary Test Run Statistics
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface ArchiveTestRunOKResponseStats {
+  /**
+   * Number of devices running the test
+  */
+  devices?: number;
+  /**
+   * Number of finished devices
+  */
+  devicesFinished?: number;
+  /**
+   * Number of failed devices
+  */
+  devicesFailed?: number;
+  /**
+   * Number of tests in total
+  */
+  total?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of skipped tests
+  */
+  skipped?: number;
+  /**
+   * The max amount of MB used during the test run
+  */
+  peakMemory?: number;
+  /**
+   * The number of minutes of device time the test has been runnign
+  */
+  totalDeviceMinutes?: number;
+}
+
+/**
+ * @summary Test Run
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface ArchiveTestRunOKResponse {
+  /**
+   * The unique id of the test upload
+  */
+  id?: string;
+  /**
+   * The date and time the test was uploaded
+  */
+  date?: string;
+  /**
+   * The compiled version of the app binary
+  */
+  appVersion?: string;
+  /**
+   * The name of the test series with which this test upload is associated
+  */
+  testSeries?: string;
+  /**
+   * The device platform targeted by the test. Possible values are 'ios' or 'android'
+  */
+  platform?: string;
+  /**
+   * The current status of the test run, in relation to the various phases
+  */
+  runStatus?: string;
+  /**
+   * The passed/failed state
+  */
+  resultStatus?: string;
+  /**
+   * Deprecated. Use runStatus instead.
+  */
+  state?: string;
+  /**
+   * Deprecated. Use resultStatus instead.
+  */
+  status?: string;
+  /**
+   * Human readable explanation of the current test status
+  */
+  description?: string;
+  /**
+   * @summary Test Run Statistics
+   * @description Summary single test run on Xamarin Test Cloud
+  */
+  stats?: ArchiveTestRunOKResponseStats;
+  /**
+   * The name of the test framework used to run this test
+  */
+  testType?: string;
+}
+
+/**
+ * @summary Test Run Statistics
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface GetTestRunsOKResponseItemStats {
+  /**
+   * Number of devices running the test
+  */
+  devices?: number;
+  /**
+   * Number of finished devices
+  */
+  devicesFinished?: number;
+  /**
+   * Number of failed devices
+  */
+  devicesFailed?: number;
+  /**
+   * Number of tests in total
+  */
+  total?: number;
+  /**
+   * Number of passed tests
+  */
+  passed?: number;
+  /**
+   * Number of failed tests
+  */
+  failed?: number;
+  /**
+   * Number of skipped tests
+  */
+  skipped?: number;
+  /**
+   * The max amount of MB used during the test run
+  */
+  peakMemory?: number;
+  /**
+   * The number of minutes of device time the test has been runnign
+  */
+  totalDeviceMinutes?: number;
+}
+
+/**
+ * @summary Test Run
+ * @description Summary single test run on Xamarin Test Cloud
+*/
+export interface GetTestRunsOKResponseItem {
+  /**
+   * The unique id of the test upload
+  */
+  id?: string;
+  /**
+   * The date and time the test was uploaded
+  */
+  date?: string;
+  /**
+   * The compiled version of the app binary
+  */
+  appVersion?: string;
+  /**
+   * The name of the test series with which this test upload is associated
+  */
+  testSeries?: string;
+  /**
+   * The device platform targeted by the test. Possible values are 'ios' or 'android'
+  */
+  platform?: string;
+  /**
+   * The current status of the test run, in relation to the various phases
+  */
+  runStatus?: string;
+  /**
+   * The passed/failed state
+  */
+  resultStatus?: string;
+  /**
+   * Deprecated. Use runStatus instead.
+  */
+  state?: string;
+  /**
+   * Deprecated. Use resultStatus instead.
+  */
+  status?: string;
+  /**
+   * Human readable explanation of the current test status
+  */
+  description?: string;
+  /**
+   * @summary Test Run Statistics
+   * @description Summary single test run on Xamarin Test Cloud
+  */
+  stats?: GetTestRunsOKResponseItemStats;
+  /**
+   * The name of the test framework used to run this test
+  */
+  testType?: string;
+}
+
+export interface GdprExportTestRunOKResponse {
+  id?: string;
+  appHashFileId?: string;
+  locale?: string;
+  dsymHashFileId?: string;
+  appHashFileUrl?: string;
+  dsymHashFileUrl?: string;
+  appIconUrl?: string;
+}
+
+export interface GdprExportPipelineTestOKResponse {
+  appUploadId?: string;
+  testParameters?: any;
+}
+
+export interface GdprExportHashFileOKResponse {
+  id?: string;
+  filename?: string;
+}
+
+export interface GdprExportFileSetFileOKResponse {
+  path?: string;
+  hashFileId?: string;
+  appUploadId?: string;
+  hashFileUrl?: string;
+}
+
+export interface GdprExportAppOKResponse {
+  hashFilesUrl?: string;
+}
+
+export interface GdprExportAppsOKResponseResourcesItem {
+  rel?: string;
+  path?: string;
+}
+
+export interface GdprExportAppsOKResponse {
+  resources?: GdprExportAppsOKResponseResourcesItem[];
+}
+
+export interface GetTeamsOKResponseItem {
+  /**
+   * The internal unique id (UUID) of the team.
+  */
+  id: string;
+  /**
+   * The name of the team
+  */
+  name: string;
+  /**
+   * The display name of the team
+  */
+  displayName: string;
+  /**
+   * The description of the team
+  */
+  description?: string;
+  /**
+   * The permissions the team has for the app
+  */
+  permissions?: string[];
+}
+
+export interface GetTeamsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetTeamsErrorModel {
+  error: GetTeamsErrorModelError;
+}
+
+/**
+ * A response containing information pertaining to a symbol status
+*/
+export interface GetStatusOKResponse {
+  /**
+   * The unique id for this symbol (uuid)
+  */
+  symbolId: string;
+  /**
+   * The application that this symbol belongs to
+  */
+  appId: string;
+  /**
+   * Whether the symbol is ignored. Possible values include: 'available', 'ignored', 'missing'
+  */
+  status: string;
+}
+
+export interface GetStatusForbiddenResponse {
+  message: string;
+}
+
+export interface GetStatusNotFoundResponse {
+  message: string;
+}
+
+export interface GetStatusInternalServerErrorResponse {
+  message: string;
+}
+
+/**
+ * Location for downloading symbol
+*/
+export interface GetLocationOKResponse {
+  uri: string;
+}
+
+export interface GetLocationForbiddenResponse {
+  message: string;
+}
+
+export interface GetLocationNotFoundResponse {
+  message: string;
+}
+
+export interface GetLocationInternalServerErrorResponse {
+  message: string;
+}
+
+export interface IgnoreOKResponse {
+  /**
+   * The unique id for this symbol (uuid)
+  */
+  symbolId: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  type: string;
+  /**
+   * The application that this symbol belongs to
+  */
+  appId: string;
+  /**
+   * The platform that this symbol is associated with
+  */
+  platform: string;
+  /**
+   * The path name of the symbol file in blob storage
+  */
+  url: string;
+  /**
+   * The origin of the symbol file. Possible values include: 'System', 'User'
+  */
+  origin: string;
+  /**
+   * The other symbols in the same file
+  */
+  alternateSymbolIds: string[];
+  /**
+   * Whether the symbol is ignored. Possible values include: 'available', 'ignored'
+  */
+  status: string;
+  /**
+   * The version number. Optional for Apple. Required for Android.
+  */
+  version?: string;
+  /**
+   * The build number. Optional for Apple. Required for Android.
+  */
+  build?: string;
+  /**
+   * The id of the symbol upload this symbol belongs to.
+  */
+  symbolUploadId: string;
+}
+
+export interface IgnoreForbiddenResponse {
+  message: string;
+}
+
+export interface IgnoreNotFoundResponse {
+  message: string;
+}
+
+export interface IgnoreInternalServerErrorResponse {
+  message: string;
+}
+
+export interface GetOKResponseModelModel {
+  /**
+   * The unique id for this symbol (uuid)
+  */
+  symbolId: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  type: string;
+  /**
+   * The application that this symbol belongs to
+  */
+  appId: string;
+  /**
+   * The platform that this symbol is associated with
+  */
+  platform: string;
+  /**
+   * The path name of the symbol file in blob storage
+  */
+  url: string;
+  /**
+   * The origin of the symbol file. Possible values include: 'System', 'User'
+  */
+  origin: string;
+  /**
+   * The other symbols in the same file
+  */
+  alternateSymbolIds: string[];
+  /**
+   * Whether the symbol is ignored. Possible values include: 'available', 'ignored'
+  */
+  status: string;
+  /**
+   * The version number. Optional for Apple. Required for Android.
+  */
+  version?: string;
+  /**
+   * The build number. Optional for Apple. Required for Android.
+  */
+  build?: string;
+  /**
+   * The id of the symbol upload this symbol belongs to.
+  */
+  symbolUploadId: string;
+}
+
+export interface GetForbiddenResponse {
+  message: string;
+}
+
+export interface GetNotFoundResponse {
+  message: string;
+}
+
+export interface GetInternalServerErrorResponse {
+  message: string;
+}
+
+export interface ListOKResponseItemModelModel {
+  /**
+   * The unique id for this symbol (uuid)
+  */
+  symbolId: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  type: string;
+  /**
+   * The application that this symbol belongs to
+  */
+  appId: string;
+  /**
+   * The platform that this symbol is associated with
+  */
+  platform: string;
+  /**
+   * The path name of the symbol file in blob storage
+  */
+  url: string;
+  /**
+   * The origin of the symbol file. Possible values include: 'System', 'User'
+  */
+  origin: string;
+  /**
+   * The other symbols in the same file
+  */
+  alternateSymbolIds: string[];
+  /**
+   * Whether the symbol is ignored. Possible values include: 'available', 'ignored'
+  */
+  status: string;
+  /**
+   * The version number. Optional for Apple. Required for Android.
+  */
+  version?: string;
+  /**
+   * The build number. Optional for Apple. Required for Android.
+  */
+  build?: string;
+  /**
+   * The id of the symbol upload this symbol belongs to.
+  */
+  symbolUploadId: string;
+}
+
+export interface ListForbiddenResponse {
+  message: string;
+}
+
+export interface ListInternalServerErrorResponse {
+  message: string;
+}
+
+/**
+ * Location for downloading symbol upload
+*/
+export interface GetLocationOKResponseModel {
+  uri: string;
+}
+
+/**
+ * User information of the one who intitiated the symbol upload
+*/
+export interface GetOKResponseUser {
+  /**
+   * The email of the user
+  */
+  email?: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface GetOKResponseSymbolsUploadedItem {
+  /**
+   * The symbol id of the symbol binary
+  */
+  symbolId: string;
+  /**
+   * The platform the symbol is associated with
+  */
+  platform: string;
+}
+
+/**
+ * A single symbol upload entity
+*/
+export interface GetOKResponseModelModelModel {
+  /**
+   * The id for the current symbol upload
+  */
+  symbolUploadId: string;
+  /**
+   * The application that this symbol upload belongs to
+  */
+  appId: string;
+  /**
+   * User information of the one who intitiated the symbol upload
+  */
+  user?: GetOKResponseUser;
+  /**
+   * The current status for the symbol upload. Possible values include: 'created', 'committed',
+   * 'aborted', 'processing', 'indexed', 'failed'
+  */
+  status: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  symbolType: string;
+  /**
+   * The symbols found in the upload. This may be empty until the status is indexed
+  */
+  symbolsUploaded?: GetOKResponseSymbolsUploadedItem[];
+  /**
+   * The origin of the symbol upload. Possible values include: 'User', 'System'
+  */
+  origin?: string;
+  /**
+   * The file name for the symbol upload
+  */
+  fileName?: string;
+  /**
+   * The size of the file in Mebibytes. This may be 0 until the status is indexed
+  */
+  fileSize?: number;
+  /**
+   * When the symbol upload was committed, or last transaction time if not committed
+  */
+  timestamp?: Date;
+}
+
+/**
+ * A request containing information pertaining to completing a symbol upload process
+*/
+export interface BodyModel {
+  /**
+   * The desired operation for the symbol upload. Possible values include: 'committed', 'aborted'
+  */
+  status: string;
+}
+
+/**
+ * User information of the one who intitiated the symbol upload
+*/
+export interface CompleteOKResponseUser {
+  /**
+   * The email of the user
+  */
+  email?: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface CompleteOKResponseSymbolsUploadedItem {
+  /**
+   * The symbol id of the symbol binary
+  */
+  symbolId: string;
+  /**
+   * The platform the symbol is associated with
+  */
+  platform: string;
+}
+
+/**
+ * A single symbol upload entity
+*/
+export interface CompleteOKResponse {
+  /**
+   * The id for the current symbol upload
+  */
+  symbolUploadId: string;
+  /**
+   * The application that this symbol upload belongs to
+  */
+  appId: string;
+  /**
+   * User information of the one who intitiated the symbol upload
+  */
+  user?: CompleteOKResponseUser;
+  /**
+   * The current status for the symbol upload. Possible values include: 'created', 'committed',
+   * 'aborted', 'processing', 'indexed', 'failed'
+  */
+  status: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  symbolType: string;
+  /**
+   * The symbols found in the upload. This may be empty until the status is indexed
+  */
+  symbolsUploaded?: CompleteOKResponseSymbolsUploadedItem[];
+  /**
+   * The origin of the symbol upload. Possible values include: 'User', 'System'
+  */
+  origin?: string;
+  /**
+   * The file name for the symbol upload
+  */
+  fileName?: string;
+  /**
+   * The size of the file in Mebibytes. This may be 0 until the status is indexed
+  */
+  fileSize?: number;
+  /**
+   * When the symbol upload was committed, or last transaction time if not committed
+  */
+  timestamp?: Date;
+}
+
+export interface CompleteBadRequestResponse {
+  message: string;
+}
+
+export interface CompleteForbiddenResponse {
+  message: string;
+}
+
+export interface CompleteInternalServerErrorResponse {
+  message: string;
+}
+
+/**
+ * User information of the one who intitiated the symbol upload
+*/
+export interface DeleteOKResponseUser {
+  /**
+   * The email of the user
+  */
+  email?: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface DeleteOKResponseSymbolsUploadedItem {
+  /**
+   * The symbol id of the symbol binary
+  */
+  symbolId: string;
+  /**
+   * The platform the symbol is associated with
+  */
+  platform: string;
+}
+
+/**
+ * A single symbol upload entity
+*/
+export interface DeleteOKResponse {
+  /**
+   * The id for the current symbol upload
+  */
+  symbolUploadId: string;
+  /**
+   * The application that this symbol upload belongs to
+  */
+  appId: string;
+  /**
+   * User information of the one who intitiated the symbol upload
+  */
+  user?: DeleteOKResponseUser;
+  /**
+   * The current status for the symbol upload. Possible values include: 'created', 'committed',
+   * 'aborted', 'processing', 'indexed', 'failed'
+  */
+  status: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  symbolType: string;
+  /**
+   * The symbols found in the upload. This may be empty until the status is indexed
+  */
+  symbolsUploaded?: DeleteOKResponseSymbolsUploadedItem[];
+  /**
+   * The origin of the symbol upload. Possible values include: 'User', 'System'
+  */
+  origin?: string;
+  /**
+   * The file name for the symbol upload
+  */
+  fileName?: string;
+  /**
+   * The size of the file in Mebibytes. This may be 0 until the status is indexed
+  */
+  fileSize?: number;
+  /**
+   * When the symbol upload was committed, or last transaction time if not committed
+  */
+  timestamp?: Date;
+}
+
+export interface DeleteForbiddenResponse {
+  message: string;
+}
+
+export interface DeleteNotFoundResponse {
+  message: string;
+}
+
+export interface DeleteInternalServerErrorResponse {
+  message: string;
+}
+
+/**
+ * User information of the one who intitiated the symbol upload
+*/
+export interface ListOKResponseItemUser {
+  /**
+   * The email of the user
+  */
+  email?: string;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+}
+
+export interface ListOKResponseItemSymbolsUploadedItem {
+  /**
+   * The symbol id of the symbol binary
+  */
+  symbolId: string;
+  /**
+   * The platform the symbol is associated with
+  */
+  platform: string;
+}
+
+/**
+ * A single symbol upload entity
+*/
+export interface ListOKResponseItemModelModelModel {
+  /**
+   * The id for the current symbol upload
+  */
+  symbolUploadId: string;
+  /**
+   * The application that this symbol upload belongs to
+  */
+  appId: string;
+  /**
+   * User information of the one who intitiated the symbol upload
+  */
+  user?: ListOKResponseItemUser;
+  /**
+   * The current status for the symbol upload. Possible values include: 'created', 'committed',
+   * 'aborted', 'processing', 'indexed', 'failed'
+  */
+  status: string;
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  symbolType: string;
+  /**
+   * The symbols found in the upload. This may be empty until the status is indexed
+  */
+  symbolsUploaded?: ListOKResponseItemSymbolsUploadedItem[];
+  /**
+   * The origin of the symbol upload. Possible values include: 'User', 'System'
+  */
+  origin?: string;
+  /**
+   * The file name for the symbol upload
+  */
+  fileName?: string;
+  /**
+   * The size of the file in Mebibytes. This may be 0 until the status is indexed
+  */
+  fileSize?: number;
+  /**
+   * When the symbol upload was committed, or last transaction time if not committed
+  */
+  timestamp?: Date;
+}
+
+/**
+ * A request containing information pertaining to starting a symbol upload process
+*/
+export interface BodyModelModel {
+  /**
+   * The type of the symbol for the current symbol upload. Possible values include: 'Apple',
+   * 'JavaScript', 'Breakpad', 'AndroidProguard', 'UWP'
+  */
+  symbolType: string;
+  /**
+   * The callback URL that the client can optionally provide to get status updates for the current
+   * symbol upload
+  */
+  clientCallback?: string;
+  /**
+   * The file name for the symbol upload
+  */
+  fileName?: string;
+  /**
+   * The build number. Optional for Apple. Required for Android.
+  */
+  build?: string;
+  /**
+   * The version number. Optional for Apple. Required for Android.
+  */
+  version?: string;
+}
+
+/**
+ * A response containing information pertaining to starting a symbol upload process
+*/
+export interface CreateOKResponse {
+  /**
+   * The id for the current upload
+  */
+  symbolUploadId: string;
+  /**
+   * The URL where the client needs to upload the symbol blob to
+  */
+  uploadUrl: string;
+  /**
+   * Describes how long the upload_url is valid
+  */
+  expirationDate: Date;
+}
+
+export interface CreateBadRequestResponse {
+  message: string;
+}
+
+export interface CreateForbiddenResponse {
+  message: string;
+}
+
+export interface CreateInternalServerErrorResponse {
+  message: string;
+}
+
+/**
+ * @summary Subscription Tier
+*/
+export interface GetSubscriptionsOKResponseTier {
+  /**
+   * The name of the tier
+  */
+  name?: string;
+}
+
+/**
+ * @summary Subscription
+ * @description Subscription information
+*/
+export interface GetSubscriptionsOKResponse {
+  /**
+   * The date the subscription began
+  */
+  startsAt?: string;
+  /**
+   * The date the subscription will end or ended
+  */
+  endsAt?: string;
+  /**
+   * The number of days left in the subscription
+  */
+  daysLeft?: number;
+  /**
+   * @summary Subscription Tier
+  */
+  tier?: GetSubscriptionsOKResponseTier;
+  /**
+   * Is the subscription currently active?
+  */
+  active?: boolean;
+  /**
+   * Id of the subscription
+  */
+  id?: string;
+}
+
+/**
+ * @summary Subscription Tier
+*/
+export interface CreateSubscriptionCreatedResponseTier {
+  /**
+   * The name of the tier
+  */
+  name?: string;
+}
+
+/**
+ * @summary Subscription
+ * @description Subscription information
+*/
+export interface CreateSubscriptionCreatedResponse {
+  /**
+   * The date the subscription began
+  */
+  startsAt?: string;
+  /**
+   * The date the subscription will end or ended
+  */
+  endsAt?: string;
+  /**
+   * The number of days left in the subscription
+  */
+  daysLeft?: number;
+  /**
+   * @summary Subscription Tier
+  */
+  tier?: CreateSubscriptionCreatedResponseTier;
+  /**
+   * Is the subscription currently active?
+  */
+  active?: boolean;
+  /**
+   * Id of the subscription
+  */
+  id?: string;
+}
+
+export interface GetNotificationByAppIdOKResponse {
+  service?: string;
+  status?: string;
+  validUntil?: number;
+}
+
+export interface GetNotificationByAppIdErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * The source repository
+*/
+export interface ListOKResponseItemModelModelModelModel {
+  /**
+   * The repository name
+  */
+  name?: string;
+  /**
+   * URL used to clone the repository
+  */
+  cloneUrl?: string;
+}
+
+export interface ListErrorModel2 {
+  id: string;
+  code: string;
+  message: string;
+}
+
+export interface ListOKResponseItemModelModelModelModelModel {
+  /**
+   * The repository's git url, must be a HTTPS URL
+  */
+  repoUrl: string;
+  /**
+   * The repository id from the repository provider. Required for repositories connected from
+   * GitHub App and GitLab.com
+  */
+  repoId?: string;
+  /**
+   * The external user id from the repository provider. Required for GitLab.com repositories
+  */
+  externalUserId?: string;
+  /**
+   * The id of the service connection (private). Required for GitLab self-hosted repositories
+  */
+  serviceConnectionId?: string;
+  /**
+   * The GitHub App Installation id. Required for repositories connected from GitHub App
+  */
+  installationId?: string;
+  /**
+   * Repository configuration identifier
+  */
+  id: string;
+  /**
+   * Type of repository
+  */
+  type: string;
+  /**
+   * State of the configuration. Possible values include: 'unauthorized', 'inactive', 'active'
+  */
+  state: string;
+  /**
+   * Email of the user who linked the repository
+  */
+  userEmail?: string;
+}
+
+export interface ListErrorModel3 {
+  id: string;
+  code: string;
+  message: string;
+}
+
+export interface Repo {
+  /**
+   * The repository's git url, must be a HTTPS URL
+  */
+  repoUrl: string;
+  /**
+   * The repository id from the repository provider. Required for repositories connected from
+   * GitHub App and GitLab.com
+  */
+  repoId?: string;
+  /**
+   * The external user id from the repository provider. Required for GitLab.com repositories
+  */
+  externalUserId?: string;
+  /**
+   * The id of the service connection (private). Required for GitLab self-hosted repositories
+  */
+  serviceConnectionId?: string;
+  /**
+   * The GitHub App Installation id. Required for repositories connected from GitHub App
+  */
+  installationId?: string;
+}
+
+export interface CreateOrUpdateOKResponse {
+  message: string;
+}
+
+export interface CreateOrUpdateErrorModel1 {
+  id: string;
+  code: string;
+  message: string;
+}
+
+export interface DeleteOKResponseModel {
+  message: string;
+}
+
+export interface DeleteErrorModel1 {
+  id: string;
+  code: string;
+  message: string;
+}
+
+/**
+ * The status of the resign operation.
+*/
+export interface GetReleaseUpdateDevicesStatusOKResponse {
+  /**
+   * The status of the resign
+  */
+  status: string;
+  /**
+   * Error code for any error that occured during the resigning operation.
+  */
+  errorCode?: string;
+  /**
+   * Error message for any error that occured during the resigning operation.
+  */
+  errorMessage?: string;
+}
+
+export interface GetReleaseUpdateDevicesStatusBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetReleaseUpdateDevicesStatusNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
 export interface DestinationTesterUpdateDetails {
   /**
    * Whether a release is mandatory for the given destination
@@ -12196,9 +36194,11583 @@ export interface DestinationTesterUpdateDetails {
   mandatoryUpdate: boolean;
 }
 
+export interface PutDistributionTesterNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteDistributionTesterNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface BodyModelModelModel {
+  /**
+   * Flag to mark the release for the provided destinations as mandatory
+  */
+  mandatoryUpdate?: boolean;
+  /**
+   * Tester's email address
+  */
+  email: string;
+  /**
+   * Flag to enable or disable notifications to testers
+  */
+  notifyTesters?: boolean;
+}
+
+export interface AddTestersCreatedResponse {
+  /**
+   * Unique id for the release destination
+  */
+  id: string;
+  /**
+   * Flag to mark the release for the provided destinations as mandatory
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * The url to check provisioning status.
+  */
+  provisioningStatusUrl?: string;
+}
+
+export interface AddTestersBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AddTestersNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteDistributionStoreNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface BodyModelModelModelModel {
+  /**
+   * Unique id of the release destination
+  */
+  id: string;
+}
+
+export interface AddStoreCreatedResponse {
+  /**
+   * Unique id for the release destination
+  */
+  id: string;
+}
+
+export interface AddStoreBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AddStoreNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ProfileBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
 export interface DestinationGroupUpdateDetails {
   /**
    * Whether a release is mandatory for the given destination
   */
   mandatoryUpdate: boolean;
+}
+
+export interface PutDistributionGroupNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteDistributionGroupNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface BodyModelModelModelModelModel {
+  /**
+   * Unique id of the release destination
+  */
+  id: string;
+  /**
+   * Flag to mark the release for the provided destinations as mandatory
+  */
+  mandatoryUpdate?: boolean;
+  /**
+   * Flag to enable or disable notifications to testers
+  */
+  notifyTesters?: boolean;
+}
+
+export interface AddDistributionGroupCreatedResponse {
+  /**
+   * Unique id for the release destination
+  */
+  id: string;
+  /**
+   * Flag to mark the release for the provided destinations as mandatory
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * The url to check provisioning status.
+  */
+  provisioningStatusUrl?: string;
+}
+
+export interface AddDistributionGroupBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AddDistributionGroupNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetLatestByUserOKResponseDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+}
+
+export interface GetLatestByUserOKResponseDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+export interface GetLatestByUserOKResponseDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface GetLatestByUserOKResponseBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface GetLatestByUserOKResponse {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The app's name (extracted from the uploaded release).
+  */
+  appName: string;
+  /**
+   * The app's display name.
+  */
+  appDisplayName: string;
+  /**
+   * The app's OS.
+  */
+  appOs?: string;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+  /**
+   * The release's provisioning profile name.
+  */
+  provisioningProfileName?: string;
+  /**
+   * The type of the provisioning profile for the requested app version. Possible values include:
+   * 'adhoc', 'enterprise', 'other'
+  */
+  provisioningProfileType?: string;
+  /**
+   * expiration date of provisioning profile in UTC format.
+  */
+  provisioningProfileExpiryDate?: string;
+  /**
+   * A flag that determines whether the release's provisioning profile is still extracted or not.
+  */
+  isProvisioningProfileSyncing?: boolean;
+  /**
+   * The release's size in bytes.
+  */
+  size?: number;
+  /**
+   * The release's minimum required operating system.
+  */
+  minOs?: string;
+  /**
+   * The release's device family.
+  */
+  deviceFamily?: string;
+  /**
+   * The release's minimum required Android API level.
+  */
+  androidMinApiLevel?: string;
+  /**
+   * The identifier of the apps bundle.
+  */
+  bundleIdentifier?: string;
+  /**
+   * Hashes for the packages.
+  */
+  packageHashes?: string[];
+  /**
+   * MD5 checksum of the release binary.
+  */
+  fingerprint?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * The URL that hosts the binary for this release.
+  */
+  downloadUrl?: string;
+  /**
+   * A URL to the app's icon.
+  */
+  appIconUrl: string;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`
+  */
+  installUrl?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned.<br>
+   * <b>tester</b>: The release distributed testers details will be returned.<br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: GetLatestByUserOKResponseDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: GetLatestByUserOKResponseDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: GetLatestByUserOKResponseDestinationsItem[];
+  /**
+   * In calls that allow passing `udid` in the query string, this value will hold the provisioning
+   * status of that UDID in this release. Will be ignored for non-iOS platforms.
+  */
+  isUdidProvisioned?: boolean;
+  /**
+   * In calls that allow passing `udid` in the query string, this value determines if a release can
+   * be re-signed. When true, after a re-sign, the tester will be able to install the release from
+   * his registered devices. Will not be returned for non-iOS platforms.
+  */
+  canResign?: boolean;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: GetLatestByUserOKResponseBuild;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * Status of the release.
+  */
+  status?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface GetLatestByUserBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetLatestByUserNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface BodyBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * A request containing information for updating details of a release
+*/
+export interface BodyModelModelModelModelModelModel {
+  /**
+   * Toggle this release to be enable distribute/download or not.
+  */
+  enabled?: boolean;
+  /**
+   * Release notes for this release.
+  */
+  releaseNotes?: string;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: BodyBuild;
+}
+
+export interface UpdateDetailsOKResponseDestinationsItem {
+  id?: string;
+  name?: string;
+}
+
+/**
+ * Response for updating a release
+*/
+export interface UpdateDetailsOKResponse {
+  enabled?: boolean;
+  mandatoryUpdate?: boolean;
+  releaseNotes?: string;
+  provisioningStatusUrl?: string;
+  destinations?: UpdateDetailsOKResponseDestinationsItem[];
+}
+
+export interface UpdateDetailsBadRequestResponseDestinationsItem {
+  /**
+   * Error Codes:<br>
+   * <b>invalid_store_secrets</b>: While distributing to store, secrets provided for store are not
+   * valid.<br>
+   * <b>store_release_bad_request</b>: Proper package release details for the store is not
+   * provided.<br>
+   * <b>store_release_unauthorized</b>: User is not authorized to publish to store due to invalid
+   * developer credentials.<br>
+   * <b>store_release_forbidden</b>: Publish to store is forbidden due to conflicts/errors in the
+   * release version and already existing version in the store.<br>
+   * <b>store_release_promotion</b>: Release already distributed, promoting a release is not
+   * supported.<br>
+   * <b>store_track_deactivated</b>: One or more tracks would be deactivated with this release.
+   * This is not supported yet.<br>
+   * <b>store_release_not_found</b>: App with the given package name is not found in the store.<br>
+   * <b>store_release_not_available</b>: The release is not available.<br>
+   * <b>internal_server_error</b>: Failed to distribute to a destination due to an internal server
+   * error.
+
+  */
+  code?: string;
+  message?: string;
+  id?: string;
+  name?: string;
+}
+
+export interface UpdateDetailsBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+  releaseNotes?: string;
+  mandatoryUpdate?: boolean;
+  destinations?: UpdateDetailsBadRequestResponseDestinationsItem[];
+}
+
+export interface UpdateDetailsNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * A unique identifier for a destination. A destination can be identified by an ID (guid) or by a
+ * name. DestinationId encapsulates both options. A destination can be either a distribution group
+ * or a store.
+*/
+export interface BodyDestinationsItem {
+  /**
+   * Name of a distribution group / distribution store. The release will be associated with this
+   * distribution group or store. If the distribution group / store doesn't exist a 400 is
+   * returned. If both distribution group / store name and id are passed, the id is taking
+   * precedence.
+  */
+  name?: string;
+  /**
+   * Id of a distribution group / store. The release will be associated with this distribution
+   * group / store. If the distribution group / store doesn't exist a 400 is returned. If both
+   * distribution group / store name and id are passed, the id is taking precedence.
+  */
+  id?: string;
+}
+
+/**
+ * An object containing all the release metadata.
+*/
+export interface BodyMetadata {
+  /**
+   * dsa signature of the release for the sparkle feed.
+  */
+  dsaSignature?: string;
+  /**
+   * edDSA signature of the release for the sparkle feed.
+  */
+  edSignature?: string;
+}
+
+/**
+ * A request containing information for updating a release.
+*/
+export interface BodyModelModelModelModelModelModelModel {
+  /**
+   * OBSOLETE. Will be removed in future releases - use destinations instead. Name of a
+   * distribution group. The release will be associated with this distribution group. If the
+   * distribution group doesn't exist a 400 is returned. If both distribution group name and id are
+   * passed, the id is taking precedence.
+
+  */
+  distributionGroupName?: string;
+  /**
+   * OBSOLETE. Will be removed in future releases - use destinations instead. Id of a distribution
+   * group. The release will be associated with this distribution group. If the distribution group
+   * doesn't exist a 400 is returned. If both distribution group name and id are passed, the id is
+   * taking precedence.
+
+  */
+  distributionGroupId?: string;
+  /**
+   * OBSOLETE. Will be removed in future releases - use destinations instead. Name of a
+   * destination. The release will be associated with this destination. If the destination doesn't
+   * exist a 400 is returned. If both distribution group name and id are passed, the id is taking
+   * precedence.
+
+  */
+  destinationName?: string;
+  /**
+   * OBSOLETE. Will be removed in future releases - use destinations instead. Id of a destination.
+   * The release will be associated with this destination. If the destination doesn't exist a 400
+   * is returned. If both destination name and id are passed, the id is taking precedence.
+
+  */
+  destinationId?: string;
+  /**
+   * Not used anymore.
+  */
+  destinationType?: string;
+  /**
+   * Release notes for this release.
+  */
+  releaseNotes?: string;
+  /**
+   * A boolean which determines whether this version should be a mandatory update or not.
+  */
+  mandatoryUpdate?: boolean;
+  /**
+   * Distribute this release under the following list of destinations (store groups or distribution
+   * groups).
+  */
+  destinations?: BodyDestinationsItem[];
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: BodyBuild;
+  /**
+   * A boolean which determines whether to notify testers of a new release, default to true.
+  */
+  notifyTesters?: boolean;
+  /**
+   * An object containing all the release metadata.
+  */
+  metadata?: BodyMetadata;
+}
+
+/**
+ * Response for updating release details
+*/
+export interface UpdateOKResponseModelModelModel {
+  releaseNotes?: string;
+}
+
+export interface UpdateBadRequestResponseDestinationsItem {
+  /**
+   * Error Codes:<br>
+   * <b>invalid_store_secrets</b>: While distributing to store, secrets provided for store are not
+   * valid.<br>
+   * <b>store_release_bad_request</b>: Proper package release details for the store is not
+   * provided.<br>
+   * <b>store_release_unauthorized</b>: User is not authorized to publish to store due to invalid
+   * developer credentials.<br>
+   * <b>store_release_forbidden</b>: Publish to store is forbidden due to conflicts/errors in the
+   * release version and already existing version in the store.<br>
+   * <b>store_release_promotion</b>: Release already distributed, promoting a release is not
+   * supported.<br>
+   * <b>store_track_deactivated</b>: One or more tracks would be deactivated with this release.
+   * This is not supported yet.<br>
+   * <b>store_release_not_found</b>: App with the given package name is not found in the store.<br>
+   * <b>store_release_not_available</b>: The release is not available.<br>
+   * <b>internal_server_error</b>: Failed to distribute to a destination due to an internal server
+   * error.
+
+  */
+  code?: string;
+  message?: string;
+  id?: string;
+  name?: string;
+}
+
+export interface UpdateBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+  releaseNotes?: string;
+  mandatoryUpdate?: boolean;
+  destinations?: UpdateBadRequestResponseDestinationsItem[];
+}
+
+export interface UpdateNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteNotFoundResponseModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteInternalServerErrorResponseModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AvailableToTesterOKResponseItemDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+}
+
+export interface AvailableToTesterOKResponseItemDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Is the containing release the latest one in this distribution store.
+  */
+  isLatest?: boolean;
+}
+
+export interface AvailableToTesterOKResponseItemDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Build information for the release
+
+*/
+export interface AvailableToTesterOKResponseItemBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Basic information on a release
+*/
+export interface AvailableToTesterOKResponseItem {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned. <br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: AvailableToTesterOKResponseItemDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: AvailableToTesterOKResponseItemDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: AvailableToTesterOKResponseItemDestinationsItem[];
+  /**
+   * Build information for the release
+
+  */
+  build?: AvailableToTesterOKResponseItemBuild;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface ListOKResponseItemDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+}
+
+export interface ListOKResponseItemDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Is the containing release the latest one in this distribution store.
+  */
+  isLatest?: boolean;
+}
+
+export interface ListOKResponseItemDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Build information for the release
+
+*/
+export interface ListOKResponseItemBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Basic information on a release
+*/
+export interface ListOKResponseItemModelModelModelModelModelModel {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned. <br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: ListOKResponseItemDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: ListOKResponseItemDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: ListOKResponseItemDestinationsItem[];
+  /**
+   * Build information for the release
+
+  */
+  build?: ListOKResponseItemBuild;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+/**
+ * A request containing information pertaining to complete a release upload process
+*/
+export interface BodyModelModelModelModelModelModelModelModel {
+  /**
+   * The desired operation for the upload. Possible values include: 'committed', 'aborted'
+  */
+  status: string;
+}
+
+/**
+ * A response containing information about the uploaded release.
+*/
+export interface CompleteOKResponseModel {
+  /**
+   * The ID of the release.
+  */
+  releaseId?: number;
+  /**
+   * A URL to the new release. If upload was aborted will be null.
+  */
+  releaseUrl?: string;
+}
+
+/**
+ * A request containing information pertaining to begin a release upload process
+*/
+export interface BodyModelModelModelModelModelModelModelModelModel {
+  /**
+   * Optional value for explicitly specifying the ID of existing release.
+  */
+  releaseId?: number;
+  /**
+   * The build version of the uploaded binary, used for macOS, Windows and Custom app support.
+  */
+  buildVersion?: string;
+  /**
+   * The build number of the uploaded binary, used with build_version for macOS app support.
+  */
+  buildNumber?: string;
+}
+
+/**
+ * A response containing information pertaining to starting a release upload process
+*/
+export interface CreateCreatedResponse {
+  /**
+   * The ID for the current upload
+  */
+  uploadId: string;
+  /**
+   * The URL where the client needs to upload the release to
+  */
+  uploadUrl: string;
+  /**
+   * The ID for the current upload, reserved for future use
+  */
+  assetId?: string;
+  /**
+   * The URL for the current upload, reserved for future use
+  */
+  assetDomain?: string;
+  /**
+   * The token for the current upload, reserved for future use
+  */
+  assetToken?: string;
+}
+
+export interface ListLatestOKResponseItemDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+}
+
+export interface ListLatestOKResponseItemDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Is the containing release the latest one in this distribution store.
+  */
+  isLatest?: boolean;
+}
+
+export interface ListLatestOKResponseItemDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Build information for the release
+
+*/
+export interface ListLatestOKResponseItemBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Basic information on a release
+*/
+export interface ListLatestOKResponseItem {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned. <br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: ListLatestOKResponseItemDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: ListLatestOKResponseItemDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: ListLatestOKResponseItemDestinationsItem[];
+  /**
+   * Build information for the release
+
+  */
+  build?: ListLatestOKResponseItemBuild;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface ConfigExistsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ConfigExistsErrorModel {
+  error: ConfigExistsErrorModelError;
+}
+
+/**
+ * Generic notification configuration result.
+*/
+export interface GetConfigOKResponse {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+export interface GetConfigErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetConfigErrorModel {
+  error: GetConfigErrorModelError;
+}
+
+/**
+ * Type of notification config (NotificationConfigAppleToken, NotificationConfigGoogle,
+ * NotificationConfigWindows). The 'type' property must be set to a valid value and the object must
+ * include the correct properties for the specified type.
+*/
+export interface Properties {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Generic notification configuration result.
+*/
+export interface SetConfigOKResponse {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+export interface SetConfigErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface SetConfigErrorModel {
+  error: SetConfigErrorModelError;
+}
+
+export interface DeleteConfigErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteConfigErrorModel {
+  error: DeleteConfigErrorModelError;
+}
+
+/**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface GetOKResponseNotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Notification definition object
+*/
+export interface GetOKResponseNotificationContent {
+  /**
+   * Notification name
+  */
+  name: string;
+  /**
+   * Notification title
+  */
+  title?: string;
+  /**
+   * Notification body
+  */
+  body?: string;
+  /**
+   * Notification custom data (such as badge, color, sound, etc.)
+  */
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * Notification failure outcome count
+*/
+export interface GetOKResponseFailureOutcomesItem {
+  /**
+   * The reason of the notification failure
+  */
+  failureReason?: string;
+  /**
+   * count of this type of failure
+  */
+  count?: number;
+}
+
+/**
+ * Notification statistics
+*/
+export interface GetOKResponseModelModelModelModel {
+  /**
+   * Notification id.
+  */
+  notificationId: string;
+  /**
+   * Notification name
+  */
+  name?: string;
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: GetOKResponseNotificationTarget;
+  /**
+   * Notification send time
+  */
+  sendTime?: Date;
+  /**
+   * Number of the notifications failed to send to the push provider.
+  */
+  pnsSendFailure?: number;
+  /**
+   * Number of the notifications successfully sent to push the provider.
+  */
+  pnsSendSuccess?: number;
+  /**
+   * State of the notification. Possible values include: 'Queued', 'Sending', 'Completed',
+   * 'Failed', 'NoTargetFound'
+  */
+  state: string;
+  /**
+   * Notification definition object
+  */
+  notificationContent: GetOKResponseNotificationContent;
+  /**
+   * Failture outcome counts
+  */
+  failureOutcomes?: GetOKResponseFailureOutcomesItem[];
+}
+
+/**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface ListOKResponseValuesItemNotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Notification statistics
+*/
+export interface ListOKResponseValuesItemModel {
+  /**
+   * Notification id.
+  */
+  notificationId: string;
+  /**
+   * Notification name
+  */
+  name?: string;
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: ListOKResponseValuesItemNotificationTarget;
+  /**
+   * Notification send time
+  */
+  sendTime?: Date;
+  /**
+   * Number of the notifications failed to send to the push provider.
+  */
+  pnsSendFailure?: number;
+  /**
+   * Number of the notifications successfully sent to push the provider.
+  */
+  pnsSendSuccess?: number;
+  /**
+   * State of the notification. Possible values include: 'Queued', 'Sending', 'Completed',
+   * 'Failed', 'NoTargetFound'
+  */
+  state: string;
+}
+
+/**
+ * List of notifications
+*/
+export interface ListOKResponseModel {
+  values: ListOKResponseValuesItemModel[];
+  /**
+   * the total count of notifications
+  */
+  total?: number;
+  nextLink?: string;
+}
+
+/**
+ * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object
+ * must include the correct properties for the specified target type except for broadcast.
+*/
+export interface PropertiesNotificationTarget {
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Notification definition object
+*/
+export interface PropertiesNotificationContent {
+  /**
+   * Notification name
+  */
+  name: string;
+  /**
+   * Notification title
+  */
+  title?: string;
+  /**
+   * Notification body
+  */
+  body?: string;
+  /**
+   * Notification custom data (such as badge, color, sound, etc.)
+  */
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * Notification definition object
+*/
+export interface PropertiesModel {
+  /**
+   * Type of Notification target (audiences, devices, user ids, account ids or broadcast). The
+   * object must include the correct properties for the specified target type except for broadcast.
+  */
+  notificationTarget?: PropertiesNotificationTarget;
+  /**
+   * Notification definition object
+  */
+  notificationContent: PropertiesNotificationContent;
+}
+
+/**
+ * Notification send succeeded.
+*/
+export interface SendAcceptedResponse {
+  /**
+   * The unique notification identifier.
+  */
+  notificationId: string;
+}
+
+export interface SendErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface SendErrorModel {
+  error: SendErrorModelError;
+}
+
+/**
+ * List of notification Ids
+*/
+export interface NotificationIds {
+  /**
+   * List of notification Ids.
+  */
+  values: string[];
+}
+
+export interface DeleteInstallIdErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteInstallIdErrorModel {
+  error: DeleteInstallIdErrorModelError;
+}
+
+/**
+ * Export status
+*/
+export interface ExportDevicesStatusOKResponse {
+  /**
+   * The unique export identifier.
+  */
+  exportId: string;
+  /**
+   * Status of the export. Possible values include: 'InProgress', 'Completed', 'Failed'
+  */
+  status: string;
+}
+
+export interface ExportDevicesStatusErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ExportDevicesStatusErrorModel {
+  error: ExportDevicesStatusErrorModelError;
+}
+
+/**
+ * Generic export configuration.
+*/
+export interface PropertiesModelModel {
+  /**
+   * A shared access signature (SAS) URI with Read, Write and Delete permissions on a container.
+  */
+  blobContainerSasUri: string;
+}
+
+/**
+ * Export started.
+*/
+export interface ExportDevicesAcceptedResponse {
+  /**
+   * The unique export identifier.
+  */
+  exportId: string;
+}
+
+export interface ExportDevicesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ExportDevicesErrorModel {
+  error: ExportDevicesErrorModelError;
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface GetDeviceSetOfOwnerOKResponseOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface GetDeviceSetOfOwnerOKResponseDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface GetDeviceSetOfOwnerOKResponseDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface GetDeviceSetOfOwnerOKResponseDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: GetDeviceSetOfOwnerOKResponseDeviceConfigurationsItemImage;
+  model?: GetDeviceSetOfOwnerOKResponseDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface GetDeviceSetOfOwnerOKResponse {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: GetDeviceSetOfOwnerOKResponseOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: GetDeviceSetOfOwnerOKResponseDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface UpdateDeviceSetOfOwnerOKResponseOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface UpdateDeviceSetOfOwnerOKResponseDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface UpdateDeviceSetOfOwnerOKResponseDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface UpdateDeviceSetOfOwnerOKResponseDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: UpdateDeviceSetOfOwnerOKResponseDeviceConfigurationsItemImage;
+  model?: UpdateDeviceSetOfOwnerOKResponseDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface UpdateDeviceSetOfOwnerOKResponse {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: UpdateDeviceSetOfOwnerOKResponseOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: UpdateDeviceSetOfOwnerOKResponseDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Test Cloud Error Details
+ * @description Details of a failed operation
+*/
+export interface UpdateDeviceSetOfOwnerBadRequestResponse {
+  /**
+   * Status of the operation
+  */
+  status: string;
+  /**
+   * Human-readable message that describes the error
+  */
+  message: string;
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface ListDeviceSetsOfOwnerOKResponseItemOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface ListDeviceSetsOfOwnerOKResponseItemDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface ListDeviceSetsOfOwnerOKResponseItemDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface ListDeviceSetsOfOwnerOKResponseItemDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: ListDeviceSetsOfOwnerOKResponseItemDeviceConfigurationsItemImage;
+  model?: ListDeviceSetsOfOwnerOKResponseItemDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface ListDeviceSetsOfOwnerOKResponseItem {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: ListDeviceSetsOfOwnerOKResponseItemOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: ListDeviceSetsOfOwnerOKResponseItemDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Device Set Owner
+ * @description The owner of a device set
+*/
+export interface CreateDeviceSetOfOwnerCreatedResponseOwner {
+  /**
+   * Type of account
+  */
+  type: string;
+  /**
+   * Account ID
+  */
+  id: string;
+  /**
+   * Display name of the account
+  */
+  displayName?: string;
+  /**
+   * Name of the account
+  */
+  name: string;
+}
+
+export interface CreateDeviceSetOfOwnerCreatedResponseDeviceConfigurationsItemImage {
+  thumb?: string;
+}
+
+export interface CreateDeviceSetOfOwnerCreatedResponseDeviceConfigurationsItemModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+export interface CreateDeviceSetOfOwnerCreatedResponseDeviceConfigurationsItem {
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  image?: CreateDeviceSetOfOwnerCreatedResponseDeviceConfigurationsItemImage;
+  model?: CreateDeviceSetOfOwnerCreatedResponseDeviceConfigurationsItemModel;
+  os?: string;
+  osName?: string;
+}
+
+/**
+ * @summary Device Set
+ * @description The name and devices of the device set
+*/
+export interface CreateDeviceSetOfOwnerCreatedResponse {
+  /**
+   * Identifier of the device set
+  */
+  id: string;
+  /**
+   * The number of manufacturers in the device set's device selection
+  */
+  manufacturerCount?: number;
+  /**
+   * Name of the device set
+  */
+  name: string;
+  /**
+   * Slug of the device set
+  */
+  slug?: string;
+  /**
+   * @summary Device Set Owner
+   * @description The owner of a device set
+  */
+  owner: CreateDeviceSetOfOwnerCreatedResponseOwner;
+  /**
+   * The number of os versions in the device set's device selection
+  */
+  osVersionCount?: number;
+  deviceConfigurations: CreateDeviceSetOfOwnerCreatedResponseDeviceConfigurationsItem[];
+}
+
+/**
+ * @summary Test Cloud Error Details
+ * @description Details of a failed operation
+*/
+export interface CreateDeviceSetOfOwnerBadRequestResponse {
+  /**
+   * Status of the operation
+  */
+  status: string;
+  /**
+   * Human-readable message that describes the error
+  */
+  message: string;
+}
+
+/**
+ * Event Setting
+*/
+export interface GetAppEmailSettingsOKResponseSettingsItem {
+  /**
+   * Frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual', 'Default'
+  */
+  value: string;
+  /**
+   * Default frequency of event. Possible values include: 'Disabled', 'Individual', 'Daily',
+   * 'DailyAndIndividual'
+  */
+  defaultValue?: string;
+}
+
+/**
+ * Alerting Email Settings of the user for a particular app
+*/
+export interface GetAppEmailSettingsOKResponse {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The ETag of the entity
+  */
+  eTag?: string;
+  /**
+   * Allows to forcefully disable emails on app or user level
+  */
+  enabled: boolean;
+  /**
+   * The unique id (UUID) of the user
+  */
+  userId?: string;
+  /**
+   * The settings the user has for the app
+  */
+  settings: GetAppEmailSettingsOKResponseSettingsItem[];
+  /**
+   * Application ID
+  */
+  appId?: string;
+  /**
+   * A flag indicating if settings are enabled at user/global level
+  */
+  userEnabled: boolean;
+}
+
+/**
+ * Alerting service error
+*/
+export interface GetAppEmailSettingsErrorModel {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The status code return by the API. It can be 400 or 404 or 409 or 500.
+  */
+  code: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+export interface CreateByEmailErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CreateByEmailErrorModel {
+  error: CreateByEmailErrorModelError;
+}
+
+export interface UserInvitationPermissionsData {
+  /**
+   * The permissions the user has for the app in the invitation
+  */
+  permissions: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface ListOKResponseAppOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface ListOKResponseAppAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface ListOKResponseApp {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: ListOKResponseAppOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: ListOKResponseAppAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface ListOKResponseInvitedBy {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name: string;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The creation origin of this user. Possible values include: 'appcenter', 'hockeyapp',
+   * 'codepush'
+  */
+  origin: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface ListOKResponseDistributionGroupOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+/**
+ * The organization that owns the distribution group, if it exists
+*/
+export interface ListOKResponseDistributionGroup {
+  /**
+   * The information about the app's owner
+  */
+  owner?: ListOKResponseDistributionGroupOwner;
+}
+
+export interface ListOKResponseModelModel {
+  /**
+   * The unique ID (UUID) of the invitation
+  */
+  id: string;
+  app: ListOKResponseApp;
+  /**
+   * The email address of the invited user
+  */
+  email: string;
+  /**
+   * The invitation type. Possible values include: 'developer', 'tester'
+  */
+  inviteType: string;
+  invitedBy: ListOKResponseInvitedBy;
+  /**
+   * Indicates whether the invited user already exists
+  */
+  isExistingUser: boolean;
+  /**
+   * The permissions the user has for the app
+  */
+  permissions?: string[];
+  /**
+   * The number of apps in the group
+  */
+  appCount?: number;
+  /**
+   * The organization that owns the distribution group, if it exists
+  */
+  distributionGroup?: ListOKResponseDistributionGroup;
+}
+
+export interface CreateOKResponseModel {
+  id?: string;
+  location?: string;
+  token?: string;
+  uploadDomain?: string;
+  uploadWindowLocation?: string;
+  urlEncodedToken?: string;
+}
+
+export interface CreateErrorModel1 {
+  id: string;
+  code: string;
+  message: string;
+}
+
+export interface EnableErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface EnableErrorModel {
+  error: EnableErrorModelError;
+}
+
+export interface DisableErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DisableErrorModel {
+  error: DisableErrorModelError;
+}
+
+/**
+ * Export configuration
+*/
+export interface GetOKResponseExportConfiguration {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Export configuration result
+*/
+export interface GetOKResponseModelModelModelModelModel {
+  /**
+   * Export configuration id
+  */
+  id: string;
+  /**
+   * Target resource type of export configuration. Possible values include: 'BlobStorage',
+   * 'AppInsights'
+  */
+  exportType: string;
+  /**
+   * Creation time in ISO 8601 format
+  */
+  creationTime: string;
+  /**
+   * Latest time in ISO 8601 format when export completed successfully
+  */
+  lastRunTime?: string;
+  exportEntities?: string[];
+  /**
+   * State of the export job. Possible values include: 'Enabled', 'Disabled', 'Pending', 'Deleted',
+   * 'Invalid'
+  */
+  state: string;
+  /**
+   * Additional information about export configuration state
+  */
+  stateInfo?: string;
+  /**
+   * resource group for the storage account/App Insights resource
+  */
+  resourceGroup?: string;
+  /**
+   * Storage accout or Appinsights resource name
+  */
+  resourceName?: string;
+  /**
+   * Export configuration
+  */
+  exportConfiguration?: GetOKResponseExportConfiguration;
+}
+
+/**
+ * Export configuration
+*/
+export interface PropertiesModelModelModel {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Export configuration
+*/
+export interface PartialUpdateOKResponseExportConfiguration {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Export configuration result
+*/
+export interface PartialUpdateOKResponse {
+  /**
+   * Export configuration id
+  */
+  id: string;
+  /**
+   * Target resource type of export configuration. Possible values include: 'BlobStorage',
+   * 'AppInsights'
+  */
+  exportType: string;
+  /**
+   * Creation time in ISO 8601 format
+  */
+  creationTime: string;
+  /**
+   * Latest time in ISO 8601 format when export completed successfully
+  */
+  lastRunTime?: string;
+  exportEntities?: string[];
+  /**
+   * State of the export job. Possible values include: 'Enabled', 'Disabled', 'Pending', 'Deleted',
+   * 'Invalid'
+  */
+  state: string;
+  /**
+   * Additional information about export configuration state
+  */
+  stateInfo?: string;
+  /**
+   * resource group for the storage account/App Insights resource
+  */
+  resourceGroup?: string;
+  /**
+   * Storage accout or Appinsights resource name
+  */
+  resourceName?: string;
+  /**
+   * Export configuration
+  */
+  exportConfiguration?: PartialUpdateOKResponseExportConfiguration;
+}
+
+export interface PartialUpdateErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface PartialUpdateErrorModel {
+  error: PartialUpdateErrorModelError;
+}
+
+/**
+ * Export configuration
+*/
+export interface ListOKResponseValuesItemExportConfiguration {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Export configuration result
+*/
+export interface ListOKResponseValuesItemModelModel {
+  /**
+   * Export configuration id
+  */
+  id: string;
+  /**
+   * Target resource type of export configuration. Possible values include: 'BlobStorage',
+   * 'AppInsights'
+  */
+  exportType: string;
+  /**
+   * Creation time in ISO 8601 format
+  */
+  creationTime: string;
+  /**
+   * Latest time in ISO 8601 format when export completed successfully
+  */
+  lastRunTime?: string;
+  exportEntities?: string[];
+  /**
+   * State of the export job. Possible values include: 'Enabled', 'Disabled', 'Pending', 'Deleted',
+   * 'Invalid'
+  */
+  state: string;
+  /**
+   * Additional information about export configuration state
+  */
+  stateInfo?: string;
+  /**
+   * resource group for the storage account/App Insights resource
+  */
+  resourceGroup?: string;
+  /**
+   * Storage accout or Appinsights resource name
+  */
+  resourceName?: string;
+  /**
+   * Export configuration
+  */
+  exportConfiguration?: ListOKResponseValuesItemExportConfiguration;
+}
+
+/**
+ * List of export configurations
+*/
+export interface ListOKResponseModelModelModel {
+  values: ListOKResponseValuesItemModelModel[];
+  /**
+   * the total count of exports
+  */
+  total?: number;
+  nextLink?: string;
+}
+
+/**
+ * Export configuration
+*/
+export interface CreateAcceptedResponseExportConfiguration {
+  exportEntities?: string[];
+  /**
+   * The resource name on azure
+  */
+  resourceName?: string;
+  /**
+   * The resource group name on azure
+  */
+  resourceGroup?: string;
+  /**
+   * Field to determine if backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
+  */
+  backfill?: boolean;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Export configuration result
+*/
+export interface CreateAcceptedResponse {
+  /**
+   * Export configuration id
+  */
+  id: string;
+  /**
+   * Target resource type of export configuration. Possible values include: 'BlobStorage',
+   * 'AppInsights'
+  */
+  exportType: string;
+  /**
+   * Creation time in ISO 8601 format
+  */
+  creationTime: string;
+  /**
+   * Latest time in ISO 8601 format when export completed successfully
+  */
+  lastRunTime?: string;
+  exportEntities?: string[];
+  /**
+   * State of the export job. Possible values include: 'Enabled', 'Disabled', 'Pending', 'Deleted',
+   * 'Invalid'
+  */
+  state: string;
+  /**
+   * Additional information about export configuration state
+  */
+  stateInfo?: string;
+  /**
+   * resource group for the storage account/App Insights resource
+  */
+  resourceGroup?: string;
+  /**
+   * Storage accout or Appinsights resource name
+  */
+  resourceName?: string;
+  /**
+   * Export configuration
+  */
+  exportConfiguration?: CreateAcceptedResponseExportConfiguration;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface ListSessionLogsOKResponseLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface ListSessionLogsOKResponseLogsItem {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: ListSessionLogsOKResponseLogsItemDevice;
+}
+
+export interface ListSessionLogsOKResponse {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: ListSessionLogsOKResponseLogsItem[];
+}
+
+export interface ListSessionLogsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListSessionLogsErrorModel {
+  error: ListSessionLogsErrorModelError;
+}
+
+export interface ErrorAttachmentTextOKResponse {
+  content?: string;
+}
+
+export interface ErrorAttachmentTextErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorAttachmentTextErrorModel {
+  error: ErrorAttachmentTextErrorModelError;
+}
+
+export interface ErrorAttachmentLocationOKResponse {
+  uri?: string;
+}
+
+export interface ErrorAttachmentLocationErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorAttachmentLocationErrorModel {
+  error: ErrorAttachmentLocationErrorModelError;
+}
+
+export interface ErrorAttachmentsOKResponseItem {
+  appId?: string;
+  attachmentId?: string;
+  crashId?: string;
+  blobLocation?: string;
+  contentType?: string;
+  fileName?: string;
+  createdTime?: Date;
+  size?: number;
+}
+
+export interface ErrorAttachmentsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorAttachmentsErrorModel {
+  error: ErrorAttachmentsErrorModelError;
+}
+
+export interface ErrorSearchOKResponseErrorsItem {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
+}
+
+export interface ErrorSearchOKResponse {
+  hasMoreResults?: boolean;
+  errors?: ErrorSearchOKResponseErrorsItem[];
+}
+
+export interface ErrorSearchErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorSearchErrorModel {
+  error: ErrorSearchErrorModelError;
+}
+
+export interface ErrorRetentionInDays {
+  retentionInDays: number;
+}
+
+export interface PutRetentionSettingsOKResponse {
+  retentionInDays: number;
+}
+
+export interface PutRetentionSettingsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface PutRetentionSettingsErrorModel {
+  error: PutRetentionSettingsErrorModelError;
+}
+
+export interface GetRetentionSettingsOKResponse {
+  retentionInDays: number;
+}
+
+export interface GetRetentionSettingsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetRetentionSettingsErrorModel {
+  error: GetRetentionSettingsErrorModelError;
+}
+
+export interface ErrorFreeDevicePercentagesOKResponseDailyPercentagesItem {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * percentage of the object
+  */
+  percentage?: number;
+}
+
+export interface ErrorFreeDevicePercentagesOKResponse {
+  /**
+   * Average percentage
+  */
+  averagePercentage?: number;
+  /**
+   * The error-free percentage per day.
+  */
+  dailyPercentages?: ErrorFreeDevicePercentagesOKResponseDailyPercentagesItem[];
+}
+
+export interface ErrorFreeDevicePercentagesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorFreeDevicePercentagesErrorModel {
+  error: ErrorFreeDevicePercentagesErrorModelError;
+}
+
+export interface GroupErrorStackTraceErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupErrorStackTraceErrorModel {
+  error: GroupErrorStackTraceErrorModelError;
+}
+
+export interface GroupOperatingSystemCountsOKResponseOperatingSystemsItem {
+  /**
+   * OS name
+  */
+  operatingSystemName?: string;
+  /**
+   * count of OS
+  */
+  errorCount?: number;
+}
+
+export interface GroupOperatingSystemCountsOKResponse {
+  errorCount?: number;
+  operatingSystems?: GroupOperatingSystemCountsOKResponseOperatingSystemsItem[];
+}
+
+export interface GroupOperatingSystemCountsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupOperatingSystemCountsErrorModel {
+  error: GroupOperatingSystemCountsErrorModelError;
+}
+
+export interface GroupModelCountsOKResponseModelsItem {
+  /**
+   * model name
+  */
+  modelName?: string;
+  /**
+   * model code
+  */
+  modelCode?: string;
+  /**
+   * count of errors in a model
+  */
+  errorCount?: number;
+}
+
+export interface GroupModelCountsOKResponse {
+  errorCount?: number;
+  modelsProperty?: GroupModelCountsOKResponseModelsItem[];
+}
+
+export interface GroupModelCountsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupModelCountsErrorModel {
+  error: GroupModelCountsErrorModelError;
+}
+
+export interface ErrorStackTraceErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorStackTraceErrorModel {
+  error: ErrorStackTraceErrorModelError;
+}
+
+export interface ErrorLocationOKResponse {
+  uri?: string;
+}
+
+export interface ErrorLocationErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorLocationErrorModel {
+  error: ErrorLocationErrorModelError;
+}
+
+export interface ErrorDownloadErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorDownloadErrorModel {
+  error: ErrorDownloadErrorModelError;
+}
+
+export interface GetErrorDetailsOKResponseReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface GetErrorDetailsOKResponse {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
+  name?: string;
+  reasonFrames?: GetErrorDetailsOKResponseReasonFramesItem[];
+  /**
+   * Timestamp when the app was launched, example: '2017-03-13T18:05:42Z'.
+
+  */
+  appLaunchTimestamp?: Date;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Flag indicating if device is jailbroken
+
+  */
+  jailbreak?: boolean;
+  properties?: { [propertyName: string]: string };
+}
+
+export interface GetErrorDetailsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetErrorDetailsErrorModel {
+  error: GetErrorDetailsErrorModelError;
+}
+
+export interface DeleteErrorOKResponse {
+  appId?: string;
+  errorGroupId?: string;
+  errorId?: string;
+  errorsDeleted?: number;
+  attachmentsDeleted?: number;
+  blobsSucceeded?: number;
+  blobsFailed?: number;
+}
+
+export interface DeleteErrorErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteErrorErrorModel {
+  error: DeleteErrorErrorModelError;
+}
+
+export interface LatestErrorDetailsOKResponseReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface LatestErrorDetailsOKResponse {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
+  name?: string;
+  reasonFrames?: LatestErrorDetailsOKResponseReasonFramesItem[];
+  /**
+   * Timestamp when the app was launched, example: '2017-03-13T18:05:42Z'.
+
+  */
+  appLaunchTimestamp?: Date;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Flag indicating if device is jailbroken
+
+  */
+  jailbreak?: boolean;
+  properties?: { [propertyName: string]: string };
+}
+
+export interface LatestErrorDetailsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface LatestErrorDetailsErrorModel {
+  error: LatestErrorDetailsErrorModelError;
+}
+
+export interface ListForGroupOKResponseErrorsItem {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+  hasBreadcrumbs?: boolean;
+  hasAttachments?: boolean;
+}
+
+export interface ListForGroupOKResponse {
+  nextLink?: string;
+  /**
+   * Errors list.
+  */
+  errors?: ListForGroupOKResponseErrorsItem[];
+}
+
+export interface ListForGroupErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListForGroupErrorModel {
+  error: ListForGroupErrorModelError;
+}
+
+export interface GroupErrorFreeDevicePercentagesOKResponseDailyPercentagesItem {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * percentage of the object
+  */
+  percentage?: number;
+}
+
+export interface GroupErrorFreeDevicePercentagesOKResponse {
+  /**
+   * Average percentage
+  */
+  averagePercentage?: number;
+  /**
+   * The error-free percentage per day.
+  */
+  dailyPercentages?: GroupErrorFreeDevicePercentagesOKResponseDailyPercentagesItem[];
+}
+
+export interface GroupErrorFreeDevicePercentagesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupErrorFreeDevicePercentagesErrorModel {
+  error: GroupErrorFreeDevicePercentagesErrorModelError;
+}
+
+export interface GroupCountsPerDayOKResponseErrorsItem {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * count of the object
+  */
+  count?: number;
+}
+
+export interface GroupCountsPerDayOKResponse {
+  /**
+   * total error count
+  */
+  count?: number;
+  /**
+   * the total error count for day
+  */
+  errors?: GroupCountsPerDayOKResponseErrorsItem[];
+}
+
+export interface GroupCountsPerDayErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupCountsPerDayErrorModel {
+  error: GroupCountsPerDayErrorModelError;
+}
+
+export interface GroupDetailsOKResponseReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface GroupDetailsOKResponse {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: GroupDetailsOKResponseReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface GroupDetailsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupDetailsErrorModel {
+  error: GroupDetailsErrorModelError;
+}
+
+export interface ErrorGroupStateModel {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+}
+
+export interface UpdateStateOKResponseReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface UpdateStateOKResponse {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: UpdateStateOKResponseReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface UpdateStateErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface UpdateStateErrorModel {
+  error: UpdateStateErrorModelError;
+}
+
+export interface ErrorGroupsSearchOKResponseErrorGroupsItemReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface ErrorGroupsSearchOKResponseErrorGroupsItem {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: ErrorGroupsSearchOKResponseErrorGroupsItemReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface ErrorGroupsSearchOKResponse {
+  hasMoreResults?: boolean;
+  errorGroups?: ErrorGroupsSearchOKResponseErrorGroupsItem[];
+}
+
+export interface ErrorGroupsSearchErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ErrorGroupsSearchErrorModel {
+  error: ErrorGroupsSearchErrorModelError;
+}
+
+export interface GroupListOKResponseErrorGroupsItemReasonFramesItem {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface GroupListOKResponseErrorGroupsItem {
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  state: string;
+  annotation?: string;
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: GroupListOKResponseErrorGroupsItemReasonFramesItem[];
+  hidden?: boolean;
+}
+
+export interface GroupListOKResponse {
+  nextLink?: string;
+  errorGroups?: GroupListOKResponseErrorGroupsItem[];
+}
+
+export interface GroupListErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GroupListErrorModel {
+  error: GroupListErrorModelError;
+}
+
+export interface CountsPerDayOKResponseErrorsItem {
+  /**
+   * the ISO 8601 datetime
+  */
+  datetime?: string;
+  /**
+   * count of the object
+  */
+  count?: number;
+}
+
+export interface CountsPerDayOKResponse {
+  /**
+   * total error count
+  */
+  count?: number;
+  /**
+   * the total error count for day
+  */
+  errors?: CountsPerDayOKResponseErrorsItem[];
+}
+
+export interface CountsPerDayErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CountsPerDayErrorModel {
+  error: CountsPerDayErrorModelError;
+}
+
+export interface AvailableVersionsOKResponse {
+  /**
+   * List of available versions.
+  */
+  versions?: string[];
+  /**
+   * The full number of versions across all pages.
+  */
+  totalCount?: number;
+}
+
+export interface AvailableVersionsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AvailableVersionsErrorModel {
+  error: AvailableVersionsErrorModelError;
+}
+
+export interface AppBuildsListOKResponse {
+  appBuilds?: string[];
+}
+
+export interface AppBuildsListErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AppBuildsListErrorModel {
+  error: AppBuildsListErrorModelError;
+}
+
+/**
+ * Status Data from store
+*/
+export interface GetRealTimeStatusByReleaseIdOKResponseStatus {
+  /**
+   * status from store
+  */
+  status?: string;
+  /**
+   * store type
+  */
+  storetype?: string;
+  /**
+   * track information from store
+  */
+  track?: string;
+  /**
+   * version of the app from store
+  */
+  version?: string;
+}
+
+/**
+ * status of the app from store
+*/
+export interface GetRealTimeStatusByReleaseIdOKResponse {
+  /**
+   * release id
+  */
+  releaseId?: string;
+  /**
+   * app id
+  */
+  appId?: string;
+  /**
+   * Status Data from store
+  */
+  status?: GetRealTimeStatusByReleaseIdOKResponseStatus;
+}
+
+export interface GetRealTimeStatusByReleaseIdErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetErrorModel1 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * ReleasePublishErrorResponse
+*/
+export interface GetPublishErrorOKResponse {
+  /**
+   * error Details
+  */
+  message?: string;
+  /**
+   * boolean property to tell if logs are available for download
+  */
+  isLogAvailable?: boolean;
+}
+
+export interface GetPublishErrorErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetOKResponseItemDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id?: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune or googleplay. Possible
+   * values include: 'intune', 'googleplay'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface GetOKResponseItem {
+  /**
+   * ID identifying this unique release.
+  */
+  id?: number;
+  /**
+   * OBSOLETE. Will be removed in next version. The availability concept is now replaced with
+   * distributed. Any 'available' release will be associated with the default distribution group of
+   * an app.</br>
+   * The release state.<br>
+   * <b>available</b>: The uploaded release has been distributed.<br>
+   * <b>unavailable</b>: The uploaded release is not visible to the user. <br>
+   * . Possible values include: 'available', 'unavailable'
+  */
+  status?: string;
+  /**
+   * The app's name (extracted from the uploaded release).
+  */
+  appName?: string;
+  /**
+   * The app's display name.
+  */
+  appDisplayName?: string;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion?: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+  /**
+   * The release's size in bytes.
+  */
+  size?: number;
+  /**
+   * The release's minimum required operating system.
+  */
+  minOs?: string;
+  /**
+   * The release's minimum required Android API level.
+  */
+  androidMinApiLevel?: string;
+  /**
+   * The identifier of the apps bundle.
+  */
+  bundleIdentifier?: string;
+  /**
+   * MD5 checksum of the release binary.
+  */
+  fingerprint?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt?: string;
+  /**
+   * The URL that hosts the binary for this release.
+  */
+  downloadUrl?: string;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`. Possible values include: 'group',
+   * 'store'
+  */
+  installUrl?: string;
+  /**
+   * a list of distribution stores that are associated with this release.
+  */
+  distributionStores?: GetOKResponseItemDistributionStoresItem[];
+}
+
+export interface GetErrorModel2 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteErrorModel2 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListOKResponseItemDistributionStoresItemModel {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id?: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * A type identifying the type of distribution store. Possible values include: 'googleplay',
+   * 'intune', 'apple'
+  */
+  type?: string;
+  /**
+   * A status identifying the status of release in the distribution store.
+  */
+  publishingStatus?: string;
+  /**
+   * Is the containing release the latest one in this distribution store.
+  */
+  isLatest?: boolean;
+}
+
+/**
+ * Basic information on a release
+*/
+export interface ListOKResponseItemModelModelModelModelModelModelModel {
+  /**
+   * ID identifying this unique release.
+  */
+  id?: number;
+  /**
+   * The release's version.
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version?: string;
+  /**
+   * The release's short version.
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt?: string;
+  /**
+   * Destination for this release. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * a list of distribution stores that are associated with this release.
+  */
+  distributionStores?: ListOKResponseItemDistributionStoresItemModel[];
+}
+
+export interface ListErrorModel4 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetLatestOKResponseItemDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id?: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune or googleplay. Possible
+   * values include: 'intune', 'googleplay'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface GetLatestOKResponseItem {
+  /**
+   * ID identifying this unique release.
+  */
+  id?: number;
+  /**
+   * OBSOLETE. Will be removed in next version. The availability concept is now replaced with
+   * distributed. Any 'available' release will be associated with the default distribution group of
+   * an app.</br>
+   * The release state.<br>
+   * <b>available</b>: The uploaded release has been distributed.<br>
+   * <b>unavailable</b>: The uploaded release is not visible to the user. <br>
+   * . Possible values include: 'available', 'unavailable'
+  */
+  status?: string;
+  /**
+   * The app's name (extracted from the uploaded release).
+  */
+  appName?: string;
+  /**
+   * The app's display name.
+  */
+  appDisplayName?: string;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion?: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+  /**
+   * The release's size in bytes.
+  */
+  size?: number;
+  /**
+   * The release's minimum required operating system.
+  */
+  minOs?: string;
+  /**
+   * The release's minimum required Android API level.
+  */
+  androidMinApiLevel?: string;
+  /**
+   * The identifier of the apps bundle.
+  */
+  bundleIdentifier?: string;
+  /**
+   * MD5 checksum of the release binary.
+  */
+  fingerprint?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt?: string;
+  /**
+   * The URL that hosts the binary for this release.
+  */
+  downloadUrl?: string;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`. Possible values include: 'group',
+   * 'store'
+  */
+  installUrl?: string;
+  /**
+   * a list of distribution stores that are associated with this release.
+  */
+  distributionStores?: GetLatestOKResponseItemDistributionStoresItem[];
+}
+
+export interface GetLatestErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetOKResponseIntuneDetailsTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+  /**
+   * ID for the target audience/group.
+  */
+  id?: string;
+}
+
+export interface GetOKResponseIntuneDetailsAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+  /**
+   * ID for the category.
+  */
+  id?: string;
+}
+
+/**
+ * Store details for intune
+*/
+export interface GetOKResponseIntuneDetails {
+  targetAudience?: GetOKResponseIntuneDetailsTargetAudience;
+  appCategory?: GetOKResponseIntuneDetailsAppCategory;
+}
+
+/**
+ * ExternalStoreResponse
+*/
+export interface GetOKResponseModelModelModelModelModelModel {
+  /**
+   * Store id
+  */
+  id?: string;
+  /**
+   * Store Name
+  */
+  name?: string;
+  /**
+   * Store Type
+  */
+  type?: string;
+  /**
+   * Store track. Possible values include: 'production', 'alpha', 'beta', 'testflight-internal',
+   * 'testflight-external'
+  */
+  track?: string;
+  /**
+   * Store details for intune
+  */
+  intuneDetails?: GetOKResponseIntuneDetails;
+  /**
+   * Id for the shared service connection. In case of Apple / GooglePlay stores, this connection
+   * will be used to connect to the Apple / Google stores in App Center.
+  */
+  serviceConnectionId?: string;
+  /**
+   * The ID of the principal that created the store.
+  */
+  createdBy?: string;
+  /**
+   * The type of the principal that created the store.
+  */
+  createdByPrincipalType?: string;
+}
+
+export interface GetErrorModel3 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface BodyModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * Service connection id to updated.
+  */
+  serviceConnectionId: string;
+}
+
+export interface PatchErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteErrorModel3 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface BodyIntuneDetailsSecretJson {
+  /**
+   * the id token of user
+  */
+  idToken?: string;
+  /**
+   * the refresh token for user
+  */
+  refreshToken?: string;
+  /**
+   * the expiry of refresh token
+  */
+  refreshTokenExpiry?: string;
+}
+
+export interface BodyIntuneDetailsTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+}
+
+export interface BodyIntuneDetailsAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+}
+
+export interface BodyIntuneDetails {
+  secretJson?: BodyIntuneDetailsSecretJson;
+  targetAudience?: BodyIntuneDetailsTargetAudience;
+  appCategory?: BodyIntuneDetailsAppCategory;
+  /**
+   * tenant id of the intune store
+  */
+  tenantId?: string;
+}
+
+/**
+ * ExternalStoreRequest
+*/
+export interface BodyModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * store Type. Possible values include: 'googleplay', 'intune', 'apple'
+  */
+  type?: string;
+  /**
+   * name of the store. In case of googleplay, and Apple store this is fixed to Production.
+  */
+  name?: string;
+  /**
+   * track of the store. Can be production, alpha & beta for googleplay. Can be production,
+   * testflight-internal & testflight-external for Apple Store. Possible values include:
+   * 'production', 'alpha', 'beta', 'testflight-internal', 'testflight-external'
+  */
+  track?: string;
+  intuneDetails?: BodyIntuneDetails;
+  /**
+   * Id for the shared service connection. In case of Apple AppStore, this connection will be used
+   * to create and connect to the Apple AppStore in Mobile Center.
+  */
+  serviceConnectionId?: string;
+}
+
+export interface CreateCreatedResponseIntuneDetailsTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+  /**
+   * ID for the target audience/group.
+  */
+  id?: string;
+}
+
+export interface CreateCreatedResponseIntuneDetailsAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+  /**
+   * ID for the category.
+  */
+  id?: string;
+}
+
+/**
+ * Store details for intune
+*/
+export interface CreateCreatedResponseIntuneDetails {
+  targetAudience?: CreateCreatedResponseIntuneDetailsTargetAudience;
+  appCategory?: CreateCreatedResponseIntuneDetailsAppCategory;
+}
+
+/**
+ * ExternalStoreResponse
+*/
+export interface CreateCreatedResponseModel {
+  /**
+   * Store id
+  */
+  id?: string;
+  /**
+   * Store Name
+  */
+  name?: string;
+  /**
+   * Store Type
+  */
+  type?: string;
+  /**
+   * Store track. Possible values include: 'production', 'alpha', 'beta', 'testflight-internal',
+   * 'testflight-external'
+  */
+  track?: string;
+  /**
+   * Store details for intune
+  */
+  intuneDetails?: CreateCreatedResponseIntuneDetails;
+  /**
+   * Id for the shared service connection. In case of Apple / GooglePlay stores, this connection
+   * will be used to connect to the Apple / Google stores in App Center.
+  */
+  serviceConnectionId?: string;
+  /**
+   * The ID of the principal that created the store.
+  */
+  createdBy?: string;
+  /**
+   * The type of the principal that created the store.
+  */
+  createdByPrincipalType?: string;
+}
+
+export interface CreateErrorModel2 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListOKResponseItemIntuneDetailsTargetAudience {
+  /**
+   * display name for the target audience/group
+  */
+  name?: string;
+  /**
+   * ID for the target audience/group.
+  */
+  id?: string;
+}
+
+export interface ListOKResponseItemIntuneDetailsAppCategory {
+  /**
+   * display name for the app category
+  */
+  name?: string;
+  /**
+   * ID for the category.
+  */
+  id?: string;
+}
+
+/**
+ * Store details for intune
+*/
+export interface ListOKResponseItemIntuneDetails {
+  targetAudience?: ListOKResponseItemIntuneDetailsTargetAudience;
+  appCategory?: ListOKResponseItemIntuneDetailsAppCategory;
+}
+
+/**
+ * ExternalStoreResponse
+*/
+export interface ListOKResponseItemModelModelModelModelModelModelModelModel {
+  /**
+   * Store id
+  */
+  id?: string;
+  /**
+   * Store Name
+  */
+  name?: string;
+  /**
+   * Store Type
+  */
+  type?: string;
+  /**
+   * Store track. Possible values include: 'production', 'alpha', 'beta', 'testflight-internal',
+   * 'testflight-external'
+  */
+  track?: string;
+  /**
+   * Store details for intune
+  */
+  intuneDetails?: ListOKResponseItemIntuneDetails;
+  /**
+   * Id for the shared service connection. In case of Apple / GooglePlay stores, this connection
+   * will be used to connect to the Apple / Google stores in App Center.
+  */
+  serviceConnectionId?: string;
+  /**
+   * The ID of the principal that created the store.
+  */
+  createdBy?: string;
+  /**
+   * The type of the principal that created the store.
+  */
+  createdByPrincipalType?: string;
+}
+
+export interface ResendInviteErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ResendInviteErrorModel {
+  error: ResendInviteErrorModelError;
+}
+
+export interface GetLatestByDistributionGroupOKResponseDistributionGroupsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+}
+
+export interface GetLatestByDistributionGroupOKResponseDistributionStoresItem {
+  /**
+   * ID identifying a unique distribution store.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution store.
+  */
+  name?: string;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+}
+
+export interface GetLatestByDistributionGroupOKResponseDestinationsItem {
+  /**
+   * ID identifying a unique distribution group.
+  */
+  id: string;
+  /**
+   * A name identifying a unique distribution group.
+  */
+  name?: string;
+  /**
+   * Is the containing release the latest one in this distribution group.
+  */
+  isLatest?: boolean;
+  /**
+   * type of the distribution store currently stores type can be intune, googleplay or windows.
+   * Possible values include: 'intune', 'googleplay', 'apple', 'none'
+  */
+  type?: string;
+  /**
+   * publishing status of the release in the store.
+  */
+  publishingStatus?: string;
+  /**
+   * Destination can be either store or group. Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * Display name for the group or tester
+  */
+  displayName?: string;
+}
+
+/**
+ * Contains metadata about the build that produced the release being uploaded
+*/
+export interface GetLatestByDistributionGroupOKResponseBuild {
+  /**
+   * The branch name of the build producing the release
+  */
+  branchName?: string;
+  /**
+   * The commit hash of the build producing the release
+  */
+  commitHash?: string;
+  /**
+   * The commit message of the build producing the release
+  */
+  commitMessage?: string;
+}
+
+/**
+ * Details of an uploaded release
+*/
+export interface GetLatestByDistributionGroupOKResponse {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The app's name (extracted from the uploaded release).
+  */
+  appName: string;
+  /**
+   * The app's display name.
+  */
+  appDisplayName: string;
+  /**
+   * The app's OS.
+  */
+  appOs?: string;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * The release's release notes.
+  */
+  releaseNotes?: string;
+  /**
+   * The release's provisioning profile name.
+  */
+  provisioningProfileName?: string;
+  /**
+   * The type of the provisioning profile for the requested app version. Possible values include:
+   * 'adhoc', 'enterprise', 'other'
+  */
+  provisioningProfileType?: string;
+  /**
+   * expiration date of provisioning profile in UTC format.
+  */
+  provisioningProfileExpiryDate?: string;
+  /**
+   * A flag that determines whether the release's provisioning profile is still extracted or not.
+  */
+  isProvisioningProfileSyncing?: boolean;
+  /**
+   * The release's size in bytes.
+  */
+  size?: number;
+  /**
+   * The release's minimum required operating system.
+  */
+  minOs?: string;
+  /**
+   * The release's device family.
+  */
+  deviceFamily?: string;
+  /**
+   * The release's minimum required Android API level.
+  */
+  androidMinApiLevel?: string;
+  /**
+   * The identifier of the apps bundle.
+  */
+  bundleIdentifier?: string;
+  /**
+   * Hashes for the packages.
+  */
+  packageHashes?: string[];
+  /**
+   * MD5 checksum of the release binary.
+  */
+  fingerprint?: string;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * The URL that hosts the binary for this release.
+  */
+  downloadUrl?: string;
+  /**
+   * A URL to the app's icon.
+  */
+  appIconUrl: string;
+  /**
+   * The href required to install a release on a mobile device. On iOS devices will be prefixed
+   * with `itms-services://?action=download-manifest&url=`
+  */
+  installUrl?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and distribution_groups details will
+   * be returned.<br>
+   * <b>store</b>: The release distributed to external stores and distribution_stores details will
+   * be returned.<br>
+   * <b>tester</b>: The release distributed testers details will be returned.<br>
+   * . Possible values include: 'group', 'store', 'tester'
+  */
+  destinationType?: string;
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution groups that are associated
+   * with this release.
+  */
+  distributionGroups?: GetLatestByDistributionGroupOKResponseDistributionGroupsItem[];
+  /**
+   * OBSOLETE. Will be removed in next version. A list of distribution stores that are associated
+   * with this release.
+  */
+  distributionStores?: GetLatestByDistributionGroupOKResponseDistributionStoresItem[];
+  /**
+   * A list of distribution groups or stores.
+  */
+  destinations?: GetLatestByDistributionGroupOKResponseDestinationsItem[];
+  /**
+   * In calls that allow passing `udid` in the query string, this value will hold the provisioning
+   * status of that UDID in this release. Will be ignored for non-iOS platforms.
+  */
+  isUdidProvisioned?: boolean;
+  /**
+   * In calls that allow passing `udid` in the query string, this value determines if a release can
+   * be re-signed. When true, after a re-sign, the tester will be able to install the release from
+   * his registered devices. Will not be returned for non-iOS platforms.
+  */
+  canResign?: boolean;
+  /**
+   * Contains metadata about the build that produced the release being uploaded
+  */
+  build?: GetLatestByDistributionGroupOKResponseBuild;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * Status of the release.
+  */
+  status?: string;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface GetLatestByDistributionGroupNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetLatestByDistributionGroupNotImplementedResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * Response for getting a list of releases in a distribution group
+*/
+export interface ListByDistributionGroupOKResponseItem {
+  /**
+   * ID identifying this unique release.
+  */
+  id: number;
+  /**
+   * The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+
+  */
+  version: string;
+  /**
+   * The release's origin. Possible values include: 'hockeyapp', 'appcenter'
+  */
+  origin?: string;
+  /**
+   * The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+
+  */
+  shortVersion: string;
+  /**
+   * A boolean which determines whether the release is a mandatory update or not.
+  */
+  mandatoryUpdate: boolean;
+  /**
+   * UTC time in ISO 8601 format of the uploaded time.
+  */
+  uploadedAt: string;
+  /**
+   * This value determines the whether a release currently is enabled or disabled.
+  */
+  enabled: boolean;
+  /**
+   * This value determines if a release is external or not.
+  */
+  isExternalBuild?: boolean;
+}
+
+export interface ListByDistributionGroupNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface RemoveUserOKResponseItem {
+  /**
+   * The code of the result
+  */
+  code?: string;
+  /**
+   * The message of the result
+  */
+  message?: number;
+  /**
+   * The status code of the result
+  */
+  status: number;
+  /**
+   * The email of the user
+  */
+  userEmail?: string;
+}
+
+export interface ListUsersOKResponseItem {
+  /**
+   * The unique id (UUID) of the user
+  */
+  id?: string;
+  /**
+   * The avatar URL of the user
+  */
+  avatarUrl?: string;
+  /**
+   * User is required to send an old password in order to change the password.
+  */
+  canChangePassword?: boolean;
+  /**
+   * The full name of the user. Might for example be first and last name
+  */
+  displayName?: string;
+  /**
+   * The email address of the user
+  */
+  email: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The unique name that is used to identify the user.
+  */
+  name?: string;
+}
+
+export interface ListUsersErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListUsersErrorModel {
+  error: ListUsersErrorModelError;
+}
+
+export interface AddUserOKResponseItem {
+  /**
+   * The code of the result
+  */
+  code?: string;
+  /**
+   * Whether the has accepted the invite. Available when an invite is pending, and the value will
+   * be "true".
+  */
+  invitePending?: boolean;
+  /**
+   * The message of the result
+  */
+  message?: string;
+  /**
+   * The status code of the result
+  */
+  status: number;
+  /**
+   * The email of the user
+  */
+  userEmail?: string;
+}
+
+export interface ListCsvFormatBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListCsvFormatNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListCsvFormatInternalServerErrorResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * The information for a single iOS device
+*/
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModel {
+  /**
+   * The Unique Device IDentifier of the device
+  */
+  udid: string;
+  /**
+   * The model identifier of the device, in the format iDeviceM,N
+  */
+  model: string;
+  /**
+   * The device description, in the format "iPhone 7 Plus (A1784)"
+  */
+  deviceName: string;
+  /**
+   * A combination of the device model name and the owner name.
+  */
+  fullDeviceName?: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osBuild: string;
+  /**
+   * The last known OS version running on the device
+  */
+  osVersion: string;
+  /**
+   * The device's serial number. Always empty or undefined at present.
+  */
+  serial?: string;
+  /**
+   * The device's International Mobile Equipment Identity number. Always empty or undefined at
+   * present.
+  */
+  imei?: string;
+  /**
+   * The user ID of the device owner.
+  */
+  ownerId?: string;
+  /**
+   * The provisioning status of the device.
+  */
+  status: string;
+  /**
+   * Timestamp of when the device was registered in ISO format.
+  */
+  registeredAt?: string;
+}
+
+export interface ListBadRequestResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListNotFoundResponse {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetOKResponseModelModelModelModelModelModelModel {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface UpdateOKResponseModelModelModelModel {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+export interface CreateCreatedResponseModelModel {
+  /**
+   * The unique ID of the distribution group
+  */
+  id: string;
+  /**
+   * The name of the distribution group used in URLs
+  */
+  name: string;
+  /**
+   * The name of the distribution group
+  */
+  displayName?: string;
+  /**
+   * The creation origin of this distribution group. Possible values include: 'appcenter',
+   * 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * Whether the distribution group is public
+  */
+  isPublic: boolean;
+}
+
+/**
+ * missing symbol groups
+*/
+export interface InfoOKResponse {
+  /**
+   * total number of crashes for all missing symbol groups
+  */
+  totalCrashCount: number;
+}
+
+/**
+ * failure response object
+*/
+export interface InfoErrorModel {
+  code: string;
+  message: string;
+}
+
+/**
+ * missing symbol
+*/
+export interface GetOKResponseGroupsItemMissingSymbolsItem {
+  /**
+   * symbol id
+  */
+  symbolId: string;
+  /**
+   * symbol name
+  */
+  name: string;
+  /**
+   * symbol plarform
+  */
+  platform?: string;
+  /**
+   * symbol status. Possible values include: 'missing', 'ignored', 'available'
+  */
+  status: string;
+}
+
+/**
+ * missing symbol crash group object
+*/
+export interface GetOKResponseGroupsItem {
+  /**
+   * id of the symbol group
+  */
+  symbolGroupId: string;
+  /**
+   * number of crashes that belong to this group
+  */
+  crashCount?: number;
+  /**
+   * number of errors that belong to this group
+  */
+  errorCount?: number;
+  /**
+   * application id
+  */
+  appId: string;
+  /**
+   * application version
+  */
+  appVer: string;
+  /**
+   * application build
+  */
+  appBuild: string;
+  /**
+   * last update date for the group
+  */
+  lastModified: Date;
+  /**
+   * list of missing symbols
+  */
+  missingSymbols: GetOKResponseGroupsItemMissingSymbolsItem[];
+  /**
+   * group status. Possible values include: 'active', 'pending', 'closed'
+  */
+  status: string;
+}
+
+/**
+ * grouped by missing symbols crashes response object
+*/
+export interface GetOKResponseModelModelModelModelModelModelModelModel {
+  /**
+   * total number of crashes for all the groups
+  */
+  totalCrashCount: number;
+  /**
+   * list of crash groups formed by missing symbols combination
+  */
+  groups: GetOKResponseGroupsItem[];
+}
+
+/**
+ * failure response object
+*/
+export interface GetErrorModel4 {
+  code: string;
+  message: string;
+}
+
+/**
+ * missing symbol
+*/
+export interface ListOKResponseGroupsItemMissingSymbolsItem {
+  /**
+   * symbol id
+  */
+  symbolId: string;
+  /**
+   * symbol name
+  */
+  name: string;
+  /**
+   * symbol plarform
+  */
+  platform?: string;
+  /**
+   * symbol status. Possible values include: 'missing', 'ignored', 'available'
+  */
+  status: string;
+}
+
+/**
+ * missing symbol crash group object
+*/
+export interface ListOKResponseGroupsItem {
+  /**
+   * id of the symbol group
+  */
+  symbolGroupId: string;
+  /**
+   * number of crashes that belong to this group
+  */
+  crashCount?: number;
+  /**
+   * number of errors that belong to this group
+  */
+  errorCount?: number;
+  /**
+   * application id
+  */
+  appId: string;
+  /**
+   * application version
+  */
+  appVer: string;
+  /**
+   * application build
+  */
+  appBuild: string;
+  /**
+   * last update date for the group
+  */
+  lastModified: Date;
+  /**
+   * list of missing symbols
+  */
+  missingSymbols: ListOKResponseGroupsItemMissingSymbolsItem[];
+  /**
+   * group status. Possible values include: 'active', 'pending', 'closed'
+  */
+  status: string;
+}
+
+/**
+ * grouped by missing symbols crashes response object
+*/
+export interface ListOKResponseModelModelModelModel {
+  /**
+   * total number of crashes for all the groups
+  */
+  totalCrashCount: number;
+  /**
+   * list of crash groups formed by missing symbols combination
+  */
+  groups: ListOKResponseGroupsItem[];
+}
+
+/**
+ * failure response object
+*/
+export interface ListErrorModel5 {
+  code: string;
+  message: string;
+}
+
+/**
+ * @summary Device List
+ * @description A list of device IDs
+*/
+export interface DeviceListModel {
+  devices: string[];
+}
+
+/**
+ * @summary Device Selection
+ * @description Short ID for a list of device IDs
+*/
+export interface CreateDeviceSelectionCreatedResponse {
+  /**
+   * Identifier of the device selection
+  */
+  shortId: string;
+}
+
+/**
+ * @summary Test Cloud Error Details
+ * @description Details of a failed operation
+*/
+export interface CreateDeviceSelectionBadRequestResponse {
+  /**
+   * Status of the operation
+  */
+  status: string;
+  /**
+   * Human-readable message that describes the error
+  */
+  message: string;
+}
+
+export interface GetDeviceConfigurationsOKResponseItemImage {
+  full?: string;
+  thumb?: string;
+}
+
+/**
+ * Physical device dimensions
+*/
+export interface GetDeviceConfigurationsOKResponseItemModelDimensions {
+  depth?: any;
+  height?: any;
+  width?: any;
+}
+
+/**
+ * Device screen resolution
+*/
+export interface GetDeviceConfigurationsOKResponseItemModelResolution {
+  height?: string;
+  width?: string;
+  ppi?: string;
+}
+
+/**
+ * Physical device screen dimensions
+*/
+export interface GetDeviceConfigurationsOKResponseItemModelScreenSize {
+  cm?: string;
+  inProperty?: string;
+}
+
+/**
+ * CPU data for device
+*/
+export interface GetDeviceConfigurationsOKResponseItemModelCpu {
+  frequency?: string;
+  core?: string;
+  text?: string;
+}
+
+/**
+ * Memory data for device
+*/
+export interface GetDeviceConfigurationsOKResponseItemModelMemory {
+  formattedSize?: string;
+}
+
+export interface GetDeviceConfigurationsOKResponseItemModelDeviceFrameGrid {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface GetDeviceConfigurationsOKResponseItemModelDeviceFrameFull {
+  width?: number;
+  height?: number;
+  frameUrl?: string;
+  screen?: number[];
+}
+
+export interface GetDeviceConfigurationsOKResponseItemModelDeviceFrame {
+  grid?: GetDeviceConfigurationsOKResponseItemModelDeviceFrameGrid;
+  full?: GetDeviceConfigurationsOKResponseItemModelDeviceFrameFull;
+}
+
+export interface GetDeviceConfigurationsOKResponseItemModel {
+  name?: string;
+  manufacturer?: string;
+  model?: string;
+  platform?: string;
+  /**
+   * Physical device dimensions
+  */
+  dimensions?: GetDeviceConfigurationsOKResponseItemModelDimensions;
+  /**
+   * Device screen resolution
+  */
+  resolution?: GetDeviceConfigurationsOKResponseItemModelResolution;
+  releaseDate?: string;
+  formFactor?: string;
+  /**
+   * Physical device screen dimensions
+  */
+  screenSize?: GetDeviceConfigurationsOKResponseItemModelScreenSize;
+  /**
+   * CPU data for device
+  */
+  cpu?: GetDeviceConfigurationsOKResponseItemModelCpu;
+  /**
+   * Memory data for device
+  */
+  memory?: GetDeviceConfigurationsOKResponseItemModelMemory;
+  screenRotation?: number;
+  deviceFrame?: GetDeviceConfigurationsOKResponseItemModelDeviceFrame;
+  availabilityCount?: number;
+}
+
+export interface GetDeviceConfigurationsOKResponseItem {
+  /**
+   * The name of the device model and OS version
+  */
+  name?: string;
+  /**
+   * The unique id of the device configuration
+  */
+  id?: string;
+  /**
+   * The tier
+  */
+  tier?: number;
+  image?: GetDeviceConfigurationsOKResponseItemImage;
+  model?: GetDeviceConfigurationsOKResponseItemModel;
+  os?: string;
+  osName?: string;
+  marketShare?: number;
+}
+
+export interface CreateOKResponseModelModel {
+  /**
+   * The ID for the newly created upload. It is going to be required later in the process.
+  */
+  id: string;
+  /**
+   * The URL domain used to upload the release.
+  */
+  uploadDomain: string;
+  /**
+   * The URL encoded token used for upload permissions.
+  */
+  token: string;
+}
+
+export interface CreateErrorModel3 {
+  message: string;
+}
+
+export interface ReleaseLabel {
+  label?: string;
+}
+
+export interface RollbackCreatedResponseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface RollbackCreatedResponse {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: RollbackCreatedResponseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface RollbackErrorModel {
+  message: string;
+}
+
+export interface ReleaseModel {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+}
+
+export interface UpdateOKResponseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface UpdateOKResponseModelModelModelModelModel {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: UpdateOKResponseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface UpdateErrorModel1 {
+  message: string;
+}
+
+export interface DeleteErrorModel4 {
+  message: string;
+}
+
+export interface GetOKResponseItemDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface GetOKResponseItemModel {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: GetOKResponseItemDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface GetErrorModel5 {
+  message: string;
+}
+
+/**
+ * The upload metadata from the release initialization step.
+*/
+export interface UploadedReleaseReleaseUpload {
+  /**
+   * The ID for the newly created upload. It is going to be required later in the process.
+  */
+  id: string;
+  /**
+   * The URL domain used to upload the release.
+  */
+  uploadDomain: string;
+  /**
+   * The URL encoded token used for upload permissions.
+  */
+  token: string;
+}
+
+export interface UploadedRelease {
+  /**
+   * The upload metadata from the release initialization step.
+  */
+  releaseUpload: UploadedReleaseReleaseUpload;
+  /**
+   * the binary version of the application
+  */
+  targetBinaryVersion: string;
+  /**
+   * This specifies which deployment you want to release the update to. Default is Staging.
+  */
+  deploymentName?: string;
+  /**
+   * This provides an optional "change log" for the deployment.
+  */
+  description?: string;
+  /**
+   * This specifies whether an update should be downloadable by end users or not.
+  */
+  disabled?: boolean;
+  /**
+   * This specifies whether the update should be considered mandatory or not (e.g. it includes a
+   * critical security fix).
+  */
+  mandatory?: boolean;
+  /**
+   * This specifies that if the update is identical to the latest release on the deployment, the
+   * CLI should generate a warning instead of an error.
+  */
+  noDuplicateReleaseError?: boolean;
+  /**
+   * This specifies the percentage of users (as an integer between 1 and 100) that should be
+   * eligible to receive this update.
+  */
+  rollout?: number;
+}
+
+export interface CreateCreatedResponseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface CreateCreatedResponseModelModelModel {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: CreateCreatedResponseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface CreateErrorModel4 {
+  message: string;
+}
+
+export interface ReleaseModelModel {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+}
+
+export interface PromoteOKResponseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface PromoteOKResponse {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: PromoteOKResponseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface PromoteErrorModel {
+  message: string;
+}
+
+export interface GetOKResponseItemModelModel {
+  label: string;
+  active: number;
+  downloaded?: number;
+  failed?: number;
+  installed?: number;
+}
+
+export interface GetErrorModel6 {
+  message: string;
+}
+
+export interface DeleteErrorModel5 {
+  message: string;
+}
+
+export interface GetOKResponseLatestReleaseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface GetOKResponseLatestRelease {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: GetOKResponseLatestReleaseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface GetOKResponseModelModelModelModelModelModelModelModelModel {
+  key?: string;
+  name: string;
+  latestRelease?: GetOKResponseLatestRelease;
+}
+
+export interface GetErrorModel7 {
+  message: string;
+}
+
+export interface DeploymentModel {
+  name: string;
+}
+
+export interface UpdateErrorModel2 {
+  message: string;
+}
+
+export interface ListOKResponseItemLatestReleaseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface ListOKResponseItemLatestRelease {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: ListOKResponseItemLatestReleaseDiffPackageMapValue };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel {
+  key?: string;
+  name: string;
+  latestRelease?: ListOKResponseItemLatestRelease;
+}
+
+export interface ListErrorModel6 {
+  message: string;
+}
+
+export interface DeploymentLatestReleaseDiffPackageMapValueModel {
+  size: number;
+  url: string;
+}
+
+export interface DeploymentLatestReleaseModel {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: DeploymentLatestReleaseDiffPackageMapValueModel };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface DeploymentModelModel {
+  key?: string;
+  name: string;
+  latestRelease?: DeploymentLatestReleaseModel;
+}
+
+export interface CreateCreatedResponseLatestReleaseDiffPackageMapValue {
+  size: number;
+  url: string;
+}
+
+export interface CreateCreatedResponseLatestRelease {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+  label?: string;
+  packageHash?: string;
+  blobUrl?: string;
+  diffPackageMap?: { [propertyName: string]: CreateCreatedResponseLatestReleaseDiffPackageMapValue
+  };
+  /**
+   * Set on 'Promote'
+  */
+  originalDeployment?: string;
+  /**
+   * Set on 'Promote' and 'Rollback'
+  */
+  originalLabel?: string;
+  releasedBy?: string;
+  /**
+   * The release method is unknown if unspecified. Possible values include: 'Upload', 'Promote',
+   * 'Rollback'
+  */
+  releaseMethod?: string;
+  size?: number;
+  uploadTime?: number;
+}
+
+export interface CreateCreatedResponseModelModelModelModel {
+  key?: string;
+  name: string;
+  latestRelease?: CreateCreatedResponseLatestRelease;
+}
+
+export interface CreateErrorModel5 {
+  message: string;
+}
+
+export interface GetResourceProvisioningNotFoundResponse {
+  /**
+   * Possible values include: 'Empty', 'Accepted', 'Creating', 'Connected', 'Invalid'
+  */
+  status: string;
+  message?: string;
+}
+
+export interface GetResourceProvisioningInternalServerErrorResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetResourceProvisioningInternalServerErrorResponse {
+  error: GetResourceProvisioningInternalServerErrorResponseError;
+}
+
+export interface ProvisionDatabaseParameters {
+  subscriptionId?: string;
+  databaseConnectionString?: string;
+  /**
+   * Possible values include: 'East Asia', 'Southeast Asia', 'Australia Central', 'Australia
+   * Central 2', 'Australia East', 'Australia Southeast', 'Brazil South', 'Canada Central', 'Canada
+   * East', 'Central India', 'South India', 'West India', 'North Europe', 'West Europe', 'France
+   * Central', 'France South', 'Germany Central', 'Germany Northeast', 'Japan East', 'Japan West',
+   * 'Korea Central', 'Korea South', 'South Africa North', 'South Africa West', 'UK South', 'UK
+   * West', 'Central US', 'East US', 'East US 2', 'US Gov Arizona', 'US Gov Texas', 'North Central
+   * US', 'South Central US', 'West US', 'West US 2', 'West Central US'
+  */
+  resourceRegion?: string;
+  database?: string;
+  collection?: string;
+  requestUnits?: number;
+  accountName?: string;
+}
+
+export interface PostResourceProvisioningAcceptedResponse {
+  /**
+   * Possible values include: 'Empty', 'Accepted', 'Creating', 'Connected', 'Invalid'
+  */
+  status: string;
+  message?: string;
+}
+
+export interface PostResourceProvisioningBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface PostResourceProvisioningBadRequestResponse {
+  error: PostResourceProvisioningBadRequestResponseError;
+}
+
+export interface PostResourceProvisioningInternalServerErrorResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface PostResourceProvisioningInternalServerErrorResponse {
+  error: PostResourceProvisioningInternalServerErrorResponseError;
+}
+
+export interface GetOverviewInternalServerErrorResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetOverviewInternalServerErrorResponse {
+  error: GetOverviewInternalServerErrorResponseError;
+}
+
+export interface GetAppCrashesInfoOKResponseFeatures {
+  /**
+   * App supports modification of crashgroup status
+  */
+  crashgroupModifyStatus?: boolean;
+  /**
+   * App supports modification of crashgroup annotation
+  */
+  crashgroupModifyAnnotation?: boolean;
+  /**
+   * App supports search API
+  */
+  search?: boolean;
+  /**
+   * App supports the 'crash free user' metric
+  */
+  crashgroupAnalyticsCrashfreeusers?: boolean;
+  /**
+   * App supports the 'impacted users' metric
+  */
+  crashgroupAnalyticsImpactedusers?: boolean;
+  /**
+   * App supports download of raw crashes
+  */
+  crashDownloadRaw?: boolean;
+}
+
+export interface GetAppCrashesInfoOKResponse {
+  hasCrashes: boolean;
+  features: GetAppCrashesInfoOKResponseFeatures;
+}
+
+export interface GetAppCrashesInfoErrorModel {
+  message: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface ListSessionLogsOKResponseLogsItemModel {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: ListSessionLogsOKResponseLogsItemDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
+}
+
+export interface ListSessionLogsOKResponseModel {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: ListSessionLogsOKResponseLogsItemModel[];
+}
+
+export interface GetCrashTextAttachmentContentErrorModel {
+  message: string;
+}
+
+/**
+ * Location for downloading crash attachment
+*/
+export interface GetCrashAttachmentLocationOKResponse {
+  uri: string;
+}
+
+export interface GetCrashAttachmentLocationErrorModel {
+  message: string;
+}
+
+export interface ListAttachmentsOKResponseItem {
+  appId: string;
+  attachmentId: string;
+  crashId: string;
+  blobLocation: string;
+  contentType: string;
+  fileName: string;
+  createdTime: Date;
+  size: number;
+}
+
+export interface ListAttachmentsErrorModel {
+  message: string;
+}
+
+export interface GetStacktraceErrorModel {
+  message: string;
+}
+
+/**
+ * Location for downloading crash raw
+*/
+export interface GetRawCrashLocationOKResponse {
+  uri: string;
+}
+
+export interface GetRawCrashLocationErrorModel {
+  message: string;
+}
+
+export interface GetNativeCrashDownloadErrorModel {
+  message: string;
+}
+
+export interface GetNativeCrashErrorModel {
+  message: string;
+}
+
+export interface GetErrorModel8 {
+  message: string;
+}
+
+export interface DeleteOKResponseModelModel {
+  appId?: string;
+  crashGroupId?: string;
+  crashId?: string;
+  crashesDeleted?: number;
+  attachmentsDeleted?: number;
+  blobsSucceeded?: number;
+  blobsFailed?: number;
+}
+
+export interface DeleteErrorModel6 {
+  message: string;
+}
+
+export interface ListErrorModel7 {
+  message: string;
+}
+
+/**
+ * frame belonging to the reason of the crash
+*/
+export interface GetOKResponseReasonFrame {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface GetOKResponseModelModelModelModelModelModelModelModelModelModel {
+  crashGroupId: string;
+  newCrashGroupId: string;
+  displayId: string;
+  appVersion: string;
+  build: string;
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  status: string;
+  count: number;
+  impactedUsers?: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exception?: string;
+  crashReason: string;
+  /**
+   * frame belonging to the reason of the crash
+  */
+  reasonFrame?: GetOKResponseReasonFrame;
+  /**
+   * Crash or handled exception
+  */
+  fatal: boolean;
+  annotation: string;
+}
+
+export interface GetErrorModel9 {
+  message: string;
+}
+
+export interface Group {
+  status?: any;
+  annotation?: string;
+}
+
+/**
+ * frame belonging to the reason of the crash
+*/
+export interface UpdateOKResponseReasonFrame {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface UpdateOKResponseModelModelModelModelModelModel {
+  crashGroupId: string;
+  newCrashGroupId: string;
+  displayId: string;
+  appVersion: string;
+  build: string;
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  status: string;
+  count: number;
+  impactedUsers?: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exception?: string;
+  crashReason: string;
+  /**
+   * frame belonging to the reason of the crash
+  */
+  reasonFrame?: UpdateOKResponseReasonFrame;
+  /**
+   * Crash or handled exception
+  */
+  fatal: boolean;
+  annotation: string;
+}
+
+export interface UpdateErrorModel3 {
+  message: string;
+}
+
+/**
+ * frame belonging to the reason of the crash
+*/
+export interface ListOKResponseCrashGroupsItemReasonFrame {
+  /**
+   * name of the class
+  */
+  className?: string;
+  /**
+   * name of the method
+  */
+  method?: string;
+  /**
+   * is a class method
+  */
+  classMethod?: boolean;
+  /**
+   * name of the file
+  */
+  file?: string;
+  /**
+   * line number
+  */
+  line?: number;
+  /**
+   * this line isn't from any framework
+  */
+  appCode?: boolean;
+  /**
+   * Name of the framework
+  */
+  frameworkName?: string;
+  /**
+   * Formatted frame string
+  */
+  codeFormatted?: string;
+  /**
+   * Unformatted Frame string
+  */
+  codeRaw?: string;
+  /**
+   * programming language of the frame. Possible values include: 'JavaScript', 'CSharp',
+   * 'Objective-C', 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+  */
+  language?: string;
+  /**
+   * parameters of the frames method
+  */
+  methodParams?: string;
+  /**
+   * Exception type.
+  */
+  exceptionType?: string;
+  /**
+   * OS exception type. (aka. SIGNAL)
+  */
+  osExceptionType?: string;
+}
+
+export interface ListOKResponseCrashGroupsItem {
+  crashGroupId: string;
+  newCrashGroupId: string;
+  displayId: string;
+  appVersion: string;
+  build: string;
+  /**
+   * Possible values include: 'open', 'closed', 'ignored'
+  */
+  status: string;
+  count: number;
+  impactedUsers?: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exception?: string;
+  crashReason: string;
+  /**
+   * frame belonging to the reason of the crash
+  */
+  reasonFrame?: ListOKResponseCrashGroupsItemReasonFrame;
+  /**
+   * Crash or handled exception
+  */
+  fatal: boolean;
+  annotation: string;
+}
+
+export interface ListOKResponseModelModelModelModelModel {
+  limitedResultSet: boolean;
+  /**
+   * Cassandra request continuation token. The token is used for pagination.
+  */
+  continuationToken?: string;
+  crashGroups: ListOKResponseCrashGroupsItem[];
+}
+
+export interface ListErrorModel8 {
+  message: string;
+}
+
+export interface ListByShaListOKResponseItemCommitAuthor {
+  /**
+   * Date and time of the commit
+  */
+  date?: string;
+  /**
+   * Author name
+  */
+  name?: string;
+  /**
+   * Author's email
+  */
+  email?: string;
+}
+
+export interface ListByShaListOKResponseItemCommit {
+  /**
+   * Commit message
+  */
+  message?: string;
+  author?: ListByShaListOKResponseItemCommitAuthor;
+}
+
+export interface ListByShaListOKResponseItem {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+  commit?: ListByShaListOKResponseItemCommit;
+}
+
+export interface GetLogOKResponse {
+  value?: string[];
+}
+
+/**
+ * A download reference
+*/
+export interface GetDownloadUriOKResponse {
+  /**
+   * Download URI
+  */
+  uri: string;
+}
+
+/**
+ * Destination details for distributing build releases
+*/
+export interface DistributeInfoDestinationsItem {
+  id: string;
+  /**
+   * Possible values include: 'store', 'group', 'tester'
+  */
+  type: string;
+}
+
+export interface DistributeInfo {
+  /**
+   * Array of objects {id:string, type:string} with "id" being the distribution group ID, store ID,
+   * or tester email, and "type" being "group", "store", or "tester"
+  */
+  destinations?: DistributeInfoDestinationsItem[];
+  /**
+   * The release notes
+  */
+  releaseNotes?: string;
+  mandatoryUpdate?: boolean;
+  notifyTesters?: boolean;
+}
+
+export interface DistributeOKResponse {
+  /**
+   * Status of the Request
+  */
+  status?: string;
+  /**
+   * A unique ID of the upload
+  */
+  uploadId?: string;
+}
+
+export interface GetOKResponseModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
+export interface PropertiesModelModelModelModel {
+  /**
+   * The build status; used to cancel builds. Possible values include: 'cancelling'
+  */
+  status?: string;
+}
+
+export interface UpdateOKResponseModelModelModelModelModelModelModel {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
+export interface GetStatusByAppIdOKResponse {
+  status?: string;
+  service?: string;
+  message?: string;
+  url?: string;
+  validUntil?: number;
+  os?: string;
+}
+
+/**
+ * Object returned in response to getting a bug tracker issue related to a crash group id
+*/
+export interface GetRepoIssueFromCrashOKResponse {
+  id?: string;
+  url?: string;
+  title?: string;
+  /**
+   * Possible values include: 'github', 'vsts', 'jira'
+  */
+  bugTrackerType?: string;
+  repoName?: string;
+  mobileCenterId?: string;
+  eventType?: string;
+}
+
+/**
+ * Alerting service error
+*/
+export interface GetRepoIssueFromCrashErrorModel {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The status code return by the API. It can be 400 or 404 or 409 or 500.
+  */
+  code: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+/**
+ * Bugtracker specific settings
+*/
+export interface GetSettingsOKResponseSettings {
+  callbackUrl?: string;
+  ownerName: string;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+/**
+ * Alerting bugtracker resource
+*/
+export interface GetSettingsOKResponse {
+  /**
+   * type of bugtracker. Possible values include: 'github', 'vsts', 'jira'
+  */
+  type?: string;
+  /**
+   * bugtracker state. Possible values include: 'enabled', 'disabled', 'unauthorized'
+  */
+  state?: string;
+  /**
+   * ID of OAuth token
+  */
+  tokenId?: string;
+  /**
+   * Event types enabled for bugtracker
+  */
+  eventTypes?: string[];
+  /**
+   * Bugtracker specific settings
+  */
+  settings?: GetSettingsOKResponseSettings;
+}
+
+/**
+ * Alerting service error
+*/
+export interface GetSettingsErrorModel {
+  /**
+   * Unique request identifier for tracking
+  */
+  requestId: string;
+  /**
+   * The status code return by the API. It can be 400 or 404 or 409 or 500.
+  */
+  code: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+export interface ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemSharedSchemesItemArchiveProject {
+  /**
+   * The Id of the target to archive
+  */
+  archiveTargetId: string;
+  /**
+   * The project to archive container name
+  */
+  projectName: string;
+  /**
+   * Full path of the target project
+  */
+  projectPath?: string;
+}
+
+export interface ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemSharedSchemesItem {
+  /**
+   * Scheme name
+  */
+  name: string;
+  /**
+   * Does scheme have a test action?
+  */
+  hasTestAction: boolean;
+  /**
+   * Build configuration set in Archive action
+  */
+  archiveConfiguration?: string;
+  archiveProject?:
+  ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemSharedSchemesItemArchiveProject;
+}
+
+/**
+ * App extension information
+*/
+export interface ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemAppExtensionTargetsItem
+{
+  /**
+   * App extension name
+  */
+  name: string;
+  /**
+   * App extension bundle identifier
+  */
+  targetBundleIdentifier: string;
+}
+
+export interface ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItem {
+  /**
+   * Path to project
+  */
+  path: string;
+  /**
+   * Project schemes
+  */
+  sharedSchemes: ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemSharedSchemesItem[];
+  /**
+   * Path to CocoaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  /**
+   * repo object Id of the pbxproject
+  */
+  xcodeProjectSha?: string;
+  /**
+   * Related projects paths for xcworkspace
+  */
+  workspaceProjectPaths?: string;
+  /**
+   * Information regarding project app extensions, if present
+  */
+  appExtensionTargets?:
+  ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemAppExtensionTargetsItem[];
+}
+
+export interface ListToolsetProjectsOKResponseXcode {
+  /**
+   * The Xcode scheme containers
+  */
+  xcodeSchemeContainers: ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItem[];
+}
+
+export interface ListToolsetProjectsOKResponseJavascriptJavascriptSolutionsItem {
+  /**
+   * The path to the detected package.json
+  */
+  packageJsonPath: string;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+export interface ListToolsetProjectsOKResponseJavascript {
+  /**
+   * Paths for detected package.json files
+  */
+  packageJsonPaths: string[];
+  /**
+   * The React Native solutions detected
+  */
+  javascriptSolutions?: ListToolsetProjectsOKResponseJavascriptJavascriptSolutionsItem[];
+}
+
+export interface ListToolsetProjectsOKResponseXamarinXamarinSolutionsItem {
+  /**
+   * Path to solution
+  */
+  path: string;
+  /**
+   * Solution configurations
+  */
+  configurations: string[];
+  /**
+   * Solution default configuration
+  */
+  defaultConfiguration?: string;
+}
+
+export interface ListToolsetProjectsOKResponseXamarin {
+  /**
+   * Xamarin solutions for the toolset
+  */
+  xamarinSolutions: ListToolsetProjectsOKResponseXamarinXamarinSolutionsItem[];
+}
+
+/**
+ * Android signing config. Null if not specified
+*/
+export interface ListToolsetProjectsOKResponseAndroidAndroidModulesItemBuildConfigurationsItemSigningConfig {
+  /**
+   * Indicates if storeFile is specified in the signing configuration
+  */
+  hasStoreFile?: boolean;
+}
+
+export interface ListToolsetProjectsOKResponseAndroidAndroidModulesItemBuildConfigurationsItem {
+  /**
+   * Name of build configuration (the same as a build type name)
+  */
+  name: string;
+  /**
+   * Android signing config. Null if not specified
+  */
+  signingConfig?:
+  ListToolsetProjectsOKResponseAndroidAndroidModulesItemBuildConfigurationsItemSigningConfig;
+}
+
+export interface ListToolsetProjectsOKResponseAndroidAndroidModulesItem {
+  /**
+   * Name of the Android module
+  */
+  name: string;
+  /**
+   * Module contains bundle settings
+  */
+  hasBundle?: boolean;
+  /**
+   * The product flavors of the Android module
+  */
+  productFlavors?: string[];
+  /**
+   * The detected build variants of the Android module (matrix of product flavor + build type
+   * (debug|release))
+  */
+  buildVariants?: string[];
+  /**
+   * The detected build types of the Android module
+  */
+  buildTypes?: string[];
+  /**
+   * The detected build configurations of the Android module
+  */
+  buildConfigurations?:
+  ListToolsetProjectsOKResponseAndroidAndroidModulesItemBuildConfigurationsItem[];
+  /**
+   * Whether the module is at the root level of the project
+  */
+  isRoot?: boolean;
+}
+
+export interface ListToolsetProjectsOKResponseAndroid {
+  /**
+   * Android Gradle modules
+  */
+  androidModules: ListToolsetProjectsOKResponseAndroidAndroidModulesItem[];
+  /**
+   * The path of the Gradle wrapper
+  */
+  gradleWrapperPath?: string;
+}
+
+/**
+ * Abstract platform project
+*/
+export interface ListToolsetProjectsOKResponseBuildscriptsValue {
+  name?: string;
+  path?: string;
+}
+
+export interface ListToolsetProjectsOKResponseUwpUwpSolutionsItem {
+  /**
+   * The path to the UWP solution
+  */
+  path: string;
+  /**
+   * The possible configurations detected for the UWP solution
+  */
+  configurations: string[];
+}
+
+export interface ListToolsetProjectsOKResponseUwp {
+  /**
+   * The UWP solutions detected
+  */
+  uwpSolutions: ListToolsetProjectsOKResponseUwpUwpSolutionsItem[];
+}
+
+export interface ListToolsetProjectsOKResponseTestcloudProjectsItemFrameworkProperties {
+  configurations?: string[];
+}
+
+export interface ListToolsetProjectsOKResponseTestcloudProjectsItem {
+  /**
+   * The path to the TestCloud project
+  */
+  path: string;
+  /**
+   * Possible values include: 'Appium', 'Calabash', 'Espresso', 'UITest', 'Generated'
+  */
+  frameworkType: string;
+  frameworkProperties?: ListToolsetProjectsOKResponseTestcloudProjectsItemFrameworkProperties;
+}
+
+export interface ListToolsetProjectsOKResponseTestcloud {
+  /**
+   * The TestCloud projects detected
+  */
+  projects: ListToolsetProjectsOKResponseTestcloudProjectsItem[];
+}
+
+/**
+ * A collection of projects for each type of toolset
+*/
+export interface ListToolsetProjectsOKResponse {
+  /**
+   * The commit hash of the analyzed commit
+  */
+  commit?: string;
+  xcode?: ListToolsetProjectsOKResponseXcode;
+  javascript?: ListToolsetProjectsOKResponseJavascript;
+  xamarin?: ListToolsetProjectsOKResponseXamarin;
+  android?: ListToolsetProjectsOKResponseAndroid;
+  /**
+   * A collection of detected pre/post buildscripts for current platform toolset
+  */
+  buildscripts?: { [propertyName: string]: ListToolsetProjectsOKResponseBuildscriptsValue };
+  uwp?: ListToolsetProjectsOKResponseUwp;
+  testcloud?: ListToolsetProjectsOKResponseTestcloud;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface GetOKResponseToolsetsXcodeAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface GetOKResponseToolsetsXcode {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  GetOKResponseToolsetsXcodeAppExtensionProvisioningProfileFilesItem[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
+}
+
+/**
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+*/
+export interface GetOKResponseToolsetsJavascript {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+/**
+ * Build configuration for Xamarin projects
+*/
+export interface GetOKResponseToolsetsXamarin {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
+  /**
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
+  */
+  symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface GetOKResponseToolsetsAndroid {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface GetOKResponseToolsets {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: GetOKResponseToolsetsXcode;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: GetOKResponseToolsetsJavascript;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: GetOKResponseToolsetsXamarin;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: GetOKResponseToolsetsAndroid;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface GetOKResponseArtifactVersioning {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+export interface GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * Possible values include: 'continous', 'continuous', 'manual'
+  */
+  trigger?: string;
+  testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
+  signed?: boolean;
+  /**
+   * A configured branch name to clone from. If provided, all other parameters will be ignored.
+   * Only supported in POST requests.
+  */
+  cloneFromBranch?: string;
+  /**
+   * The branch build configuration for each toolset
+  */
+  toolsets?: GetOKResponseToolsets;
+  /**
+   * The versioning configuration for artifacts built for this branch
+  */
+  artifactVersioning?: GetOKResponseArtifactVersioning;
+  id: number;
+}
+
+export interface GetErrorModel10 {
+  id: string;
+  code: string;
+  message: string;
+}
+
+export interface ParamsValueBranchCommit {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+}
+
+export interface ParamsValueBranch {
+  /**
+   * The branch name
+  */
+  name: string;
+  commit: ParamsValueBranchCommit;
+}
+
+/**
+ * The branch build core properties
+*/
+export interface ParamsValue {
+  branch?: ParamsValueBranch;
+  enabled?: boolean;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface ParamsToolsetsXcodeAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface ParamsToolsetsXcode {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  ParamsToolsetsXcodeAppExtensionProvisioningProfileFilesItem[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
+}
+
+/**
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+*/
+export interface ParamsToolsetsJavascript {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+/**
+ * Build configuration for Xamarin projects
+*/
+export interface ParamsToolsetsXamarin {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
+  /**
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
+  */
+  symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface ParamsToolsetsAndroid {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface ParamsToolsets {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: ParamsToolsetsXcode;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: ParamsToolsetsJavascript;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: ParamsToolsetsXamarin;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: ParamsToolsetsAndroid;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface ParamsArtifactVersioning {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+/**
+ * The branch build configuration
+*/
+export interface Params {
+  /**
+   * Possible values include: 'continous', 'continuous', 'manual'
+  */
+  trigger?: string;
+  testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
+  signed?: boolean;
+  /**
+   * A configured branch name to clone from. If provided, all other parameters will be ignored.
+   * Only supported in POST requests.
+  */
+  cloneFromBranch?: string;
+  /**
+   * The branch build configuration for each toolset
+  */
+  toolsets?: ParamsToolsets;
+  /**
+   * The versioning configuration for artifacts built for this branch
+  */
+  artifactVersioning?: ParamsArtifactVersioning;
+  /**
+   * Describes unknown properties. The value of an unknown property MUST be of type "ParamsValue".
+   * Due to valid TS constraints we have modeled this as a union of `ParamsValue | any`.
+  */
+  [additionalPropertyName: string]: ParamsValue | any;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface CreateOKResponseToolsetsXcodeAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface CreateOKResponseToolsetsXcode {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  CreateOKResponseToolsetsXcodeAppExtensionProvisioningProfileFilesItem[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
+}
+
+/**
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+*/
+export interface CreateOKResponseToolsetsJavascript {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+/**
+ * Build configuration for Xamarin projects
+*/
+export interface CreateOKResponseToolsetsXamarin {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
+  /**
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
+  */
+  symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface CreateOKResponseToolsetsAndroid {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface CreateOKResponseToolsets {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: CreateOKResponseToolsetsXcode;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: CreateOKResponseToolsetsJavascript;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: CreateOKResponseToolsetsXamarin;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: CreateOKResponseToolsetsAndroid;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface CreateOKResponseArtifactVersioning {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+export interface CreateOKResponseModelModelModel {
+  /**
+   * Possible values include: 'continous', 'continuous', 'manual'
+  */
+  trigger?: string;
+  testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
+  signed?: boolean;
+  /**
+   * A configured branch name to clone from. If provided, all other parameters will be ignored.
+   * Only supported in POST requests.
+  */
+  cloneFromBranch?: string;
+  /**
+   * The branch build configuration for each toolset
+  */
+  toolsets?: CreateOKResponseToolsets;
+  /**
+   * The versioning configuration for artifacts built for this branch
+  */
+  artifactVersioning?: CreateOKResponseArtifactVersioning;
+  id: number;
+}
+
+/**
+ * Provisioning profile fetch and store information
+*/
+export interface UpdateOKResponseToolsetsXcodeAppExtensionProvisioningProfileFilesItem {
+  /**
+   * Name of uploaded provisioning profile
+  */
+  fileName?: string;
+  /**
+   * File id from secure file storage
+  */
+  fileId?: string;
+  /**
+   * Upload id to App Center File Upload Store
+  */
+  uploadId?: string;
+  /**
+   * Target the provisioning profile is used to sign
+  */
+  targetBundleIdentifier?: string;
+}
+
+/**
+ * Build configuration when Xcode is part of the build steps
+*/
+export interface UpdateOKResponseToolsetsXcode {
+  /**
+   * Xcode project/workspace path
+  */
+  projectOrWorkspacePath?: string;
+  /**
+   * Path to CococaPods file, if present
+  */
+  podfilePath?: string;
+  /**
+   * Path to Carthage file, if present
+  */
+  cartfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  provisioningProfileFileId?: string;
+  certificateFileId?: string;
+  provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?:
+  UpdateOKResponseToolsetsXcodeAppExtensionProvisioningProfileFilesItem[];
+  certificateUploadId?: string;
+  certificatePassword?: string;
+  scheme?: string;
+  /**
+   * Xcode version used to build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
+  */
+  xcodeVersion?: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+  teamId?: string;
+  automaticSigning?: boolean;
+  /**
+   * The selected pbxproject hash to the repositroy
+  */
+  xcodeProjectSha?: string;
+  /**
+   * The build configuration of the target to archive
+  */
+  archiveConfiguration?: string;
+  /**
+   * The target id of the selected scheme to archive
+  */
+  targetToArchive?: string;
+  /**
+   * Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to the repository.
+   * Only used for iOS React Native app, with Xcode 10.
+
+  */
+  forceLegacyBuildSystem?: boolean;
+}
+
+/**
+ * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+*/
+export interface UpdateOKResponseToolsetsJavascript {
+  /**
+   * Path to package.json file for the main project, e.g. "package.json" or "myapp/package.json"
+  */
+  packageJsonPath?: string;
+  /**
+   * Whether to run Jest unit tests, via npm test, during the build
+  */
+  runTests?: boolean;
+  /**
+   * Version of React Native from package.json files
+  */
+  reactNativeVersion?: string;
+}
+
+/**
+ * Build configuration for Xamarin projects
+*/
+export interface UpdateOKResponseToolsetsXamarin {
+  slnPath?: string;
+  isSimBuild?: boolean;
+  args?: string;
+  configuration?: string;
+  p12File?: string;
+  p12Pwd?: string;
+  provProfile?: string;
+  monoVersion?: string;
+  sdkBundle?: string;
+  /**
+   * Symlink of the SDK Bundle and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If both symlink and
+   * monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink
+   * is passed, the current stable Mono version will be configured for building.
+
+  */
+  symlink?: string;
+}
+
+/**
+ * Build configuration for Android projects
+*/
+export interface UpdateOKResponseToolsetsAndroid {
+  /**
+   * Path to the Gradle wrapper script
+  */
+  gradleWrapperPath?: string;
+  /**
+   * The Gradle module to build
+  */
+  module?: string;
+  /**
+   * The Android build variant to build
+  */
+  buildVariant?: string;
+  /**
+   * Whether to run unit tests during the build (default)
+  */
+  runTests?: boolean;
+  /**
+   * Whether to run lint checks during the build (default)
+  */
+  runLint?: boolean;
+  /**
+   * Whether it is the root module or not
+  */
+  isRoot?: boolean;
+  /**
+   * Whether to apply automatic signing or not
+  */
+  automaticSigning?: boolean;
+  /**
+   * The password of the keystore
+  */
+  keystorePassword?: string;
+  /**
+   * The key alias
+  */
+  keyAlias?: string;
+  /**
+   * The key password
+  */
+  keyPassword?: string;
+  /**
+   * The name of the keystore file
+  */
+  keystoreFilename?: string;
+  /**
+   * The keystore encoded value
+  */
+  keystoreEncoded?: string;
+}
+
+/**
+ * The branch build configuration for each toolset
+*/
+export interface UpdateOKResponseToolsets {
+  /**
+   * Build configuration when Xcode is part of the build steps
+  */
+  xcode?: UpdateOKResponseToolsetsXcode;
+  /**
+   * Build configuration when React Native, or other JavaScript tech, is part of the build steps
+  */
+  javascript?: UpdateOKResponseToolsetsJavascript;
+  /**
+   * Build configuration for Xamarin projects
+  */
+  xamarin?: UpdateOKResponseToolsetsXamarin;
+  /**
+   * Build configuration for Android projects
+  */
+  android?: UpdateOKResponseToolsetsAndroid;
+}
+
+/**
+ * The versioning configuration for artifacts built for this branch
+*/
+export interface UpdateOKResponseArtifactVersioning {
+  /**
+   * Possible values include: 'buildId', 'timestamp'
+  */
+  buildNumberFormat?: string;
+}
+
+export interface UpdateOKResponseModelModelModelModelModelModelModelModel {
+  /**
+   * Possible values include: 'continous', 'continuous', 'manual'
+  */
+  trigger?: string;
+  testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
+  signed?: boolean;
+  /**
+   * A configured branch name to clone from. If provided, all other parameters will be ignored.
+   * Only supported in POST requests.
+  */
+  cloneFromBranch?: string;
+  /**
+   * The branch build configuration for each toolset
+  */
+  toolsets?: UpdateOKResponseToolsets;
+  /**
+   * The versioning configuration for artifacts built for this branch
+  */
+  artifactVersioning?: UpdateOKResponseArtifactVersioning;
+  id: number;
+}
+
+export interface ListByBranchOKResponseItem {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
+export interface ParamsModel {
+  /**
+   * Version to build which represents the full Git commit reference
+  */
+  sourceVersion?: string;
+  /**
+   * Run build in debug mode
+  */
+  debug?: boolean;
+}
+
+export interface CreateOKResponseModelModelModelModel {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
+export interface ListBranchesOKResponseItemValueBranchCommit {
+  /**
+   * The commit SHA
+  */
+  sha?: string;
+  /**
+   * The URL to the commit
+  */
+  url?: string;
+}
+
+export interface ListBranchesOKResponseItemValueBranch {
+  /**
+   * The branch name
+  */
+  name: string;
+  commit: ListBranchesOKResponseItemValueBranchCommit;
+}
+
+/**
+ * The branch build core properties
+*/
+export interface ListBranchesOKResponseItemValue {
+  branch?: ListBranchesOKResponseItemValueBranch;
+  enabled?: boolean;
+}
+
+export interface ListBranchesOKResponseItemLastBuild {
+  /**
+   * The build ID
+  */
+  id: number;
+  /**
+   * The build number
+  */
+  buildNumber: string;
+  /**
+   * The time the build was queued
+  */
+  queueTime: string;
+  /**
+   * The time the build was started
+  */
+  startTime?: string;
+  /**
+   * The time the build was finished
+  */
+  finishTime?: string;
+  /**
+   * The time the build status was last changed
+  */
+  lastChangedDate?: string;
+  /**
+   * The build status
+  */
+  status: string;
+  /**
+   * The build result
+  */
+  result: string;
+  /**
+   * The source branch name
+  */
+  sourceBranch: string;
+  /**
+   * The source SHA
+  */
+  sourceVersion: string;
+}
+
+/**
+ * The branch build status
+*/
+export interface ListBranchesOKResponseItem {
+  configured: boolean;
+  lastBuild?: ListBranchesOKResponseItemLastBuild;
+  /**
+   * Describes unknown properties. The value of an unknown property MUST be of type
+   * "ListBranchesOKResponseItemValue". Due to valid TS constraints we have modeled this as a union
+   * of `ListBranchesOKResponseItemValue | any`.
+  */
+  [additionalPropertyName: string]: ListBranchesOKResponseItemValue | any;
+}
+
+export interface ListBranchesErrorModel {
+  id: string;
+  code: string;
+  message: string;
+}
+
+/**
+ * Billing Plan
+*/
+export interface GetByAppOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface GetByAppOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: GetByAppOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface GetByAppOKResponseBillingPlansBuildServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: GetByAppOKResponseBillingPlansBuildServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface GetByAppOKResponseBillingPlansBuildService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: GetByAppOKResponseBillingPlansBuildServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plan
+*/
+export interface GetByAppOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
+  /**
+   * The Billing Plan ID
+  */
+  id?: string;
+  /**
+   * Version of the Billing Plan schema
+  */
+  version?: string;
+  /**
+   * Price of the Billing Plan
+  */
+  price?: number;
+  /**
+   * Service that receives payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
+  */
+  paymentSource?: string;
+  /**
+   * Name of the service that the plan applies to. Possible values include: 'Build', 'Test'
+  */
+  service?: string;
+  /**
+   * A collection of named numeric values
+  */
+  limits?: { [propertyName: string]: number };
+  /**
+   * Collection of attribute values.
+  */
+  attributes?: { [propertyName: string]: any };
+  parentId?: string;
+}
+
+/**
+ * Selection of a billing plan
+*/
+export interface GetByAppOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccount {
+  /**
+   * Number of instances of the billing plan.
+  */
+  count?: number;
+  /**
+   * Billing Plan
+  */
+  plan?: GetByAppOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccountPlan;
+}
+
+/**
+ * Billing plans for a given period
+*/
+export interface GetByAppOKResponseBillingPlansTestServiceCurrentBillingPeriod {
+  /**
+   * Inclusive start of the period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end of the period.
+  */
+  endTime?: string;
+  /**
+   * Selection of a billing plan
+  */
+  byAccount?: GetByAppOKResponseBillingPlansTestServiceCurrentBillingPeriodByAccount;
+}
+
+/**
+ * Billing Plans for a single service
+*/
+export interface GetByAppOKResponseBillingPlansTestService {
+  /**
+   * Can customer select trial plan for that service (if it exists)?
+  */
+  canSelectTrialPlan?: boolean;
+  /**
+   * Expiration time of the last selected trial plan. Will be null if trial plan was not used.
+  */
+  lastTrialPlanExpirationTime?: string;
+  /**
+   * Billing plans for a given period
+  */
+  currentBillingPeriod?: GetByAppOKResponseBillingPlansTestServiceCurrentBillingPeriod;
+}
+
+/**
+ * Billing Plans section in the Billing Information
+*/
+export interface GetByAppOKResponseBillingPlans {
+  /**
+   * Billing Plans for a single service
+  */
+  buildService?: GetByAppOKResponseBillingPlansBuildService;
+  /**
+   * Billing Plans for a single service
+  */
+  testService?: GetByAppOKResponseBillingPlansTestService;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface GetByAppOKResponseUsageBuildServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface GetByAppOKResponseUsageBuildService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: GetByAppOKResponseUsageBuildServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage for a single period
+*/
+export interface GetByAppOKResponseUsageTestServiceCurrentUsagePeriod {
+  /**
+   * Inclusive start time of the usage period
+  */
+  startTime?: string;
+  /**
+   * Exclusive end time of the usage period.
+  */
+  endTime?: string;
+  /**
+   * A collection of named numeric values
+  */
+  byAccount?: { [propertyName: string]: number };
+  /**
+   * A collection of  named numeric values grouped by app
+  */
+  byApp?: { [propertyName: string]: { [propertyName: string]: number } };
+}
+
+/**
+ * Resource usage for a single Mobile Center service
+*/
+export interface GetByAppOKResponseUsageTestService {
+  /**
+   * Usage for a single period
+  */
+  currentUsagePeriod?: GetByAppOKResponseUsageTestServiceCurrentUsagePeriod;
+}
+
+/**
+ * Usage section in the Billing Information
+*/
+export interface GetByAppOKResponseUsage {
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  buildService?: GetByAppOKResponseUsageBuildService;
+  /**
+   * Resource usage for a single Mobile Center service
+  */
+  testService?: GetByAppOKResponseUsageTestService;
+}
+
+/**
+ * Aggregated Billing Information for a user or an organization
+*/
+export interface GetByAppOKResponse {
+  /**
+   * Version of the Billing Information schema
+  */
+  version?: string;
+  /**
+   * The ISO 8601 datetime of last modification
+  */
+  timestamp?: string;
+  /**
+   * ID of the user or organization
+  */
+  id?: string;
+  /**
+   * Billing Plans section in the Billing Information
+  */
+  billingPlans?: GetByAppOKResponseBillingPlans;
+  /**
+   * Usage section in the Billing Information
+  */
+  usage?: GetByAppOKResponseUsage;
+  /**
+   * Unique identifier for the Azure subscription used for billing
+  */
+  azureSubscriptionId?: string;
+  /**
+   * State of the Azure subscription used for billing. Possible values include: 'Enabled',
+   * 'Disabled', 'NotSet'
+  */
+  azureSubscriptionState?: string;
+}
+
+export interface GetByAppErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface GetByAppErrorModel {
+  error?: GetByAppErrorModelError;
+}
+
+export interface DeleteForAppErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteForAppErrorModel {
+  error: DeleteForAppErrorModelError;
+}
+
+export interface ListForAppOKResponseItem {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface ListForAppErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListForAppErrorModel {
+  error: ListForAppErrorModelError;
+}
+
+export interface AzureSubscriptionToAppData {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+}
+
+export interface LinkForAppErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface LinkForAppErrorModel {
+  error: LinkForAppErrorModelError;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface UpdateAvatarOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface UpdateAvatarOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface UpdateAvatarOKResponseModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: UpdateAvatarOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: UpdateAvatarOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface DeleteAvatarOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface DeleteAvatarOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface DeleteAvatarOKResponseModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: DeleteAvatarOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: DeleteAvatarOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface GetUsersUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetUsersUnauthorizedResponse {
+  error: GetUsersUnauthorizedResponseError;
+}
+
+export interface GetUsersInternalServerErrorResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetUsersInternalServerErrorResponse {
+  error: GetUsersInternalServerErrorResponseError;
+}
+
+/**
+ * Apple Test Flight Groups Response Type
+*/
+export interface TestFlightGroupsOKResponseItem {
+  /**
+   * id of the group.
+  */
+  id?: string;
+  /**
+   * provider id of the group.
+  */
+  providerId?: number;
+  /**
+   * apple id of the group.
+  */
+  appleId?: number;
+  /**
+   * name of the group.
+  */
+  name?: string;
+}
+
+export interface TestFlightGroupsErrorModel {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * Apple Mapping Request Type
+*/
+export interface GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * ID of the apple application in Mobile Center
+  */
+  appId?: string;
+  /**
+   * Id for the shared service connection. In case of Apple AppStore, this connection will be used
+   * to create and connect to the Apple AppStore in Mobile Center.
+  */
+  serviceConnectionId?: string;
+  /**
+   * ID of the apple application in apple store
+  */
+  appleId?: string;
+  /**
+   * ID of the Team associated with the app in apple store
+  */
+  teamIdentifier?: string;
+}
+
+export interface GetErrorModel11 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteErrorModel7 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+/**
+ * Apple Mapping Request Type
+*/
+export interface BodyModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * Id for the shared service connection. In case of Apple AppStore, this connection will be used
+   * to create and connect to the Apple AppStore in Mobile Center.
+  */
+  serviceConnectionId: string;
+  /**
+   * ID of the apple application in apple store, takes precedence over bundle_identifier when both
+   * are provided
+  */
+  appleId?: string;
+  /**
+   * Bundle Identifier of the apple package
+  */
+  bundleIdentifier?: string;
+  /**
+   * ID of the Team associated with the app in apple store
+  */
+  teamIdentifier: string;
+}
+
+/**
+ * Apple Mapping Request Type
+*/
+export interface CreateCreatedResponseModelModelModelModelModel {
+  /**
+   * ID of the apple application in Mobile Center
+  */
+  appId?: string;
+  /**
+   * Id for the shared service connection. In case of Apple AppStore, this connection will be used
+   * to create and connect to the Apple AppStore in Mobile Center.
+  */
+  serviceConnectionId?: string;
+  /**
+   * ID of the apple application in apple store
+  */
+  appleId?: string;
+  /**
+   * ID of the Team associated with the app in apple store
+  */
+  teamIdentifier?: string;
+}
+
+export interface CreateErrorModel6 {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface VersionsOKResponseVersionsItem {
+  /**
+   * Version.
+  */
+  version?: string;
+  /**
+   * Version count.
+  */
+  count?: number;
+  /**
+   * The count of previous time range of the version.
+  */
+  previousCount?: number;
+}
+
+export interface VersionsOKResponse {
+  /**
+   * List of version count.
+  */
+  versions?: VersionsOKResponseVersionsItem[];
+  /**
+   * The total count of versions.
+  */
+  total?: number;
+}
+
+export interface VersionsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface VersionsErrorModel {
+  error?: VersionsErrorModelError;
+}
+
+export interface PerDeviceCountsOKResponseSessionsPerUserItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count.
+  */
+  count?: number;
+}
+
+export interface PerDeviceCountsOKResponse {
+  /**
+   * Average seesion per user.
+  */
+  averageSessionsPerUser?: number;
+  /**
+   * Previous average session per user.
+  */
+  previousAverageSessionsPerUser?: number;
+  /**
+   * Total session per device count.
+  */
+  totalCount?: number;
+  /**
+   * Previous total count.
+  */
+  previousTotalCount?: number;
+  /**
+   * The session count for each interval per device.
+  */
+  sessionsPerUser?: PerDeviceCountsOKResponseSessionsPerUserItem[];
+}
+
+export interface PerDeviceCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface PerDeviceCountsErrorModel {
+  error?: PerDeviceCountsErrorModelError;
+}
+
+export interface SessionDurationsDistributionOKResponseDistributionItem {
+  /**
+   * The bucket name.
+  */
+  bucket?: string;
+  /**
+   * The count of sessions in current bucket.
+  */
+  count?: number;
+}
+
+export interface SessionDurationsDistributionOKResponse {
+  /**
+   * The count of sessions in these buckets.
+  */
+  distribution?: SessionDurationsDistributionOKResponseDistributionItem[];
+  /**
+   * The previous average session duration for previous time range.
+  */
+  previousAverageDuration?: string;
+  /**
+   * The average session duration for current time range.
+  */
+  averageDuration?: string;
+}
+
+export interface SessionDurationsDistributionErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface SessionDurationsDistributionErrorModel {
+  error?: SessionDurationsDistributionErrorModelError;
+}
+
+export interface SessionCountsOKResponseItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface SessionCountsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface SessionCountsErrorModel {
+  error: SessionCountsErrorModelError;
+}
+
+/**
+ * The place code and the count.
+*/
+export interface PlaceCountsOKResponsePlacesItem {
+  /**
+   * The place code.
+  */
+  code?: string;
+  /**
+   * The count of the this place.
+  */
+  count?: number;
+  /**
+   * The count of previous time range of the place.
+  */
+  previousCount?: number;
+}
+
+/**
+ * Places and count during the time range in descending order.
+*/
+export interface PlaceCountsOKResponse {
+  total?: number;
+  places?: PlaceCountsOKResponsePlacesItem[];
+}
+
+export interface PlaceCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface PlaceCountsErrorModel {
+  error?: PlaceCountsErrorModelError;
+}
+
+export interface OperatingSystemCountsOKResponseOsesItem {
+  /**
+   * OS name.
+  */
+  osName?: string;
+  /**
+   * Count current of OS.
+  */
+  count?: number;
+  /**
+   * Count of previous OS.
+  */
+  previousCount?: number;
+}
+
+export interface OperatingSystemCountsOKResponse {
+  total?: number;
+  oses?: OperatingSystemCountsOKResponseOsesItem[];
+}
+
+export interface OperatingSystemCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface OperatingSystemCountsErrorModel {
+  error?: OperatingSystemCountsErrorModelError;
+}
+
+export interface ModelCountsOKResponseModelsItem {
+  /**
+   * Model's name.
+  */
+  modelName?: string;
+  /**
+   * Count current of model.
+  */
+  count?: number;
+  /**
+   * Count of previous model.
+  */
+  previousCount?: number;
+}
+
+export interface ModelCountsOKResponse {
+  total?: number;
+  modelsProperty?: ModelCountsOKResponseModelsItem[];
+}
+
+export interface ModelCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface ModelCountsErrorModel {
+  error?: ModelCountsErrorModelError;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface LogFlowOKResponseLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+export interface LogFlowOKResponseLogsItem {
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Device characteristics.
+  */
+  device: LogFlowOKResponseLogsItemDevice;
+  /**
+   * Polymorphic Discriminator
+  */
+  type: string;
+}
+
+export interface LogFlowOKResponse {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: LogFlowOKResponseLogsItem[];
+}
+
+export interface LogFlowErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface LogFlowErrorModel {
+  error: LogFlowErrorModelError;
+}
+
+export interface LanguageCountsOKResponseLanguagesItem {
+  /**
+   * Language's name.
+  */
+  languageName?: string;
+  /**
+   * Count current of language.
+  */
+  count?: number;
+  /**
+   * Count of previous lanugage.
+  */
+  previousCount?: number;
+}
+
+export interface LanguageCountsOKResponse {
+  total?: number;
+  languages?: LanguageCountsOKResponseLanguagesItem[];
+}
+
+export interface LanguageCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface LanguageCountsErrorModel {
+  error?: LanguageCountsErrorModelError;
+}
+
+/**
+ * Device characteristics.
+*/
+export interface GenericLogFlowOKResponseLogsItemDevice {
+  /**
+   * Name of the SDK. Consists of the name of the SDK and the platform, e.g. "appcenter.ios",
+   * "hockeysdk.android".
+
+  */
+  sdkName: string;
+  /**
+   * Version of the SDK in semver format, e.g. "1.2.0" or "0.12.3-alpha.1".
+
+  */
+  sdkVersion: string;
+  /**
+   * Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for
+   * example Xamarin.Android wraps Android), the Xamarin specific version is populated into this
+   * field while sdkVersion refers to the original Android SDK.
+
+  */
+  wrapperSdkVersion?: string;
+  /**
+   * Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g.
+   * "appcenter.xamarin", "hockeysdk.cordova".
+
+  */
+  wrapperSdkName?: string;
+  /**
+   * Device model (example: iPad2,3).
+
+  */
+  model?: string;
+  /**
+   * Device manufacturer (example: HTC).
+
+  */
+  oemName?: string;
+  /**
+   * OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS,
+   * macOS, tvOS, Windows.
+
+  */
+  osName: string;
+  /**
+   * OS version (example: 9.3.0).
+
+  */
+  osVersion: string;
+  /**
+   * OS build code (example: LMY47X).
+
+  */
+  osBuild?: string;
+  /**
+   * API level when applicable like in Android (example: 15).
+
+  */
+  osApiLevel?: number;
+  /**
+   * Language code (example: en_US).
+
+  */
+  locale: string;
+  /**
+   * The offset in minutes from UTC for the device time zone, including daylight savings time.
+
+  */
+  timeZoneOffset: number;
+  /**
+   * Screen size of the device in pixels (example: 640x480).
+
+  */
+  screenSize?: string;
+  /**
+   * Application version name, e.g. 1.1.0
+
+  */
+  appVersion: string;
+  /**
+   * Carrier name (for mobile devices).
+
+  */
+  carrierName?: string;
+  /**
+   * Carrier country code (for mobile devices).
+
+  */
+  carrierCode?: string;
+  /**
+   * Carrier country.
+
+  */
+  carrierCountry?: string;
+  /**
+   * The app's build number, e.g. 42.
+
+  */
+  appBuild: string;
+  /**
+   * The bundle identifier, package identifier, or namespace, depending on what the individual
+   * plattforms use,  .e.g com.microsoft.example.
+
+  */
+  appNamespace?: string;
+  /**
+   * Label that is used to identify application code 'version' released via Live Update beacon
+   * running on device
+
+  */
+  liveUpdateReleaseLabel?: string;
+  /**
+   * Identifier of environment that current application release belongs to, deployment key then
+   * maps to environment like Production, Staging.
+
+  */
+  liveUpdateDeploymentKey?: string;
+  /**
+   * Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+   * identify the Release version on device or need to download updates in future.
+
+  */
+  liveUpdatePackageHash?: string;
+  /**
+   * Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+   * other.
+
+  */
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * Generic log.
+*/
+export interface GenericLogFlowOKResponseLogsItem {
+  /**
+   * Log type.
+   * . Possible values include: 'event', 'page', 'start_session', 'error', 'push_installation',
+   * 'start_service', 'custom_properties'
+  */
+  type: string;
+  /**
+   * Log creation timestamp.
+
+  */
+  timestamp: Date;
+  /**
+   * Install ID.
+
+  */
+  installId: string;
+  /**
+   * Session ID.
+
+  */
+  sessionId?: string;
+  /**
+   * Event ID.
+
+  */
+  eventId?: string;
+  /**
+   * Event name.
+
+  */
+  eventName?: string;
+  /**
+   * Message ID.
+
+  */
+  messageId?: string;
+  /**
+   * event specific properties.
+
+  */
+  properties?: { [propertyName: string]: string };
+  /**
+   * Device characteristics.
+  */
+  device: GenericLogFlowOKResponseLogsItemDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
+}
+
+export interface GenericLogFlowOKResponse {
+  /**
+   * indicates if the number of available logs are more than the max allowed return limit(100).
+  */
+  exceededMaxLimit?: boolean;
+  /**
+   * the timestamp of the last log received. This value can be used as the start time parameter in
+   * the consecutive API call.
+  */
+  lastReceivedLogTimestamp?: Date;
+  /**
+   * the list of logs
+  */
+  logs: GenericLogFlowOKResponseLogsItem[];
+}
+
+export interface GenericLogFlowErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GenericLogFlowErrorModel {
+  error: GenericLogFlowErrorModelError;
+}
+
+/**
+ * An event property value with counts.
+*/
+export interface EventPropertyCountsOKResponseValuesItem {
+  /**
+   * The event property value name.
+  */
+  name?: string;
+  /**
+   * The count of the the event property value.
+  */
+  count?: number;
+  /**
+   * The count of previous time range of the event property value.
+  */
+  previousCount?: number;
+}
+
+/**
+ * Event property value counts during the time range in descending order.
+*/
+export interface EventPropertyCountsOKResponse {
+  /**
+   * The total property value counts.
+  */
+  total?: number;
+  /**
+   * The event property values.
+  */
+  values?: EventPropertyCountsOKResponseValuesItem[];
+}
+
+export interface EventPropertyCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventPropertyCountsErrorModel {
+  error?: EventPropertyCountsErrorModelError;
+}
+
+/**
+ * Event properties during the time range.
+*/
+export interface EventPropertiesOKResponse {
+  eventProperties?: string[];
+}
+
+export interface EventPropertiesErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventPropertiesErrorModel {
+  error?: EventPropertiesErrorModelError;
+}
+
+export interface EventCountOKResponseCountItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface EventCountOKResponse {
+  totalCount?: number;
+  previousTotalCount?: number;
+  count?: EventCountOKResponseCountItem[];
+}
+
+export interface EventCountErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventCountErrorModel {
+  error?: EventCountErrorModelError;
+}
+
+export interface EventDeviceCountOKResponseDevicesCountItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface EventDeviceCountOKResponse {
+  totalDevices?: number;
+  totalDevicesWithEvent?: number;
+  previousTotalDevicesWithEvent?: number;
+  devicesCount?: EventDeviceCountOKResponseDevicesCountItem[];
+}
+
+export interface EventDeviceCountErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventDeviceCountErrorModel {
+  error?: EventDeviceCountErrorModelError;
+}
+
+export interface EventPerSessionCountOKResponseCountPerSessionItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Decimal count of the object.
+  */
+  count?: number;
+}
+
+export interface EventPerSessionCountOKResponse {
+  avgCountPerSession?: number;
+  previousAvgCountPerSession?: number;
+  countPerSession?: EventPerSessionCountOKResponseCountPerSessionItem[];
+}
+
+export interface EventPerSessionCountErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventPerSessionCountErrorModel {
+  error?: EventPerSessionCountErrorModelError;
+}
+
+export interface EventPerDeviceCountOKResponseCountPerDeviceItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Decimal count of the object.
+  */
+  count?: number;
+}
+
+export interface EventPerDeviceCountOKResponse {
+  avgCountPerDevice?: number;
+  previousAvgCountPerDevice?: number;
+  countPerDevice?: EventPerDeviceCountOKResponseCountPerDeviceItem[];
+}
+
+export interface EventPerDeviceCountErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventPerDeviceCountErrorModel {
+  error?: EventPerDeviceCountErrorModelError;
+}
+
+export interface EventsDeleteErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventsDeleteErrorModel {
+  error?: EventsDeleteErrorModelError;
+}
+
+export interface EventsOKResponseEventsItem {
+  id?: string;
+  name?: string;
+  deviceCount?: number;
+  /**
+   * The device count of previous time range of the event.
+  */
+  previousDeviceCount?: number;
+  count?: number;
+  /**
+   * The event count of previous time range of the event.
+  */
+  previousCount?: number;
+  countPerDevice?: number;
+  countPerSession?: number;
+}
+
+export interface EventsOKResponse {
+  events?: EventsOKResponseEventsItem[];
+  /**
+   * The total count of events.
+  */
+  total?: number;
+  /**
+   * The active device over this period.
+  */
+  totalDevices?: number;
+}
+
+export interface EventsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventsErrorModel {
+  error?: EventsErrorModelError;
+}
+
+export interface EventsDeleteLogsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface EventsDeleteLogsErrorModel {
+  error?: EventsDeleteLogsErrorModelError;
+}
+
+export interface ReleasesReleasesItem {
+  /**
+   * Release Id.
+
+  */
+  release: string;
+  /**
+   * Distribution group Id.
+
+  */
+  distributionGroup?: string;
+}
+
+export interface Releases {
+  releases: ReleasesReleasesItem[];
+}
+
+export interface DistributionReleaseCountsOKResponseCountsItem {
+  releaseId: string;
+  /**
+   * Distribution group queried.
+
+  */
+  distributionGroup?: string;
+  /**
+   * Count of unique downloads against user id.
+
+  */
+  uniqueCount: number;
+  /**
+   * Total count of downloads.
+
+  */
+  totalCount: number;
+}
+
+export interface DistributionReleaseCountsOKResponse {
+  total?: number;
+  counts: DistributionReleaseCountsOKResponseCountsItem[];
+}
+
+export interface DistributionReleaseCountsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DistributionReleaseCountsErrorModel {
+  error: DistributionReleaseCountsErrorModelError;
+}
+
+export interface CrashFreeDevicePercentagesOKResponseDailyPercentagesItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Percentage of the object.
+  */
+  percentage?: number;
+}
+
+export interface CrashFreeDevicePercentagesOKResponse {
+  /**
+   * Average percentage.
+  */
+  averagePercentage?: number;
+  /**
+   * The crash-free percentage per day.
+  */
+  dailyPercentages?: CrashFreeDevicePercentagesOKResponseDailyPercentagesItem[];
+}
+
+export interface CrashFreeDevicePercentagesErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashFreeDevicePercentagesErrorModel {
+  error?: CrashFreeDevicePercentagesErrorModelError;
+}
+
+export interface CrashGroupTotalsOKResponse {
+  crashCount?: number;
+  deviceCount?: number;
+}
+
+export interface CrashGroupTotalsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashGroupTotalsErrorModel {
+  error?: CrashGroupTotalsErrorModelError;
+}
+
+export interface CrashGroupOperatingSystemCountsOKResponseOperatingSystemsItem {
+  /**
+   * OS name.
+  */
+  operatingSystemName?: string;
+  /**
+   * Count of OS.
+  */
+  crashCount?: number;
+}
+
+export interface CrashGroupOperatingSystemCountsOKResponse {
+  crashCount?: number;
+  operatingSystems?: CrashGroupOperatingSystemCountsOKResponseOperatingSystemsItem[];
+}
+
+export interface CrashGroupOperatingSystemCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashGroupOperatingSystemCountsErrorModel {
+  error?: CrashGroupOperatingSystemCountsErrorModelError;
+}
+
+export interface CrashGroupModelCountsOKResponseModelsItem {
+  /**
+   * Model's name.
+  */
+  modelName?: string;
+  /**
+   * Count of model.
+  */
+  crashCount?: number;
+}
+
+export interface CrashGroupModelCountsOKResponse {
+  crashCount?: number;
+  modelsProperty?: CrashGroupModelCountsOKResponseModelsItem[];
+}
+
+export interface CrashGroupModelCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashGroupModelCountsErrorModel {
+  error?: CrashGroupModelCountsErrorModelError;
+}
+
+export interface CrashGroupCountsOKResponseCrashesItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface CrashGroupCountsOKResponse {
+  /**
+   * Total crash count.
+  */
+  count?: number;
+  /**
+   * The total crash count for day.
+  */
+  crashes?: CrashGroupCountsOKResponseCrashesItem[];
+}
+
+export interface CrashGroupCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashGroupCountsErrorModel {
+  error?: CrashGroupCountsErrorModelError;
+}
+
+export interface CrashGroupsCrashGroupsItem {
+  crashGroupId?: string;
+  appVersion?: string;
+}
+
+export interface CrashGroups {
+  crashGroups: CrashGroupsCrashGroupsItem[];
+}
+
+export interface CrashGroupsTotalsOKResponseItemOverall {
+  crashCount?: number;
+  deviceCount?: number;
+}
+
+export interface CrashGroupsTotalsOKResponseItem {
+  crashGroupId?: string;
+  appVersion?: string;
+  overall?: CrashGroupsTotalsOKResponseItemOverall;
+}
+
+export interface CrashGroupsTotalsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashGroupsTotalsErrorModel {
+  error?: CrashGroupsTotalsErrorModelError;
+}
+
+export interface CrashCountsOKResponseCrashesItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface CrashCountsOKResponse {
+  /**
+   * Total crash count.
+  */
+  count?: number;
+  /**
+   * The total crash count for day.
+  */
+  crashes?: CrashCountsOKResponseCrashesItem[];
+}
+
+export interface CrashCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface CrashCountsErrorModel {
+  error?: CrashCountsErrorModelError;
+}
+
+export interface AudienceNameExistsErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface AudienceNameExistsErrorModel {
+  error: AudienceNameExistsErrorModelError;
+}
+
+export interface DeleteAudienceErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteAudienceErrorModel {
+  error: DeleteAudienceErrorModelError;
+}
+
+/**
+ * Audience with details.
+*/
+export interface GetAudienceOKResponse {
+  /**
+   * Audience name.
+  */
+  name?: string;
+  /**
+   * Audience description.
+  */
+  description?: string;
+  /**
+   * Estimated audience size.
+  */
+  estimatedCount?: number;
+  /**
+   * Audience definition in OData format.
+  */
+  definition?: string;
+  /**
+   * Audience state. Possible values include: 'Calculating', 'Ready', 'Disabled'
+  */
+  state?: string;
+  enabled?: boolean;
+  /**
+   * Custom properties used in the definition.
+  */
+  customProperties?: { [propertyName: string]: string };
+  /**
+   * Estimated total audience size.
+  */
+  estimatedTotalCount?: number;
+  /**
+   * Date the audience was last refreshed.
+  */
+  timestamp?: Date;
+}
+
+export interface GetAudienceErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface GetAudienceErrorModel {
+  error: GetAudienceErrorModelError;
+}
+
+/**
+ * Audience definition.
+*/
+export interface AudienceModel {
+  /**
+   * Audience description.
+  */
+  description?: string;
+  /**
+   * Audience definition in OData format.
+  */
+  definition: string;
+  enabled?: boolean;
+  /**
+   * Custom properties used in the definition.
+  */
+  customProperties?: { [propertyName: string]: string };
+}
+
+/**
+ * Audience with details.
+*/
+export interface CreateOrUpdateAudienceOKResponse {
+  /**
+   * Audience name.
+  */
+  name?: string;
+  /**
+   * Audience description.
+  */
+  description?: string;
+  /**
+   * Estimated audience size.
+  */
+  estimatedCount?: number;
+  /**
+   * Audience definition in OData format.
+  */
+  definition?: string;
+  /**
+   * Audience state. Possible values include: 'Calculating', 'Ready', 'Disabled'
+  */
+  state?: string;
+  enabled?: boolean;
+  /**
+   * Custom properties used in the definition.
+  */
+  customProperties?: { [propertyName: string]: string };
+  /**
+   * Estimated total audience size.
+  */
+  estimatedTotalCount?: number;
+  /**
+   * Date the audience was last refreshed.
+  */
+  timestamp?: Date;
+}
+
+export interface CreateOrUpdateAudienceErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface CreateOrUpdateAudienceErrorModel {
+  error: CreateOrUpdateAudienceErrorModelError;
+}
+
+/**
+ * List of device property values.
+*/
+export interface ListDevicePropertyValuesOKResponse {
+  /**
+   * List of device property values.
+  */
+  values: string[];
+}
+
+export interface ListDevicePropertyValuesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListDevicePropertyValuesErrorModel {
+  error: ListDevicePropertyValuesErrorModelError;
+}
+
+/**
+ * List of device properties.
+*/
+export interface ListDevicePropertiesOKResponse {
+  /**
+   * List of device properties.
+  */
+  values: { [propertyName: string]: string };
+}
+
+export interface ListDevicePropertiesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListDevicePropertiesErrorModel {
+  error: ListDevicePropertiesErrorModelError;
+}
+
+/**
+ * List of device properties.
+*/
+export interface ListCustomPropertiesOKResponse {
+  /**
+   * List of device properties.
+  */
+  values: { [propertyName: string]: string };
+}
+
+export interface ListCustomPropertiesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListCustomPropertiesErrorModel {
+  error: ListCustomPropertiesErrorModelError;
+}
+
+/**
+ * Audience test result.
+*/
+export interface TestAudienceOKResponse {
+  /**
+   * Audience definition in OData format.
+  */
+  definition?: string;
+  /**
+   * Custom properties used in the definition.
+  */
+  customProperties?: { [propertyName: string]: string };
+  /**
+   * Estimated audience size.
+  */
+  estimatedCount?: number;
+  /**
+   * Estimated total audience size.
+  */
+  estimatedTotalCount?: number;
+}
+
+export interface TestAudienceErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface TestAudienceErrorModel {
+  error: TestAudienceErrorModelError;
+}
+
+/**
+ * Audience definition.
+*/
+export interface ListAudiencesOKResponseValuesItem {
+  /**
+   * Audience name.
+  */
+  name?: string;
+  /**
+   * Audience description.
+  */
+  description?: string;
+  /**
+   * Estimated audience size.
+  */
+  estimatedCount?: number;
+  /**
+   * Audience definition in OData format.
+  */
+  definition?: string;
+  /**
+   * Audience state. Possible values include: 'Calculating', 'Ready', 'Disabled'
+  */
+  state?: string;
+}
+
+/**
+ * List of audiences.
+*/
+export interface ListAudiencesOKResponse {
+  /**
+   * List of audiences.
+  */
+  values: ListAudiencesOKResponseValuesItem[];
+  nextLink?: string;
+}
+
+export interface ListAudiencesErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListAudiencesErrorModel {
+  error: ListAudiencesErrorModelError;
+}
+
+export interface DeviceCountsOKResponseDailyItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface DeviceCountsOKResponseWeeklyItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface DeviceCountsOKResponseMonthlyItem {
+  /**
+   * The ISO 8601 datetime.
+  */
+  datetime?: string;
+  /**
+   * Count of the object.
+  */
+  count?: number;
+}
+
+export interface DeviceCountsOKResponse {
+  /**
+   * The active device count for each interval.
+  */
+  daily?: DeviceCountsOKResponseDailyItem[];
+  /**
+   * The active device count for each interval with a week's retention.
+  */
+  weekly?: DeviceCountsOKResponseWeeklyItem[];
+  /**
+   * The active device count for each interval with a month's retention.
+  */
+  monthly?: DeviceCountsOKResponseMonthlyItem[];
+}
+
+export interface DeviceCountsErrorModelError {
+  /**
+   * The status code return by the API. It can be 400 or 403 or 500.
+  */
+  code?: number;
+  /**
+   * The reason for the request failed.
+  */
+  message?: string;
+}
+
+/**
+ * Error
+*/
+export interface DeviceCountsErrorModel {
+  error?: DeviceCountsErrorModelError;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface GetOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface GetOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: GetOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: GetOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface AppModelModel {
+  /**
+   * A short text describing the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName?: string;
+  /**
+   * A one-word descriptive release type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The uuid for the icon's asset id from ACFUS
+  */
+  iconAssetId?: string;
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface UpdateOKResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface UpdateOKResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface UpdateOKResponseModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: UpdateOKResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: UpdateOKResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface CreateCreatedResponseOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface CreateCreatedResponseAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface CreateCreatedResponseModelModelModelModelModelModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: CreateCreatedResponseOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: CreateCreatedResponseAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+/**
+ * The information about the app's owner
+*/
+export interface ListOKResponseItemOwner {
+  /**
+   * The unique id (UUID) of the owner
+  */
+  id: string;
+  /**
+   * The avatar URL of the owner
+  */
+  avatarUrl?: string;
+  /**
+   * The owner's display name
+  */
+  displayName: string;
+  /**
+   * The owner's email address
+  */
+  email?: string;
+  /**
+   * The unique name that used to identify the owner
+  */
+  name: string;
+  /**
+   * The owner type. Can either be 'org' or 'user'. Possible values include: 'org', 'user'
+  */
+  type: string;
+}
+
+export interface ListOKResponseItemAzureSubscription {
+  /**
+   * The azure subscription id
+  */
+  subscriptionId: string;
+  /**
+   * The tenant id of the azure subscription belongs to
+  */
+  tenantId: string;
+  /**
+   * The name of the azure subscription
+  */
+  subscriptionName: string;
+  /**
+   * If the subscription is used for billing
+  */
+  isBilling?: boolean;
+  /**
+   * If the subscription can be used for billing
+  */
+  isBillable?: boolean;
+  /**
+   * If the subscription is internal Microsoft subscription
+  */
+  isMicrosoftInternal?: boolean;
+}
+
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique ID (UUID) of the app
+  */
+  id: string;
+  /**
+   * The description of the app
+  */
+  description?: string;
+  /**
+   * The display name of the app
+  */
+  displayName: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
+   * The string representation of the URL pointing to the app's icon
+  */
+  iconUrl?: string;
+  /**
+   * The string representation of the source of the app's icon
+  */
+  iconSource?: string;
+  /**
+   * The name of the app used in URLs
+  */
+  name: string;
+  /**
+   * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
+  */
+  os: string;
+  /**
+   * The information about the app's owner
+  */
+  owner: ListOKResponseItemOwner;
+  /**
+   * A unique and secret key used to identify the app in communication with the ingestion endpoint
+   * for crash reporting and analytics
+  */
+  appSecret: string;
+  azureSubscription?: ListOKResponseItemAzureSubscription;
+  /**
+   * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown',
+   * 'Custom'
+  */
+  platform: string;
+  /**
+   * The creation origin of this app. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+  */
+  origin: string;
+  /**
+   * The created date of this app
+  */
+  createdAt?: string;
+  /**
+   * The last updated date of this app
+  */
+  updatedAt?: string;
+  /**
+   * The permissions of the calling user
+  */
+  memberPermissions?: string[];
+}
+
+export interface DeleteBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteBadRequestResponse {
+  error: DeleteBadRequestResponseError;
+}
+
+export interface DeleteUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteUnauthorizedResponse {
+  error: DeleteUnauthorizedResponseError;
+}
+
+export interface DeleteNotFoundResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteNotFoundResponseModelModel {
+  error: DeleteNotFoundResponseError;
+}
+
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique id (UUID) of the api token
+  */
+  id: string;
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+  /**
+   * The creation time
+  */
+  createdAt: string;
+}
+
+export interface ListBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListBadRequestResponseModel {
+  error: ListBadRequestResponseError;
+}
+
+export interface ListUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListUnauthorizedResponse {
+  error: ListUnauthorizedResponseError;
+}
+
+export interface Description {
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+}
+
+export interface NewCreatedResponse {
+  /**
+   * The unique id (UUID) of the api token
+  */
+  id: string;
+  /**
+   * The api token generated will not be accessible again
+  */
+  apiToken: string;
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+  /**
+   * The creation time
+  */
+  createdAt: string;
+}
+
+export interface NewBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface NewBadRequestResponse {
+  error: NewBadRequestResponseError;
+}
+
+export interface NewUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface NewUnauthorizedResponse {
+  error: NewUnauthorizedResponseError;
+}
+
+export interface ListAdministeredOKResponseOrganizations {
+  /**
+   * The internal unique id (UUID) of the organization.
+  */
+  id: string;
+  /**
+   * The display name of the organization
+  */
+  displayName: string;
+  /**
+   * The slug name of the organization
+  */
+  name: string;
+  /**
+   * The URL to a user-uploaded Avatar image
+  */
+  avatarUrl?: string;
+  /**
+   * The creation origin of this organization. Possible values include: 'appcenter', 'hockeyapp'
+  */
+  origin: string;
+  /**
+   * The creation date of this organization
+  */
+  createdAt: string;
+  /**
+   * The date the organization was last updated at
+  */
+  updatedAt: string;
+}
+
+export interface ListAdministeredOKResponse {
+  organizations: ListAdministeredOKResponseOrganizations;
+}
+
+export interface ListAdministeredErrorModelError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListAdministeredErrorModel {
+  error: ListAdministeredErrorModelError;
+}
+
+export interface GdprExportFeatureFlagOKResponse {
+  name?: string;
+  targetId?: string;
+}
+
+export interface GdprExportAccountOKResponse {
+  id?: string;
+}
+
+export interface GdprExportAccountsOKResponseResourcesItem {
+  rel?: string;
+  path?: string;
+}
+
+export interface GdprExportAccountsOKResponse {
+  resources?: GdprExportAccountsOKResponseResourcesItem[];
 }

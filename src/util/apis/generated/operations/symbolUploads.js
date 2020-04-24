@@ -124,7 +124,7 @@ function _getLocation(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SymbolUploadLocation']().mapper();
+          let resultMapper = new client.models['GetLocationOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -141,7 +141,7 @@ function _getLocation(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetLocationForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -158,7 +158,7 @@ function _getLocation(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetLocationNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -175,7 +175,7 @@ function _getLocation(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetLocationInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -301,7 +301,7 @@ function _get(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SymbolUpload']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -318,7 +318,7 @@ function _get(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -335,7 +335,7 @@ function _get(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -352,7 +352,7 @@ function _get(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -426,7 +426,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
   }
   let body;
   if (status !== null && status !== undefined) {
-    body = new client.models['SymbolUploadEndRequest']();
+    body = new client.models['BodyModel']();
     body.status = status;
   }
 
@@ -456,7 +456,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['SymbolUploadEndRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -504,7 +504,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SymbolUpload']().mapper();
+          let resultMapper = new client.models['CompleteOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -521,7 +521,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CompleteBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -538,7 +538,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CompleteForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -555,7 +555,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CompleteInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -681,7 +681,7 @@ function _deleteMethod(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SymbolUpload']().mapper();
+          let resultMapper = new client.models['DeleteOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -698,7 +698,7 @@ function _deleteMethod(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['DeleteForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -715,7 +715,7 @@ function _deleteMethod(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['DeleteNotFoundResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -732,7 +732,7 @@ function _deleteMethod(symbolUploadId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['DeleteInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -766,6 +766,9 @@ function _deleteMethod(symbolUploadId, ownerName, appName, options, callback) {
  * is completed. Includes indexed and failed states.
  * . Possible values include: 'all', 'uploaded', 'processed'
  *
+ * @param {string} [options.symbolType] The type of symbols. Possible values
+ * include: 'AndroidProguard', 'Apple', 'Breakpad', 'JavaScript', 'UWP'
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -793,6 +796,7 @@ function _list(ownerName, appName, options, callback) {
   }
   let top = (options && options.top !== undefined) ? options.top : 30;
   let status = (options && options.status !== undefined) ? options.status : undefined;
+  let symbolType = (options && options.symbolType !== undefined) ? options.symbolType : undefined;
   // Validate
   try {
     if (top !== null && top !== undefined && typeof top !== 'number') {
@@ -810,6 +814,9 @@ function _list(ownerName, appName, options, callback) {
     }
     if (status !== null && status !== undefined && typeof status.valueOf() !== 'string') {
       throw new Error('status must be of type string.');
+    }
+    if (symbolType !== null && symbolType !== undefined && typeof symbolType.valueOf() !== 'string') {
+      throw new Error('symbolType must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -832,6 +839,9 @@ function _list(ownerName, appName, options, callback) {
   }
   if (status !== null && status !== undefined) {
     queryParameters.push('status=' + encodeURIComponent(status));
+  }
+  if (symbolType !== null && symbolType !== undefined) {
+    queryParameters.push('symbol_type=' + encodeURIComponent(symbolType));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -897,10 +907,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'SymbolUploadElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'SymbolUpload'
+                    className: 'ListOKResponseItemModelModelModel'
                   }
               }
             }
@@ -921,7 +931,7 @@ function _list(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['ListForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -938,7 +948,7 @@ function _list(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['ListInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1045,7 +1055,7 @@ function _create(body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['SymbolUploadBeginRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1093,7 +1103,7 @@ function _create(body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SymbolUploadBeginResponse']().mapper();
+          let resultMapper = new client.models['CreateOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1110,7 +1120,7 @@ function _create(body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CreateBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1127,7 +1137,7 @@ function _create(body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CreateForbiddenResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1144,7 +1154,7 @@ function _create(body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CreateInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1558,6 +1568,9 @@ class SymbolUploads {
    * is completed. Includes indexed and failed states.
    * . Possible values include: 'all', 'uploaded', 'processed'
    *
+   * @param {string} [options.symbolType] The type of symbols. Possible values
+   * include: 'AndroidProguard', 'Apple', 'Breakpad', 'JavaScript', 'UWP'
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1599,6 +1612,9 @@ class SymbolUploads {
    * processing, indexed and failed states * processed: symbol upload processing
    * is completed. Includes indexed and failed states.
    * . Possible values include: 'all', 'uploaded', 'processed'
+   *
+   * @param {string} [options.symbolType] The type of symbols. Possible values
+   * include: 'AndroidProguard', 'Apple', 'Breakpad', 'JavaScript', 'UWP'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

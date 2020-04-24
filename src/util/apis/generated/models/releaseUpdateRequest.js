@@ -43,7 +43,8 @@ class ReleaseUpdateRequest {
    * this version should be a mandatory update or not.
    * @property {array} [destinations] Distribute this release under the
    * following list of destinations (store groups or distribution groups).
-   * @property {object} [build]
+   * @property {object} [build] Contains metadata about the build that produced
+   * the release being uploaded
    * @property {string} [build.branchName] The branch name of the build
    * producing the release
    * @property {string} [build.commitHash] The commit hash of the build
@@ -51,7 +52,13 @@ class ReleaseUpdateRequest {
    * @property {string} [build.commitMessage] The commit message of the build
    * producing the release
    * @property {boolean} [notifyTesters] A boolean which determines whether to
-   * notify testers of a new release, default to false. Default value: false .
+   * notify testers of a new release, default to true. Default value: true .
+   * @property {object} [metadata] An object containing all the release
+   * metadata.
+   * @property {string} [metadata.dsaSignature] dsa signature of the release
+   * for the sparkle feed.
+   * @property {string} [metadata.edSignature] edDSA signature of the release
+   * for the sparkle feed.
    */
   constructor() {
   }
@@ -126,10 +133,10 @@ class ReleaseUpdateRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DestinationIdElementType',
+                  serializedName: 'ReleaseUpdateRequestDestinationsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DestinationId'
+                    className: 'ReleaseUpdateRequestDestinationsItem'
                   }
               }
             }
@@ -139,15 +146,23 @@ class ReleaseUpdateRequest {
             serializedName: 'build',
             type: {
               name: 'Composite',
-              className: 'BuildInfo'
+              className: 'ReleaseUpdateRequestBuild'
             }
           },
           notifyTesters: {
             required: false,
             serializedName: 'notify_testers',
-            defaultValue: false,
+            defaultValue: true,
             type: {
               name: 'Boolean'
+            }
+          },
+          metadata: {
+            required: false,
+            serializedName: 'metadata',
+            type: {
+              name: 'Composite',
+              className: 'ReleaseUpdateRequestMetadata'
             }
           }
         }

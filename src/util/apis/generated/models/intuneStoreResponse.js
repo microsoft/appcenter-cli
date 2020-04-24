@@ -46,7 +46,7 @@ class IntuneStoreResponse {
             serializedName: 'target_audience',
             type: {
               name: 'Composite',
-              className: 'IntuneTargetAudienceResponse'
+              className: 'IntuneStoreResponseTargetAudience'
             }
           },
           appCategory: {
@@ -54,7 +54,7 @@ class IntuneStoreResponse {
             serializedName: 'app_category',
             type: {
               name: 'Composite',
-              className: 'IntuneAppCategoryResponse'
+              className: 'IntuneStoreResponseAppCategory'
             }
           }
         }

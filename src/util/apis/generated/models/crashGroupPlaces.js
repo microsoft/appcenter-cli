@@ -50,10 +50,10 @@ class CrashGroupPlaces {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupPlaceElementType',
+                  serializedName: 'CrashGroupPlacesPlacesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroupPlace'
+                    className: 'CrashGroupPlacesPlacesItem'
                   }
               }
             }

@@ -44,10 +44,10 @@ class AppMembershipsValidationResponseExcessAppMemberships {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppMembershipElementType',
+                  serializedName: 'AppMembershipsValidationResponseExcessAppMembershipsAppUsersMembershipsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppMembership'
+                    className: 'AppMembershipsValidationResponseExcessAppMembershipsAppUsersMembershipsItem'
                   }
               }
             }
@@ -59,10 +59,10 @@ class AppMembershipsValidationResponseExcessAppMemberships {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppMembershipElementType',
+                  serializedName: 'AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMembershipsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppMembership'
+                    className: 'AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMembershipsItem'
                   }
               }
             }
@@ -74,10 +74,10 @@ class AppMembershipsValidationResponseExcessAppMemberships {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppMembershipElementType',
+                  serializedName: 'AppMembershipsValidationResponseExcessAppMembershipsOrganizationAdminMembershipsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppMembership'
+                    className: 'AppMembershipsValidationResponseExcessAppMembershipsOrganizationAdminMembershipsItem'
                   }
               }
             }

@@ -106,7 +106,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
       const appInfo = (
         await out.progress(
           "Getting app info...",
-          clientRequest<models.AppResponse>((cb) => client.apps.get(this.app.ownerName, this.app.appName, cb))
+          clientRequest<models.AppResponse>((cb) => client.appsOperations.get(this.app.ownerName, this.app.appName, cb))
         )
       ).result;
       const platform = appInfo.platform.toLowerCase();

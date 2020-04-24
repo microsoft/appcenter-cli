@@ -20,7 +20,8 @@ class ReleaseDetailsUpdateRequest {
    * @property {boolean} [enabled] Toggle this release to be enable
    * distribute/download or not.
    * @property {string} [releaseNotes] Release notes for this release.
-   * @property {object} [build]
+   * @property {object} [build] Contains metadata about the build that produced
+   * the release being uploaded
    * @property {string} [build.branchName] The branch name of the build
    * producing the release
    * @property {string} [build.commitHash] The commit hash of the build
@@ -64,7 +65,7 @@ class ReleaseDetailsUpdateRequest {
             serializedName: 'build',
             type: {
               name: 'Composite',
-              className: 'BuildInfo'
+              className: 'ReleaseDetailsUpdateRequestBuild'
             }
           }
         }

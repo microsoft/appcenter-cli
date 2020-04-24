@@ -43,10 +43,10 @@ class BugTrackerIssuesResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'BugTrackerIssueResultElementType',
+                  serializedName: 'BugTrackerIssuesResultIssuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'BugTrackerIssueResult'
+                    className: 'BugTrackerIssuesResultIssuesItem'
                   }
               }
             }

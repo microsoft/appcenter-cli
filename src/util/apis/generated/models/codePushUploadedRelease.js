@@ -62,7 +62,7 @@ class CodePushUploadedRelease {
             serializedName: 'release_upload',
             type: {
               name: 'Composite',
-              className: 'CodePushReleaseUpload'
+              className: 'CodePushUploadedReleaseReleaseUpload'
             }
           },
           targetBinaryVersion: {

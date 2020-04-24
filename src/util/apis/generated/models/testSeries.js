@@ -71,10 +71,10 @@ class TestSeries {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TestRunSummaryElementType',
+                  serializedName: 'TestSeriesTestRunsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TestRunSummary'
+                    className: 'TestSeriesTestRunsItem'
                   }
               }
             }

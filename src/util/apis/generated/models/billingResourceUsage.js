@@ -17,22 +17,30 @@
 class BillingResourceUsage {
   /**
    * Create a BillingResourceUsage.
-   * @property {object} [buildService]
-   * @property {object} [buildService.currentUsagePeriod]
+   * @property {object} [buildService] Resource usage for a single Mobile
+   * Center service
+   * @property {object} [buildService.currentUsagePeriod] Usage for a single
+   * period
    * @property {string} [buildService.currentUsagePeriod.startTime] Inclusive
    * start time of the usage period
    * @property {string} [buildService.currentUsagePeriod.endTime] Exclusive end
    * time of the usage period.
-   * @property {object} [buildService.currentUsagePeriod.byAccount]
-   * @property {object} [buildService.currentUsagePeriod.byApp]
-   * @property {object} [testService]
-   * @property {object} [testService.currentUsagePeriod]
+   * @property {object} [buildService.currentUsagePeriod.byAccount] A
+   * collection of named numeric values
+   * @property {object} [buildService.currentUsagePeriod.byApp] A collection of
+   * named numeric values grouped by app
+   * @property {object} [testService] Resource usage for a single Mobile Center
+   * service
+   * @property {object} [testService.currentUsagePeriod] Usage for a single
+   * period
    * @property {string} [testService.currentUsagePeriod.startTime] Inclusive
    * start time of the usage period
    * @property {string} [testService.currentUsagePeriod.endTime] Exclusive end
    * time of the usage period.
-   * @property {object} [testService.currentUsagePeriod.byAccount]
-   * @property {object} [testService.currentUsagePeriod.byApp]
+   * @property {object} [testService.currentUsagePeriod.byAccount] A collection
+   * of named numeric values
+   * @property {object} [testService.currentUsagePeriod.byApp] A collection of
+   * named numeric values grouped by app
    */
   constructor() {
   }
@@ -56,7 +64,7 @@ class BillingResourceUsage {
             serializedName: 'buildService',
             type: {
               name: 'Composite',
-              className: 'ServiceResourceUsage'
+              className: 'BillingResourceUsageBuildService'
             }
           },
           testService: {
@@ -64,7 +72,7 @@ class BillingResourceUsage {
             serializedName: 'testService',
             type: {
               name: 'Composite',
-              className: 'ServiceResourceUsage'
+              className: 'BillingResourceUsageTestService'
             }
           }
         }

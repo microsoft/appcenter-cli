@@ -50,10 +50,10 @@ class ReleaseCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ReleaseCountElementType',
+                  serializedName: 'ReleaseCountsCountsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ReleaseCount'
+                    className: 'ReleaseCountsCountsItem'
                   }
               }
             }

@@ -10,15 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a OrgDistributionGroupDetailsResponse.
- * @extends models['DistributionGroupResponse']
  */
-class OrgDistributionGroupDetailsResponse extends models['DistributionGroupResponse'] {
+class OrgDistributionGroupDetailsResponse {
   /**
    * Create a OrgDistributionGroupDetailsResponse.
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {string} [displayName] The name of the distribution group
+   * @property {string} origin The creation origin of this distribution group.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {boolean} isPublic Whether the distribution group is public
    * @property {number} totalAppsCount The count of apps associated with this
    * distribution group
    * @property {number} totalUsersCount The count of users in the distribution
@@ -26,7 +29,6 @@ class OrgDistributionGroupDetailsResponse extends models['DistributionGroupRespo
    * @property {array} apps The apps associated with the distribution group
    */
   constructor() {
-    super();
   }
 
   /**
@@ -99,10 +101,10 @@ class OrgDistributionGroupDetailsResponse extends models['DistributionGroupRespo
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppResponseElementType',
+                  serializedName: 'OrgDistributionGroupDetailsResponseAppsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppResponse'
+                    className: 'OrgDistributionGroupDetailsResponseAppsItem'
                   }
               }
             }

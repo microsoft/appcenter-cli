@@ -51,6 +51,8 @@ class BasicReleaseDetailsResponse {
    * producing the release
    * @property {string} [build.commitMessage] The commit message of the build
    * producing the release
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -125,10 +127,10 @@ class BasicReleaseDetailsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupElementType',
+                  serializedName: 'BasicReleaseDetailsResponseDistributionGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroup'
+                    className: 'BasicReleaseDetailsResponseDistributionGroupsItem'
                   }
               }
             }
@@ -140,10 +142,10 @@ class BasicReleaseDetailsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionStoreElementType',
+                  serializedName: 'BasicReleaseDetailsResponseDistributionStoresItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionStore'
+                    className: 'BasicReleaseDetailsResponseDistributionStoresItem'
                   }
               }
             }
@@ -155,10 +157,10 @@ class BasicReleaseDetailsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DestinationElementType',
+                  serializedName: 'BasicReleaseDetailsResponseDestinationsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Destination'
+                    className: 'BasicReleaseDetailsResponseDestinationsItem'
                   }
               }
             }
@@ -168,7 +170,14 @@ class BasicReleaseDetailsResponse {
             serializedName: 'build',
             type: {
               name: 'Composite',
-              className: 'BuildInfo'
+              className: 'BasicReleaseDetailsResponseBuild'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
+            type: {
+              name: 'Boolean'
             }
           }
         }

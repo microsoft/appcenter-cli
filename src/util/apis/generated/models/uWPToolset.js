@@ -42,10 +42,10 @@ class UWPToolset {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'UWPSolutionElementType',
+                  serializedName: 'UWPToolsetUwpSolutionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'UWPSolution'
+                    className: 'UWPToolsetUwpSolutionsItem'
                   }
               }
             }

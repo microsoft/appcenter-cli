@@ -34,7 +34,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExternalStoreResponse} for more information.
+ *                      See {@link GetOKResponseModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -109,7 +110,7 @@ function _get(storeName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetErrorModel3']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -129,7 +130,7 @@ function _get(storeName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExternalStoreResponse']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -201,7 +202,7 @@ function _patch(storeName, ownerName, appName, serviceConnectionId, options, cal
   }
   let body;
   if (serviceConnectionId !== null && serviceConnectionId !== undefined) {
-    body = new client.models['StorePatchRequest']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModelModelModel']();
     body.serviceConnectionId = serviceConnectionId;
   }
 
@@ -231,7 +232,7 @@ function _patch(storeName, ownerName, appName, serviceConnectionId, options, cal
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['StorePatchRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -263,7 +264,7 @@ function _patch(storeName, ownerName, appName, serviceConnectionId, options, cal
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['PatchErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -402,7 +403,7 @@ function _deleteMethod(storeName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel3']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -480,7 +481,8 @@ function _deleteMethod(storeName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ExternalStoreResponse} for more information.
+ *                      See {@link CreateCreatedResponseModel} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -536,7 +538,7 @@ function _create(body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['ExternalStoreRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -568,7 +570,7 @@ function _create(body, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['CreateErrorModel2']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -588,7 +590,7 @@ function _create(body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ExternalStoreResponse']().mapper();
+          let resultMapper = new client.models['CreateCreatedResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -716,10 +718,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ExternalStoreResponseElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ExternalStoreResponse'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -769,7 +771,7 @@ class Stores {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExternalStoreResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -808,7 +810,7 @@ class Stores {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExternalStoreResponse} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -817,7 +819,8 @@ class Stores {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExternalStoreResponse} for more information.
+   *                      See {@link GetOKResponseModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1084,7 +1087,7 @@ class Stores {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ExternalStoreResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateCreatedResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1162,7 +1165,7 @@ class Stores {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ExternalStoreResponse} - The deserialized result object.
+   *                      @resolve {CreateCreatedResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1171,7 +1174,8 @@ class Stores {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ExternalStoreResponse} for more information.
+   *                      See {@link CreateCreatedResponseModel} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

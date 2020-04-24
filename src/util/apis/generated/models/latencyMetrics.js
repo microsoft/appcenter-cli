@@ -51,7 +51,7 @@ class LatencyMetrics {
             serializedName: 'readLatencyMetrics',
             type: {
               name: 'Composite',
-              className: 'LatencyData'
+              className: 'LatencyMetricsReadLatencyMetrics'
             }
           },
           writeLatencyMetrics: {
@@ -59,7 +59,7 @@ class LatencyMetrics {
             serializedName: 'writeLatencyMetrics',
             type: {
               name: 'Composite',
-              className: 'LatencyData'
+              className: 'LatencyMetricsWriteLatencyMetrics'
             }
           }
         }

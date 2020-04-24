@@ -23,7 +23,8 @@ class TestCloudFileHashResponse {
    * 'dsym-file', 'app-file', 'test-file'
    * @property {string} checksum SHA256 hash of the file
    * @property {string} [relativePath] Relative path of the file
-   * @property {object} uploadStatus Status of the upload
+   * @property {object} uploadStatus Test Cloud Hash Upload Status. Status of
+   * the upload
    * @property {number} [uploadStatus.statusCode] HTTP status code that
    * represent result of upload
    * @property {string} [uploadStatus.location] URI that should be used to make
@@ -73,7 +74,7 @@ class TestCloudFileHashResponse {
             serializedName: 'uploadStatus',
             type: {
               name: 'Composite',
-              className: 'TestCloudHashUploadStatus'
+              className: 'TestCloudFileHashResponseUploadStatus'
             }
           }
         }

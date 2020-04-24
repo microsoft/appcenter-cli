@@ -32,8 +32,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AlertWebhookListResult} for more
- *                      information.
+ *                      See {@link ListOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -104,7 +103,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['AlertingError']().mapper();
+          let resultMapper = new client.models['ListErrorModel1']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -124,7 +123,7 @@ function _list(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AlertWebhookListResult']().mapper();
+          let resultMapper = new client.models['ListOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -164,7 +163,7 @@ class Webhooks {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AlertWebhookListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -201,7 +200,7 @@ class Webhooks {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AlertWebhookListResult} - The deserialized result object.
+   *                      @resolve {ListOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -210,8 +209,7 @@ class Webhooks {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AlertWebhookListResult} for more
-   *                      information.
+   *                      See {@link ListOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * String property.
  *
- * @extends models['CustomPropertyDiagnostics']
  */
-class StringPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
+class StringPropertyDiagnostics {
   /**
    * Create a StringPropertyDiagnostics.
+   * @property {string} type
+   * @property {string} name
    * @property {string} value String property value.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,13 +36,15 @@ class StringPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
       serializedName: 'string',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'CustomPropertyDiagnostics',
         className: 'StringPropertyDiagnostics',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -52,14 +52,6 @@ class StringPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

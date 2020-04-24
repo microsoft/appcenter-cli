@@ -43,10 +43,10 @@ class AndroidProject {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AndroidModuleElementType',
+                  serializedName: 'AndroidProjectAndroidModulesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AndroidModule'
+                    className: 'AndroidProjectAndroidModulesItem'
                   }
               }
             }

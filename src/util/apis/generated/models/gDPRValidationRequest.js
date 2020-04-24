@@ -17,7 +17,11 @@
 class GDPRValidationRequest {
   /**
    * Create a GDPRValidationRequest.
-   * @property {array} releaseIds a list of release ids to validate
+   * @property {array} releaseIds a list of release ids to validate (AC flow)
+   * @property {array} [hockeyappReleaseIds] a list of release ids to validate
+   * (HA flow)
+   * @property {array} [releaseUploadIds] a list of release uploads ids to
+   * validate
    */
   constructor() {
   }
@@ -46,6 +50,34 @@ class GDPRValidationRequest {
                   serializedName: 'NumberElementType',
                   type: {
                     name: 'Number'
+                  }
+              }
+            }
+          },
+          hockeyappReleaseIds: {
+            required: false,
+            serializedName: 'hockeyapp_release_ids',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'NumberElementType',
+                  type: {
+                    name: 'Number'
+                  }
+              }
+            }
+          },
+          releaseUploadIds: {
+            required: false,
+            serializedName: 'release_upload_ids',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
                   }
               }
             }

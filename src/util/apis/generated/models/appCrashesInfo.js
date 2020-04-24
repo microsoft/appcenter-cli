@@ -59,7 +59,7 @@ class AppCrashesInfo {
             serializedName: 'features',
             type: {
               name: 'Composite',
-              className: 'AppFeatures'
+              className: 'AppCrashesInfoFeatures'
             }
           }
         }

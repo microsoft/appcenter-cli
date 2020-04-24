@@ -10,19 +10,20 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CodePushReleasePromote.
- * @extends models['CodePushReleaseInfo']
  */
-class CodePushReleasePromote extends models['CodePushReleaseInfo'] {
+class CodePushReleasePromote {
   /**
    * Create a CodePushReleasePromote.
+   * @property {string} [targetBinaryRange]
+   * @property {string} [description]
+   * @property {boolean} [isDisabled]
+   * @property {boolean} [isMandatory]
+   * @property {number} [rollout]
    * @property {string} [label]
    */
   constructor() {
-    super();
   }
 
   /**

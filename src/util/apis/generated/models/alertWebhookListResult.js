@@ -43,10 +43,10 @@ class AlertWebhookListResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AlertWebhookElementType',
+                  serializedName: 'AlertWebhookListResultValuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AlertWebhook'
+                    className: 'AlertWebhookListResultValuesItem'
                   }
               }
             }

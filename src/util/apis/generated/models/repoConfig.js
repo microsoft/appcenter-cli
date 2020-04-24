@@ -10,15 +10,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a RepoConfig.
- * @extends models['RepoConfigPostRequest']
  */
-class RepoConfig extends models['RepoConfigPostRequest'] {
+class RepoConfig {
   /**
    * Create a RepoConfig.
+   * @property {string} repoUrl The repository's git url, must be a HTTPS URL
+   * @property {string} [repoId] The repository id from the repository
+   * provider. Required for repositories connected from GitHub App and
+   * GitLab.com
+   * @property {string} [externalUserId] The external user id from the
+   * repository provider. Required for GitLab.com repositories
+   * @property {string} [serviceConnectionId] The id of the service connection
+   * (private). Required for GitLab self-hosted repositories
+   * @property {string} [installationId] The GitHub App Installation id.
+   * Required for repositories connected from GitHub App
    * @property {string} id Repository configuration identifier
    * @property {string} type Type of repository
    * @property {string} state State of the configuration. Possible values
@@ -26,7 +33,6 @@ class RepoConfig extends models['RepoConfigPostRequest'] {
    * @property {string} [userEmail] Email of the user who linked the repository
    */
   constructor() {
-    super();
   }
 
   /**
@@ -44,7 +50,7 @@ class RepoConfig extends models['RepoConfigPostRequest'] {
         className: 'RepoConfig',
         modelProperties: {
           repoUrl: {
-            required: false,
+            required: true,
             serializedName: 'repo_url',
             type: {
               name: 'String'

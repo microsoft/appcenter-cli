@@ -10,19 +10,16 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseWithDistributionGroup.
- * @extends models['Release']
  */
-class ReleaseWithDistributionGroup extends models['Release'] {
+class ReleaseWithDistributionGroup {
   /**
    * Create a ReleaseWithDistributionGroup.
+   * @property {string} release Release Id.
    * @property {string} [distributionGroup] Distribution group Id.
    */
   constructor() {
-    super();
   }
 
   /**

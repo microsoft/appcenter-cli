@@ -28,7 +28,7 @@ class AppGroupResponse {
    * 'Custom'
    * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown'
+   * 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown', 'Custom'
    */
   constructor() {
   }

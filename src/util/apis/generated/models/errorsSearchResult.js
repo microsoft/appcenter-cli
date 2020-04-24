@@ -50,10 +50,10 @@ class ErrorsSearchResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'HandledErrorElementType',
+                  serializedName: 'ErrorsSearchResultErrorsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'HandledError'
+                    className: 'ErrorsSearchResultErrorsItem'
                   }
               }
             }

@@ -10,16 +10,20 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * private Apple connection secrets response
  *
- * @extends models['PrivateAppleSecretResponse']
  */
-class PrivateAppleCertificateSecretResponse extends models['PrivateAppleSecretResponse'] {
+class PrivateAppleCertificateSecretResponse {
   /**
    * Create a PrivateAppleCertificateSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira|applecertificate. Possible values include:
+   * 'apple', 'jira', 'googleplay', 'gitlab'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data apple secret details
    * @property {string} [data.base64Certificate] The certificate contents in
    * base 64 encoded string
@@ -32,7 +36,6 @@ class PrivateAppleCertificateSecretResponse extends models['PrivateAppleSecretRe
    * which the certificate is valid
    */
   constructor() {
-    super();
   }
 
   /**
@@ -47,11 +50,6 @@ class PrivateAppleCertificateSecretResponse extends models['PrivateAppleSecretRe
       serializedName: 'certificate',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'PrivateSharedConnectionResponse',
         className: 'PrivateAppleCertificateSecretResponse',
         modelProperties: {
           id: {
@@ -64,6 +62,13 @@ class PrivateAppleCertificateSecretResponse extends models['PrivateAppleSecretRe
           displayName: {
             required: false,
             serializedName: 'displayName',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
@@ -82,20 +87,12 @@ class PrivateAppleCertificateSecretResponse extends models['PrivateAppleSecretRe
               name: 'Boolean'
             }
           },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
-            type: {
-              name: 'String'
-            }
-          },
           data: {
             required: true,
             serializedName: 'data',
             type: {
               name: 'Composite',
-              className: 'AppleCertificateSecretDetails'
+              className: 'PrivateAppleCertificateSecretResponseData'
             }
           }
         }

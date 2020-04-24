@@ -10,17 +10,28 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Notification statistics
  *
- * @extends models['NotificationOverviewResult']
  */
-class NotificationDetailsResult extends models['NotificationOverviewResult'] {
+class NotificationDetailsResult {
   /**
    * Create a NotificationDetailsResult.
-   * @property {object} notificationContent
+   * @property {string} notificationId Notification id.
+   * @property {string} [name] Notification name
+   * @property {object} [notificationTarget] Type of Notification target
+   * (audiences, devices, user ids, account ids or broadcast). The object must
+   * include the correct properties for the specified target type except for
+   * broadcast.
+   * @property {string} [notificationTarget.type] Polymorphic Discriminator
+   * @property {date} [sendTime] Notification send time
+   * @property {number} [pnsSendFailure] Number of the notifications failed to
+   * send to the push provider.
+   * @property {number} [pnsSendSuccess] Number of the notifications
+   * successfully sent to push the provider.
+   * @property {string} state State of the notification. Possible values
+   * include: 'Queued', 'Sending', 'Completed', 'Failed', 'NoTargetFound'
+   * @property {object} notificationContent Notification definition object
    * @property {string} [notificationContent.name] Notification name
    * @property {string} [notificationContent.title] Notification title
    * @property {string} [notificationContent.body] Notification body
@@ -29,7 +40,6 @@ class NotificationDetailsResult extends models['NotificationOverviewResult'] {
    * @property {array} [failureOutcomes] Failture outcome counts
    */
   constructor() {
-    super();
   }
 
   /**
@@ -72,8 +82,8 @@ class NotificationDetailsResult extends models['NotificationOverviewResult'] {
                 serializedName: 'type',
                 clientName: 'type'
               },
-              uberParent: 'NotificationTarget',
-              className: 'NotificationTarget'
+              uberParent: 'NotificationDetailsResultNotificationTarget',
+              className: 'NotificationDetailsResultNotificationTarget'
             }
           },
           sendTime: {
@@ -109,7 +119,7 @@ class NotificationDetailsResult extends models['NotificationOverviewResult'] {
             serializedName: 'notification_content',
             type: {
               name: 'Composite',
-              className: 'NotificationContent'
+              className: 'NotificationDetailsResultNotificationContent'
             }
           },
           failureOutcomes: {
@@ -119,10 +129,10 @@ class NotificationDetailsResult extends models['NotificationOverviewResult'] {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'NotificationFailureOutcomeCountElementType',
+                  serializedName: 'NotificationDetailsResultFailureOutcomesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'NotificationFailureOutcomeCount'
+                    className: 'NotificationDetailsResultFailureOutcomesItem'
                   }
               }
             }

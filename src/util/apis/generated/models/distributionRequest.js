@@ -47,10 +47,10 @@ class DistributionRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DestinationDetailsElementType',
+                  serializedName: 'DistributionRequestDestinationsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DestinationDetails'
+                    className: 'DistributionRequestDestinationsItem'
                   }
               }
             }

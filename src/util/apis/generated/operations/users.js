@@ -14,6 +14,113 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link GetUserMetadataOKResponse} for more
+ *                      information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _getUserMetadata(options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/user/metadata/optimizely';
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['GetUserMetadataErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['GetUserMetadataOKResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
  * Returns the user profile data
  *
  * @param {object} [options] Optional Parameters.
@@ -28,7 +135,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link UserProfileResponse} for more information.
+ *                      See {@link GetOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -86,7 +193,7 @@ function _get(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -106,7 +213,7 @@ function _get(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['UserProfileResponse']().mapper();
+          let resultMapper = new client.models['GetOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -139,7 +246,7 @@ function _get(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link UserProfileResponse} for more information.
+ *                      See {@link UpdateOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -166,7 +273,7 @@ function _update(options, callback) {
   }
   let user;
   if (displayName !== null && displayName !== undefined) {
-    user = new client.models['UserUpdateRequest']();
+    user = new client.models['User']();
     user.displayName = displayName;
   }
 
@@ -193,7 +300,7 @@ function _update(options, callback) {
   let requestModel = null;
   try {
     if (user !== null && user !== undefined) {
-      let requestModelMapper = new client.models['UserUpdateRequest']().mapper();
+      let requestModelMapper = new client.models['User']().mapper();
       requestModel = client.serialize(requestModelMapper, user, 'user');
       requestContent = JSON.stringify(requestModel);
     }
@@ -225,7 +332,7 @@ function _update(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -245,7 +352,7 @@ function _update(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['UserProfileResponse']().mapper();
+          let resultMapper = new client.models['UpdateOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -282,7 +389,7 @@ function _update(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link OrganizationUserResponse} for more
+ *                      See {@link UpdateOrgRoleOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -316,7 +423,7 @@ function _updateOrgRole(orgName, userName, options, callback) {
   }
   let organizationUser;
   if (role !== null && role !== undefined) {
-    organizationUser = new client.models['OrganizationUserPatchRequest']();
+    organizationUser = new client.models['OrganizationUser']();
     organizationUser.role = role;
   }
 
@@ -345,7 +452,7 @@ function _updateOrgRole(orgName, userName, options, callback) {
   let requestModel = null;
   try {
     if (organizationUser !== null && organizationUser !== undefined) {
-      let requestModelMapper = new client.models['OrganizationUserPatchRequest']().mapper();
+      let requestModelMapper = new client.models['OrganizationUser']().mapper();
       requestModel = client.serialize(requestModelMapper, organizationUser, 'organizationUser');
       requestContent = JSON.stringify(requestModel);
     }
@@ -377,7 +484,7 @@ function _updateOrgRole(orgName, userName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdateOrgRoleErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -397,7 +504,7 @@ function _updateOrgRole(orgName, userName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['OrganizationUserResponse']().mapper();
+          let resultMapper = new client.models['UpdateOrgRoleOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -501,7 +608,7 @@ function _removeFromOrg(orgName, userName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['RemoveFromOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -539,8 +646,7 @@ function _removeFromOrg(orgName, userName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link OrganizationUserResponse} for more
- *                      information.
+ *                      See {@link GetForOrgOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -611,7 +717,7 @@ function _getForOrg(orgName, userName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -631,7 +737,7 @@ function _getForOrg(orgName, userName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['OrganizationUserResponse']().mapper();
+          let resultMapper = new client.models['GetForOrgOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -729,7 +835,7 @@ function _listForOrg(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -756,10 +862,10 @@ function _listForOrg(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'OrganizationUserResponseElementType',
+                  serializedName: 'ListForOrgOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'OrganizationUserResponse'
+                    className: 'ListForOrgOKResponseItem'
                   }
               }
             }
@@ -868,7 +974,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -895,10 +1001,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'UserProfileResponseElementType',
+                  serializedName: 'ListOKResponseItemModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'UserProfileResponse'
+                    className: 'ListOKResponseItemModel'
                   }
               }
             }
@@ -925,6 +1031,7 @@ class Users {
    */
   constructor(client) {
     this.client = client;
+    this._getUserMetadata = _getUserMetadata;
     this._get = _get;
     this._update = _update;
     this._updateOrgRole = _updateOrgRole;
@@ -932,6 +1039,81 @@ class Users {
     this._getForOrg = _getForOrg;
     this._listForOrg = _listForOrg;
     this._list = _list;
+  }
+
+  /**
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<GetUserMetadataOKResponse>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  getUserMetadataWithHttpOperationResponse(options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._getUserMetadata(options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {GetUserMetadataOKResponse} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link GetUserMetadataOKResponse} for more
+   *                      information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  getUserMetadata(options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._getUserMetadata(options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._getUserMetadata(options, optionalCallback);
+    }
   }
 
   /**
@@ -944,7 +1126,7 @@ class Users {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<UserProfileResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -977,7 +1159,7 @@ class Users {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {UserProfileResponse} - The deserialized result object.
+   *                      @resolve {GetOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -986,7 +1168,7 @@ class Users {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link UserProfileResponse} for more information.
+   *                      See {@link GetOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1025,7 +1207,7 @@ class Users {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<UserProfileResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1061,7 +1243,7 @@ class Users {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {UserProfileResponse} - The deserialized result object.
+   *                      @resolve {UpdateOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1070,7 +1252,7 @@ class Users {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link UserProfileResponse} for more information.
+   *                      See {@link UpdateOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1113,7 +1295,7 @@ class Users {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<OrganizationUserResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOrgRoleOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1153,7 +1335,7 @@ class Users {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {OrganizationUserResponse} - The deserialized result object.
+   *                      @resolve {UpdateOrgRoleOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1162,7 +1344,7 @@ class Users {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link OrganizationUserResponse} for more
+   *                      See {@link UpdateOrgRoleOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1289,7 +1471,7 @@ class Users {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<OrganizationUserResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetForOrgOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1327,7 +1509,7 @@ class Users {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {OrganizationUserResponse} - The deserialized result object.
+   *                      @resolve {GetForOrgOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1336,8 +1518,7 @@ class Users {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link OrganizationUserResponse} for more
-   *                      information.
+   *                      See {@link GetForOrgOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
