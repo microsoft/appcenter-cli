@@ -40,7 +40,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       const httpRequest = await out.progress(
         "Loading release details...",
         clientRequest<models.ReleaseDetailsResponse>((cb) =>
-          client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
+          client.releasesOperations.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
         )
       );
       if (httpRequest.response.statusCode >= 400) {

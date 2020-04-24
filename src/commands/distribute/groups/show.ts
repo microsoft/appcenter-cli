@@ -35,7 +35,7 @@ export default class ShowDistributionGroupCommand extends AppCommand {
 
     // creating releases information request
     const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetailsResponse[]>((cb) =>
-      client.releases.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb)
+      client.releasesOperations.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb)
     );
 
     // show spinner and wait for the requests to finish

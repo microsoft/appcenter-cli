@@ -126,7 +126,7 @@ export default class AddDestinationCommand extends AppCommand {
       })
     );
     const { result, response } = await clientRequest<any>(async (cb) => {
-      client.releases.addStore(releaseId, this.app.ownerName, this.app.appName, store.id, cb);
+      client.releasesOperations.addStore(releaseId, this.app.ownerName, this.app.appName, store.id, cb);
     });
 
     this.handleAddDestinationResponse(result, response);
@@ -134,7 +134,7 @@ export default class AddDestinationCommand extends AppCommand {
 
   private async addTesterToRelease(client: AppCenterClient, releaseId: number) {
     const { result, response } = await clientRequest<models.ReleaseDetailsResponse>(async (cb) => {
-      client.releases.addTesters(
+      client.releasesOperations.addTesters(
         releaseId,
         this.app.ownerName,
         this.app.appName,
