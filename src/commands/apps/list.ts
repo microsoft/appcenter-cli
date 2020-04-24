@@ -27,7 +27,7 @@ export default class AppsListCommand extends Command {
   async run(client: AppCenterClient): Promise<CommandResult> {
     const appsResponse = await out.progress(
       "Getting app list ...",
-      clientRequest<models.AppResponse[]>((cb) => client.apps.list(cb))
+      clientRequest<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
     );
 
     if (appsResponse.response.statusCode >= 400) {

@@ -57,7 +57,7 @@ export default class WizardTestCommand extends AppCommand {
     const app = await this.selectApp(client);
 
     const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(app.ownerName, app.appName);
-    const getAppOS: Promise<AppResponse> = client.apps.get(app.ownerName, app.appName);
+    const getAppOS: Promise<AppResponse> = client.appsOperations.get(app.ownerName, app.appName);
     this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
 
     const frameworkName: TestFramework = await this.promptFramework();
@@ -218,7 +218,7 @@ export default class WizardTestCommand extends AppCommand {
   private async getApps(client: AppCenterClient): Promise<DefaultApp> {
     const apps = await out.progress(
       "Getting list of apps...",
-      clientCall<models.AppResponse[]>((cb) => client.apps.list(cb))
+      clientCall<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
     );
     const choices = apps.map((app: models.AppResponse) => {
       return {
