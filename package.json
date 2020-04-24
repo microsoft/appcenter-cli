@@ -25,7 +25,7 @@
     "watch-test": "mocha --require ts-node/register ./test/**/*-test.[tj]s --watch",
     "autorest:clean": "rimraf src/util/apis/generated",
     "autorest": "npm run autorest:clean && node scripts/autorest.js",
-    "autorest:gen": "node --max-old-space-size=16384 node_modules/.bin/autorest --debug swagger/readme.md",
+    "autorest:gen": "node --max-old-space-size=16384 node_modules/autorest/dist/app.js --debug swagger/readme.md",
     "clean": "gulp clean",
     "prepublishOnly": "npm run lint && gulp prepublish",
     "download-swagger": "gulp download-swagger",
