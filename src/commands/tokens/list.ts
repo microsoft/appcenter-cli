@@ -1,4 +1,16 @@
-import { CommandArgs, CommandResult, help, success, AppCommand, shortName, longName, hasArg } from "../../util/commandline";
+import {
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  AppCommand,
+  shortName,
+  longName,
+  hasArg,
+  failure,
+  ErrorCodes,
+  defaultValue,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
@@ -14,16 +26,32 @@ export default class ApiTokenListCommand extends AppCommand {
   @shortName("t")
   @longName("type")
   @hasArg
+  @defaultValue("user")
   public principalType: string;
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const app: DefaultApp = this.app;
-    const tokenMessaging = this.principalType === PrincipalType.USER ? principalMessaging.user : principalMessaging.app;
-    const apiTokensResponse = await out.progress(`Getting ${tokenMessaging} API tokens ...`,
-      clientRequest<models.ApiTokensGetResponse[]>((cb) => client.apiTokens.list(cb)));
+    const tokenLevel = this.principalType === PrincipalType.USER ? principalMessaging.user : principalMessaging.app;
+    const tokenMessaging = `Getting ${tokenLevel} API tokens ...`;
 
-    out.table(out.getCommandOutputTableOptions(["ID", "Description", "Type", "Created At"]),
-      apiTokensResponse.result.map((apiToken) => [apiToken.id, apiToken.description, this.principalType, apiToken.createdAt])
+    let listTokensResponse;
+    if (this.principalType === PrincipalType.USER) {
+      listTokensResponse = await out.progress(
+        tokenMessaging,
+        clientRequest<models.ApiTokensGetResponse[]>((cb) => client.apiTokens.list(cb))
+      );
+    } else if (this.principalType === PrincipalType.APP) {
+      const app: DefaultApp = this.app;
+      listTokensResponse = await out.progress(
+        tokenMessaging,
+        clientRequest<models.ApiTokensGetResponse[]>((cb) => client.appApiTokens.list(app.ownerName, app.appName, cb))
+      );
+    } else {
+      return failure(ErrorCodes.InvalidParameter, "Provided token type is invalid. Should be: [" + allPrincipalTypes.join(", ") + "]");
+    }
+
+    out.table(
+      out.getCommandOutputTableOptions(["ID", "Description", "Type", "Created At"]),
+      listTokensResponse.result.map((apiToken) => [apiToken.id, apiToken.description, this.principalType, apiToken.createdAt])
     );
 
     return success();
