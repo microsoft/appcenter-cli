@@ -40,13 +40,12 @@
       "console": "integratedTerminal",
       "request": "launch",
       "program": "${workspaceRoot}/src/index.ts",
-      "cwd": "/Users/hagould/Code/johntestprod",
+      "cwd": "${workspaceRoot}",
       "runtimeArgs": [
         "--nolazy"
       ],
       "args": [
-        // "codepush", "release-react", "-a", "john-reed-org-1/johntest", "-t", "2.0", "-d", "test", "--env", "int", "--token", "69dd20c1b4343cfc1fca88f6ac773ac22faa573b"
-        "codepush", "release-react", "-a", "john-reed-prod-test/johntest-prod", "-t", "2.0", "-d", "test", "--env", "prod", "--token", "2fd831f313b9ac6858a7577d2d1ce19ae4b6521d"
+        // Add your Mobile Center CLI command
       ],
       "outFiles": [
         "${workspaceRoot}/dist/**/*.js"
