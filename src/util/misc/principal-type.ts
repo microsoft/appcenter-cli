@@ -6,6 +6,6 @@ export enum PrincipalType {
 export const allPrincipalTypes = [PrincipalType.USER, PrincipalType.APP];
 
 export const principalMessaging = {
-  [PrincipalType.USER]: "User level",
-  [PrincipalType.APP]: "App level",
+  [PrincipalType.USER]: "user type",
+  [PrincipalType.APP]: "app type",
 };

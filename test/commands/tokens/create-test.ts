@@ -12,9 +12,7 @@ describe("Tokens Create", () => {
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
-  const fakeReleaseId = "1";
   const fakeDescription = "fakeDescription";
-  const fakeStoreName = "fakeStore";
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
 
@@ -40,20 +38,13 @@ describe("Tokens Create", () => {
     const fakeId = "00000000-0000-0000-0000-000000000000";
     const createUserTokenUrl = `/v0.1/api_tokens`;
 
-    const expectedBody = {
-      description: "description",
-    };
-
-    nockScope.post(createUserTokenUrl, expectedBody).reply(201, {
+    nockScope.post(createUserTokenUrl).reply(201, {
       id: fakeId,
-      description: fakeDescription,
       api_token: "token",
-      scope: "all"
+      scope: "all",
     });
 
-    const command = new CreateTokenCommand(
-      getCommandArgs(["--type", "user", "--description", fakeDescription])
-    );
+    const command = new CreateTokenCommand(getCommandArgs(["--type", "user"]));
     const result = await command.execute();
 
     expect(result.succeeded).to.be.true;
@@ -61,24 +52,18 @@ describe("Tokens Create", () => {
     nockScope.done();
   });
 
-  it("#create user type calls correctly when description provided", async () => {
+  it("#create user type calls user API with description when description provided", async () => {
     const fakeId = "00000000-0000-0000-0000-000000000000";
     const createUserTokenUrl = `/v0.1/api_tokens`;
 
-    const expectedBody = {
-      description: "description",
-    };
-
-    nockScope.post(createUserTokenUrl, expectedBody).reply(201, {
+    nockScope.post(createUserTokenUrl, { description: fakeDescription }).reply(201, {
       id: fakeId,
       description: fakeDescription,
       api_token: "token",
-      scope: "all"
+      scope: "all",
     });
 
-    const command = new CreateTokenCommand(
-      getCommandArgs(["--type", "user", "--description", fakeDescription])
-    );
+    const command = new CreateTokenCommand(getCommandArgs(["--type", "user", "--description", fakeDescription]));
     const result = await command.execute();
 
     expect(result.succeeded).to.be.true;
@@ -90,18 +75,14 @@ describe("Tokens Create", () => {
     const fakeId = "00000000-0000-0000-0000-000000000000";
     const createUserTokenUrl = `/v0.1/api_tokens`;
 
-    const expectedBody = {
-      description: "description",
-    };
-
-    nockScope.post(createUserTokenUrl, expectedBody).reply(201, {
+    nockScope.post(createUserTokenUrl, {}).reply(201, {
       id: fakeId,
       description: fakeDescription,
       api_token: "token",
-      scope: "all"
+      scope: "all",
     });
 
-    const command = new CreateTokenCommand(getCommandArgs(["--type", "user", "--description", fakeDescription]));
+    const command = new CreateTokenCommand(getCommandArgs([]));
     const result = await command.execute();
 
     expect(result.succeeded).to.be.true;
@@ -109,22 +90,18 @@ describe("Tokens Create", () => {
     nockScope.done();
   });
 
-  it("#create providing app type calls the correct app create API when current-app is set", async () => {
+  it("#create providing app type calls the app create API", async () => {
     const fakeId = "00000000-0000-0000-0000-000000000000";
-    const createUserTokenUrl = `/v0.1/api_tokens`;
+    const createAppTokenUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/api_tokens`;
 
-    const expectedBody = {
-      description: "description",
-    };
-
-    nockScope.post(createUserTokenUrl, expectedBody).reply(201, {
+    nockScope.post(createAppTokenUrl, { description: fakeDescription }).reply(201, {
       id: fakeId,
       description: fakeDescription,
       api_token: "token",
-      scope: "all"
+      scope: "all",
     });
 
-    const command = new CreateTokenCommand();
+    const command = new CreateTokenCommand(getCommandArgsWithApp(["--type", "app", "--description", fakeDescription]));
     const result = await command.execute();
 
     expect(result.succeeded).to.be.true;
@@ -132,87 +109,46 @@ describe("Tokens Create", () => {
     nockScope.done();
   });
 
-  it("#create providing app type calls the correct app create API when MOBILE_CENTER_CURRENT_APP is set", async () => {
-    const fakeId = "00000000-0000-0000-0000-000000000000";
-    const createUserTokenUrl = `/v0.1/api_tokens`;
+  it("#create providing invalid type calls fails", async () => {
+    const command = new CreateTokenCommand(getCommandArgsWithApp(["--type", "fake", "--description", fakeDescription]));
+    const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
-    const expectedBody = {
-      description: "description",
-    };
-
-    nockScope.post(createUserTokenUrl, expectedBody).reply(201, {
-      id: fakeId,
-      description: fakeDescription,
-      api_token: "token",
-      scope: "all"
-    });
-
-    const command = new CreateTokenCommand();
-    const result = await command.execute();
-
-    expect(result.succeeded).to.be.true;
+    expect(result.succeeded).to.be.false;
+    expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
+    expect(result.errorMessage).to.eql(`Provided token type is invalid. Should be: [user, app]`);
 
     nockScope.done();
   });
 
-    it("#create providing app type calls fails if the app info isn't set", async () => {
-    const fakeId = "00000000-0000-0000-0000-000000000000";
-    const createUserTokenUrl = `/v0.1/api_tokens`;
+  it("#create providing app type calls fails with 400 response", async () => {
+    const createAppTokenUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/api_tokens`;
 
-    const expectedBody = {
-      description: "description",
-    };
+    nockScope.post(createAppTokenUrl, { description: fakeDescription }).reply(400, {});
 
-    nockScope.post(createUserTokenUrl, expectedBody).reply(201, {
-      id: fakeId,
-      description: fakeDescription,
-      api_token: "token",
-      scope: "all"
-    });
+    const command = new CreateTokenCommand(getCommandArgsWithApp(["--type", "app", "--description", fakeDescription]));
+    const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
-    const command = new CreateTokenCommand();
-    const result = await command.execute();
-
-    expect(result.succeeded).to.be.true;
+    expect(result.succeeded).to.be.false;
+    expect(result.errorCode).to.eql(ErrorCodes.Exception);
+    expect(result.errorMessage).to.eql(`invalid request`);
 
     nockScope.done();
   });
 
-  describe("when distributing a store", () => {
-    const getStoreUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_stores/${fakeStoreName}`;
-
-    describe("when the store does not exist", () => {
-      beforeEach(() => {
-        nockScope.get(getStoreUrl).reply(404, {});
-      });
-
-      it("reports the command as failed", async () => {
-        const command = new CreateTokenCommand(
-          getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName])
-        );
-        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
-
-        expect(result.succeeded).to.be.false;
-        expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-        expect(result.errorMessage).to.eql(`Could not find store ${fakeStoreName}`);
-      });
-    });
-    it("reports the command as failed", async () => {
-      const command = new CreateTokenCommand(
-        getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName])
-      );
-      const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
-
-      expect(result.succeeded).to.be.false;
-      expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-      expect(result.errorMessage).to.eql(`Could not find release ${fakeReleaseId}`);
-    });
-  });
-  function getCommandArgs(additionalArgs: string[]): CommandArgs {
+  function getCommandArgsWithApp(additionalArgs: string[]): CommandArgs {
     const args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
     return {
       args,
-      command: ["distribute", "releases", "add-destination"],
+      command: ["tokens", "create"],
+      commandPath: "FAKE",
+    };
+  }
+
+  function getCommandArgs(additionalArgs: string[]): CommandArgs {
+    const args: string[] = ["--token", fakeToken, "--env", "local"].concat(additionalArgs);
+    return {
+      args,
+      command: ["tokens", "create"],
       commandPath: "FAKE",
     };
   }
