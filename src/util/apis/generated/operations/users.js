@@ -1001,10 +1001,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModel'
+                    className: 'ListOKResponseItemModelModel'
                   }
               }
             }

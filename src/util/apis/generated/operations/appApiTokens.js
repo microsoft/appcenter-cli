@@ -14,7 +14,11 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
- * Delete the api_token object with the specific id
+ * Delete the App Api Token object with the specific ID
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
  *
  * @param {string} apiTokenId The unique ID (UUID) of the api token
  *
@@ -35,7 +39,7 @@ const WebResource = msRest.WebResource;
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _deleteMethod(apiTokenId, options, callback) {
+function _deleteMethod(ownerName, appName, apiTokenId, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -47,6 +51,12 @@ function _deleteMethod(apiTokenId, options, callback) {
   }
   // Validate
   try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
     if (apiTokenId === null || apiTokenId === undefined || typeof apiTokenId.valueOf() !== 'string') {
       throw new Error('apiTokenId cannot be null or undefined and it must be of type string.');
     }
@@ -56,7 +66,9 @@ function _deleteMethod(apiTokenId, options, callback) {
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/api_tokens/{api_token_id}';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/api_tokens/{api_token_id}';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   requestUrl = requestUrl.replace('{api_token_id}', encodeURIComponent(apiTokenId));
 
   // Create HTTP transport objects
@@ -162,7 +174,11 @@ function _deleteMethod(apiTokenId, options, callback) {
 }
 
 /**
- * Returns api tokens for the authenticated user
+ * Returns App API tokens for the app
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -181,7 +197,7 @@ function _deleteMethod(apiTokenId, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _list(options, callback) {
+function _list(ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -191,10 +207,23 @@ function _list(options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/api_tokens';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/api_tokens';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
@@ -313,7 +342,11 @@ function _list(options, callback) {
 }
 
 /**
- * Creates a new API token
+ * Creates a new App API token
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -336,7 +369,7 @@ function _list(options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _newMethod(options, callback) {
+function _newMethod(ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -350,6 +383,12 @@ function _newMethod(options, callback) {
   let scope = (options && options.scope !== undefined) ? options.scope : undefined;
   // Validate
   try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
     if (description !== null && description !== undefined && typeof description.valueOf() !== 'string') {
       throw new Error('description must be of type string.');
     }
@@ -372,7 +411,9 @@ function _newMethod(options, callback) {
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/api_tokens';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/api_tokens';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
@@ -490,10 +531,10 @@ function _newMethod(options, callback) {
   });
 }
 
-/** Class representing a ApiTokens. */
-class ApiTokens {
+/** Class representing a AppApiTokens. */
+class AppApiTokens {
   /**
-   * Create a ApiTokens.
+   * Create a AppApiTokens.
    * @param {AppCenterClient} client Reference to the service client.
    */
   constructor(client) {
@@ -504,7 +545,11 @@ class ApiTokens {
   }
 
   /**
-   * Delete the api_token object with the specific id
+   * Delete the App Api Token object with the specific ID
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
    *
    * @param {string} apiTokenId The unique ID (UUID) of the api token
    *
@@ -519,11 +564,11 @@ class ApiTokens {
    *
    * @reject {Error} - The error object.
    */
-  deleteMethodWithHttpOperationResponse(apiTokenId, options) {
+  deleteMethodWithHttpOperationResponse(ownerName, appName, apiTokenId, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._deleteMethod(apiTokenId, options, (err, result, request, response) => {
+      self._deleteMethod(ownerName, appName, apiTokenId, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -534,7 +579,11 @@ class ApiTokens {
   }
 
   /**
-   * Delete the api_token object with the specific id
+   * Delete the App Api Token object with the specific ID
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
    *
    * @param {string} apiTokenId The unique ID (UUID) of the api token
    *
@@ -564,7 +613,7 @@ class ApiTokens {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  deleteMethod(apiTokenId, options, optionalCallback) {
+  deleteMethod(ownerName, appName, apiTokenId, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -573,19 +622,23 @@ class ApiTokens {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._deleteMethod(apiTokenId, options, (err, result, request, response) => {
+        self._deleteMethod(ownerName, appName, apiTokenId, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._deleteMethod(apiTokenId, options, optionalCallback);
+      return self._deleteMethod(ownerName, appName, apiTokenId, options, optionalCallback);
     }
   }
 
   /**
-   * Returns api tokens for the authenticated user
+   * Returns App API tokens for the app
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -598,11 +651,11 @@ class ApiTokens {
    *
    * @reject {Error} - The error object.
    */
-  listWithHttpOperationResponse(options) {
+  listWithHttpOperationResponse(ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._list(options, (err, result, request, response) => {
+      self._list(ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -613,7 +666,11 @@ class ApiTokens {
   }
 
   /**
-   * Returns api tokens for the authenticated user
+   * Returns App API tokens for the app
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -641,7 +698,7 @@ class ApiTokens {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  list(options, optionalCallback) {
+  list(ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -650,19 +707,23 @@ class ApiTokens {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._list(options, (err, result, request, response) => {
+        self._list(ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._list(options, optionalCallback);
+      return self._list(ownerName, appName, options, optionalCallback);
     }
   }
 
   /**
-   * Creates a new API token
+   * Creates a new App API token
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -679,11 +740,11 @@ class ApiTokens {
    *
    * @reject {Error} - The error object.
    */
-  newMethodWithHttpOperationResponse(options) {
+  newMethodWithHttpOperationResponse(ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._newMethod(options, (err, result, request, response) => {
+      self._newMethod(ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -694,7 +755,11 @@ class ApiTokens {
   }
 
   /**
-   * Creates a new API token
+   * Creates a new App API token
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -726,7 +791,7 @@ class ApiTokens {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  newMethod(options, optionalCallback) {
+  newMethod(ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -735,17 +800,17 @@ class ApiTokens {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._newMethod(options, (err, result, request, response) => {
+        self._newMethod(ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._newMethod(options, optionalCallback);
+      return self._newMethod(ownerName, appName, options, optionalCallback);
     }
   }
 
 }
 
-module.exports = ApiTokens;
+module.exports = AppApiTokens;

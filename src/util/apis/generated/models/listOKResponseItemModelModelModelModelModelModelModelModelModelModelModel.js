@@ -16,27 +16,12 @@
 class ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel.
-   * @property {string} [key]
-   * @property {string} name
-   * @property {object} [latestRelease]
-   * @property {string} [latestRelease.targetBinaryRange]
-   * @property {string} [latestRelease.description]
-   * @property {boolean} [latestRelease.isDisabled]
-   * @property {boolean} [latestRelease.isMandatory]
-   * @property {number} [latestRelease.rollout]
-   * @property {string} [latestRelease.label]
-   * @property {string} [latestRelease.packageHash]
-   * @property {string} [latestRelease.blobUrl]
-   * @property {object} [latestRelease.diffPackageMap]
-   * @property {string} [latestRelease.originalDeployment] Set on 'Promote'
-   * @property {string} [latestRelease.originalLabel] Set on 'Promote' and
-   * 'Rollback'
-   * @property {string} [latestRelease.releasedBy]
-   * @property {string} [latestRelease.releaseMethod] The release method is
-   * unknown if unspecified. Possible values include: 'Upload', 'Promote',
-   * 'Rollback'
-   * @property {number} [latestRelease.size]
-   * @property {number} [latestRelease.uploadTime]
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {string} [displayName] The name of the distribution group
+   * @property {string} origin The creation origin of this distribution group.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {boolean} isPublic Whether the distribution group is public
    */
   constructor() {
   }
@@ -55,9 +40,9 @@ class ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel 
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel',
         modelProperties: {
-          key: {
-            required: false,
-            serializedName: 'key',
+          id: {
+            required: true,
+            serializedName: 'id',
             type: {
               name: 'String'
             }
@@ -69,12 +54,25 @@ class ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel 
               name: 'String'
             }
           },
-          latestRelease: {
+          displayName: {
             required: false,
-            serializedName: 'latest_release',
+            serializedName: 'display_name',
             type: {
-              name: 'Composite',
-              className: 'ListOKResponseItemLatestRelease'
+              name: 'String'
+            }
+          },
+          origin: {
+            required: true,
+            serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          isPublic: {
+            required: true,
+            serializedName: 'is_public',
+            type: {
+              name: 'Boolean'
             }
           }
         }

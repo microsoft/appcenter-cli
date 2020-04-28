@@ -50,6 +50,7 @@ class AppCenterClient extends ServiceClient {
 
     let packageInfo = this.getPackageJsonInfo(__dirname);
     this.addUserAgentInfo(`${packageInfo.name}/${packageInfo.version}`);
+    this.appApiTokens = new operations.AppApiTokens(this);
     this.devices = new operations.Devices(this);
     this.notifications = new operations.Notifications(this);
     this.users = new operations.Users(this);

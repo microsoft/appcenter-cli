@@ -11,35 +11,30 @@
 'use strict';
 
 /**
- * A single symbol upload entity
- *
+ * Class representing a ListOKResponseItemModelModelModel.
  */
 class ListOKResponseItemModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModel.
-   * @property {string} symbolUploadId The id for the current symbol upload
-   * @property {string} appId The application that this symbol upload belongs
-   * to
-   * @property {object} [user] User information of the one who intitiated the
-   * symbol upload
-   * @property {string} [user.email] The email of the user
-   * @property {string} [user.displayName] The full name of the user. Might for
-   * example be first and last name
-   * @property {string} status The current status for the symbol upload.
-   * Possible values include: 'created', 'committed', 'aborted', 'processing',
-   * 'indexed', 'failed'
-   * @property {string} symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
+   * @property {string} symbolId The unique id for this symbol (uuid)
+   * @property {string} type The type of the symbol for the current symbol
+   * upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
    * 'AndroidProguard', 'UWP'
-   * @property {array} [symbolsUploaded] The symbols found in the upload. This
-   * may be empty until the status is indexed
-   * @property {string} [origin] The origin of the symbol upload. Possible
-   * values include: 'User', 'System'
-   * @property {string} [fileName] The file name for the symbol upload
-   * @property {number} [fileSize] The size of the file in Mebibytes. This may
-   * be 0 until the status is indexed
-   * @property {date} [timestamp] When the symbol upload was committed, or last
-   * transaction time if not committed
+   * @property {string} appId The application that this symbol belongs to
+   * @property {string} platform The platform that this symbol is associated
+   * with
+   * @property {string} url The path name of the symbol file in blob storage
+   * @property {string} origin The origin of the symbol file. Possible values
+   * include: 'System', 'User'
+   * @property {array} alternateSymbolIds The other symbols in the same file
+   * @property {string} status Whether the symbol is ignored. Possible values
+   * include: 'available', 'ignored'
+   * @property {string} [version] The version number. Optional for Apple.
+   * Required for Android.
+   * @property {string} [build] The build number. Optional for Apple. Required
+   * for Android.
+   * @property {string} symbolUploadId The id of the symbol upload this symbol
+   * belongs to.
    */
   constructor() {
   }
@@ -58,9 +53,16 @@ class ListOKResponseItemModelModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModel',
         modelProperties: {
-          symbolUploadId: {
+          symbolId: {
             required: true,
-            serializedName: 'symbol_upload_id',
+            serializedName: 'symbol_id',
+            type: {
+              name: 'String'
+            }
+          },
+          type: {
+            required: true,
+            serializedName: 'type',
             type: {
               name: 'String'
             }
@@ -72,12 +74,39 @@ class ListOKResponseItemModelModelModel {
               name: 'String'
             }
           },
-          user: {
-            required: false,
-            serializedName: 'user',
+          platform: {
+            required: true,
+            serializedName: 'platform',
             type: {
-              name: 'Composite',
-              className: 'ListOKResponseItemUser'
+              name: 'String'
+            }
+          },
+          url: {
+            required: true,
+            serializedName: 'url',
+            type: {
+              name: 'String'
+            }
+          },
+          origin: {
+            required: true,
+            serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          alternateSymbolIds: {
+            required: true,
+            serializedName: 'alternate_symbol_ids',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
             }
           },
           status: {
@@ -87,54 +116,25 @@ class ListOKResponseItemModelModelModel {
               name: 'String'
             }
           },
-          symbolType: {
+          version: {
+            required: false,
+            serializedName: 'version',
+            type: {
+              name: 'String'
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'String'
+            }
+          },
+          symbolUploadId: {
             required: true,
-            serializedName: 'symbol_type',
+            serializedName: 'symbol_upload_id',
             type: {
               name: 'String'
-            }
-          },
-          symbolsUploaded: {
-            required: false,
-            serializedName: 'symbols_uploaded',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'ListOKResponseItemSymbolsUploadedItemElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'ListOKResponseItemSymbolsUploadedItem'
-                  }
-              }
-            }
-          },
-          origin: {
-            required: false,
-            serializedName: 'origin',
-            type: {
-              name: 'String'
-            }
-          },
-          fileName: {
-            required: false,
-            serializedName: 'file_name',
-            type: {
-              name: 'String'
-            }
-          },
-          fileSize: {
-            required: false,
-            serializedName: 'file_size',
-            type: {
-              name: 'Number'
-            }
-          },
-          timestamp: {
-            required: false,
-            serializedName: 'timestamp',
-            type: {
-              name: 'DateTime'
             }
           }
         }

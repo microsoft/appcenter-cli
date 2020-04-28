@@ -17,19 +17,42 @@
 class ListOKResponseItemModelModelModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModelModelModel.
-   * @property {number} [id] ID identifying this unique release.
-   * @property {string} [version] The release's version.
-   * For iOS: CFBundleVersion from info.plist.
+   * @property {number} id ID identifying this unique release.
+   * @property {string} version The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
    * For Android: android:versionCode from AppManifest.xml.
-   * @property {string} [shortVersion] The release's short version.
-   * For iOS: CFBundleShortVersionString from info.plist.
+   * @property {string} [origin] The release's origin. Possible values include:
+   * 'hockeyapp', 'appcenter'
+   * @property {string} shortVersion The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
    * For Android: android:versionName from AppManifest.xml.
-   * @property {string} [uploadedAt] UTC time in ISO 8601 format of the
-   * uploaded time.
-   * @property {string} [destinationType] Destination for this release.
-   * Possible values include: 'group', 'store', 'tester'
-   * @property {array} [distributionStores] a list of distribution stores that
-   * are associated with this release.
+   * @property {boolean} enabled This value determines the whether a release
+   * currently is enabled or disabled.
+   * @property {string} uploadedAt UTC time in ISO 8601 format of the uploaded
+   * time.
+   * @property {string} [destinationType] OBSOLETE. Will be removed in next
+   * version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and
+   * distribution_groups details will be returned.<br>
+   * <b>store</b>: The release distributed to external stores and
+   * distribution_stores details will be returned. <br>
+   * . Possible values include: 'group', 'store', 'tester'
+   * @property {array} [distributionGroups] OBSOLETE. Will be removed in next
+   * version. A list of distribution groups that are associated with this
+   * release.
+   * @property {array} [distributionStores] OBSOLETE. Will be removed in next
+   * version. A list of distribution stores that are associated with this
+   * release.
+   * @property {array} [destinations] A list of distribution groups or stores.
+   * @property {object} [build] Build information for the release
+   * @property {string} [build.branchName] The branch name of the build
+   * producing the release
+   * @property {string} [build.commitHash] The commit hash of the build
+   * producing the release
+   * @property {string} [build.commitMessage] The commit message of the build
+   * producing the release
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -49,28 +72,42 @@ class ListOKResponseItemModelModelModelModelModelModelModel {
         className: 'ListOKResponseItemModelModelModelModelModelModelModel',
         modelProperties: {
           id: {
-            required: false,
+            required: true,
             serializedName: 'id',
             type: {
               name: 'Number'
             }
           },
           version: {
-            required: false,
+            required: true,
             serializedName: 'version',
             type: {
               name: 'String'
             }
           },
-          shortVersion: {
+          origin: {
             required: false,
+            serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          shortVersion: {
+            required: true,
             serializedName: 'short_version',
             type: {
               name: 'String'
             }
           },
+          enabled: {
+            required: true,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
+            }
+          },
           uploadedAt: {
-            required: false,
+            required: true,
             serializedName: 'uploaded_at',
             type: {
               name: 'String'
@@ -83,6 +120,21 @@ class ListOKResponseItemModelModelModelModelModelModelModel {
               name: 'String'
             }
           },
+          distributionGroups: {
+            required: false,
+            serializedName: 'distribution_groups',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ListOKResponseItemDistributionGroupsItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ListOKResponseItemDistributionGroupsItem'
+                  }
+              }
+            }
+          },
           distributionStores: {
             required: false,
             serializedName: 'distribution_stores',
@@ -90,12 +142,42 @@ class ListOKResponseItemModelModelModelModelModelModelModel {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemDistributionStoresItemModelElementType',
+                  serializedName: 'ListOKResponseItemDistributionStoresItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemDistributionStoresItemModel'
+                    className: 'ListOKResponseItemDistributionStoresItem'
                   }
               }
+            }
+          },
+          destinations: {
+            required: false,
+            serializedName: 'destinations',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ListOKResponseItemDestinationsItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ListOKResponseItemDestinationsItem'
+                  }
+              }
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'Composite',
+              className: 'ListOKResponseItemBuild'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
+            type: {
+              name: 'Boolean'
             }
           }
         }

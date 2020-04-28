@@ -16,25 +16,17 @@
 class ListOKResponseItemModelModel {
   /**
    * Create a ListOKResponseItemModelModel.
-   * @property {string} symbolId The unique id for this symbol (uuid)
-   * @property {string} type The type of the symbol for the current symbol
-   * upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
-   * 'AndroidProguard', 'UWP'
-   * @property {string} appId The application that this symbol belongs to
-   * @property {string} platform The platform that this symbol is associated
-   * with
-   * @property {string} url The path name of the symbol file in blob storage
-   * @property {string} origin The origin of the symbol file. Possible values
-   * include: 'System', 'User'
-   * @property {array} alternateSymbolIds The other symbols in the same file
-   * @property {string} status Whether the symbol is ignored. Possible values
-   * include: 'available', 'ignored'
-   * @property {string} [version] The version number. Optional for Apple.
-   * Required for Android.
-   * @property {string} [build] The build number. Optional for Apple. Required
-   * for Android.
-   * @property {string} symbolUploadId The id of the symbol upload this symbol
-   * belongs to.
+   * @property {uuid} id The unique id (UUID) of the user
+   * @property {string} [avatarUrl] The avatar URL of the user
+   * @property {boolean} [canChangePassword] User is required to send an old
+   * password in order to change the password.
+   * @property {string} displayName The full name of the user. Might for
+   * example be first and last name
+   * @property {string} email The email address of the user
+   * @property {string} name The unique name that is used to identify the user.
+   * @property {array} [permissions] The permissions the user has for the app
+   * @property {string} origin The creation origin of this user. Possible
+   * values include: 'appcenter', 'hockeyapp', 'codepush'
    */
   constructor() {
   }
@@ -53,51 +45,51 @@ class ListOKResponseItemModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModel',
         modelProperties: {
-          symbolId: {
+          id: {
             required: true,
-            serializedName: 'symbol_id',
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          type: {
-            required: true,
-            serializedName: 'type',
+          avatarUrl: {
+            required: false,
+            serializedName: 'avatar_url',
             type: {
               name: 'String'
             }
           },
-          appId: {
+          canChangePassword: {
+            required: false,
+            serializedName: 'can_change_password',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          displayName: {
             required: true,
-            serializedName: 'app_id',
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }
           },
-          platform: {
+          email: {
             required: true,
-            serializedName: 'platform',
+            serializedName: 'email',
             type: {
               name: 'String'
             }
           },
-          url: {
+          name: {
             required: true,
-            serializedName: 'url',
+            serializedName: 'name',
             type: {
               name: 'String'
             }
           },
-          origin: {
-            required: true,
-            serializedName: 'origin',
-            type: {
-              name: 'String'
-            }
-          },
-          alternateSymbolIds: {
-            required: true,
-            serializedName: 'alternate_symbol_ids',
+          permissions: {
+            required: false,
+            serializedName: 'permissions',
             type: {
               name: 'Sequence',
               element: {
@@ -109,30 +101,9 @@ class ListOKResponseItemModelModel {
               }
             }
           },
-          status: {
+          origin: {
             required: true,
-            serializedName: 'status',
-            type: {
-              name: 'String'
-            }
-          },
-          version: {
-            required: false,
-            serializedName: 'version',
-            type: {
-              name: 'String'
-            }
-          },
-          build: {
-            required: false,
-            serializedName: 'build',
-            type: {
-              name: 'String'
-            }
-          },
-          symbolUploadId: {
-            required: true,
-            serializedName: 'symbol_upload_id',
+            serializedName: 'origin',
             type: {
               name: 'String'
             }

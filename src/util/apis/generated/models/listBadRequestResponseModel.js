@@ -16,11 +16,10 @@
 class ListBadRequestResponseModel {
   /**
    * Create a ListBadRequestResponseModel.
-   * @property {object} error
-   * @property {string} [error.code] Possible values include: 'BadRequest',
-   * 'Conflict', 'NotAcceptable', 'NotFound', 'InternalServerError',
-   * 'Unauthorized', 'TooManyRequests'
-   * @property {string} [error.message]
+   * @property {string} code Possible values include: 'BadRequest', 'Conflict',
+   * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized',
+   * 'TooManyRequests'
+   * @property {string} message
    */
   constructor() {
   }
@@ -39,12 +38,18 @@ class ListBadRequestResponseModel {
         name: 'Composite',
         className: 'ListBadRequestResponseModel',
         modelProperties: {
-          error: {
+          code: {
             required: true,
-            serializedName: 'error',
+            serializedName: 'code',
             type: {
-              name: 'Composite',
-              className: 'ListBadRequestResponseError'
+              name: 'String'
+            }
+          },
+          message: {
+            required: true,
+            serializedName: 'message',
+            type: {
+              name: 'String'
             }
           }
         }

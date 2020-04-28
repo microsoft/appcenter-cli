@@ -631,10 +631,10 @@ function _list(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemElementType',
+                  serializedName: 'ListOKResponseItemModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItem'
+                    className: 'ListOKResponseItemModel'
                   }
               }
             }

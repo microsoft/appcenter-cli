@@ -11,30 +11,35 @@
 'use strict';
 
 /**
- * The information for a single iOS device
+ * ExternalStoreResponse
  *
  */
 class ListOKResponseItemModelModelModelModelModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModelModelModelModelModel.
-   * @property {string} udid The Unique Device IDentifier of the device
-   * @property {string} model The model identifier of the device, in the format
-   * iDeviceM,N
-   * @property {string} deviceName The device description, in the format
-   * "iPhone 7 Plus (A1784)"
-   * @property {string} [fullDeviceName] A combination of the device model name
-   * and the owner name.
-   * @property {string} osBuild The last known OS version running on the device
-   * @property {string} osVersion The last known OS version running on the
-   * device
-   * @property {string} [serial] The device's serial number. Always empty or
-   * undefined at present.
-   * @property {string} [imei] The device's International Mobile Equipment
-   * Identity number. Always empty or undefined at present.
-   * @property {string} [ownerId] The user ID of the device owner.
-   * @property {string} status The provisioning status of the device.
-   * @property {string} [registeredAt] Timestamp of when the device was
-   * registered in ISO format.
+   * @property {string} [id] Store id
+   * @property {string} [name] Store Name
+   * @property {string} [type] Store Type
+   * @property {string} [track] Store track. Possible values include:
+   * 'production', 'alpha', 'beta', 'testflight-internal',
+   * 'testflight-external'
+   * @property {object} [intuneDetails] Store details for intune
+   * @property {object} [intuneDetails.targetAudience]
+   * @property {string} [intuneDetails.targetAudience.name] display name for
+   * the target audience/group
+   * @property {string} [intuneDetails.targetAudience.id] ID for the target
+   * audience/group.
+   * @property {object} [intuneDetails.appCategory]
+   * @property {string} [intuneDetails.appCategory.name] display name for the
+   * app category
+   * @property {string} [intuneDetails.appCategory.id] ID for the category.
+   * @property {string} [serviceConnectionId] Id for the shared service
+   * connection. In case of Apple / GooglePlay stores, this connection will be
+   * used to connect to the Apple / Google stores in App Center.
+   * @property {string} [createdBy] The ID of the principal that created the
+   * store.
+   * @property {string} [createdByPrincipalType] The type of the principal that
+   * created the store.
    */
   constructor() {
   }
@@ -53,79 +58,59 @@ class ListOKResponseItemModelModelModelModelModelModelModelModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModel',
         modelProperties: {
-          udid: {
-            required: true,
-            serializedName: 'udid',
-            type: {
-              name: 'String'
-            }
-          },
-          model: {
-            required: true,
-            serializedName: 'model',
-            type: {
-              name: 'String'
-            }
-          },
-          deviceName: {
-            required: true,
-            serializedName: 'device_name',
-            type: {
-              name: 'String'
-            }
-          },
-          fullDeviceName: {
+          id: {
             required: false,
-            serializedName: 'full_device_name',
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          osBuild: {
-            required: true,
-            serializedName: 'os_build',
-            type: {
-              name: 'String'
-            }
-          },
-          osVersion: {
-            required: true,
-            serializedName: 'os_version',
-            type: {
-              name: 'String'
-            }
-          },
-          serial: {
+          name: {
             required: false,
-            serializedName: 'serial',
+            serializedName: 'name',
             type: {
               name: 'String'
             }
           },
-          imei: {
+          type: {
             required: false,
-            serializedName: 'imei',
+            serializedName: 'type',
             type: {
               name: 'String'
             }
           },
-          ownerId: {
+          track: {
             required: false,
-            serializedName: 'owner_id',
+            serializedName: 'track',
             type: {
               name: 'String'
             }
           },
-          status: {
-            required: true,
-            serializedName: 'status',
-            type: {
-              name: 'String'
-            }
-          },
-          registeredAt: {
+          intuneDetails: {
             required: false,
-            serializedName: 'registered_at',
+            serializedName: 'intune_details',
+            type: {
+              name: 'Composite',
+              className: 'ListOKResponseItemIntuneDetails'
+            }
+          },
+          serviceConnectionId: {
+            required: false,
+            serializedName: 'service_connection_id',
+            type: {
+              name: 'String'
+            }
+          },
+          createdBy: {
+            required: false,
+            serializedName: 'created_by',
+            type: {
+              name: 'String'
+            }
+          },
+          createdByPrincipalType: {
+            required: false,
+            serializedName: 'created_by_principal_type',
             type: {
               name: 'String'
             }

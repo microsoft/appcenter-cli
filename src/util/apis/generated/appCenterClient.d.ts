@@ -37,6 +37,7 @@ export default class AppCenterClient extends ServiceClient {
   credentials: ServiceClientCredentials;
 
   // Operation groups
+  appApiTokens: operations.AppApiTokens;
   devices: operations.Devices;
   notifications: operations.Notifications;
   users: operations.Users;

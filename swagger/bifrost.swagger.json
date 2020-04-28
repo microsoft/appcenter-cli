@@ -17,6 +17,457 @@
     "application/json"
   ],
   "paths": {
+    "/v0.1/apps/{owner_name}/{app_name}/api_tokens/{api_token_id}": {
+      "x-swagger-pipe": "api_token_controllers",
+      "x-swagger-router-controller": "api_token",
+      "x-internal": true,
+      "delete": {
+          "operationId": "appApiTokens_delete",
+          "x-auditing-category": "Key Management",
+          "description": "Delete the App Api Token object with the specific ID",
+          "parameters": [
+              {
+                  "name": "owner_name",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The name of the owner",
+                  "required": true
+              },
+              {
+                  "name": "app_name",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The name of the application",
+                  "required": true
+              },
+              {
+                  "name": "api_token_id",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The unique ID (UUID) of the api token",
+                  "required": true
+              }
+          ],
+          "responses": {
+              "204": {
+                  "description": "Success"
+              },
+              "400": {
+                  "description": "Error",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              },
+              "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              },
+              "404": {
+                  "description": "NotFound",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              }
+          },
+          "security": [
+              {
+                  "Basic": []
+              }
+          ],
+          "tags": [
+              "account"
+          ]
+      }
+  },
+  "/v0.1/apps/{owner_name}/{app_name}/api_tokens": {
+      "x-swagger-pipe": "api_token_controllers",
+      "x-swagger-router-controller": "api_token",
+      "x-internal": true,
+      "get": {
+          "operationId": "appApiTokens_list",
+          "x-auditing-category": "Key Management",
+          "description": "Returns App API tokens for the app",
+          "parameters": [
+              {
+                  "name": "owner_name",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The name of the owner",
+                  "required": true
+              },
+              {
+                  "name": "app_name",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The name of the application",
+                  "required": true
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "Success",
+                  "schema": {
+                      "type": "array",
+                      "items": {
+                          "properties": {
+                              "id": {
+                                  "type": "string",
+                                  "description": "The unique id (UUID) of the api token"
+                              },
+                              "description": {
+                                  "type": "string",
+                                  "description": "The description of the token"
+                              },
+                              "scope": {
+                                  "description": "The scope for this token.",
+                                  "type": "array",
+                                  "items": {
+                                      "type": "string",
+                                      "enum": [
+                                          "all",
+                                          "viewer"
+                                      ]
+                                  }
+                              },
+                              "created_at": {
+                                  "type": "string",
+                                  "description": "The creation time"
+                              }
+                          },
+                          "required": [
+                              "id",
+                              "created_at"
+                          ]
+                      }
+                  }
+              },
+              "400": {
+                  "description": "Error",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              },
+              "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              }
+          },
+          "security": [
+              {
+                  "Basic": []
+              }
+          ],
+          "tags": [
+              "account"
+          ]
+      },
+      "post": {
+          "operationId": "appApiTokens_new",
+          "x-auditing-category": "Key Management",
+          "description": "Creates a new App API token",
+          "parameters": [
+              {
+                  "name": "owner_name",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The name of the owner",
+                  "required": true
+              },
+              {
+                  "name": "app_name",
+                  "type": "string",
+                  "in": "path",
+                  "description": "The name of the application",
+                  "required": true
+              },
+              {
+                  "name": "description",
+                  "in": "body",
+                  "description": "Description of the token",
+                  "schema": {
+                      "properties": {
+                          "description": {
+                              "type": "string",
+                              "description": "The description of the token"
+                          },
+                          "scope": {
+                              "description": "The scope for this token.",
+                              "type": "array",
+                              "items": {
+                                  "type": "string",
+                                  "enum": [
+                                      "all",
+                                      "viewer"
+                                  ]
+                              }
+                          }
+                      }
+                  }
+              }
+          ],
+          "responses": {
+              "201": {
+                  "description": "Success",
+                  "schema": {
+                      "properties": {
+                          "id": {
+                              "type": "string",
+                              "description": "The unique id (UUID) of the api token"
+                          },
+                          "api_token": {
+                              "type": "string",
+                              "description": "The api token generated will not be accessible again"
+                          },
+                          "description": {
+                              "type": "string",
+                              "description": "The description of the token"
+                          },
+                          "scope": {
+                              "description": "The scope for this token.",
+                              "type": "array",
+                              "items": {
+                                  "type": "string",
+                                  "enum": [
+                                      "all",
+                                      "viewer"
+                                  ]
+                              }
+                          },
+                          "created_at": {
+                              "type": "string",
+                              "description": "The creation time"
+                          }
+                      },
+                      "required": [
+                          "id",
+                          "created_at",
+                          "api_token"
+                      ]
+                  }
+              },
+              "400": {
+                  "description": "Error",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              },
+              "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "error": {
+                              "properties": {
+                                  "code": {
+                                      "type": "string",
+                                      "enum": [
+                                          "BadRequest",
+                                          "Conflict",
+                                          "NotAcceptable",
+                                          "NotFound",
+                                          "InternalServerError",
+                                          "Unauthorized",
+                                          "TooManyRequests"
+                                      ]
+                                  },
+                                  "message": {
+                                      "type": "string"
+                                  }
+                              },
+                              "required": [
+                                  "code",
+                                  "message"
+                              ]
+                          }
+                      },
+                      "required": [
+                          "error"
+                      ]
+                  }
+              }
+          },
+          "security": [
+              {
+                  "Basic": []
+              }
+          ],
+          "tags": [
+              "account"
+          ]
+      }
+  },
     "/v0.1/users/{user_id}/devices/register": {
       "post": {
         "description": "Registers a user for an existing device",
