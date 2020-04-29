@@ -7,14 +7,12 @@ import {
   shortName,
   longName,
   hasArg,
-  failure,
-  ErrorCodes,
   defaultValue,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
-import { allPrincipalTypes, PrincipalType, principalMessaging } from "../../util/misc/principal-type";
+import { allPrincipalTypes, PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
 @help("Get a list of API tokens")
 export default class ApiTokenListCommand extends AppCommand {
@@ -22,16 +20,16 @@ export default class ApiTokenListCommand extends AppCommand {
     super(args);
   }
 
-  @help("The type of token principal authentication: [" + allPrincipalTypes.join(", ") + "]")
+  @help("The type of token: [" + allPrincipalTypes.join(", ") + "]")
   @shortName("t")
   @longName("type")
   @hasArg
   @defaultValue("user")
-  public principalType: string;
+  principalType: PrincipalType;
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const tokenLevel = this.principalType === PrincipalType.USER ? principalMessaging.user : principalMessaging.app;
-    const tokenMessaging = `Getting ${tokenLevel} API tokens ...`;
+    validatePrincipalType(this.principalType);
+    const tokenMessaging = `Getting ${this.principalType} API tokens ...`;
 
     let listTokensResponse;
     if (this.principalType === PrincipalType.USER) {
@@ -45,8 +43,6 @@ export default class ApiTokenListCommand extends AppCommand {
         tokenMessaging,
         clientRequest<models.ApiTokensGetResponse[]>((cb) => client.appApiTokens.list(app.ownerName, app.appName, cb))
       );
-    } else {
-      return failure(ErrorCodes.InvalidParameter, "Provided token type is invalid. Should be: [" + allPrincipalTypes.join(", ") + "]");
     }
 
     out.table(

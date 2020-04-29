@@ -17,7 +17,7 @@ import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
 import { DefaultApp } from "../../util/profile";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
-import { allPrincipalTypes, principalMessaging, PrincipalType } from "../../util/misc/principal-type";
+import { allPrincipalTypes, PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
 @help("Create a new API token")
 export default class TokenCreateCommand extends AppCommand {
@@ -31,16 +31,16 @@ export default class TokenCreateCommand extends AppCommand {
   @hasArg
   description: string;
 
-  @help("The type of token principal authentication: [" + allPrincipalTypes.join(", ") + "]")
+  @help("The type of token: [" + allPrincipalTypes.join(", ") + "]")
   @shortName("t")
   @longName("type")
   @hasArg
   @defaultValue("user")
-  public principalType: string;
+  principalType: PrincipalType;
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const tokenLevel = this.principalType === PrincipalType.USER ? principalMessaging.user : principalMessaging.app;
-    const tokenMessaging = `Creating ${tokenLevel} API token ...`;
+    validatePrincipalType(this.principalType);
+    const tokenMessaging = `Creating ${this.principalType} API token ...`;
     const tokenAttributes: models.ApiTokensCreateRequest = {
       description: this.description,
     };
@@ -59,8 +59,6 @@ export default class TokenCreateCommand extends AppCommand {
           client.appApiTokens.newMethod(app.ownerName, app.appName, tokenAttributes, cb)
         )
       );
-    } else {
-      return failure(ErrorCodes.InvalidParameter, "Provided token type is invalid. Should be: [" + allPrincipalTypes.join(", ") + "]");
     }
 
     const statusCode = createTokenResponse.response.statusCode;

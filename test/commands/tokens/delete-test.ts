@@ -101,19 +101,20 @@ describe("Tokens Delete", () => {
 
     expect(result.succeeded).to.be.false;
     expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-    expect(result.errorMessage).to.eql(`the app type API token with ID "${fakeId}" could not be found`);
+    expect(result.errorMessage).to.eql(`the app API token with ID "${fakeId}" could not be found`);
 
     nockScope.done();
   });
 
-  it("delete providing invalid type fails", async () => {
+  it("delete providing invalid type parameter fails", async () => {
     const fakeId = "00000000-0000-0000-0000-000000000000";
+    const expectedErrorMessage = "Provided token type is invalid. Should be one of: [user, app]";
     const command = new DeleteTokenCommand(getCommandArgsWithApp([fakeId, "--type", "nope"]));
-    const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
+    const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
 
-    expect(result.succeeded).to.be.false;
+    expect(result.succeeded).to.eql(false);
     expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-    expect(result.errorMessage).to.eql(`Provided token type is invalid. Should be: [user, app]`);
+    expect(result.errorMessage).to.eql(expectedErrorMessage);
 
     nockScope.done();
   });

@@ -109,13 +109,14 @@ describe("Tokens Create", () => {
     nockScope.done();
   });
 
-  it("#create providing invalid type calls fails", async () => {
+  it("#create providing invalid type sparameter fails", async () => {
+    const expectedErrorMessage = "Provided token type is invalid. Should be one of: [user, app]";
     const command = new CreateTokenCommand(getCommandArgsWithApp(["--type", "fake", "--description", fakeDescription]));
-    const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
-    expect(result.succeeded).to.be.false;
+    const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
+    expect(result.succeeded).to.eql(false);
     expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-    expect(result.errorMessage).to.eql(`Provided token type is invalid. Should be: [user, app]`);
+    expect(result.errorMessage).to.eql(expectedErrorMessage);
 
     nockScope.done();
   });

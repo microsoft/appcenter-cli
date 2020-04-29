@@ -19,7 +19,7 @@ import {
 import { out, prompt } from "../../util/interaction";
 import { AppCenterClient, clientRequest } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
-import { allPrincipalTypes, PrincipalType, principalMessaging } from "../../util/misc/principal-type";
+import { allPrincipalTypes, PrincipalType, validatePrincipalType as validateTokenPrincipal } from "../../util/misc/principal-type";
 
 @help("Delete an API token")
 export default class TokenDeleteCommand extends AppCommand {
@@ -33,20 +33,20 @@ export default class TokenDeleteCommand extends AppCommand {
   @position(0)
   id: string;
 
-  @help("The type of token principal authentication: [" + allPrincipalTypes.join(", ") + "]")
+  @help("The type of token: [" + allPrincipalTypes.join(", ") + "]")
   @shortName("t")
   @longName("type")
   @hasArg
   @defaultValue("user")
-  public principalType: string;
+  principalType: PrincipalType;
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const tokenLevel = this.principalType === PrincipalType.USER ? principalMessaging.user : principalMessaging.app;
-    const tokenMessaging = `Deleting ${tokenLevel} API token ...`;
-    const confirmation = await prompt.confirm(`Do you really want to delete the ${tokenLevel} API token with ID "${this.id}"`);
+    validateTokenPrincipal(this.principalType);
+    const tokenMessaging = `Deleting ${this.principalType} API token ...`;
+    const confirmation = await prompt.confirm(`Do you really want to delete the ${this.principalType} API token with ID "${this.id}"`);
 
     if (!confirmation) {
-      out.text(`Deletion of ${tokenLevel} API token with ID "${this.id}" canceled`);
+      out.text(`Deletion of ${this.principalType} API token with ID "${this.id}" canceled`);
       return success();
     }
 
@@ -62,12 +62,10 @@ export default class TokenDeleteCommand extends AppCommand {
         tokenMessaging,
         clientRequest<null>((cb) => client.appApiTokens.deleteMethod(app.ownerName, app.appName, this.id, cb))
       );
-    } else {
-      return failure(ErrorCodes.InvalidParameter, "Provided token type is invalid. Should be: [" + allPrincipalTypes.join(", ") + "]");
     }
 
     if (deleteTokenResponse.response.statusCode === 404) {
-      return failure(ErrorCodes.InvalidParameter, `the ${tokenLevel} API token with ID "${this.id}" could not be found`);
+      return failure(ErrorCodes.InvalidParameter, `the ${this.principalType} API token with ID "${this.id}" could not be found`);
     }
     return success();
   }

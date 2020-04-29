@@ -1,3 +1,5 @@
+import { failure, ErrorCodes } from "../commandline";
+
 export enum PrincipalType {
   USER = "user",
   APP = "app",
@@ -5,7 +7,12 @@ export enum PrincipalType {
 
 export const allPrincipalTypes = [PrincipalType.USER, PrincipalType.APP];
 
-export const principalMessaging = {
-  [PrincipalType.USER]: "user type",
-  [PrincipalType.APP]: "app type",
-};
+export function validatePrincipalType(principalType: PrincipalType): Promise<void> {
+  if (allPrincipalTypes.includes(principalType)) {
+    return;
+  }
+  throw failure(
+    ErrorCodes.InvalidParameter,
+    "Provided token type is invalid. Should be one of: [" + allPrincipalTypes.join(", ") + "]"
+  );
+}
