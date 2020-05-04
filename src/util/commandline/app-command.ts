@@ -35,7 +35,7 @@ export class AppCommand extends Command {
       // Default app in profile
     } else {
       const profile = getUser();
-      if (profile.defaultApp) {
+      if (profile?.defaultApp) {
         result = profile.defaultApp;
 
         // Couldn't find one, fail.

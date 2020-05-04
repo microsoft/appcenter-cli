@@ -10,7 +10,7 @@ export default class GetCurrentAppCommand extends Command {
 
   async runNoClient(): Promise<CommandResult> {
     const user = getUser();
-    const currentApp = user.defaultApp ? `${user.defaultApp.ownerName}/${user.defaultApp.appName}` : "";
+    const currentApp = user?.defaultApp ? `${user.defaultApp.ownerName}/${user.defaultApp.appName}` : "";
     out.text((s) => s, currentApp);
     return success();
   }

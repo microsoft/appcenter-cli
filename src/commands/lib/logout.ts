@@ -13,7 +13,7 @@ export async function logout(client: AppCenterClient, user: Profile): Promise<vo
 
 async function performLogout(client: AppCenterClient, user: Profile): Promise<void> {
   // Only delete token off the server if CLI created it.
-  if (!user.tokenSuppliedByUser) {
+  if (!user?.tokenSuppliedByUser) {
     let tokenId: string;
     try {
       await Promise.race([
