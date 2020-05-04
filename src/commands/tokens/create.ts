@@ -31,7 +31,7 @@ export default class TokenCreateCommand extends AppCommand {
   @hasArg
   description: string;
 
-  @help("The type of token: [" + allPrincipalTypes.join(", ") + "]")
+  @help("The type of token: [" + allPrincipalTypes.join("(default), ") + "]. An app must be specified for app type tokens")
   @shortName("t")
   @longName("type")
   @hasArg
