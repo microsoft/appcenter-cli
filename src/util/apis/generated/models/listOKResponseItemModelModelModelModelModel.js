@@ -11,14 +11,26 @@
 'use strict';
 
 /**
- * The source repository
- *
+ * Class representing a ListOKResponseItemModelModelModelModelModel.
  */
 class ListOKResponseItemModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModel.
-   * @property {string} [name] The repository name
-   * @property {string} [cloneUrl] URL used to clone the repository
+   * @property {string} repoUrl The repository's git url, must be a HTTPS URL
+   * @property {string} [repoId] The repository id from the repository
+   * provider. Required for repositories connected from GitHub App and
+   * GitLab.com
+   * @property {string} [externalUserId] The external user id from the
+   * repository provider. Required for GitLab.com repositories
+   * @property {string} [serviceConnectionId] The id of the service connection
+   * (private). Required for GitLab self-hosted repositories
+   * @property {string} [installationId] The GitHub App Installation id.
+   * Required for repositories connected from GitHub App
+   * @property {string} id Repository configuration identifier
+   * @property {string} type Type of repository
+   * @property {string} state State of the configuration. Possible values
+   * include: 'unauthorized', 'inactive', 'active'
+   * @property {string} [userEmail] Email of the user who linked the repository
    */
   constructor() {
   }
@@ -37,16 +49,65 @@ class ListOKResponseItemModelModelModelModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModelModel',
         modelProperties: {
-          name: {
-            required: false,
-            serializedName: 'name',
+          repoUrl: {
+            required: true,
+            serializedName: 'repo_url',
             type: {
               name: 'String'
             }
           },
-          cloneUrl: {
+          repoId: {
             required: false,
-            serializedName: 'clone_url',
+            serializedName: 'repo_id',
+            type: {
+              name: 'String'
+            }
+          },
+          externalUserId: {
+            required: false,
+            serializedName: 'external_user_id',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceConnectionId: {
+            required: false,
+            serializedName: 'service_connection_id',
+            type: {
+              name: 'String'
+            }
+          },
+          installationId: {
+            required: false,
+            serializedName: 'installation_id',
+            type: {
+              name: 'String'
+            }
+          },
+          id: {
+            required: true,
+            serializedName: 'id',
+            type: {
+              name: 'String'
+            }
+          },
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
+          state: {
+            required: true,
+            serializedName: 'state',
+            type: {
+              name: 'String'
+            }
+          },
+          userEmail: {
+            required: false,
+            serializedName: 'user_email',
             type: {
               name: 'String'
             }

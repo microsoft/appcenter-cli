@@ -718,10 +718,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModel'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModel'
                   }
               }
             }

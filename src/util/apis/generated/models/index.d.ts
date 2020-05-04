@@ -28943,150 +28943,6 @@ export interface CosmosDbCorsStatusResponse {
   message?: string;
 }
 
-export interface DeleteBadRequestResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface DeleteBadRequestResponse {
-  error: DeleteBadRequestResponseError;
-}
-
-export interface DeleteUnauthorizedResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface DeleteUnauthorizedResponse {
-  error: DeleteUnauthorizedResponseError;
-}
-
-export interface DeleteNotFoundResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface DeleteNotFoundResponse {
-  error: DeleteNotFoundResponseError;
-}
-
-export interface ListOKResponseItem {
-  /**
-   * The unique id (UUID) of the api token
-  */
-  id: string;
-  /**
-   * The description of the token
-  */
-  description?: string;
-  /**
-   * The scope for this token.
-  */
-  scope?: string[];
-  /**
-   * The creation time
-  */
-  createdAt: string;
-}
-
-export interface ListBadRequestResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface ListBadRequestResponse {
-  error: ListBadRequestResponseError;
-}
-
-export interface ListUnauthorizedResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface ListUnauthorizedResponse {
-  error: ListUnauthorizedResponseError;
-}
-
-export interface Description {
-  /**
-   * The description of the token
-  */
-  description?: string;
-  /**
-   * The scope for this token.
-  */
-  scope?: string[];
-}
-
-export interface NewCreatedResponse {
-  /**
-   * The unique id (UUID) of the api token
-  */
-  id: string;
-  /**
-   * The api token generated will not be accessible again
-  */
-  apiToken: string;
-  /**
-   * The description of the token
-  */
-  description?: string;
-  /**
-   * The scope for this token.
-  */
-  scope?: string[];
-  /**
-   * The creation time
-  */
-  createdAt: string;
-}
-
-export interface NewBadRequestResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface NewBadRequestResponse {
-  error: NewBadRequestResponseError;
-}
-
-export interface NewUnauthorizedResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface NewUnauthorizedResponse {
-  error: NewUnauthorizedResponseError;
-}
-
 /**
  * The information for a single iOS device
 */
@@ -33008,7 +32864,7 @@ export interface CreateOrUpdateErrorModel {
   error: CreateOrUpdateErrorModelError;
 }
 
-export interface ListOKResponseItemModel {
+export interface ListOKResponseItem {
   /**
    * The display name of the organization
   */
@@ -33764,7 +33620,7 @@ export interface UpdateUserPermissionsErrorModel {
   error: UpdateUserPermissionsErrorModelError;
 }
 
-export interface ListOKResponseItemModelModel {
+export interface ListOKResponseItemModel {
   /**
    * The unique id (UUID) of the user
   */
@@ -35641,7 +35497,7 @@ export interface GetInternalServerErrorResponse {
   message: string;
 }
 
-export interface ListOKResponseItemModelModelModel {
+export interface ListOKResponseItemModelModel {
   /**
    * The unique id for this symbol (uuid)
   */
@@ -35949,7 +35805,7 @@ export interface DeleteForbiddenResponse {
   message: string;
 }
 
-export interface DeleteNotFoundResponseModel {
+export interface DeleteNotFoundResponse {
   message: string;
 }
 
@@ -35985,7 +35841,7 @@ export interface ListOKResponseItemSymbolsUploadedItem {
 /**
  * A single symbol upload entity
 */
-export interface ListOKResponseItemModelModelModelModel {
+export interface ListOKResponseItemModelModelModel {
   /**
    * The id for the current symbol upload
   */
@@ -36188,7 +36044,7 @@ export interface GetNotificationByAppIdErrorModel {
 /**
  * The source repository
 */
-export interface ListOKResponseItemModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModel {
   /**
    * The repository name
   */
@@ -36205,7 +36061,7 @@ export interface ListErrorModel2 {
   message: string;
 }
 
-export interface ListOKResponseItemModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModel {
   /**
    * The repository's git url, must be a HTTPS URL
   */
@@ -37039,7 +36895,7 @@ export interface UpdateNotFoundResponse {
   message: string;
 }
 
-export interface DeleteNotFoundResponseModelModel {
+export interface DeleteNotFoundResponseModel {
   /**
    * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
    * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
@@ -37308,7 +37164,7 @@ export interface ListOKResponseItemBuild {
 /**
  * Basic information on a release
 */
-export interface ListOKResponseItemModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModel {
   /**
    * ID identifying this unique release.
   */
@@ -40541,7 +40397,7 @@ export interface ListOKResponseItemDistributionStoresItemModel {
 /**
  * Basic information on a release
 */
-export interface ListOKResponseItemModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModel {
   /**
    * ID identifying this unique release.
   */
@@ -40977,7 +40833,7 @@ export interface ListOKResponseItemIntuneDetails {
 /**
  * ExternalStoreResponse
 */
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModel {
   /**
    * Store id
   */
@@ -41454,7 +41310,7 @@ export interface ListCsvFormatInternalServerErrorResponse {
 /**
  * The information for a single iOS device
 */
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModel {
   /**
    * The Unique Device IDentifier of the device
   */
@@ -41502,7 +41358,7 @@ export interface ListOKResponseItemModelModelModelModelModelModelModelModelModel
   registeredAt?: string;
 }
 
-export interface ListBadRequestResponseModel {
+export interface ListBadRequestResponse {
   /**
    * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
    * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
@@ -41568,7 +41424,7 @@ export interface UpdateOKResponseModelModelModelModel {
   isPublic: boolean;
 }
 
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModel {
   /**
    * The unique ID of the distribution group
   */
@@ -42343,7 +42199,7 @@ export interface ListOKResponseItemLatestRelease {
   uploadTime?: number;
 }
 
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel {
   key?: string;
   name: string;
   latestRelease?: ListOKResponseItemLatestRelease;
@@ -47640,7 +47496,7 @@ export interface ListOKResponseItemAzureSubscription {
   isMicrosoftInternal?: boolean;
 }
 
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * The unique ID (UUID) of the app
   */
@@ -47707,6 +47563,150 @@ export interface ListOKResponseItemModelModelModelModelModelModelModelModelModel
    * The permissions of the calling user
   */
   memberPermissions?: string[];
+}
+
+export interface DeleteBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteBadRequestResponse {
+  error: DeleteBadRequestResponseError;
+}
+
+export interface DeleteUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteUnauthorizedResponse {
+  error: DeleteUnauthorizedResponseError;
+}
+
+export interface DeleteNotFoundResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteNotFoundResponseModelModel {
+  error: DeleteNotFoundResponseError;
+}
+
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique id (UUID) of the api token
+  */
+  id: string;
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+  /**
+   * The creation time
+  */
+  createdAt: string;
+}
+
+export interface ListBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListBadRequestResponseModel {
+  error: ListBadRequestResponseError;
+}
+
+export interface ListUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListUnauthorizedResponse {
+  error: ListUnauthorizedResponseError;
+}
+
+export interface Description {
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+}
+
+export interface NewCreatedResponse {
+  /**
+   * The unique id (UUID) of the api token
+  */
+  id: string;
+  /**
+   * The api token generated will not be accessible again
+  */
+  apiToken: string;
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+  /**
+   * The creation time
+  */
+  createdAt: string;
+}
+
+export interface NewBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface NewBadRequestResponse {
+  error: NewBadRequestResponseError;
+}
+
+export interface NewUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface NewUnauthorizedResponse {
+  error: NewUnauthorizedResponseError;
 }
 
 export interface ListAdministeredOKResponseOrganizations {

@@ -2606,7 +2606,7 @@ function _deleteMethod(releaseId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeleteNotFoundResponseModelModel']().mapper();
+          let resultMapper = new client.models['DeleteNotFoundResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2924,10 +2924,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModelModelModelModelModelModelModel'
+                    className: 'ListOKResponseItemModelModelModelModelModelModel'
                   }
               }
             }

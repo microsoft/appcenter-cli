@@ -16,11 +16,7 @@
 class DeleteNotFoundResponse {
   /**
    * Create a DeleteNotFoundResponse.
-   * @property {object} error
-   * @property {string} [error.code] Possible values include: 'BadRequest',
-   * 'Conflict', 'NotAcceptable', 'NotFound', 'InternalServerError',
-   * 'Unauthorized', 'TooManyRequests'
-   * @property {string} [error.message]
+   * @property {string} message
    */
   constructor() {
   }
@@ -39,12 +35,11 @@ class DeleteNotFoundResponse {
         name: 'Composite',
         className: 'DeleteNotFoundResponse',
         modelProperties: {
-          error: {
+          message: {
             required: true,
-            serializedName: 'error',
+            serializedName: 'message',
             type: {
-              name: 'Composite',
-              className: 'DeleteNotFoundResponseError'
+              name: 'String'
             }
           }
         }

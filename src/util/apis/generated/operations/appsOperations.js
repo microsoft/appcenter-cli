@@ -2175,10 +2175,10 @@ function _list(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel'
                   }
               }
             }

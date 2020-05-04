@@ -3143,10 +3143,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModel'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModel'
                   }
               }
             }

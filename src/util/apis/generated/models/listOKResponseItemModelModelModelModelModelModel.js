@@ -11,26 +11,48 @@
 'use strict';
 
 /**
- * Class representing a ListOKResponseItemModelModelModelModelModelModel.
+ * Basic information on a release
+ *
  */
 class ListOKResponseItemModelModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModelModel.
-   * @property {string} repoUrl The repository's git url, must be a HTTPS URL
-   * @property {string} [repoId] The repository id from the repository
-   * provider. Required for repositories connected from GitHub App and
-   * GitLab.com
-   * @property {string} [externalUserId] The external user id from the
-   * repository provider. Required for GitLab.com repositories
-   * @property {string} [serviceConnectionId] The id of the service connection
-   * (private). Required for GitLab self-hosted repositories
-   * @property {string} [installationId] The GitHub App Installation id.
-   * Required for repositories connected from GitHub App
-   * @property {string} id Repository configuration identifier
-   * @property {string} type Type of repository
-   * @property {string} state State of the configuration. Possible values
-   * include: 'unauthorized', 'inactive', 'active'
-   * @property {string} [userEmail] Email of the user who linked the repository
+   * @property {number} id ID identifying this unique release.
+   * @property {string} version The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+   * @property {string} [origin] The release's origin. Possible values include:
+   * 'hockeyapp', 'appcenter'
+   * @property {string} shortVersion The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+   * @property {boolean} enabled This value determines the whether a release
+   * currently is enabled or disabled.
+   * @property {string} uploadedAt UTC time in ISO 8601 format of the uploaded
+   * time.
+   * @property {string} [destinationType] OBSOLETE. Will be removed in next
+   * version. The destination type.<br>
+   * <b>group</b>: The release distributed to internal groups and
+   * distribution_groups details will be returned.<br>
+   * <b>store</b>: The release distributed to external stores and
+   * distribution_stores details will be returned. <br>
+   * . Possible values include: 'group', 'store', 'tester'
+   * @property {array} [distributionGroups] OBSOLETE. Will be removed in next
+   * version. A list of distribution groups that are associated with this
+   * release.
+   * @property {array} [distributionStores] OBSOLETE. Will be removed in next
+   * version. A list of distribution stores that are associated with this
+   * release.
+   * @property {array} [destinations] A list of distribution groups or stores.
+   * @property {object} [build] Build information for the release
+   * @property {string} [build.branchName] The branch name of the build
+   * producing the release
+   * @property {string} [build.commitHash] The commit hash of the build
+   * producing the release
+   * @property {string} [build.commitMessage] The commit message of the build
+   * producing the release
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    */
   constructor() {
   }
@@ -49,67 +71,113 @@ class ListOKResponseItemModelModelModelModelModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModelModelModel',
         modelProperties: {
-          repoUrl: {
-            required: true,
-            serializedName: 'repo_url',
-            type: {
-              name: 'String'
-            }
-          },
-          repoId: {
-            required: false,
-            serializedName: 'repo_id',
-            type: {
-              name: 'String'
-            }
-          },
-          externalUserId: {
-            required: false,
-            serializedName: 'external_user_id',
-            type: {
-              name: 'String'
-            }
-          },
-          serviceConnectionId: {
-            required: false,
-            serializedName: 'service_connection_id',
-            type: {
-              name: 'String'
-            }
-          },
-          installationId: {
-            required: false,
-            serializedName: 'installation_id',
-            type: {
-              name: 'String'
-            }
-          },
           id: {
             required: true,
             serializedName: 'id',
             type: {
-              name: 'String'
+              name: 'Number'
             }
           },
-          type: {
+          version: {
             required: true,
-            serializedName: 'type',
+            serializedName: 'version',
             type: {
               name: 'String'
             }
           },
-          state: {
-            required: true,
-            serializedName: 'state',
-            type: {
-              name: 'String'
-            }
-          },
-          userEmail: {
+          origin: {
             required: false,
-            serializedName: 'user_email',
+            serializedName: 'origin',
             type: {
               name: 'String'
+            }
+          },
+          shortVersion: {
+            required: true,
+            serializedName: 'short_version',
+            type: {
+              name: 'String'
+            }
+          },
+          enabled: {
+            required: true,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          uploadedAt: {
+            required: true,
+            serializedName: 'uploaded_at',
+            type: {
+              name: 'String'
+            }
+          },
+          destinationType: {
+            required: false,
+            serializedName: 'destination_type',
+            type: {
+              name: 'String'
+            }
+          },
+          distributionGroups: {
+            required: false,
+            serializedName: 'distribution_groups',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ListOKResponseItemDistributionGroupsItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ListOKResponseItemDistributionGroupsItem'
+                  }
+              }
+            }
+          },
+          distributionStores: {
+            required: false,
+            serializedName: 'distribution_stores',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ListOKResponseItemDistributionStoresItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ListOKResponseItemDistributionStoresItem'
+                  }
+              }
+            }
+          },
+          destinations: {
+            required: false,
+            serializedName: 'destinations',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ListOKResponseItemDestinationsItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ListOKResponseItemDestinationsItem'
+                  }
+              }
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'Composite',
+              className: 'ListOKResponseItemBuild'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
+            type: {
+              name: 'Boolean'
             }
           }
         }

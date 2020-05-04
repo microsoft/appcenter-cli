@@ -16,27 +16,52 @@
 class ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel.
-   * @property {string} [key]
-   * @property {string} name
-   * @property {object} [latestRelease]
-   * @property {string} [latestRelease.targetBinaryRange]
-   * @property {string} [latestRelease.description]
-   * @property {boolean} [latestRelease.isDisabled]
-   * @property {boolean} [latestRelease.isMandatory]
-   * @property {number} [latestRelease.rollout]
-   * @property {string} [latestRelease.label]
-   * @property {string} [latestRelease.packageHash]
-   * @property {string} [latestRelease.blobUrl]
-   * @property {object} [latestRelease.diffPackageMap]
-   * @property {string} [latestRelease.originalDeployment] Set on 'Promote'
-   * @property {string} [latestRelease.originalLabel] Set on 'Promote' and
-   * 'Rollback'
-   * @property {string} [latestRelease.releasedBy]
-   * @property {string} [latestRelease.releaseMethod] The release method is
-   * unknown if unspecified. Possible values include: 'Upload', 'Promote',
-   * 'Rollback'
-   * @property {number} [latestRelease.size]
-   * @property {number} [latestRelease.uploadTime]
+   * @property {uuid} id The unique ID (UUID) of the app
+   * @property {string} [description] The description of the app
+   * @property {string} displayName The display name of the app
+   * @property {string} [releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   * @property {string} [iconUrl] The string representation of the URL pointing
+   * to the app's icon
+   * @property {string} [iconSource] The string representation of the source of
+   * the app's icon
+   * @property {string} name The name of the app used in URLs
+   * @property {string} os The OS the app will be running on. Possible values
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+   * 'Custom'
+   * @property {object} owner The information about the app's owner
+   * @property {uuid} [owner.id] The unique id (UUID) of the owner
+   * @property {string} [owner.avatarUrl] The avatar URL of the owner
+   * @property {string} [owner.displayName] The owner's display name
+   * @property {string} [owner.email] The owner's email address
+   * @property {string} [owner.name] The unique name that used to identify the
+   * owner
+   * @property {string} [owner.type] The owner type. Can either be 'org' or
+   * 'user'. Possible values include: 'org', 'user'
+   * @property {string} appSecret A unique and secret key used to identify the
+   * app in communication with the ingestion endpoint for crash reporting and
+   * analytics
+   * @property {object} [azureSubscription]
+   * @property {uuid} [azureSubscription.subscriptionId] The azure subscription
+   * id
+   * @property {uuid} [azureSubscription.tenantId] The tenant id of the azure
+   * subscription belongs to
+   * @property {string} [azureSubscription.subscriptionName] The name of the
+   * azure subscription
+   * @property {boolean} [azureSubscription.isBilling] If the subscription is
+   * used for billing
+   * @property {boolean} [azureSubscription.isBillable] If the subscription can
+   * be used for billing
+   * @property {boolean} [azureSubscription.isMicrosoftInternal] If the
+   * subscription is internal Microsoft subscription
+   * @property {string} platform The platform of the app. Possible values
+   * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+   * 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown', 'Custom'
+   * @property {string} origin The creation origin of this app. Possible values
+   * include: 'appcenter', 'hockeyapp', 'codepush'
+   * @property {string} [createdAt] The created date of this app
+   * @property {string} [updatedAt] The last updated date of this app
+   * @property {array} [memberPermissions] The permissions of the calling user
    */
   constructor() {
   }
@@ -55,9 +80,44 @@ class ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelM
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel',
         modelProperties: {
-          key: {
+          id: {
+            required: true,
+            serializedName: 'id',
+            type: {
+              name: 'String'
+            }
+          },
+          description: {
             required: false,
-            serializedName: 'key',
+            serializedName: 'description',
+            type: {
+              name: 'String'
+            }
+          },
+          displayName: {
+            required: true,
+            serializedName: 'display_name',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
+            type: {
+              name: 'String'
+            }
+          },
+          iconUrl: {
+            required: false,
+            serializedName: 'icon_url',
+            type: {
+              name: 'String'
+            }
+          },
+          iconSource: {
+            required: false,
+            serializedName: 'icon_source',
             type: {
               name: 'String'
             }
@@ -69,12 +129,76 @@ class ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelM
               name: 'String'
             }
           },
-          latestRelease: {
-            required: false,
-            serializedName: 'latest_release',
+          os: {
+            required: true,
+            serializedName: 'os',
+            type: {
+              name: 'String'
+            }
+          },
+          owner: {
+            required: true,
+            serializedName: 'owner',
             type: {
               name: 'Composite',
-              className: 'ListOKResponseItemLatestRelease'
+              className: 'ListOKResponseItemOwner'
+            }
+          },
+          appSecret: {
+            required: true,
+            serializedName: 'app_secret',
+            type: {
+              name: 'String'
+            }
+          },
+          azureSubscription: {
+            required: false,
+            serializedName: 'azure_subscription',
+            type: {
+              name: 'Composite',
+              className: 'ListOKResponseItemAzureSubscription'
+            }
+          },
+          platform: {
+            required: true,
+            serializedName: 'platform',
+            type: {
+              name: 'String'
+            }
+          },
+          origin: {
+            required: true,
+            serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          createdAt: {
+            required: false,
+            serializedName: 'created_at',
+            type: {
+              name: 'String'
+            }
+          },
+          updatedAt: {
+            required: false,
+            serializedName: 'updated_at',
+            type: {
+              name: 'String'
+            }
+          },
+          memberPermissions: {
+            required: false,
+            serializedName: 'member_permissions',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
             }
           }
         }

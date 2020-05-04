@@ -180,10 +180,10 @@ function _list(sourceHost, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelModelModelModelModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModelModelModelModelModel'
+                    className: 'ListOKResponseItemModelModelModelModel'
                   }
               }
             }

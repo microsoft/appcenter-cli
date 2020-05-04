@@ -11,30 +11,17 @@
 'use strict';
 
 /**
- * The information for a single iOS device
- *
+ * Class representing a ListOKResponseItemModelModelModelModelModelModelModelModelModelModel.
  */
 class ListOKResponseItemModelModelModelModelModelModelModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModelModelModelModelModelModelModel.
-   * @property {string} udid The Unique Device IDentifier of the device
-   * @property {string} model The model identifier of the device, in the format
-   * iDeviceM,N
-   * @property {string} deviceName The device description, in the format
-   * "iPhone 7 Plus (A1784)"
-   * @property {string} [fullDeviceName] A combination of the device model name
-   * and the owner name.
-   * @property {string} osBuild The last known OS version running on the device
-   * @property {string} osVersion The last known OS version running on the
-   * device
-   * @property {string} [serial] The device's serial number. Always empty or
-   * undefined at present.
-   * @property {string} [imei] The device's International Mobile Equipment
-   * Identity number. Always empty or undefined at present.
-   * @property {string} [ownerId] The user ID of the device owner.
-   * @property {string} status The provisioning status of the device.
-   * @property {string} [registeredAt] Timestamp of when the device was
-   * registered in ISO format.
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {string} [displayName] The name of the distribution group
+   * @property {string} origin The creation origin of this distribution group.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {boolean} isPublic Whether the distribution group is public
    */
   constructor() {
   }
@@ -53,81 +40,39 @@ class ListOKResponseItemModelModelModelModelModelModelModelModelModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModel',
         modelProperties: {
-          udid: {
+          id: {
             required: true,
-            serializedName: 'udid',
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          model: {
+          name: {
             required: true,
-            serializedName: 'model',
+            serializedName: 'name',
             type: {
               name: 'String'
             }
           },
-          deviceName: {
-            required: true,
-            serializedName: 'device_name',
-            type: {
-              name: 'String'
-            }
-          },
-          fullDeviceName: {
+          displayName: {
             required: false,
-            serializedName: 'full_device_name',
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }
           },
-          osBuild: {
+          origin: {
             required: true,
-            serializedName: 'os_build',
+            serializedName: 'origin',
             type: {
               name: 'String'
             }
           },
-          osVersion: {
+          isPublic: {
             required: true,
-            serializedName: 'os_version',
+            serializedName: 'is_public',
             type: {
-              name: 'String'
-            }
-          },
-          serial: {
-            required: false,
-            serializedName: 'serial',
-            type: {
-              name: 'String'
-            }
-          },
-          imei: {
-            required: false,
-            serializedName: 'imei',
-            type: {
-              name: 'String'
-            }
-          },
-          ownerId: {
-            required: false,
-            serializedName: 'owner_id',
-            type: {
-              name: 'String'
-            }
-          },
-          status: {
-            required: true,
-            serializedName: 'status',
-            type: {
-              name: 'String'
-            }
-          },
-          registeredAt: {
-            required: false,
-            serializedName: 'registered_at',
-            type: {
-              name: 'String'
+              name: 'Boolean'
             }
           }
         }

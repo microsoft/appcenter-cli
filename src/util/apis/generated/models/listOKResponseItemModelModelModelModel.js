@@ -11,35 +11,14 @@
 'use strict';
 
 /**
- * A single symbol upload entity
+ * The source repository
  *
  */
 class ListOKResponseItemModelModelModelModel {
   /**
    * Create a ListOKResponseItemModelModelModelModel.
-   * @property {string} symbolUploadId The id for the current symbol upload
-   * @property {string} appId The application that this symbol upload belongs
-   * to
-   * @property {object} [user] User information of the one who intitiated the
-   * symbol upload
-   * @property {string} [user.email] The email of the user
-   * @property {string} [user.displayName] The full name of the user. Might for
-   * example be first and last name
-   * @property {string} status The current status for the symbol upload.
-   * Possible values include: 'created', 'committed', 'aborted', 'processing',
-   * 'indexed', 'failed'
-   * @property {string} symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
-   * 'AndroidProguard', 'UWP'
-   * @property {array} [symbolsUploaded] The symbols found in the upload. This
-   * may be empty until the status is indexed
-   * @property {string} [origin] The origin of the symbol upload. Possible
-   * values include: 'User', 'System'
-   * @property {string} [fileName] The file name for the symbol upload
-   * @property {number} [fileSize] The size of the file in Mebibytes. This may
-   * be 0 until the status is indexed
-   * @property {date} [timestamp] When the symbol upload was committed, or last
-   * transaction time if not committed
+   * @property {string} [name] The repository name
+   * @property {string} [cloneUrl] URL used to clone the repository
    */
   constructor() {
   }
@@ -58,83 +37,18 @@ class ListOKResponseItemModelModelModelModel {
         name: 'Composite',
         className: 'ListOKResponseItemModelModelModelModel',
         modelProperties: {
-          symbolUploadId: {
-            required: true,
-            serializedName: 'symbol_upload_id',
+          name: {
+            required: false,
+            serializedName: 'name',
             type: {
               name: 'String'
             }
           },
-          appId: {
-            required: true,
-            serializedName: 'app_id',
+          cloneUrl: {
+            required: false,
+            serializedName: 'clone_url',
             type: {
               name: 'String'
-            }
-          },
-          user: {
-            required: false,
-            serializedName: 'user',
-            type: {
-              name: 'Composite',
-              className: 'ListOKResponseItemUser'
-            }
-          },
-          status: {
-            required: true,
-            serializedName: 'status',
-            type: {
-              name: 'String'
-            }
-          },
-          symbolType: {
-            required: true,
-            serializedName: 'symbol_type',
-            type: {
-              name: 'String'
-            }
-          },
-          symbolsUploaded: {
-            required: false,
-            serializedName: 'symbols_uploaded',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'ListOKResponseItemSymbolsUploadedItemElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'ListOKResponseItemSymbolsUploadedItem'
-                  }
-              }
-            }
-          },
-          origin: {
-            required: false,
-            serializedName: 'origin',
-            type: {
-              name: 'String'
-            }
-          },
-          fileName: {
-            required: false,
-            serializedName: 'file_name',
-            type: {
-              name: 'String'
-            }
-          },
-          fileSize: {
-            required: false,
-            serializedName: 'file_size',
-            type: {
-              name: 'Number'
-            }
-          },
-          timestamp: {
-            required: false,
-            serializedName: 'timestamp',
-            type: {
-              name: 'DateTime'
             }
           }
         }

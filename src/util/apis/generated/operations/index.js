@@ -14,7 +14,6 @@
 
 'use strict';
 
-exports.AppApiTokens = require('./appApiTokens');
 exports.Devices = require('./devices');
 exports.Notifications = require('./notifications');
 exports.Users = require('./users');

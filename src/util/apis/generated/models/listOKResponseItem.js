@@ -16,10 +16,10 @@
 class ListOKResponseItem {
   /**
    * Create a ListOKResponseItem.
-   * @property {string} id The unique id (UUID) of the api token
-   * @property {string} [description] The description of the token
-   * @property {array} [scope] The scope for this token.
-   * @property {string} createdAt The creation time
+   * @property {string} displayName The display name of the organization
+   * @property {string} name The slug name of the organization
+   * @property {string} origin The creation origin of this organization.
+   * Possible values include: 'appcenter', 'hockeyapp'
    */
   constructor() {
   }
@@ -38,37 +38,23 @@ class ListOKResponseItem {
         name: 'Composite',
         className: 'ListOKResponseItem',
         modelProperties: {
-          id: {
+          displayName: {
             required: true,
-            serializedName: 'id',
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }
           },
-          description: {
-            required: false,
-            serializedName: 'description',
+          name: {
+            required: true,
+            serializedName: 'name',
             type: {
               name: 'String'
             }
           },
-          scope: {
-            required: false,
-            serializedName: 'scope',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'StringElementType',
-                  type: {
-                    name: 'String'
-                  }
-              }
-            }
-          },
-          createdAt: {
+          origin: {
             required: true,
-            serializedName: 'created_at',
+            serializedName: 'origin',
             type: {
               name: 'String'
             }
