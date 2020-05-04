@@ -88,8 +88,9 @@ export default class AppCenterClient extends ServiceClient {
   branchConfigurations: operations.BranchConfigurations;
   identity: operations.Identity;
   appleMapping: operations.AppleMapping;
+  appApiTokens: operations.AppApiTokens;
   analytics: operations.Analytics;
-  apiTokens: operations.ApiTokens;
+  userApiTokens: operations.UserApiTokens;
 }
 
 export { AppCenterClient, models as AppCenterModels };

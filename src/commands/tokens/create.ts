@@ -35,7 +35,7 @@ export default class TokenCreateCommand extends Command {
 
     const createTokenResponse = await out.progress(
       "Creating token ...",
-      clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod(tokenAttributes, cb))
+      clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod(tokenAttributes, cb))
     );
 
     const statusCode = createTokenResponse.response.statusCode;
