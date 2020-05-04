@@ -5,12 +5,11 @@
 import { WebResource } from "ms-rest";
 import { Readable, Writable } from "stream";
 import { getTelemetrySourceFromEnvironmentVar } from "../profile";
+import { v4 as uuidV4 } from "uuid";
 
 const requestPipeline = require("ms-rest/lib/requestPipeline");
 
-const uuid = require("uuid");
-
-const sessionId: string = uuid.v4();
+const sessionId: string = uuidV4();
 
 const sessionHeaderName = "diagnostic-context";
 const commandNameHeaderName = "cli-command-name";
