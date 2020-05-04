@@ -49,7 +49,7 @@ export default class TokenCreateCommand extends AppCommand {
     if (this.principalType === PrincipalType.USER) {
       createTokenResponse = await out.progress(
         tokenMessaging,
-        clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod(tokenAttributes, cb))
+        clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod(tokenAttributes, cb))
       );
     } else if (this.principalType === PrincipalType.APP) {
       const app: DefaultApp = this.app;

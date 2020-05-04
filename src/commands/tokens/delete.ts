@@ -54,7 +54,7 @@ export default class TokenDeleteCommand extends AppCommand {
     if (this.principalType === PrincipalType.USER) {
       deleteTokenResponse = await out.progress(
         tokenMessaging,
-        clientRequest<null>((cb) => client.apiTokens.deleteMethod(this.id, cb))
+        clientRequest<null>((cb) => client.userApiTokens.deleteMethod(this.id, cb))
       );
     } else if (this.principalType === PrincipalType.APP) {
       const app: DefaultApp = this.app;

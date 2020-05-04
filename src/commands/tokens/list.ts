@@ -35,7 +35,7 @@ export default class ApiTokenListCommand extends AppCommand {
     if (this.principalType === PrincipalType.USER) {
       listTokensResponse = await out.progress(
         tokenMessaging,
-        clientRequest<models.ApiTokensGetResponse[]>((cb) => client.apiTokens.list(cb))
+        clientRequest<models.ApiTokensGetResponse[]>((cb) => client.userApiTokens.list(cb))
       );
     } else if (this.principalType === PrincipalType.APP) {
       const app: DefaultApp = this.app;
