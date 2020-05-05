@@ -35,7 +35,7 @@ describe("distribute releases edit command", async () => {
       const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseResponse)(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "enabled"]));
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--state enabled"]));
       const result = await command.execute();
 
       testCommandSuccess(result, executionScope);
@@ -46,7 +46,18 @@ describe("distribute releases edit command", async () => {
       const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseResponse)(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--state disabled"]));
+      const result = await command.execute();
+
+      testCommandSuccess(result, executionScope);
+    });
+
+    it("update release notes", async () => {
+      // Arrange
+      const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseResponse)(Nock(fakeHost));
+
+      // Act
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes 'fake release notes'"]));
       const result = await command.execute();
 
       testCommandSuccess(result, executionScope);
@@ -77,37 +88,19 @@ describe("distribute releases edit command", async () => {
       const expectedErrorMessage = "notanumber is not a valid release id";
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "notanumber", "disabled"]));
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "notanumber", "--state disabled"]));
       const result = await command.execute();
 
       // Assert
       expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
     });
 
-    it("if state option wasn't specified", async () => {
-      // Arrange
-      let errorMessage: string;
-      const expectedErrorMessage = "Missing required positional argument State";
-
-      // Act
-      let command;
-      try {
-        command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "1"]));
-      } catch (e) {
-        errorMessage = e.message;
-      }
-
-      // Assert
-      expect(command).to.eql(undefined);
-      expect(errorMessage).to.eql(expectedErrorMessage);
-    });
-
     it("if state option value is invalid", async () => {
       // Arrange
-      const expectedErrorMessage = `"invalidvalue" is not a valid release state. Available states are "enabled" or "disabled".`;
+      const expectedErrorMessage = `'--state' can be 'enabled' or 'disabled'`;
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "1", "invalidvalue"]));
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "1", "--state invalidvalue"]));
       const result = await command.execute();
 
       // Assert
@@ -134,7 +127,7 @@ describe("distribute releases edit command", async () => {
       const executionScope = setupReleaseDetailsServiceUnavailableResponse(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--state disabled"]));
       const result = await command.execute();
 
       // Assert
@@ -148,7 +141,21 @@ describe("distribute releases edit command", async () => {
       const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseServiceUnavailableResponse)(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--state disabled"]));
+      const result = await command.execute();
+
+      // Assert
+      expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
+      testCommandFailure(executionScope);
+    });
+
+    it("if file and release notes both provided", async () => {
+      // Arrange
+      const expectedErrorMessage = "'--release-notes' and '--release-notes-file' switches are mutually exclusive";
+      const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseServiceUnavailableResponse)(Nock(fakeHost));
+
+      // Act
+      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--relese-notes anytext --release-notes-file some/fake/path"]));
       const result = await command.execute();
 
       // Assert

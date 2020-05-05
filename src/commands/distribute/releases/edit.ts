@@ -31,8 +31,9 @@ export default class EditReleaseCommand extends AppCommand {
   public releaseId: string;
 
   @help("Release state: enabled or disabled")
-  @name("State")
-  @position(0)
+  @shortName("s")
+  @longName("state")
+  @hasArg
   public state: string;
 
   @help("Release notes text")
@@ -77,7 +78,10 @@ export default class EditReleaseCommand extends AppCommand {
       handleHttpError(error, false, "failed to load release details");
     }
 
-    const state = this.state === "enabled"
+    let enabled: boolean = null
+    if(this.state === "enabled" || this.state === "disabled"){
+      enabled = this.state === "enabled"
+    } 
     const releaseNotes = await this.getReleaseNotesString()
 
     try {
@@ -85,7 +89,7 @@ export default class EditReleaseCommand extends AppCommand {
       const httpResponse = await out.progress(
         `Updating release`,
         clientRequest((cb) =>
-          client.releasesOperations.updateDetails(releaseId, app.ownerName, app.appName, { enabled: state , releaseNotes: releaseNotes }, cb)
+          client.releasesOperations.updateDetails(releaseId, app.ownerName, app.appName, { enabled: enabled , releaseNotes: releaseNotes }, cb)
         )
       );
       if (httpResponse.response.statusCode >= 400) {
@@ -120,6 +124,9 @@ export default class EditReleaseCommand extends AppCommand {
     debug("Checking for invalid parameter combinations");
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
+    }
+    if (!_.isNil(this.state) && this.state === "enabled" || this.state === "disable" ) {
+      throw failure(ErrorCodes.InvalidParameter, "'--state' can be 'enabled' or 'disabled'");
     }
   }  
 }
