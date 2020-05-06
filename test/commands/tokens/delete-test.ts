@@ -100,7 +100,7 @@ describe("Tokens Delete", () => {
     const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
     expect(result.succeeded).to.be.false;
-    expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
+    expect(result.errorCode).to.eql(ErrorCodes.NotLoggedIn);
     expect(result.errorMessage).to.eql(`the app API token with ID "${fakeId}" could not be found`);
 
     nockScope.done();

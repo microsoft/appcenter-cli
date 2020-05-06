@@ -8,11 +8,13 @@ import {
   longName,
   hasArg,
   defaultValue,
+  failure,
+  ErrorCodes,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
-import { allPrincipalTypes, PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
+import { PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
 @help("Get a list of API tokens")
 export default class ApiTokenListCommand extends AppCommand {
@@ -20,7 +22,7 @@ export default class ApiTokenListCommand extends AppCommand {
     super(args);
   }
 
-  @help("The type of token: [" + allPrincipalTypes.join("(default), ") + "]. An app must be specified for app type tokens")
+  @help("The type of token: [ user, app ]. An app must be specified for app type tokens")
   @shortName("t")
   @longName("type")
   @hasArg
@@ -43,6 +45,18 @@ export default class ApiTokenListCommand extends AppCommand {
         tokenMessaging,
         clientRequest<models.ApiTokensGetResponse[]>((cb) => client.appApiTokens.list(app.ownerName, app.appName, cb))
       );
+    }
+    const statusCode = listTokensResponse.response.statusCode;
+    if (statusCode >= 400) {
+      switch (statusCode) {
+        case 400:
+        default:
+          return failure(ErrorCodes.Exception, "invalid request");
+        case 401:
+          return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
+        case 404:
+          return failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
+      }
     }
 
     out.table(

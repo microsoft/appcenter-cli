@@ -17,7 +17,7 @@ import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
 import { DefaultApp } from "../../util/profile";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
-import { allPrincipalTypes, PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
+import { PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
 @help("Create a new API token")
 export default class TokenCreateCommand extends AppCommand {
@@ -31,7 +31,7 @@ export default class TokenCreateCommand extends AppCommand {
   @hasArg
   description: string;
 
-  @help("The type of token: [" + allPrincipalTypes.join("(default), ") + "]. An app must be specified for app type tokens")
+  @help("The type of token: [ user, app ]. An app must be specified for app type tokens")
   @shortName("t")
   @longName("type")
   @hasArg
@@ -70,7 +70,7 @@ export default class TokenCreateCommand extends AppCommand {
         case 403:
           return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
         case 404:
-          return failure(ErrorCodes.NotLoggedIn, `${this.principalType === PrincipalType.USER ? "user" : "app"} could not be found`);
+          return failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
       }
     }
 

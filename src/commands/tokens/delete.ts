@@ -19,7 +19,7 @@ import {
 import { out, prompt } from "../../util/interaction";
 import { AppCenterClient, clientRequest } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
-import { allPrincipalTypes, PrincipalType, validatePrincipalType as validateTokenPrincipal } from "../../util/misc/principal-type";
+import { PrincipalType, validatePrincipalType as validateTokenPrincipal } from "../../util/misc/principal-type";
 
 @help("Delete an API token")
 export default class TokenDeleteCommand extends AppCommand {
@@ -33,7 +33,7 @@ export default class TokenDeleteCommand extends AppCommand {
   @position(0)
   id: string;
 
-  @help("The type of token: [" + allPrincipalTypes.join("(default), ") + "]. An app must be specified for app type tokens")
+  @help("The type of token: [ user, app ]. An app must be specified for app type tokens")
   @shortName("t")
   @longName("type")
   @hasArg
@@ -64,8 +64,17 @@ export default class TokenDeleteCommand extends AppCommand {
       );
     }
 
-    if (deleteTokenResponse.response.statusCode === 404) {
-      return failure(ErrorCodes.InvalidParameter, `the ${this.principalType} API token with ID "${this.id}" could not be found`);
+    const statusCode = deleteTokenResponse.response.statusCode;
+    if (statusCode >= 400) {
+      switch (statusCode) {
+        case 400:
+        default:
+          return failure(ErrorCodes.Exception, "invalid request");
+        case 401:
+          return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
+        case 404:
+          return failure(ErrorCodes.NotLoggedIn, `the ${this.principalType} API token with ID "${this.id}" could not be found`);
+      }
     }
     return success();
   }
