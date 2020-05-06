@@ -11985,6 +11985,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "apps_transferToOrg",
         "security": [
           {
@@ -12261,6 +12264,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "apps_transferOwnership",
         "security": [
           {
@@ -16861,6 +16867,9 @@
     "/v0.1/apps/{owner_name}/{app_name}/source_hosts/{source_host}/repositories": {
       "get": {
         "description": "Gets the repositories available from the source code host",
+        "x-api-principals": [
+          "user"
+        ],
         "parameters": [
           {
             "name": "source_host",
@@ -17115,6 +17124,9 @@
       },
       "post": {
         "description": "Configures the repository for build",
+        "x-api-principals": [
+          "user"
+        ],
         "parameters": [
           {
             "name": "repo",
@@ -22595,6 +22607,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "security": [
           {
             "APIToken": []
@@ -22945,6 +22960,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "appInvitations_create",
         "security": [
           {
@@ -30504,6 +30522,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "distributionGroups_resendInvite",
         "security": [
           {
@@ -31483,6 +31504,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "distributionGroups_addUser",
         "security": [
           {
@@ -35029,6 +35053,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "APIToken": []
@@ -35237,6 +35262,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "APIToken": []
@@ -35319,6 +35345,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "APIToken": []
@@ -35388,6 +35415,7 @@
             "description": "Internal Error."
           }
         },
+        "deprecated": true,
         "security": [
           {
             "APIToken": []
@@ -39108,6 +39136,9 @@
       },
       "post": {
         "description": "Configures the branch for build",
+        "x-api-principals": [
+          "user"
+        ],
         "parameters": [
           {
             "name": "branch",
@@ -39736,6 +39767,9 @@
       },
       "put": {
         "description": "Reconfigures the branch for build",
+        "x-api-principals": [
+          "user"
+        ],
         "parameters": [
           {
             "name": "branch",
@@ -41291,6 +41325,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "azureSubscription_deleteForApp",
         "security": [
           {
@@ -41487,6 +41524,9 @@
             }
           }
         },
+        "x-api-principals": [
+          "user"
+        ],
         "operationId": "azureSubscription_linkForApp",
         "security": [
           {
@@ -42150,6 +42190,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "APIToken": []
@@ -42511,6 +42552,448 @@
         ],
         "tags": [
           "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/api_tokens/{api_token_id}": {
+      "delete": {
+        "operationId": "appApiTokens_delete",
+        "description": "Delete the App Api Token object with the specific ID",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the application",
+            "required": true
+          },
+          {
+            "name": "api_token_id",
+            "type": "string",
+            "in": "path",
+            "description": "The unique ID (UUID) of the api token",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        },
+        "security": [
+          {
+            "Basic": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/api_tokens": {
+      "get": {
+        "operationId": "appApiTokens_list",
+        "description": "Returns App API tokens for the app",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the application",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The unique id (UUID) of the api token"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the token"
+                  },
+                  "scope": {
+                    "description": "The scope for this token.",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "all",
+                        "viewer"
+                      ]
+                    }
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "description": "The creation time"
+                  }
+                },
+                "required": [
+                  "id",
+                  "created_at"
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        },
+        "security": [
+          {
+            "Basic": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "post": {
+        "operationId": "appApiTokens_new",
+        "description": "Creates a new App API token",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the application",
+            "required": true
+          },
+          {
+            "name": "description",
+            "in": "body",
+            "description": "Description of the token",
+            "schema": {
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The description of the token"
+                },
+                "scope": {
+                  "description": "The scope for this token.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "viewer"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique id (UUID) of the api token"
+                },
+                "api_token": {
+                  "type": "string",
+                  "description": "The api token generated will not be accessible again"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The description of the token"
+                },
+                "scope": {
+                  "description": "The scope for this token.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "viewer"
+                    ]
+                  }
+                },
+                "created_at": {
+                  "type": "string",
+                  "description": "The creation time"
+                }
+              },
+              "required": [
+                "id",
+                "created_at",
+                "api_token"
+              ]
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BadRequest",
+                        "Conflict",
+                        "NotAcceptable",
+                        "NotFound",
+                        "InternalServerError",
+                        "Unauthorized",
+                        "TooManyRequests"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        },
+        "security": [
+          {
+            "Basic": []
+          }
+        ],
+        "tags": [
+          "account"
         ]
       }
     },
@@ -48684,8 +49167,8 @@
     },
     "/v0.1/api_tokens/{api_token_id}": {
       "delete": {
-        "operationId": "apiTokens_delete",
-        "description": "Delete the api_token object with the specific id",
+        "operationId": "userApiTokens_delete",
+        "description": "Delete the user api_token object with the specific id",
         "parameters": [
           {
             "name": "api_token_id",
@@ -48814,7 +49297,7 @@
     },
     "/v0.1/api_tokens": {
       "get": {
-        "operationId": "apiTokens_list",
+        "operationId": "userApiTokens_list",
         "description": "Returns api tokens for the authenticated user",
         "responses": {
           "200": {
@@ -48933,8 +49416,8 @@
         ]
       },
       "post": {
-        "operationId": "apiTokens_new",
-        "description": "Creates a new API token",
+        "operationId": "userApiTokens_new",
+        "description": "Creates a new User API token",
         "parameters": [
           {
             "name": "description",
@@ -50572,7 +51055,11 @@
                   "user_email",
                   "user_origin",
                   "app_owner_name",
-                  "app_name"
+                  "app_name",
+                  "app_origin",
+                  "app_os",
+                  "app_platform",
+                  "app_secret"
                 ]
               },
               "claim_value": {
@@ -50599,7 +51086,11 @@
             "user_email",
             "user_origin",
             "app_owner_name",
-            "app_name"
+            "app_name",
+            "app_origin",
+            "app_os",
+            "app_platform",
+            "app_secret"
           ]
         },
         "claim_value": {
@@ -61298,7 +61789,11 @@
           "type": "string"
         },
         "token": {
-          "description": "The URL encoded token used for upload permissions.",
+          "description": "The access token used for upload permissions.",
+          "type": "string"
+        },
+        "url_encoded_token": {
+          "description": "The access token used for upload permissions (URL encoded to use as a single query parameter).",
           "type": "string"
         },
         "package_asset_id": {
@@ -61311,6 +61806,7 @@
         "id",
         "upload_domain",
         "token",
+        "url_encoded_token",
         "package_asset_id"
       ]
     },

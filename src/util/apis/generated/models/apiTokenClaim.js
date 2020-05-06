@@ -17,7 +17,8 @@ class ApiTokenClaim {
   /**
    * Create a ApiTokenClaim.
    * @property {string} [claimType] Possible values include: 'user_email',
-   * 'user_origin', 'app_owner_name', 'app_name'
+   * 'user_origin', 'app_owner_name', 'app_name', 'app_origin', 'app_os',
+   * 'app_platform', 'app_secret'
    * @property {string} [claimValue]
    */
   constructor() {

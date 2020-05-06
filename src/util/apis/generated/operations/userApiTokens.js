@@ -14,7 +14,7 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
- * Delete the api_token object with the specific id
+ * Delete the user api_token object with the specific id
  *
  * @param {string} apiTokenId The unique ID (UUID) of the api token
  *
@@ -256,10 +256,10 @@ function _list(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModelElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -313,7 +313,7 @@ function _list(options, callback) {
 }
 
 /**
- * Creates a new API token
+ * Creates a new User API token
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -490,10 +490,10 @@ function _newMethod(options, callback) {
   });
 }
 
-/** Class representing a ApiTokens. */
-class ApiTokens {
+/** Class representing a UserApiTokens. */
+class UserApiTokens {
   /**
-   * Create a ApiTokens.
+   * Create a UserApiTokens.
    * @param {AppCenterClient} client Reference to the service client.
    */
   constructor(client) {
@@ -504,7 +504,7 @@ class ApiTokens {
   }
 
   /**
-   * Delete the api_token object with the specific id
+   * Delete the user api_token object with the specific id
    *
    * @param {string} apiTokenId The unique ID (UUID) of the api token
    *
@@ -534,7 +534,7 @@ class ApiTokens {
   }
 
   /**
-   * Delete the api_token object with the specific id
+   * Delete the user api_token object with the specific id
    *
    * @param {string} apiTokenId The unique ID (UUID) of the api token
    *
@@ -662,7 +662,7 @@ class ApiTokens {
   }
 
   /**
-   * Creates a new API token
+   * Creates a new User API token
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -694,7 +694,7 @@ class ApiTokens {
   }
 
   /**
-   * Creates a new API token
+   * Creates a new User API token
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -748,4 +748,4 @@ class ApiTokens {
 
 }
 
-module.exports = ApiTokens;
+module.exports = UserApiTokens;

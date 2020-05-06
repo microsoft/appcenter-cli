@@ -101,8 +101,9 @@ class AppCenterClient extends ServiceClient {
     this.branchConfigurations = new operations.BranchConfigurations(this);
     this.identity = new operations.Identity(this);
     this.appleMapping = new operations.AppleMapping(this);
+    this.appApiTokens = new operations.AppApiTokens(this);
     this.analytics = new operations.Analytics(this);
-    this.apiTokens = new operations.ApiTokens(this);
+    this.userApiTokens = new operations.UserApiTokens(this);
     this.models = models;
     msRest.addSerializationMixin(this);
   }
