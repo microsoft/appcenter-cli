@@ -105,7 +105,7 @@ export default class LoginCommand extends Command {
 
     const createTokenResponse = await out.progress(
       "Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod({ description: "AppCenter CLI" }, cb))
+      clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod({ description: "AppCenter CLI" }, cb))
     );
 
     if (createTokenResponse.response.statusCode >= 400) {

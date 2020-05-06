@@ -33,7 +33,7 @@ export default class AppDeleteCommand extends Command {
     if (confirmation) {
       const deleteTokenResponse = await out.progress(
         "Deleting token ...",
-        clientRequest<null>((cb) => client.apiTokens.deleteMethod(this.id, cb))
+        clientRequest<null>((cb) => client.userApiTokens.deleteMethod(this.id, cb))
       );
 
       if (deleteTokenResponse.response.statusCode === 404) {

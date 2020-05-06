@@ -834,7 +834,8 @@ export interface ApiTokenGetUserResponse {
 
 export interface ValidatedApiTokenResponseClaimsItem {
   /**
-   * Possible values include: 'user_email', 'user_origin', 'app_owner_name', 'app_name'
+   * Possible values include: 'user_email', 'user_origin', 'app_owner_name', 'app_name',
+   * 'app_origin', 'app_os', 'app_platform', 'app_secret'
   */
   claimType?: string;
   claimValue?: string;
@@ -865,7 +866,8 @@ export interface ValidatedApiTokenResponse {
 
 export interface ApiTokenClaim {
   /**
-   * Possible values include: 'user_email', 'user_origin', 'app_owner_name', 'app_name'
+   * Possible values include: 'user_email', 'user_origin', 'app_owner_name', 'app_name',
+   * 'app_origin', 'app_os', 'app_platform', 'app_secret'
   */
   claimType?: string;
   claimValue?: string;
@@ -8350,9 +8352,13 @@ export interface CreateReleaseUploadResponse {
   */
   uploadDomain: string;
   /**
-   * The URL encoded token used for upload permissions.
+   * The access token used for upload permissions.
   */
   token: string;
+  /**
+   * The access token used for upload permissions (URL encoded to use as a single query parameter).
+  */
+  urlEncodedToken: string;
   /**
    * The associated asset ID in the file management service associated with this uploaded.
   */
@@ -45336,6 +45342,150 @@ export interface CreateErrorModel6 {
   message: string;
 }
 
+export interface DeleteBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteBadRequestResponse {
+  error: DeleteBadRequestResponseError;
+}
+
+export interface DeleteUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteUnauthorizedResponse {
+  error: DeleteUnauthorizedResponseError;
+}
+
+export interface DeleteNotFoundResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface DeleteNotFoundResponseModelModel {
+  error: DeleteNotFoundResponseError;
+}
+
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel {
+  /**
+   * The unique id (UUID) of the api token
+  */
+  id: string;
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+  /**
+   * The creation time
+  */
+  createdAt: string;
+}
+
+export interface ListBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListBadRequestResponseModel {
+  error: ListBadRequestResponseError;
+}
+
+export interface ListUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface ListUnauthorizedResponse {
+  error: ListUnauthorizedResponseError;
+}
+
+export interface Description {
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+}
+
+export interface NewCreatedResponse {
+  /**
+   * The unique id (UUID) of the api token
+  */
+  id: string;
+  /**
+   * The api token generated will not be accessible again
+  */
+  apiToken: string;
+  /**
+   * The description of the token
+  */
+  description?: string;
+  /**
+   * The scope for this token.
+  */
+  scope?: string[];
+  /**
+   * The creation time
+  */
+  createdAt: string;
+}
+
+export interface NewBadRequestResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface NewBadRequestResponse {
+  error: NewBadRequestResponseError;
+}
+
+export interface NewUnauthorizedResponseError {
+  /**
+   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
+   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
+  */
+  code: string;
+  message: string;
+}
+
+export interface NewUnauthorizedResponse {
+  error: NewUnauthorizedResponseError;
+}
+
 export interface VersionsOKResponseVersionsItem {
   /**
    * Version.
@@ -47496,7 +47646,7 @@ export interface ListOKResponseItemAzureSubscription {
   isMicrosoftInternal?: boolean;
 }
 
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * The unique ID (UUID) of the app
   */
@@ -47563,150 +47713,6 @@ export interface ListOKResponseItemModelModelModelModelModelModelModelModelModel
    * The permissions of the calling user
   */
   memberPermissions?: string[];
-}
-
-export interface DeleteBadRequestResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface DeleteBadRequestResponse {
-  error: DeleteBadRequestResponseError;
-}
-
-export interface DeleteUnauthorizedResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface DeleteUnauthorizedResponse {
-  error: DeleteUnauthorizedResponseError;
-}
-
-export interface DeleteNotFoundResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface DeleteNotFoundResponseModelModel {
-  error: DeleteNotFoundResponseError;
-}
-
-export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
-  /**
-   * The unique id (UUID) of the api token
-  */
-  id: string;
-  /**
-   * The description of the token
-  */
-  description?: string;
-  /**
-   * The scope for this token.
-  */
-  scope?: string[];
-  /**
-   * The creation time
-  */
-  createdAt: string;
-}
-
-export interface ListBadRequestResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface ListBadRequestResponseModel {
-  error: ListBadRequestResponseError;
-}
-
-export interface ListUnauthorizedResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface ListUnauthorizedResponse {
-  error: ListUnauthorizedResponseError;
-}
-
-export interface Description {
-  /**
-   * The description of the token
-  */
-  description?: string;
-  /**
-   * The scope for this token.
-  */
-  scope?: string[];
-}
-
-export interface NewCreatedResponse {
-  /**
-   * The unique id (UUID) of the api token
-  */
-  id: string;
-  /**
-   * The api token generated will not be accessible again
-  */
-  apiToken: string;
-  /**
-   * The description of the token
-  */
-  description?: string;
-  /**
-   * The scope for this token.
-  */
-  scope?: string[];
-  /**
-   * The creation time
-  */
-  createdAt: string;
-}
-
-export interface NewBadRequestResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface NewBadRequestResponse {
-  error: NewBadRequestResponseError;
-}
-
-export interface NewUnauthorizedResponseError {
-  /**
-   * Possible values include: 'BadRequest', 'Conflict', 'NotAcceptable', 'NotFound',
-   * 'InternalServerError', 'Unauthorized', 'TooManyRequests'
-  */
-  code: string;
-  message: string;
-}
-
-export interface NewUnauthorizedResponse {
-  error: NewUnauthorizedResponseError;
 }
 
 export interface ListAdministeredOKResponseOrganizations {

@@ -65,5 +65,6 @@ exports.BugTracker = require('./bugTracker');
 exports.BranchConfigurations = require('./branchConfigurations');
 exports.Identity = require('./identity');
 exports.AppleMapping = require('./appleMapping');
+exports.AppApiTokens = require('./appApiTokens');
 exports.Analytics = require('./analytics');
-exports.ApiTokens = require('./apiTokens');
+exports.UserApiTokens = require('./userApiTokens');

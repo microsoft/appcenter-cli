@@ -19,8 +19,9 @@ class CreateReleaseUploadResponse {
    * @property {uuid} id The ID for the newly created upload. It is going to be
    * required later in the process.
    * @property {string} uploadDomain The URL domain used to upload the release.
-   * @property {string} token The URL encoded token used for upload
-   * permissions.
+   * @property {string} token The access token used for upload permissions.
+   * @property {string} urlEncodedToken The access token used for upload
+   * permissions (URL encoded to use as a single query parameter).
    * @property {uuid} packageAssetId The associated asset ID in the file
    * management service associated with this uploaded.
    */
@@ -58,6 +59,13 @@ class CreateReleaseUploadResponse {
           token: {
             required: true,
             serializedName: 'token',
+            type: {
+              name: 'String'
+            }
+          },
+          urlEncodedToken: {
+            required: true,
+            serializedName: 'url_encoded_token',
             type: {
               name: 'String'
             }

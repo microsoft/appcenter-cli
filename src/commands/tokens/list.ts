@@ -11,7 +11,7 @@ export default class ApiTokenListCommand extends Command {
   async run(client: AppCenterClient): Promise<CommandResult> {
     const apiTokensResponse = await out.progress(
       "Getting API tokens ...",
-      clientRequest<models.ApiTokensGetResponse[]>((cb) => client.apiTokens.list(cb))
+      clientRequest<models.ApiTokensGetResponse[]>((cb) => client.userApiTokens.list(cb))
     );
 
     out.table(

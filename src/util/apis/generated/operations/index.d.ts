@@ -5229,7 +5229,7 @@ export interface AppsOperations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>>;
+    listWithHttpOperationResponse(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel[]>>;
 
     /**
      * Returns a list of apps
@@ -5265,9 +5265,9 @@ export interface AppsOperations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>;
-    list(callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>): void;
-    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModel[]>): void;
+    list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel[]>;
+    list(callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel[]>): void;
+    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel[]>): void;
 }
 
 /**
@@ -22304,6 +22304,201 @@ export interface AppleMapping {
 
 /**
  * @class
+ * AppApiTokens
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface AppApiTokens {
+
+
+    /**
+     * Delete the App Api Token object with the specific ID
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} apiTokenId The unique ID (UUID) of the api token
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Delete the App Api Token object with the specific ID
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} apiTokenId The unique ID (UUID) of the api token
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteMethod(ownerName: string, appName: string, apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    deleteMethod(ownerName: string, appName: string, apiTokenId: string, callback: ServiceCallback<any>): void;
+    deleteMethod(ownerName: string, appName: string, apiTokenId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * Returns App API tokens for the app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Returns App API tokens for the app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * Creates a new App API token
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.description] The description of the token
+     *
+     * @param {array} [options.scope] The scope for this token.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    newMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { description? : string, scope? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Creates a new App API token
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.description] The description of the token
+     *
+     * @param {array} [options.scope] The scope for this token.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    newMethod(ownerName: string, appName: string, options?: { description? : string, scope? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    newMethod(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    newMethod(ownerName: string, appName: string, options: { description? : string, scope? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
  * Analytics
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -25067,15 +25262,15 @@ export interface Analytics {
 
 /**
  * @class
- * ApiTokens
+ * UserApiTokens
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface ApiTokens {
+export interface UserApiTokens {
 
 
     /**
-     * Delete the api_token object with the specific id
+     * Delete the user api_token object with the specific id
      *
      * @param {string} apiTokenId The unique ID (UUID) of the api token
      *
@@ -25093,7 +25288,7 @@ export interface ApiTokens {
     deleteMethodWithHttpOperationResponse(apiTokenId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
-     * Delete the api_token object with the specific id
+     * Delete the user api_token object with the specific id
      *
      * @param {string} apiTokenId The unique ID (UUID) of the api token
      *
@@ -25179,7 +25374,7 @@ export interface ApiTokens {
 
 
     /**
-     * Creates a new API token
+     * Creates a new User API token
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -25199,7 +25394,7 @@ export interface ApiTokens {
     newMethodWithHttpOperationResponse(options?: { description? : string, scope? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
-     * Creates a new API token
+     * Creates a new User API token
      *
      * @param {object} [options] Optional Parameters.
      *
