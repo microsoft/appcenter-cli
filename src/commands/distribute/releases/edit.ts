@@ -17,7 +17,7 @@ import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { handleHttpError } from "../../../util/apis/create-client";
 
-const debug = require("debug")("appcenter-cli:commands:distribute:releases:delete");
+const debug = require("debug")("appcenter-cli:commands:distribute:releases:edit");
 
 @help("Toggles enabling and disabling the specified release")
 export default class EditReleaseCommand extends AppCommand {
