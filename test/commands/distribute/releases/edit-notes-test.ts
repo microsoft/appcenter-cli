@@ -118,23 +118,17 @@ describe("distribute releases edit-notes command", async () => {
 
     it("if --release-notes and --release-notes-file both specified", async () => {
       // Arrange
-      let errorMessage: string;
       const expectedErrorMessage = "'--release-notes' and '--release-notes-file' switches are mutually exclusive";
       const releaseFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
 
-      let command;
       // Act
-      try {
-        command = new EditNotesReleaseCommand(
-          getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes, "--release-notes-file", releaseFilePath])
-        );
-      } catch (e) {
-        errorMessage = e.message;
-      }
+      const command = new EditNotesReleaseCommand(
+        getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes, "--release-notes-file", releaseFilePath])
+      );
+      const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
 
       // Assert
-      expect(command).to.eql(undefined);
-      expect(errorMessage).to.eql(expectedErrorMessage);
+      testFailure(result, expectedErrorMessage);
     });
 
     it("if release does not exist", async () => {
@@ -201,5 +195,10 @@ describe("distribute releases edit-notes command", async () => {
       shortVersion: "1.1",
       version: "1.1",
     });
+  }
+
+  function testFailure(result: CommandFailedResult, errorMessage: string) {
+    expect(result.succeeded).to.eql(false, "Command should fail");
+    expect(result.errorMessage).to.eql(errorMessage);
   }
 });
