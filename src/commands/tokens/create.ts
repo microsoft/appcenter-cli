@@ -1,7 +1,6 @@
 // token create command
 
 import {
-  Command,
   CommandArgs,
   CommandResult,
   help,
@@ -11,13 +10,17 @@ import {
   shortName,
   longName,
   hasArg,
+  AppCommand,
+  defaultValue,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
+import { DefaultApp } from "../../util/profile";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
 @help("Create a new API token")
-export default class TokenCreateCommand extends Command {
+export default class TokenCreateCommand extends AppCommand {
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -28,15 +31,35 @@ export default class TokenCreateCommand extends Command {
   @hasArg
   description: string;
 
+  @help("The type of token: [ user, app ]. An app must be specified for app type tokens")
+  @shortName("t")
+  @longName("type")
+  @hasArg
+  @defaultValue("user")
+  principalType: PrincipalType;
+
   async run(client: AppCenterClient): Promise<CommandResult> {
+    validatePrincipalType(this.principalType);
+    const tokenMessaging = `Creating ${this.principalType} API token ...`;
     const tokenAttributes: models.ApiTokensCreateRequest = {
       description: this.description,
     };
+    let createTokenResponse;
 
-    const createTokenResponse = await out.progress(
-      "Creating token ...",
-      clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod(tokenAttributes, cb))
-    );
+    if (this.principalType === PrincipalType.USER) {
+      createTokenResponse = await out.progress(
+        tokenMessaging,
+        clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod(tokenAttributes, cb))
+      );
+    } else if (this.principalType === PrincipalType.APP) {
+      const app: DefaultApp = this.app;
+      createTokenResponse = await out.progress(
+        tokenMessaging,
+        clientRequest<models.ApiTokensCreateResponse>((cb) =>
+          client.appApiTokens.newMethod(app.ownerName, app.appName, tokenAttributes, cb)
+        )
+      );
+    }
 
     const statusCode = createTokenResponse.response.statusCode;
     if (statusCode >= 400) {
@@ -47,7 +70,7 @@ export default class TokenCreateCommand extends Command {
         case 403:
           return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
         case 404:
-          return failure(ErrorCodes.NotLoggedIn, "user could not be found");
+          return failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
       }
     }
 
