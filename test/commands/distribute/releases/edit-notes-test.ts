@@ -27,7 +27,7 @@ describe("distribute releases edit-notes command", async () => {
   });
 
   beforeEach(() => {
-    tmpFolderPath = Temp.mkdirSync("releaseTest");
+    tmpFolderPath = Temp.mkdirSync("editNotesTest");
   });
 
   afterEach(() => {
@@ -62,7 +62,9 @@ describe("distribute releases edit-notes command", async () => {
       const releaseFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
 
       // Act
-      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes-file", releaseFilePath]));
+      const command = new EditNotesReleaseCommand(
+        getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes-file", releaseFilePath])
+      );
       const result = await command.execute();
 
       testCommandSuccess(result, executionScope);
@@ -100,7 +102,6 @@ describe("distribute releases edit-notes command", async () => {
       expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
     });
 
-
     it("if failed to load release details", async () => {
       // Arrange
       const expectedErrorMessage = "failed to load release details";
@@ -124,7 +125,9 @@ describe("distribute releases edit-notes command", async () => {
       let command;
       // Act
       try {
-        command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes, "--release-notes-file", releaseFilePath]));
+        command = new EditNotesReleaseCommand(
+          getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes, "--release-notes-file", releaseFilePath])
+        );
       } catch (e) {
         errorMessage = e.message;
       }
@@ -132,8 +135,8 @@ describe("distribute releases edit-notes command", async () => {
       // Assert
       expect(command).to.eql(undefined);
       expect(errorMessage).to.eql(expectedErrorMessage);
-    });  
-    
+    });
+
     it("if release does not exist", async () => {
       // Arrange
       const expectedErrorMessage = `release ${fakeReleaseId} doesn't exist`;

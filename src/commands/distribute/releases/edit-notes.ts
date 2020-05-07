@@ -14,12 +14,12 @@ import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { handleHttpError } from "../../../util/apis/create-client";
-import * as Pfs from "../../util/misc/promisfied-fs";
+import * as Pfs from "../../../util/misc/promisfied-fs";
 import * as _ from "lodash";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:edit-notes");
 
-@help("Updating relese notes")
+@help("Updating release notes")
 export default class EditReleaseCommand extends AppCommand {
   @help("Release ID")
   @shortName("r")
@@ -70,7 +70,7 @@ export default class EditReleaseCommand extends AppCommand {
       handleHttpError(error, false, "failed to load release details");
     }
 
-    const releaseNotes = await this.getReleaseNotesString()
+    const releaseNotes = await this.getReleaseNotesString();
 
     try {
       debug(`Updating release notes`);
@@ -87,8 +87,7 @@ export default class EditReleaseCommand extends AppCommand {
       debug(`Failed to update the release - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, `failed to update the relese notes`);
     }
-
-    out.text(`Release notes for ${releaseDetails.shortVersion} (${releaseDetails.version}) with id: ${this.releaseId} has been updated`);
+    out.text(`Release ${releaseDetails.shortVersion} (${releaseDetails.version}) with id: ${this.releaseId} has been updated`);
     return success();
   }
 
@@ -113,5 +112,5 @@ export default class EditReleaseCommand extends AppCommand {
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
-  }  
+  }
 }
