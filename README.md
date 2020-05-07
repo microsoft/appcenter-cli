@@ -84,7 +84,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter distribute groups update` | Update existing distribution group |
 | `appcenter distribute releases add-destination` | Distribute an existing release to an additional destination |
 | `appcenter distribute releases delete` | Deletes the release |
-| `appcenter distribute releases edit` | Toggles enabling and disabling the specified release or updating information|
+| `appcenter distribute releases edit` | Toggles enabling and disabling the specified release |
 | `appcenter distribute releases list` | Shows the list of all releases for the application |
 | `appcenter distribute releases show` | Shows full details about release |
 | `appcenter distribute stores list` | Lists all stores of the app |

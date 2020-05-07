@@ -2,13 +2,15 @@ import { expect } from "chai";
 import * as Nock from "nock";
 import * as Temp from "temp";
 import * as _ from "lodash";
+import * as Path from "path";
+import * as Fs from "fs";
 
-import EditReleaseCommand from "../../../../src/commands/distribute/releases/edit";
+import EditNotesReleaseCommand from "../../../../src/commands/distribute/releases/edit-notes";
 import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
 
 Temp.track();
 
-describe("distribute releases edit command", async () => {
+describe("distribute releases edit-notes command", async () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
@@ -16,9 +18,16 @@ describe("distribute releases edit command", async () => {
   const fakeReleaseId = "5";
   const fakeHost = "http://localhost:1700";
   const releaseIdOption = "--release-id";
+  const releaseNotesFileName = "releaseNotesFile.txt";
+  const releaseNotes = "Release Notes for v1";
+  let tmpFolderPath: string;
 
   before(() => {
     Nock.disableNetConnect();
+  });
+
+  beforeEach(() => {
+    tmpFolderPath = Temp.mkdirSync("releaseTest");
   });
 
   afterEach(() => {
@@ -29,24 +38,31 @@ describe("distribute releases edit command", async () => {
     Nock.enableNetConnect();
   });
 
+  function createFile(folderPath: string, fileName: string, fileContent: string): string {
+    const finalPath = Path.join(folderPath, fileName);
+    Fs.writeFileSync(finalPath, fileContent);
+    return finalPath;
+  }
+
   context("completes successfully", () => {
-    it("if enable release", async () => {
+    it("if upload edit notes from parameter", async () => {
       // Arrange
       const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseResponse)(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "enabled"]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes]));
       const result = await command.execute();
 
       testCommandSuccess(result, executionScope);
     });
 
-    it("if disable release", async () => {
+    it("if upload edit notes from file", async () => {
       // Arrange
       const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseResponse)(Nock(fakeHost));
+      const releaseFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes-file", releaseFilePath]));
       const result = await command.execute();
 
       testCommandSuccess(result, executionScope);
@@ -62,7 +78,7 @@ describe("distribute releases edit command", async () => {
       let command;
       // Act
       try {
-        command = new EditReleaseCommand(getCommandArgs([releaseIdOption]));
+        command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption]));
       } catch (e) {
         errorMessage = e.message;
       }
@@ -77,56 +93,13 @@ describe("distribute releases edit command", async () => {
       const expectedErrorMessage = "notanumber is not a valid release id";
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "notanumber", "disabled"]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, "notanumber"]));
       const result = await command.execute();
 
       // Assert
       expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
     });
 
-    it("if state option wasn't specified", async () => {
-      // Arrange
-      let errorMessage: string;
-      const expectedErrorMessage = "Missing required positional argument State";
-
-      // Act
-      let command;
-      try {
-        command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "1"]));
-      } catch (e) {
-        errorMessage = e.message;
-      }
-
-      // Assert
-      expect(command).to.eql(undefined);
-      expect(errorMessage).to.eql(expectedErrorMessage);
-    });
-
-    it("if state option value is invalid", async () => {
-      // Arrange
-      const expectedErrorMessage = `"invalidvalue" is not a valid release state. Available states are "enabled" or "disabled".`;
-
-      // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, "1", "invalidvalue"]));
-      const result = await command.execute();
-
-      // Assert
-      expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
-    });
-
-    it("if release does not exist", async () => {
-      // Arrange
-      const expectedErrorMessage = `release ${fakeReleaseId} doesn't exist`;
-      const executionScope = setupReleaseDetailsNotFoundResponse(Nock(fakeHost));
-
-      // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
-      const result = await command.execute();
-
-      // Assert
-      expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
-      testCommandFailure(executionScope);
-    });
 
     it("if failed to load release details", async () => {
       // Arrange
@@ -134,7 +107,7 @@ describe("distribute releases edit command", async () => {
       const executionScope = setupReleaseDetailsServiceUnavailableResponse(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId]));
       const result = await command.execute();
 
       // Assert
@@ -142,13 +115,32 @@ describe("distribute releases edit command", async () => {
       testCommandFailure(executionScope);
     });
 
-    it("if failed to update release state", async () => {
+    it("if --release-notes and --release-notes-file both specified", async () => {
       // Arrange
-      const expectedErrorMessage = "failed to disable the release";
-      const executionScope = _.flow(setupReleaseDetailsResponse, setupUpdateReleaseServiceUnavailableResponse)(Nock(fakeHost));
+      let errorMessage: string;
+      const expectedErrorMessage = "'--release-notes' and '--release-notes-file' switches are mutually exclusive";
+      const releaseFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+
+      let command;
+      // Act
+      try {
+        command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes, "--release-notes-file", releaseFilePath]));
+      } catch (e) {
+        errorMessage = e.message;
+      }
+
+      // Assert
+      expect(command).to.eql(undefined);
+      expect(errorMessage).to.eql(expectedErrorMessage);
+    });  
+    
+    it("if release does not exist", async () => {
+      // Arrange
+      const expectedErrorMessage = `release ${fakeReleaseId} doesn't exist`;
+      const executionScope = setupReleaseDetailsNotFoundResponse(Nock(fakeHost));
 
       // Act
-      const command = new EditReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "disabled"]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId]));
       const result = await command.execute();
 
       // Assert
@@ -199,10 +191,6 @@ describe("distribute releases edit command", async () => {
 
   function setupReleaseDetailsServiceUnavailableResponse(nockScope: Nock.Scope) {
     return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(400);
-  }
-
-  function setupUpdateReleaseServiceUnavailableResponse(nockScope: Nock.Scope) {
-    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(400);
   }
 
   function setupUpdateReleaseResponse(nockScope: Nock.Scope) {
