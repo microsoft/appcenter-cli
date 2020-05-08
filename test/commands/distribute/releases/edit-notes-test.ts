@@ -80,7 +80,7 @@ describe("distribute releases edit-notes command", async () => {
       let command;
       // Act
       try {
-        command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption]));
+        command = new EditNotesReleaseCommand(getCommandArgs(["--release-notes", releaseNotes]));
       } catch (e) {
         errorMessage = e.message;
       }
@@ -95,7 +95,7 @@ describe("distribute releases edit-notes command", async () => {
       const expectedErrorMessage = "notanumber is not a valid release id";
 
       // Act
-      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, "notanumber"]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, "notanumber", "--release-notes", releaseNotes]));
       const result = await command.execute();
 
       // Assert
@@ -108,7 +108,21 @@ describe("distribute releases edit-notes command", async () => {
       const executionScope = setupReleaseDetailsServiceUnavailableResponse(Nock(fakeHost));
 
       // Act
-      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId]));
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes]));
+      const result = await command.execute();
+
+      // Assert
+      expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
+      testCommandFailure(executionScope);
+    });
+
+    it("if release does not exist", async () => {
+      // Arrange
+      const expectedErrorMessage = `release ${fakeReleaseId} doesn't exist`;
+      const executionScope = setupReleaseDetailsNotFoundResponse(Nock(fakeHost));
+
+      // Act
+      const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId, "--release-notes", releaseNotes]));
       const result = await command.execute();
 
       // Assert
@@ -118,7 +132,7 @@ describe("distribute releases edit-notes command", async () => {
 
     it("if --release-notes and --release-notes-file both specified", async () => {
       // Arrange
-      const expectedErrorMessage = "'--release-notes' and '--release-notes-file' switches are mutually exclusive";
+      const expectedErrorMessage = "'--release-notes' and '--release-notes-file' parameters are mutually exclusive";
       const releaseFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
 
       // Act
@@ -131,18 +145,16 @@ describe("distribute releases edit-notes command", async () => {
       testFailure(result, expectedErrorMessage);
     });
 
-    it("if release does not exist", async () => {
+    it("if --release-notes and --release-notes-file both not specified", async () => {
       // Arrange
-      const expectedErrorMessage = `release ${fakeReleaseId} doesn't exist`;
-      const executionScope = setupReleaseDetailsNotFoundResponse(Nock(fakeHost));
+      const expectedErrorMessage = "One of '--release-notes' and '--release-notes-file' is required";
 
       // Act
       const command = new EditNotesReleaseCommand(getCommandArgs([releaseIdOption, fakeReleaseId]));
-      const result = await command.execute();
+      const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
 
       // Assert
-      expect((result as CommandFailedResult).errorMessage).to.eql(expectedErrorMessage);
-      testCommandFailure(executionScope);
+      testFailure(result, expectedErrorMessage);
     });
   });
 
