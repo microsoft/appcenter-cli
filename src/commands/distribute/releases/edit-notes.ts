@@ -19,7 +19,7 @@ import * as _ from "lodash";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:edit-notes");
 
-@help("Updating release notes")
+@help("Update release notes")
 export default class EditReleaseCommand extends AppCommand {
   @help("Release ID")
   @shortName("r")
@@ -81,11 +81,11 @@ export default class EditReleaseCommand extends AppCommand {
         )
       );
       if (httpResponse.response.statusCode >= 400) {
-        return failure(ErrorCodes.Exception, `failed to update the relese notes`);
+        return failure(ErrorCodes.Exception, `failed to update the release notes`);
       }
     } catch (error) {
       debug(`Failed to update the release - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, `failed to update the relese notes`);
+      return failure(ErrorCodes.Exception, `failed to update the release notes`);
     }
     out.text(`Release ${releaseDetails.shortVersion} (${releaseDetails.version}) with id: ${this.releaseId} has been updated`);
     return success();
@@ -110,7 +110,9 @@ export default class EditReleaseCommand extends AppCommand {
   private validateParameters(): void {
     debug("Checking for invalid parameter combinations");
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
-      throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
+      throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' parameters are mutually exclusive");
+    } else if (_.isNil(this.releaseNotes) && _.isNil(this.releaseNotesFile)) {
+      throw failure(ErrorCodes.InvalidParameter, "One of '--release-notes' and '--release-notes-file' is required");
     }
   }
 }
