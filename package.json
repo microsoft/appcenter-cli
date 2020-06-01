@@ -53,7 +53,7 @@
     "@types/glob": "7.1.1",
     "@types/inquirer": "6.5.0",
     "@types/jsonwebtoken": "8.3.9",
-    "@types/lodash": "4.14.150",
+    "@types/lodash": "4.14.154",
     "@types/minimist": "1.2.0",
     "@types/mkdirp": "1.0.0",
     "@types/mocha": "7.0.2",
