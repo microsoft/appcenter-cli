@@ -72,13 +72,8 @@ export class TestCloudUploader {
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
-    const orgs = await getOrgsNamesList(this._client);
-    let isOrg = false;
-    for (const org of orgs) {
-      if (org.name === this._userName) {
-        isOrg = true;
-      }
-    }
+    const app = await this._client.appsOperations.get(this._userName, this._appName);
+    const isOrg = app.owner.type === "org";
 
     const manifest = await progressWithResult<TestManifest>("Validating arguments", this.validateAndParseManifest());
 
