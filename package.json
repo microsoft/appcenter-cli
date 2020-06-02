@@ -17,7 +17,7 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build": "npm run lint && gulp build:raw",
+    "build": "gulp build:raw",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s",
@@ -77,6 +77,8 @@
     "@types/yazl": "2.4.2",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
+    "@appcenter/mc-fus-uploader": "1.4.0",
+    "typemoq": "2.1.0",
     "autorest": "2.0.4413",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",

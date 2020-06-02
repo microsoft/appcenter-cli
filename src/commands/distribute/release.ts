@@ -14,15 +14,70 @@ import { AppCenterClient, models, clientRequest, ClientResponse } from "../../ut
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import * as Request from "request";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import * as stream from "stream";
+import { McFusUploader } from "@appcenter/mc-fus-uploader";
+import * as uuid from "uuid";
+import * as TypeMoq from "typemoq";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
+
+
+class Blob {
+  size: number;
+
+  constructor() {
+    this.size = 0;
+  }
+
+  slice(_start?: number, _end?: number, _contentType?: string): Blob {
+    return new Blob();
+  }
+}
+
+class File extends Blob {
+  name: string;
+
+  constructor(name: string, size: number) {
+    super();
+    this.size = size;
+    this.name = name;
+  }
+}
+
+class Worker {
+  postMessage() {}
+}
+
+const globalAsAny = global as any;
+globalAsAny.window = {};
+globalAsAny.Blob = Blob;
+(URL as any).createObjectURL = () => {};
+
+// For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
+globalAsAny.window.File = File;
+globalAsAny.Worker = Worker;
+
+class XMLHttpRequest {
+  readyState: number;
+  status: number;
+  responseText: string;
+  onreadystatechange?: any;
+
+  constructor() {
+    this.readyState = 0;
+    this.status = 0;
+    this.responseText = "";
+  }
+
+  open() {}
+  setRequestHeader() {}
+  send() {}
+}
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -77,8 +132,33 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
+  // todo: remove mocks
+  private setupMocks(): any {
+    const onNewXMLHttpRequestMock = TypeMoq.Mock.ofInstance(() => {});
+    const xmlHttpRequestMock: TypeMoq.IMock<XMLHttpRequest> = TypeMoq.Mock.ofInstance(new XMLHttpRequest());
+    xmlHttpRequestMock
+      .setup((xhr) => xhr.send())
+      .returns(() => {
+        xmlHttpRequestMock.object.readyState = 4;
+        xmlHttpRequestMock.object.status = 200;
+        xmlHttpRequestMock.object.responseText = "<!DOCTYPE html><html></html>";
+        xmlHttpRequestMock.object.onreadystatechange!({
+          target: xmlHttpRequestMock.object,
+          currentTarget: xmlHttpRequestMock.object,
+        });
+      });
+
+    xmlHttpRequestMock.callBase = true;
+
+    onNewXMLHttpRequestMock.setup((callback) => callback()).returns(() => xmlHttpRequestMock.object);
+
+    return onNewXMLHttpRequestMock.object;
+  }
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
+
+    console.log("running...");
 
     this.validateParameters();
 
@@ -340,35 +420,38 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private uploadFileToUri(uploadUrl: string, fileStream: stream.Stream, fileStats: fs.Stats, filename: string): Promise<void> {
     debug("Uploading the release binary");
+
     return new Promise<void>((resolve, reject) => {
-      Request.post({
-        formData: {
-          ipa: {
-            options: {
-              filename,
-              contentType: "application/octet-stream",
-              knownLength: fileStats.size,
-            },
-            value: fileStream,
-          },
+      //todo: update settings, use provided params.
+      console.log("uploadFileToUri");
+      const uploadSettings: any = {
+        AssetId: uuid.v4(),
+        UrlEncodedToken: "encodedToken",
+        UploadDomain: "upload.ms",
+        Tenant: "distribution",
+        onProgressChanged: (progress: any) => {
+          debug("onProgressChanged: " + progress.percentCompleted);
         },
-        url: uploadUrl,
-      })
-        .on("error", (error) => {
-          reject(failure(ErrorCodes.Exception, `release binary uploading failed: ${error.message}`));
-        })
-        .on("response", (response) => {
-          if (response.statusCode < 400) {
-            resolve();
-          } else {
-            reject(
-              failure(
-                ErrorCodes.Exception,
-                `release binary file uploading failed: HTTP ${response.statusCode} ${response.statusMessage}`
-              )
-            );
-          }
-        });
+        onMessage: (message: string, properties: any, messageLevel: any) => {
+          debug("onMessage: " + message);
+        },
+        onStateChanged: (status: any): void => {
+          debug("onStateChanged:" + status);
+        },
+        onResumeRestart: () => {
+          debug("onResumeRestart");
+        },
+        onCompleted: (uploadStats: any) => {
+          debug("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
+          resolve();
+        },
+        onNewXMLHttpRequest: this.setupMocks(),
+      };
+      const uploader = new McFusUploader(uploadSettings);
+      const testFile = new File("stubRelease", 100);
+      console.log("uploadFileToUri start");
+      uploader.Start(testFile);
+      console.log("uploadFileToUri finished");
     });
   }
 
