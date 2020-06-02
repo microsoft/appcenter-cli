@@ -3,7 +3,6 @@ import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
-import { getOrgsNamesList } from "../../orgs/lib/org-users-helper";
 import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
