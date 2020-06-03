@@ -21,33 +21,39 @@ import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import * as stream from "stream";
 import { McFusUploader } from "@appcenter/mc-fus-uploader";
+import { McFusFile } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
 import * as uuid from "uuid";
 import * as TypeMoq from "typemoq";
 
-const debug = require("debug")("appcenter-cli:commands:distribute:release");
-
-
-class Blob {
-  size: number;
-
-  constructor() {
-    this.size = 0;
-  }
-
-  slice(_start?: number, _end?: number, _contentType?: string): Blob {
-    return new Blob();
-  }
+import fetch from "node-fetch";
+import "abort-controller/polyfill"
+if (!globalThis.fetch) {
+  globalThis.fetch = fetch;
 }
 
-class File extends Blob {
-  name: string;
+export class File implements McFusFile {
+  readonly name: string;
 
-  constructor(name: string, size: number) {
-    super();
-    this.size = size;
+  public constructor(name: string) {
     this.name = name;
   }
+
+  get size(): number {
+    const stats = fs.statSync(this.name);
+    return stats["size"];
+  }
+
+  slice(start: number, end: number): Buffer {
+    console.log("slice("+start+","+end+")");
+    const data = new Buffer(end - start);
+    const fd = fs.openSync(this.name, "r");
+    fs.readSync(fd, data, 0, data.length, start);
+    console.log("data = " + data);
+    return data;
+  }
 }
+
+const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
 class Worker {
   postMessage() {}
@@ -55,29 +61,11 @@ class Worker {
 
 const globalAsAny = global as any;
 globalAsAny.window = {};
-globalAsAny.Blob = Blob;
 (URL as any).createObjectURL = () => {};
 
 // For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
 globalAsAny.window.File = File;
 globalAsAny.Worker = Worker;
-
-class XMLHttpRequest {
-  readyState: number;
-  status: number;
-  responseText: string;
-  onreadystatechange?: any;
-
-  constructor() {
-    this.readyState = 0;
-    this.status = 0;
-    this.responseText = "";
-  }
-
-  open() {}
-  setRequestHeader() {}
-  send() {}
-}
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -132,29 +120,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
-  // todo: remove mocks
-  private setupMocks(): any {
-    const onNewXMLHttpRequestMock = TypeMoq.Mock.ofInstance(() => {});
-    const xmlHttpRequestMock: TypeMoq.IMock<XMLHttpRequest> = TypeMoq.Mock.ofInstance(new XMLHttpRequest());
-    xmlHttpRequestMock
-      .setup((xhr) => xhr.send())
-      .returns(() => {
-        xmlHttpRequestMock.object.readyState = 4;
-        xmlHttpRequestMock.object.status = 200;
-        xmlHttpRequestMock.object.responseText = "<!DOCTYPE html><html></html>";
-        xmlHttpRequestMock.object.onreadystatechange!({
-          target: xmlHttpRequestMock.object,
-          currentTarget: xmlHttpRequestMock.object,
-        });
-      });
-
-    xmlHttpRequestMock.callBase = true;
-
-    onNewXMLHttpRequestMock.setup((callback) => callback()).returns(() => xmlHttpRequestMock.object);
-
-    return onNewXMLHttpRequestMock.object;
-  }
-
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -166,7 +131,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const [
       distributionGroupUsersCount,
       storeInformation,
-      releaseBinaryFileStream,
       releaseBinaryFileStats,
       releaseNotesString,
     ] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
@@ -183,7 +147,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       debug("Uploading release binary");
       await out.progress(
         "Uploading release binary...",
-        this.uploadFileToUri(uploadUri, releaseBinaryFileStream, releaseBinaryFileStats, Path.basename(this.filePath))
+        this.uploadFileToUri(uploadUri, releaseBinaryFileStats, Path.basename(this.filePath))
       );
 
       debug("Finishing release upload");
@@ -306,9 +270,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async getPrerequisites(
     client: AppCenterClient
-  ): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
+  ): Promise<[number | null, models.ExternalStoreResponse | null, fs.Stats, string]> {
     // load release binary file
-    const [fileStats, fileStream] = await this.getReleaseFileStream();
+    const fileStats = await this.getReleaseFileStream();
 
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
@@ -325,14 +289,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
       storeInformation = this.getStoreDetails(client);
     }
 
-    return Promise.all([distributionGroupUsersNumber, storeInformation, fileStream, fileStats, releaseNotesString]);
+    return Promise.all([distributionGroupUsersNumber, storeInformation, fileStats, releaseNotesString]);
   }
 
-  private async getReleaseFileStream(): Promise<[fs.Stats, stream.Stream]> {
+  private async getReleaseFileStream(): Promise<fs.Stats> {
     try {
       const fileStats = await Pfs.stat(this.filePath);
-      const fileStream = fs.createReadStream(this.filePath);
-      return Promise.all([fileStats, fileStream]);
+      return fileStats;
     } catch (error) {
       if (error.code === "ENOENT") {
         throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
@@ -418,7 +381,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return createReleaseUploadRequestResponse.result;
   }
 
-  private uploadFileToUri(uploadUrl: string, fileStream: stream.Stream, fileStats: fs.Stats, filename: string): Promise<void> {
+  private uploadFileToUri(uploadUrl: string, fileStats: fs.Stats, filename: string): Promise<void> {
     debug("Uploading the release binary");
 
     return new Promise<void>((resolve, reject) => {
@@ -445,10 +408,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
           debug("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
           resolve();
         },
-        onNewXMLHttpRequest: this.setupMocks(),
       };
       const uploader = new McFusUploader(uploadSettings);
-      const testFile = new File("stubRelease", 100);
+      const testFile = new File(this.filePath);
       console.log("uploadFileToUri start");
       uploader.Start(testFile);
       console.log("uploadFileToUri finished");

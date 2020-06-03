@@ -46,6 +46,7 @@
     "dist"
   ],
   "devDependencies": {
+    "@appcenter/mc-fus-uploader": "file:../appcenter/lib-mc-fus-uploader",
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "7.1.2",
     "@types/debug": "4.1.5",
@@ -77,8 +78,6 @@
     "@types/yazl": "2.4.2",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
-    "@appcenter/mc-fus-uploader": "1.4.0",
-    "typemoq": "2.1.0",
     "autorest": "2.0.4413",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
@@ -97,9 +96,11 @@
     "prettier": "2.0.5",
     "sinon": "9.0.2",
     "ts-node": "8.10.1",
+    "typemoq": "2.1.0",
     "typescript": "3.9.3"
   },
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "appcenter-file-upload-client": "0.0.24",
     "azure-storage": "2.10.3",
     "bplist": "0.0.4",
@@ -120,6 +121,7 @@
     "minimist": "1.2.5",
     "mkdirp": "1.0.4",
     "ms-rest": "2.5.4",
+    "node-fetch": "^2.6.0",
     "omelette": "0.4.12",
     "opener": "1.5.1",
     "p-limit": "2.3.0",
