@@ -19,16 +19,21 @@ import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
-import * as stream from "stream";
 import { McFusUploader } from "@appcenter/mc-fus-uploader";
-import { McFusFile } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
+import { McFusFile, IWorker } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
 import * as uuid from "uuid";
-import * as TypeMoq from "typemoq";
+import { Worker } from "worker_threads";
 
-import fetch from "node-fetch";
 import "abort-controller/polyfill"
-if (!globalThis.fetch) {
-  globalThis.fetch = fetch;
+
+export class WorkerNode extends Worker implements IWorker {
+
+  onmessage: (this: any, ev: any) => any = null;
+  onerror: (this: any, ev: any) => any = null;
+  Domain: string = "";
+  sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
+  postMessage(message: any, options?: PostMessageOptions | any): void {}
+  terminate(): void {}
 }
 
 export class File implements McFusFile {
@@ -55,17 +60,14 @@ export class File implements McFusFile {
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
-class Worker {
-  postMessage() {}
-}
-
 const globalAsAny = global as any;
 globalAsAny.window = {};
 (URL as any).createObjectURL = () => {};
 
 // For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
 globalAsAny.window.File = File;
-globalAsAny.Worker = Worker;
+
+globalAsAny.Worker = WorkerNode;
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -410,6 +412,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
         },
       };
       const uploader = new McFusUploader(uploadSettings);
+      const worker = new WorkerNode(uploader.getScript());
+      uploader.setWorker(worker);
       const testFile = new File(this.filePath);
       console.log("uploadFileToUri start");
       uploader.Start(testFile);
