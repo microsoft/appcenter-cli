@@ -35,9 +35,19 @@ export class WorkerNode extends Worker implements IWorker {
   onmessage: (this: any, ev: any) => any = null;
   onerror: (this: any, ev: any) => any = null;
   Domain: string = "";
+  set onmessage(value: ((ev: MessageEvent) => any)) {
+    super.addListener("message", value);
+  }
+  set onerror(value: (() => any)) {
+    super.addListener("error", value);
+  }
   sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
-  postMessage(message: any, options?: PostMessageOptions | any): void {}
-  terminate(): void {}
+  postMessage(message: any): void {
+    super.postMessage(message);
+  }
+  terminate(): void {
+    super.terminate();
+  }
 }
 
 export class File implements McFusFile {
