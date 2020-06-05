@@ -32,8 +32,6 @@ if (!globalThis.fetch) {
 }
 
 export class WorkerNode extends Worker implements IWorker {
-  onmessage: (this: any, ev: any) => any = null;
-  onerror: (this: any, ev: any) => any = null;
   Domain: string = "";
   set onmessage(value: ((ev: MessageEvent) => any)) {
     super.addListener("message", value);
