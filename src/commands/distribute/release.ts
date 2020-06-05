@@ -23,11 +23,15 @@ import { McFusUploader } from "@appcenter/mc-fus-uploader";
 import { McFusFile, IWorker } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
 import * as uuid from "uuid";
 import { Worker } from "worker_threads";
+import "abort-controller/polyfill";
 
-import "abort-controller/polyfill"
+const fetch = require("node-fetch");
+
+if (!globalThis.fetch) {
+  globalThis.fetch = fetch;
+}
 
 export class WorkerNode extends Worker implements IWorker {
-
   onmessage: (this: any, ev: any) => any = null;
   onerror: (this: any, ev: any) => any = null;
   Domain: string = "";
@@ -49,7 +53,7 @@ export class File implements McFusFile {
   }
 
   slice(start: number, end: number): Buffer {
-    console.log("slice("+start+","+end+")");
+    console.log("slice(" + start + "," + end + ")");
     const data = new Buffer(end - start);
     const fd = fs.openSync(this.name, "r");
     fs.readSync(fd, data, 0, data.length, start);
@@ -412,7 +416,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
         },
       };
       const uploader = new McFusUploader(uploadSettings);
-      const worker = new WorkerNode(uploader.getScript());
+      console.log("uploader script...");
+      const worker = new WorkerNode(__dirname + "/worker.js");
       uploader.setWorker(worker);
       const testFile = new File(this.filePath);
       console.log("uploadFileToUri start");
