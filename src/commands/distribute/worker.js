@@ -3,6 +3,8 @@ const fetch = require("node-fetch");
 
 console.log("worker script initialized");
 
+var workerDomain = "emptyDomain";
+
 function sendChunk(chunk, chunkNumber, url, correlationId, domain) {
   console.log("send chunk script");
   //@ts-ignore
@@ -17,26 +19,36 @@ function sendChunk(chunk, chunkNumber, url, correlationId, domain) {
   })
     .then((response) => {
       if (!response.ok) {
+        console.log("worker upload error, not ok");
         throw new HttpError(response.status, response.statusText);
       }
       return response.json();
     })
     .then((json) => {
+      console.log("worker upload complete:", json);
       parentPort.postMessage({ Error: json.Error, ChunkNumber: chunkNumber });
     })
     .catch((error) => {
+      console.log("worker upload error:", error);
       parentPort.postMessage({ Error: true, ChunkNumber: chunkNumber });
     });
 }
 
 parentPort.on("message", (evt) => {
-  console.log("worker script received message");
-  if (evt.data.Domain) {
-    mcfusWorker.Domain = evt.data.Domain;
-    return;
+  try {
+    console.log("worker script received message", evt);
+    if (evt.Domain) {
+      workerDomain = evt.Domain;
+      console.log("no domain");
+      return;
+    }
+    if (!evt.Chunk) {
+      console.log("no chunk");
+      return;
+    }
+    console.log("worker script start send chunk to " + workerDomain);
+    sendChunk(evt.Chunk, evt.ChunkNumber, evt.Url, evt.CorrelationId, workerDomain);
+  } catch (error) {
+    console.log("error inside worker.js: ", error);
   }
-  if (!evt.data.Chunk) {
-    return;
-  }
-  sendChunk(evt.data.Chunk, evt.data.ChunkNumber, evt.data.Url, evt.data.CorrelationId);
 });

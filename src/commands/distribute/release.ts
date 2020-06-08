@@ -33,10 +33,10 @@ if (!globalThis.fetch) {
 
 export class WorkerNode extends Worker implements IWorker {
   Domain: string = "";
-  set onmessage(value: ((ev: MessageEvent) => any)) {
+  set onmessage(value: (ev: MessageEvent) => any) {
     super.addListener("message", value);
   }
-  set onerror(value: (() => any)) {
+  set onerror(value: () => any) {
     super.addListener("error", value);
   }
   sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
@@ -142,12 +142,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [
-      distributionGroupUsersCount,
-      storeInformation,
-      releaseBinaryFileStats,
-      releaseNotesString,
-    ] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStats, releaseNotesString] = await out.progress(
+      "Loading prerequisites...",
+      this.getPrerequisites(client)
+    );
 
     this.validateParametersWithPrerequisites(storeInformation);
 
@@ -155,17 +153,21 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
     const uploadUri = createdReleaseUpload.uploadUrl;
     const uploadId = createdReleaseUpload.uploadId;
-
+    const releaseId = -1;
     let releaseUrl: string;
     try {
       debug("Uploading release binary");
-      await out.progress(
-        "Uploading release binary...",
-        this.uploadFileToUri(uploadUri, releaseBinaryFileStats, Path.basename(this.filePath), app)
-      );
+      const fetchResult = await this.uploadFileToUri(uploadUri, releaseBinaryFileStats, Path.basename(this.filePath), app);
+      const jsonResult = await fetchResult.json();
+      await this.startFusUploader(jsonResult);
 
-      debug("Finishing release upload");
-      releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
+      const patchJson = await this.patchUpload(app, uploadId);
+      if (patchJson.upload_status !== "uploadFinished") {
+        console.log("patch was not successful", patchJson);
+        throw new Error("patch was not successful");
+      }
+      const releaseId = await this.loadReleaseIdUntilSuccess(app, uploadId);
+      console.log("upload finished, releaseId " + releaseId);
     } catch (error) {
       try {
         out.text("Release upload failed");
@@ -177,9 +179,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
       throw error;
     }
-
-    debug("Extracting release ID from the release URL");
-    const releaseId = this.extractReleaseId(releaseUrl);
 
     if (releaseNotesString && releaseNotesString.length > 0) {
       debug("Setting release notes");
@@ -395,69 +394,120 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return createReleaseUploadRequestResponse.result;
   }
 
-  private uploadFileToUri(uploadUrl: string, fileStats: fs.Stats, filename: string, app: DefaultApp): Promise<void> {
+  private uploadFileToUri(uploadUrl: string, fileStats: fs.Stats, filename: string, app: DefaultApp): Promise<any> {
     debug("Uploading the release binary");
-    const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases"
-    console.log("url = " + url);
-    const bearerToken = "<put your token here>";
-      return fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "authorization": bearerToken
-          },
-          body: "{}",
-        }).then((response) => {
-          return response.json()
-        }).then((json) => {
-            //todo: update settings, use provided params.
-            console.log("uploadFileToUri");
-            const uploadSettings: any = {
-              AssetId: json.package_asset_id,
-              UrlEncodedToken: json.url_encoded_token,
-              UploadDomain: json.upload_domain,
-              Tenant: "distribution",
-              onProgressChanged: (progress: any) => {
-                debug("onProgressChanged: " + progress.percentCompleted);
-              },
-              onMessage: (message: string, properties: any, messageLevel: any) => {
-                debug("onMessage: " + message);
-              },
-              onStateChanged: (status: any): void => {
-                debug("onStateChanged:" + status);
-              },
-              onResumeRestart: () => {
-                debug("onResumeRestart");
-              },
-              onCompleted: (uploadStats: any) => {
-                debug("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
-              },
-            };
-            const uploader = new McFusUploader(uploadSettings);
-            console.log("uploader script...");
-            const worker = new WorkerNode(__dirname + "/worker.js");
-            uploader.setWorker(worker);
-            const testFile = new File(this.filePath);
-            console.log("uploadFileToUri start");
-            uploader.Start(testFile);
-            console.log("uploadFileToUri finished");
-          });
+    const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases";
+    const bearerToken = "put token";
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: bearerToken,
+      },
+      body: "{}",
+    });
   }
 
-  private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
-    let finishReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
+  private startFusUploader(json: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!json.upload_domain || !json.url_encoded_token) {
+        throw Error("no needed data");
+      }
+      //todo: update settings, use provided params.
+      console.log("uploadFileToUri domain:" + json.upload_domain + " urlencodedtoken: " + json.url_encoded_token);
+      const uploadSettings: any = {
+        AssetId: json.package_asset_id,
+        UrlEncodedToken: json.url_encoded_token,
+        UploadDomain: json.upload_domain,
+        Tenant: "distribution",
+        onProgressChanged: (progress: any) => {
+          debug("onProgressChanged: " + progress.percentCompleted);
+        },
+        onMessage: (message: string, properties: any, messageLevel: any) => {
+          debug("onMessage: " + message);
+        },
+        onStateChanged: (status: any): void => {
+          debug("onStateChanged:" + status);
+        },
+        onResumeRestart: () => {
+          debug("onResumeRestart");
+        },
+        onCompleted: (uploadStats: any) => {
+          console.log("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
+          resolve();
+        },
+      };
+      const uploader = new McFusUploader(uploadSettings);
+      console.log("uploader script...");
+      const worker = new WorkerNode(__dirname + "/worker.js");
+      uploader.setWorker(worker);
+      const testFile = new File(this.filePath);
+      console.log("uploadFileToUri start");
+      uploader.Start(testFile);
+    });
+  }
+
+  private async patchUpload(app: DefaultApp, uploadId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases/" + uploadId;
+      const bearerToken = "put token";
+      fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: bearerToken,
+        },
+        body: '{"upload_status":"uploadFinished"}',
+      })
+        .then((result) => {
+          return result.json();
+        })
+        .then((json) => {
+          console.log("patch complete: ", json);
+          resolve(json);
+        })
+        .catch((error) => {
+          console.log("patch failed: ", error);
+          reject();
+        });
+    });
+  }
+
+  private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const timerId = setInterval(async () => {
+        const releaseIdResult = await this.loadReleaseId(app, uploadId);
+        const releaseJsonResult = await releaseIdResult.json();
+        console.log("releaseId json " + JSON.stringify(releaseJsonResult));
+        const releaseId = releaseJsonResult.release_distinct_id;
+        console.log("upload finished, releaseId " + releaseId);
+        if (releaseJsonResult.upload_status === "readyToBePublished" && releaseId) {
+          clearInterval(timerId);
+          resolve(Number(releaseId));
+        } else if (releaseJsonResult.upload_status === "error") {
+          clearInterval(timerId);
+          console.log("loadReleaseIdUntilSuccess " + releaseJsonResult.error_details);
+          reject();
+        }
+      }, 5000);
+    });
+  }
+
+  private async loadReleaseId(app: DefaultApp, uploadId: string): Promise<any> {
     try {
-      finishReleaseUploadRequestResponse = await out.progress(
-        "Finishing release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) =>
-          client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "committed", cb)
-        )
-      );
+      const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases/" + uploadId;
+      const bearerToken = "put token";
+      return fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: bearerToken,
+        },
+      });
     } catch (error) {
+      console.log("loadReleaseId error:", error);
       throw failure(ErrorCodes.Exception, `failed to finish release upload for ${this.filePath}`);
     }
-
-    return finishReleaseUploadRequestResponse.result.releaseUrl;
   }
 
   private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
