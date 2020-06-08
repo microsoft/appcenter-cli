@@ -62,11 +62,9 @@ export class File implements McFusFile {
   }
 
   slice(start: number, end: number): Buffer {
-    console.log("slice(" + start + "," + end + ")");
     const data = new Buffer(end - start);
     const fd = fs.openSync(this.name, "r");
     fs.readSync(fd, data, 0, data.length, start);
-    console.log("data = " + data);
     return data;
   }
 }
@@ -138,8 +136,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
-    console.log("running...");
-
     this.validateParameters();
 
     debug("Loading prerequisites");
@@ -154,18 +150,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     debug("Creating release upload");
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
-    const uploadUri = createdReleaseUpload.uploadUrl;
-    const uploadId = createdReleaseUpload.uploadId;
+    const uploadId = createdReleaseUpload.id;
+    const assetId = createdReleaseUpload.package_asset_id;
+    const urlEncodedToken = createdReleaseUpload.url_encoded_token;
+    const uploadDomain = createdReleaseUpload.upload_domain;
 
     let releaseUrl: string;
-    try {
-      debug("Uploading release binary");
-      await out.progress(
-        "Uploading release binary...",
-        this.uploadFileToUri(uploadUri, releaseBinaryFileStats, Path.basename(this.filePath), app)
-      );
-
-      debug("Finishing release upload");
+    try { 
+      this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain);
       releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
     } catch (error) {
       try {
@@ -378,70 +370,53 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
-    let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
-    try {
-      const options = {
-        buildVersion: this.buildVersion,
-        buildNumber: this.buildNumber,
-      };
-      createReleaseUploadRequestResponse = await out.progress(
-        "Creating release upload...",
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, options, cb))
-      );
-    } catch (error) {
-      throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
-    }
-
-    return createReleaseUploadRequestResponse.result;
-  }
-
-  private uploadFileToUri(uploadUrl: string, fileStats: fs.Stats, filename: string, app: DefaultApp): Promise<void> {
-    debug("Uploading the release binary");
+  private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
     const profile = getUser();
     const url = getPortalUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName);
-    return profile.accessToken.then((accessToken) => {
-      return fetch(url, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        "x-api-token": accessToken
-        },
-        body: "{}",
-      });
-    }).then((response) => {
-      return response.json()
-    }).then((json) => {
-      if (!json.package_asset_id || (json.statusCode && json.statusCode != 200)) {
-        throw new Error("Error uploading file: " + json.message);
-      }
-      const uploadSettings: any = {
-        AssetId: json.package_asset_id,
-        UrlEncodedToken: json.url_encoded_token,
-        UploadDomain: json.upload_domain,
-        Tenant: "distribution",
-        onProgressChanged: (progress: any) => {
-          debug("onProgressChanged: " + progress.percentCompleted);
-        },
-        onMessage: (message: string, properties: any, messageLevel: any) => {
-          debug("onMessage: " + message);
-        },
-        onStateChanged: (status: any): void => {
-          debug("onStateChanged:" + status);
-        },
-        onResumeRestart: () => {
-          debug("onResumeRestart");
-        },
-        onCompleted: (uploadStats: any) => {
-          debug("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
-        },
-      };
-      const uploader = new McFusUploader(uploadSettings);
-      const worker = new WorkerNode(__dirname + "/worker.js");
-      uploader.setWorker(worker);
-      const testFile = new File(this.filePath);
-      uploader.Start(testFile);
+    const accessToken = await profile.accessToken;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+      "x-api-token": accessToken
+      },
+      body: "{}",
     });
+    const json = await response.json();
+    if (!json.package_asset_id || (json.statusCode && json.statusCode != 200)) {
+      throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}. ${json.message}`);
+    }
+    return json;
+  }
+
+  private uploadFileToUri(assetId: string, urlEncodedToken: string, uploadDomain: string): void {
+    debug("Uploading the release binary");
+    const uploadSettings: any = {
+      AssetId: assetId,
+      UrlEncodedToken: urlEncodedToken,
+      UploadDomain: uploadDomain,
+      Tenant: "distribution",
+      onProgressChanged: (progress: any) => {
+        debug("onProgressChanged: " + progress.percentCompleted);
+      },
+      onMessage: (message: string, properties: any, messageLevel: any) => {
+        debug("onMessage: " + message);
+      },
+      onStateChanged: (status: any): void => {
+        debug("onStateChanged:" + status);
+      },
+      onResumeRestart: () => {
+        debug("onResumeRestart");
+      },
+      onCompleted: (uploadStats: any) => {
+        debug("Upload completed, total time: " + uploadStats.TotalTimeInSeconds);
+      },
+    };
+    const uploader = new McFusUploader(uploadSettings);
+    const worker = new WorkerNode(__dirname + "/worker.js");
+    uploader.setWorker(worker);
+    const testFile = new File(this.filePath);
+    uploader.Start(testFile);
   }
 
   private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {

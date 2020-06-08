@@ -1,10 +1,7 @@
 const { parentPort } = require("worker_threads");
 const fetch = require("node-fetch");
 
-console.log("worker script initialized");
-
 function sendChunk(chunk, chunkNumber, url, correlationId, domain) {
-  console.log("send chunk script");
   //@ts-ignore
   //this check addresses a trailing zeros bug, where part of the chunk will be empty. Simply touching the size is enough to "fix" the problem
   const size = chunk.size;
@@ -30,7 +27,6 @@ function sendChunk(chunk, chunkNumber, url, correlationId, domain) {
 }
 
 parentPort.on("message", (evt) => {
-  console.log("worker script received message");
   if (evt.data.Domain) {
     mcfusWorker.Domain = evt.data.Domain;
     return;
