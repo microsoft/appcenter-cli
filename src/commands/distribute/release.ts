@@ -17,7 +17,7 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, getPortalUrlForEndpoint } from "../../util/profile";
-import { getPortalUploadLink } from "../../util/portal/portal-helper"
+import { getPortalUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "@appcenter/mc-fus-uploader";
@@ -34,10 +34,10 @@ if (!globalThis.fetch) {
 
 export class WorkerNode extends Worker implements IWorker {
   Domain: string = "";
-  set onmessage(value: ((ev: MessageEvent) => any)) {
+  set onmessage(value: (ev: MessageEvent) => any) {
     super.addListener("message", value);
   }
-  set onerror(value: (() => any)) {
+  set onerror(value: () => any) {
     super.addListener("error", value);
   }
   sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
@@ -139,12 +139,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [
-      distributionGroupUsersCount,
-      storeInformation,
-      releaseBinaryFileStats,
-      releaseNotesString,
-    ] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStats, releaseNotesString] = await out.progress(
+      "Loading prerequisites...",
+      this.getPrerequisites(client)
+    );
 
     this.validateParametersWithPrerequisites(storeInformation);
 
@@ -156,7 +154,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const uploadDomain = createdReleaseUpload.upload_domain;
 
     let releaseUrl: string;
-    try { 
+    try {
       this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain);
       releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
     } catch (error) {
@@ -377,13 +375,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-      "Content-Type": "application/json",
-      "x-api-token": accessToken
+        "Content-Type": "application/json",
+        "x-api-token": accessToken,
       },
       body: "{}",
     });
     const json = await response.json();
-    if (!json.package_asset_id || (json.statusCode && json.statusCode != 200)) {
+    if (!json.package_asset_id || (json.statusCode && json.statusCode !== 200)) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}. ${json.message}`);
     }
     return json;
