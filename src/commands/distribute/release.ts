@@ -16,7 +16,8 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
-import { DefaultApp } from "../../util/profile";
+import { DefaultApp, getUser, getPortalUrlForEndpoint } from "../../util/profile";
+import { getPortalUploadLink } from "../../util/portal/portal-helper"
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "@appcenter/mc-fus-uploader";
@@ -397,51 +398,50 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private uploadFileToUri(uploadUrl: string, fileStats: fs.Stats, filename: string, app: DefaultApp): Promise<void> {
     debug("Uploading the release binary");
-    const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases"
-    console.log("url = " + url);
-    const bearerToken = "<put your token here>";
+    const profile = getUser();
+    const url = getPortalUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName);
+    return profile.accessToken.then((accessToken) => {
       return fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "authorization": bearerToken
-          },
-          body: "{}",
-        }).then((response) => {
-          return response.json()
-        }).then((json) => {
-            //todo: update settings, use provided params.
-            console.log("uploadFileToUri");
-            const uploadSettings: any = {
-              AssetId: json.package_asset_id,
-              UrlEncodedToken: json.url_encoded_token,
-              UploadDomain: json.upload_domain,
-              Tenant: "distribution",
-              onProgressChanged: (progress: any) => {
-                debug("onProgressChanged: " + progress.percentCompleted);
-              },
-              onMessage: (message: string, properties: any, messageLevel: any) => {
-                debug("onMessage: " + message);
-              },
-              onStateChanged: (status: any): void => {
-                debug("onStateChanged:" + status);
-              },
-              onResumeRestart: () => {
-                debug("onResumeRestart");
-              },
-              onCompleted: (uploadStats: any) => {
-                debug("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
-              },
-            };
-            const uploader = new McFusUploader(uploadSettings);
-            console.log("uploader script...");
-            const worker = new WorkerNode(__dirname + "/worker.js");
-            uploader.setWorker(worker);
-            const testFile = new File(this.filePath);
-            console.log("uploadFileToUri start");
-            uploader.Start(testFile);
-            console.log("uploadFileToUri finished");
-          });
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        "x-api-token": accessToken
+        },
+        body: "{}",
+      });
+    }).then((response) => {
+      return response.json()
+    }).then((json) => {
+      if (!json.package_asset_id || (json.statusCode && json.statusCode != 200)) {
+        throw new Error("Error uploading file: " + json.message);
+      }
+      const uploadSettings: any = {
+        AssetId: json.package_asset_id,
+        UrlEncodedToken: json.url_encoded_token,
+        UploadDomain: json.upload_domain,
+        Tenant: "distribution",
+        onProgressChanged: (progress: any) => {
+          debug("onProgressChanged: " + progress.percentCompleted);
+        },
+        onMessage: (message: string, properties: any, messageLevel: any) => {
+          debug("onMessage: " + message);
+        },
+        onStateChanged: (status: any): void => {
+          debug("onStateChanged:" + status);
+        },
+        onResumeRestart: () => {
+          debug("onResumeRestart");
+        },
+        onCompleted: (uploadStats: any) => {
+          debug("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
+        },
+      };
+      const uploader = new McFusUploader(uploadSettings);
+      const worker = new WorkerNode(__dirname + "/worker.js");
+      uploader.setWorker(worker);
+      const testFile = new File(this.filePath);
+      uploader.Start(testFile);
+    });
   }
 
   private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
