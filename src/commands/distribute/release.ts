@@ -17,7 +17,7 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, getPortalUrlForEndpoint } from "../../util/profile";
-import { getPortalUploadLink } from "../../util/portal/portal-helper";
+import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "@appcenter/mc-fus-uploader";
@@ -425,14 +425,16 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<any> {
-      return new Promise((resolve, reject) => {
-        const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases/" + uploadId;
-        const bearerToken = "put token";
+      return new Promise(async (resolve, reject) => {
+        const profile = getUser();
+        const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+        const accessToken = await profile.accessToken;
+        console.log("145 accessToken = ", accessToken);
         fetch(url, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            authorization: bearerToken,
+            "x-api-token": accessToken,
           },
           body: '{"upload_status":"uploadFinished"}',
         })
@@ -472,13 +474,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async loadReleaseId(app: DefaultApp, uploadId: string): Promise<any> {
     try {
-      const url = "https://appcenter.ms/api/v0.1/apps/" + app.ownerName + "/" + app.appName + "/uploads/releases/" + uploadId;
-      const bearerToken = "put token";
+      const profile = getUser();
+      const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+      const accessToken = await profile.accessToken;
       return fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: bearerToken,
+          "x-api-token": accessToken,
         },
       });
     } catch (error) {
