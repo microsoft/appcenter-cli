@@ -62,7 +62,7 @@ export class File implements McFusFile {
   }
 
   slice(start: number, end: number): Buffer {
-    const data = new Buffer(end - start);
+    const data = Buffer.alloc(end - start);
     const fd = fs.openSync(this.name, "r");
     fs.readSync(fd, data, 0, data.length, start);
     return data;
