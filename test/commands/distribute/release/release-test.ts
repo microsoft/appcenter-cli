@@ -24,17 +24,14 @@ describe("release command", () => {
   const fakeReleaseUrl = "/fake/release/url/" + fakeReleaseId;
   const fakeDistributionGroupName = "fakeDistributionGroupName";
   const fakeStoreName = "fakeStoreName";
-  const fakeGroupId = "00000000-0000-0000-0000-000000000000";
-  const fakeStoreId = "00000000-0000-0000-0000-000000000000";
+  const fakeGuid = "00000000-0000-0000-0000-000000000000";
   const fakeStoreType = "googleplay";
   const fakeStoreTrack = "alpha";
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
   const shortVersion = "1";
-  const fakePackageAssetId = "00000000-0000-0000-0000-000000000000";
-  const fakeUrlEncodedToken = "%3fsv%3d2019-01-01%26sr%3dc%26si%3d00000000-0000-0000-0000-000000000000%26sig%3d1gqHaz73eHchp8xToO2%252BxXWiljghWIG2XfgkdeAw%252Fhg%253D%26se%3d2020-01-01T01%253A51%253A08Z%26t%3ddistribution";
+  const fakeUrlEncodedToken = "fakeUrlEncodedToken";
   const fakeUploadDomain = "http://localhost:1700";
-  const fakeId = "00000000-0000-0000-0000-000000000000";
   const releaseFileName = "releaseBinaryFile.apk";
   const releaseNotesFileName = "releaseNotesFile.txt";
 
@@ -68,12 +65,15 @@ describe("release command", () => {
 
   describe("when all network requests are successful (group)", () => {
     beforeEach(() => {
-      expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-        setupSuccessfulPostUploadResponse(
-          setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(
-                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+
+      expectedRequestsScope = setupSuccessfulSetUploadMetadataResponse(
+        setupSuccessfulGetDistributionGroupUsersResponse(
+          setupSuccessfulPostUploadResponse(
+            setupSuccessfulUploadResponse(
+              setupSuccessfulPatchUploadResponse(
+                setupSuccessfulCreateReleaseResponse(
+                  setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+                )
               )
             )
           )
@@ -82,7 +82,7 @@ describe("release command", () => {
       skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
-    it("uploads release with release notes text", async (done) => {
+    it("uploads release with release notes text", async () => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
 
@@ -95,7 +95,6 @@ describe("release command", () => {
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
       testUploadedFormData();
-      done();
     });
 
     it("uploads release with release notes file", async () => {
@@ -705,15 +704,28 @@ describe("release command", () => {
   }
 
   function setupSuccessfulPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/uploads/releases`).reply(201, (uri: any, requestBody: any) => {
+    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/uploads/releases`).reply(200, (uri: any, requestBody: any) => {
       postSymbolSpy(requestBody);
       return {
         upload_id: fakeReleaseUploadingId,
         upload_url: fakeHost + fakeUploadUrl,
-        package_asset_id: fakePackageAssetId,
+        package_asset_id: fakeGuid,
         url_encoded_token: fakeUrlEncodedToken,
         upload_domain: fakeUploadDomain,
-        id: fakeId,
+        id: fakeGuid,
+      };
+    });
+  }
+
+  function setupSuccessfulSetUploadMetadataResponse(nockScope: Nock.Scope): Nock.Scope {
+    console.log("Setting response:", nockScope, `/upload/set_metadata/${fakeGuid}`);
+    return nockScope.post(`/upload/set_metadata/${fakeGuid}`).query(true).reply(200, (uri: any, requestBody: any) => {
+      postSymbolSpy(requestBody);
+      return {
+          resume_restart: false,
+          chunk_list: [1],
+          chunk_size: releaseFileContent.length,
+          blob_partitions: 1
       };
     });
   }
@@ -780,13 +792,13 @@ describe("release command", () => {
   function setupSuccessfulAddGroupResponse(nockScope: Nock.Scope, silent = false, mandatory = false): Nock.Scope {
     const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
     const expectedBody = {
-      id: fakeGroupId,
+      id: fakeGuid,
       mandatory_update: mandatory,
       notify_testers: !silent,
     };
 
     return nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody).reply(201, {
-      id: fakeGroupId,
+      id: fakeGuid,
       mandatory_update: mandatory,
       notify_testers: !silent,
     });
@@ -796,7 +808,7 @@ describe("release command", () => {
     const getDistributionStoresUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_stores/${fakeStoreName}`;
 
     return nockScope.get(getDistributionStoresUrl).reply(200, {
-      id: fakeStoreId,
+      id: fakeGuid,
       name: fakeStoreName,
       type: storeType,
       track: fakeStoreTrack,
@@ -806,18 +818,18 @@ describe("release command", () => {
   function setupSuccessfulAddStoreResponse(nockScope: Nock.Scope): Nock.Scope {
     const postAddReleaseStoreDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/stores`;
     const expectedBody = {
-      id: fakeStoreId,
+      id: fakeGuid,
     };
 
     return nockScope.post(postAddReleaseStoreDestinationUrl, expectedBody).reply(201, {
-      id: fakeStoreId,
+      id: fakeGuid,
     });
   }
 
   function setupFailedAddGroupResponse(nockScope: Nock.Scope, silent = false, mandatory = false): Nock.Scope {
     const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
     const expectedBody = {
-      id: fakeGroupId,
+      id: fakeGuid,
       mandatory_update: mandatory,
       notify_testers: !silent,
     };
@@ -829,7 +841,7 @@ describe("release command", () => {
     const getDistributionGroupUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`;
 
     return nockScope.get(getDistributionGroupUrl).reply(200, {
-      id: fakeGroupId,
+      id: fakeGuid,
       name: fakeDistributionGroupName,
       dismay_name: "my group",
       origin: "appcenter",
