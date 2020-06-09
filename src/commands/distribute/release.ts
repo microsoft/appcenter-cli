@@ -25,6 +25,7 @@ import { McFusFile, IWorker } from "@appcenter/mc-fus-uploader/out/src/mc-fus-up
 import * as uuid from "uuid";
 import { Worker } from "worker_threads";
 import "abort-controller/polyfill";
+import {environments} from "../../util/profile/environments";
 
 const fetch = require("node-fetch");
 
@@ -372,7 +373,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
     const profile = getUser();
-    const url = getPortalUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName);
+    const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
     const accessToken = await profile.accessToken;
     const response = await fetch(url, {
       method: "POST",

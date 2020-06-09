@@ -31,7 +31,10 @@ describe("release command", () => {
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
   const shortVersion = "1";
-
+  const fakePackageAssetId = "00000000-0000-0000-0000-000000000000";
+  const fakeUrlEncodedToken = "%3fsv%3d2019-01-01%26sr%3dc%26si%3d00000000-0000-0000-0000-000000000000%26sig%3d1gqHaz73eHchp8xToO2%252BxXWiljghWIG2XfgkdeAw%252Fhg%253D%26se%3d2020-01-01T01%253A51%253A08Z%26t%3ddistribution";
+  const fakeUploadDomain = "http://localhost:1700";
+  const fakeId = "00000000-0000-0000-0000-000000000000";
   const releaseFileName = "releaseBinaryFile.apk";
   const releaseNotesFileName = "releaseNotesFile.txt";
 
@@ -79,7 +82,7 @@ describe("release command", () => {
       skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
-    it("uploads release with release notes text", async () => {
+    it("uploads release with release notes text", async (done) => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
 
@@ -92,6 +95,7 @@ describe("release command", () => {
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
       testUploadedFormData();
+      done();
     });
 
     it("uploads release with release notes file", async () => {
@@ -701,11 +705,15 @@ describe("release command", () => {
   }
 
   function setupSuccessfulPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/release_uploads`).reply(201, (uri: any, requestBody: any) => {
+    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/uploads/releases`).reply(201, (uri: any, requestBody: any) => {
       postSymbolSpy(requestBody);
       return {
         upload_id: fakeReleaseUploadingId,
         upload_url: fakeHost + fakeUploadUrl,
+        package_asset_id: fakePackageAssetId,
+        url_encoded_token: fakeUrlEncodedToken,
+        upload_domain: fakeUploadDomain,
+        id: fakeId,
       };
     });
   }
