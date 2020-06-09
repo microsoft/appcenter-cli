@@ -21,7 +21,7 @@ import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "@appcenter/mc-fus-uploader";
-import { McFusFile, IWorker } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
+import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
 import * as uuid from "uuid";
 import { Worker } from "worker_threads";
 import "abort-controller/polyfill";
@@ -133,6 +133,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
+  private mcFusUploader?: any;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -145,24 +147,25 @@ export default class ReleaseBinaryCommand extends AppCommand {
     );
 
     this.validateParametersWithPrerequisites(storeInformation);
-
-    debug("Creating release upload");
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
-    const uploadId = createdReleaseUpload.id;
-    const assetId = createdReleaseUpload.package_asset_id;
-    const urlEncodedToken = createdReleaseUpload.url_encoded_token;
-    const uploadDomain = createdReleaseUpload.upload_domain;
-    let releaseId = -1;
+    const releaseId = await this.uploadFile(createdReleaseUpload, client, app);
+    await this.uploadReleaseNotes(releaseNotesString, client, app, releaseId);
+    await this.distributeToGroup(client, app, releaseId);
+    await this.distributeToStore(storeInformation, client, app, releaseId);
+    await this.checkReleaseOnThePortal(distributionGroupUsersCount, client, app, releaseId);
+    return success();
+  }
+
+  private async uploadFile(releaseUploadParams: any, client: AppCenterClient, app: DefaultApp): Promise<any> {
+    const uploadId = releaseUploadParams.id;
+    const assetId = releaseUploadParams.package_asset_id;
+    const urlEncodedToken = releaseUploadParams.url_encoded_token;
+    const uploadDomain = releaseUploadParams.upload_domain;
+
     try {
       await this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain);
-
-      const patchJson = await this.patchUpload(app, uploadId);
-      if (patchJson.upload_status !== "uploadFinished") {
-        console.log("patch was not successful", patchJson);
-        throw new Error("patch was not successful");
-      }
-      releaseId = await this.loadReleaseIdUntilSuccess(app, uploadId);
-      console.log("upload finished, releaseId " + releaseId);
+      await this.patchUpload(app, uploadId);
+      return await this.loadReleaseIdUntilSuccess(app, uploadId);
     } catch (error) {
       try {
         out.text("Release upload failed");
@@ -174,17 +177,51 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
       throw error;
     }
+  }
+
+  private async uploadReleaseNotes(
+    releaseNotesString: string,
+    client: AppCenterClient,
+    app: DefaultApp,
+    releaseId: number
+  ): Promise<void> {
     if (releaseNotesString && releaseNotesString.length > 0) {
       debug("Setting release notes");
       await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
     } else {
       debug("Skipping empty release notes");
     }
+  }
 
+  private async distributeToGroup(client: AppCenterClient, app: DefaultApp, releaseId: number) {
     if (!_.isNil(this.distributionGroup)) {
       debug("Distributing the release to a group");
-      await this.distributeRelease(client, app, releaseId, this.silent);
+      const distributionGroupResponse = await getDistributionGroup({
+        client,
+        releaseId,
+        app: this.app,
+        destination: this.distributionGroup,
+        destinationType: "group",
+      });
+      await addGroupToRelease({
+        client,
+        releaseId,
+        distributionGroup: distributionGroupResponse,
+        app: this.app,
+        destination: this.distributionGroup,
+        destinationType: "group",
+        mandatory: this.mandatory,
+        silent: this.silent,
+      });
     }
+  }
+
+  private async distributeToStore(
+    storeInformation: models.ExternalStoreResponse,
+    client: AppCenterClient,
+    app: DefaultApp,
+    releaseId: number
+  ) {
     if (!_.isNil(storeInformation)) {
       debug("Distributing the release to a store");
       try {
@@ -198,7 +235,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw error;
       }
     }
+  }
 
+  private async checkReleaseOnThePortal(
+    distributionGroupUsersCount: any,
+    client: AppCenterClient,
+    app: DefaultApp,
+    releaseId: number
+  ) {
     debug("Retrieving the release");
     const releaseDetails = await this.getDistributeRelease(client, app, releaseId);
 
@@ -226,7 +270,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     } else {
       out.text(`Release was successfully released.`);
     }
-    return success();
   }
 
   private validateParameters(): void {
@@ -371,6 +414,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
+    debug("Creating release upload");
     const profile = getUser();
     const url = getPortalUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName);
     const accessToken = await profile.accessToken;
@@ -398,95 +442,86 @@ export default class ReleaseBinaryCommand extends AppCommand {
         UploadDomain: uploadDomain,
         Tenant: "distribution",
         onProgressChanged: (progress: any) => {
+          //todo nice to have updated progress log
           debug("onProgressChanged: " + progress.percentCompleted);
         },
-        onMessage: (message: string, properties: any, messageLevel: any) => {
-          debug("onMessage: " + message);
+        onMessage: (message: string, properties: any, level: any) => {
+          debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+          if (level === McFusMessageLevel.Error) {
+            this.mcFusUploader.Cancel();
+            reject();
+          }
         },
-        onStateChanged: (status: any): void => {
-          debug("onStateChanged:" + status);
-        },
-        onResumeRestart: () => {
-          debug("onResumeRestart");
+        onStateChanged: (status: McFusUploadState): void => {
+          //todo get state title
+          debug(`onStateChanged: ${status}`);
         },
         onCompleted: (uploadStats: any) => {
-            console.log("onCompleted, total time: " + uploadStats.TotalTimeInSeconds);
           debug("Upload completed, total time: " + uploadStats.TotalTimeInSeconds);
-            resolve();
-
+          resolve();
         },
       };
-      const uploader = new McFusUploader(uploadSettings);
-      const worker = new WorkerNode(__dirname + "/worker.js");
-      uploader.setWorker(worker);
+      this.mcFusUploader = new McFusUploader(uploadSettings);
+      const worker = new WorkerNode(__dirname + "/release-worker.js");
+      this.mcFusUploader.setWorker(worker);
       const testFile = new File(this.filePath);
-      uploader.Start(testFile);
+      this.mcFusUploader.Start(testFile);
     });
   }
 
-  private async patchUpload(app: DefaultApp, uploadId: string): Promise<any> {
-      return new Promise(async (resolve, reject) => {
-        const profile = getUser();
-        const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
-        const accessToken = await profile.accessToken;
-        console.log("145 accessToken = ", accessToken);
-        fetch(url, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-token": accessToken,
-          },
-          body: '{"upload_status":"uploadFinished"}',
-        })
-          .then((result) => {
-            return result.json();
-          })
-          .then((json) => {
-            console.log("patch complete: ", json);
-            resolve(json);
-          })
-          .catch((error) => {
-            console.log("patch failed: ", error);
-            reject();
-          });
-      });
+  private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {
+    debug("Patching the upload");
+    const profile = getUser();
+    const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+    const accessToken = await profile.accessToken;
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-token": accessToken,
+      },
+      body: '{"upload_status":"uploadFinished"}',
+    });
+    const json = await response.json();
+    if (json.upload_status !== "uploadFinished") {
+      throw failure(ErrorCodes.Exception, `failed to patch release upload ${json}`);
+    }
   }
 
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const timerId = setInterval(async () => {
-        const releaseIdResult = await this.loadReleaseId(app, uploadId);
-        const releaseJsonResult = await releaseIdResult.json();
-        console.log("releaseId json " + JSON.stringify(releaseJsonResult));
-        const releaseId = releaseJsonResult.release_distinct_id;
-        console.log("upload finished, releaseId " + releaseId);
-        if (releaseJsonResult.upload_status === "readyToBePublished" && releaseId) {
+        const response = await this.loadReleaseId(app, uploadId);
+        const releaseId = response.release_distinct_id;
+        debug(`Received release id is ${releaseId}`);
+        if (response.upload_status === "readyToBePublished" && releaseId) {
           clearInterval(timerId);
           resolve(Number(releaseId));
-        } else if (releaseJsonResult.upload_status === "error") {
+        } else if (response.upload_status === "error") {
           clearInterval(timerId);
-          console.log("loadReleaseIdUntilSuccess " + releaseJsonResult.error_details);
+          debug(`Loading release id failed: ${response.error_details}`);
           reject();
         }
-      }, 5000);
+      }, 2000);
     });
   }
 
   private async loadReleaseId(app: DefaultApp, uploadId: string): Promise<any> {
     try {
+      debug("Loading release id...");
       const profile = getUser();
       const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
       const accessToken = await profile.accessToken;
-      return fetch(url, {
+      const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           "x-api-token": accessToken,
         },
       });
+      return await response.json();
     } catch (error) {
-      console.log("loadReleaseId error:", error);
-      throw failure(ErrorCodes.Exception, `failed to finish release upload for ${this.filePath}`);
+      throw failure(ErrorCodes.Exception, `failed to get release id for upload id: ${uploadId}, error: ${JSON.stringify(error)}`);
     }
   }
 
@@ -574,26 +609,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.Exception, `failed to set release notes for release ${releaseId}`);
       }
     }
-  }
-
-  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, silent: boolean): Promise<void> {
-    const distributionGroupResponse = await getDistributionGroup({
-      client,
-      releaseId,
-      app: this.app,
-      destination: this.distributionGroup,
-      destinationType: "group",
-    });
-    await addGroupToRelease({
-      client,
-      releaseId,
-      distributionGroup: distributionGroupResponse,
-      app: this.app,
-      destination: this.distributionGroup,
-      destinationType: "group",
-      mandatory: this.mandatory,
-      silent: silent,
-    });
   }
 
   private async publishToStore(
