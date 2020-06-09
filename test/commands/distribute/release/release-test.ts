@@ -31,7 +31,6 @@ describe("release command", () => {
   const version = "1.0";
   const shortVersion = "1";
   const fakeUrlEncodedToken = "fakeUrlEncodedToken";
-  const fakeUploadDomain = "http://localhost:1700";
   const releaseFileName = "releaseBinaryFile.apk";
   const releaseNotesFileName = "releaseNotesFile.txt";
 
@@ -65,14 +64,15 @@ describe("release command", () => {
 
   describe("when all network requests are successful (group)", () => {
     beforeEach(() => {
-
       expectedRequestsScope = setupSuccessfulSetUploadMetadataResponse(
-        setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
-                setupSuccessfulCreateReleaseResponse(
-                  setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+        setupSuccessfulUploadChunkResponse(
+          setupSuccessfulGetDistributionGroupUsersResponse(
+            setupSuccessfulPostUploadResponse(
+              setupSuccessfulUploadResponse(
+                setupSuccessfulPatchUploadResponse(
+                  setupSuccessfulCreateReleaseResponse(
+                    setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+                  )
                 )
               )
             )
@@ -711,14 +711,13 @@ describe("release command", () => {
         upload_url: fakeHost + fakeUploadUrl,
         package_asset_id: fakeGuid,
         url_encoded_token: fakeUrlEncodedToken,
-        upload_domain: fakeUploadDomain,
+        upload_domain: fakeHost,
         id: fakeGuid,
       };
     });
   }
 
   function setupSuccessfulSetUploadMetadataResponse(nockScope: Nock.Scope): Nock.Scope {
-    console.log("Setting response:", nockScope, `/upload/set_metadata/${fakeGuid}`);
     return nockScope.post(`/upload/set_metadata/${fakeGuid}`).query(true).reply(200, (uri: any, requestBody: any) => {
       postSymbolSpy(requestBody);
       return {
@@ -727,6 +726,12 @@ describe("release command", () => {
           chunk_size: releaseFileContent.length,
           blob_partitions: 1
       };
+    });
+  }
+
+  function setupSuccessfulUploadChunkResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.post(`/upload/upload_chunk/${fakeGuid}`).query(true).reply(200, (uri: any, requestBody: any) => {
+      postSymbolSpy(requestBody);
     });
   }
 
