@@ -22,7 +22,6 @@ import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-import * as uuid from "uuid";
 import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
 
