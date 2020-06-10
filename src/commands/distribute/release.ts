@@ -16,14 +16,12 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
-import { DefaultApp, getUser, getPortalUrlForEndpoint } from "../../util/profile";
+import { DefaultApp, getUser } from "../../util/profile";
 import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-import * as uuid from "uuid";
-import { Worker } from "worker_threads";
+import { McFusFile, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
 
@@ -62,8 +60,6 @@ globalAsAny.window = {};
 
 // For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
 globalAsAny.window.File = File;
-
-globalAsAny.Worker = WorkerNode;
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -119,7 +115,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public mandatory: boolean;
 
   private mcFusUploader?: any;
-  private mcWorker: IWorker;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -451,10 +446,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const testFile = new File(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
-  }
-
-  public setWorker(worker: IWorker) {
-    this.mcWorker = worker;
   }
 
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {
