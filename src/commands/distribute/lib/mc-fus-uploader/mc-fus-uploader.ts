@@ -15,8 +15,26 @@ import {
   McFusFile,
   LogProperties,
 } from "./mc-fus-uploader-types";
+import { Worker } from "worker_threads";
 
 import MimeTypes from "./mc-fus-mime-types";
+
+export class WorkerNode extends Worker implements IWorker {
+  Domain: string = "";
+  set onmessage(value: (ev: MessageEvent) => any) {
+    super.addListener("message", value);
+  }
+  set onerror(value: () => any) {
+    super.addListener("error", value);
+  }
+  sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
+  postMessage(message: any): void {
+    super.postMessage(message);
+  }
+  terminate(): void {
+    super.terminate();
+  }
+}
 
 // Build a worker from an anonymous function body
 let blobURL;
@@ -874,17 +892,10 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
   function setupWorker() {
     let worker: IWorker | null = null;
     try {
-      if (mcworker) {
-        worker = mcworker;
-      } else if (typeof Worker !== "undefined") {
-        // TODO Find a way to do this better.
-        // If there's no check, cli build fails because it can't find Worker.
-        class WorkerWeb extends Worker implements IWorker {
-          Domain: string = "";
-          sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
-        }
-        worker = new WorkerWeb(blobURL || uploadData.WorkerScript);
-      }
+      // log("Browser cannot create workers from blob. Falling back to single thread upload.");
+      uploadStatus.UseSingleThreadUpload = true;
+      return;
+      worker = new WorkerNode(__dirname + "/release-worker.js");
     } catch (err) {
       // Current versions of Safari won't allow the blob script.
       log("Browser cannot create workers from blob. Falling back to single thread upload.");
@@ -1086,8 +1097,8 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     return (
       (window && window.navigator && window.navigator.userAgent.indexOf("Edge") > -1) ||
       uploadStatus.WorkerErrorCount > uploadStatus.MaxErrorCount ||
-      uploadStatus.UseSingleThreadUpload ||
-      (isNodeEnvironment() && !mcworker)
+      uploadStatus.UseSingleThreadUpload
+      // (isNodeEnvironment() && !mcworker)
     );
   }
 

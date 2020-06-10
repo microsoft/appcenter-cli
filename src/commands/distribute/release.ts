@@ -33,22 +33,6 @@ if (!globalThis.fetch) {
   globalThis.fetch = fetch;
 }
 
-export class WorkerNode extends Worker implements IWorker {
-  Domain: string = "";
-  set onmessage(value: (ev: MessageEvent) => any) {
-    super.addListener("message", value);
-  }
-  set onerror(value: () => any) {
-    super.addListener("error", value);
-  }
-  sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
-  postMessage(message: any): void {
-    super.postMessage(message);
-  }
-  terminate(): void {
-    super.terminate();
-  }
-}
 
 export class File implements McFusFile {
   readonly name: string;
@@ -464,8 +448,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         },
       };
       this.mcFusUploader = new McFusUploader(uploadSettings);
-      const worker = new WorkerNode(__dirname + "/release-worker.js");
-      this.mcFusUploader.setWorker(this.mcWorker ?? worker);
       const testFile = new File(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
