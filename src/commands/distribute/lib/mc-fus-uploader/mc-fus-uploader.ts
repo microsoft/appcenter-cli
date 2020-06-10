@@ -215,7 +215,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
       error: function (err) {
         log("Finalize upload failed. Trying to autorecover... " + err.message);
         setState(McFusUploadState.Uploading);
-        healthCheck();
+        startUpload();
       },
       success: function (response) {
         // it's possible that the health check called complete before this method did.
@@ -263,7 +263,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     });
   }
 
-
   function hasRequiredSettings(settings: IRequiredSettings) {
     let hasSettings = true;
 
@@ -290,7 +289,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     return hasSettings;
   }
 
-  function healthCheck() {
+  function startUpload() {
     // Only allow one health check at a time.
     if (uploadStatus.HealthCheckRunning === true) {
       return;
@@ -607,7 +606,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         } else {
           uploadStatus.BlocksCompleted = 0;
           uploadStatus.StartTime = new Date();
-          healthCheck();
+          startUpload();
         }
       },
     });
@@ -759,7 +758,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
 
         setState(McFusUploadState.Uploading);
         uploadStatus.StartTime = new Date();
-        healthCheck();
+        startUpload();
       },
     });
   };
@@ -784,7 +783,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
 
     setState(McFusUploadState.Uploading);
 
-    healthCheck();
+    startUpload();
   };
 
   this.Cancel = function () {
