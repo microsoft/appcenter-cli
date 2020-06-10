@@ -150,11 +150,7 @@ describe("release command", () => {
     describe("when all network requests are successful (no release notes)", () => {
       beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(
-          setupSuccessfulPostUploadResponse(
-            // setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost).log(console.log)))
-            //)
-          )
+          setupSuccessfulAddStoreResponse(Nock(fakeHost))
         );
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
@@ -183,15 +179,20 @@ describe("release command", () => {
 
     describe("when build version specified", () => {
       beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            // setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+        expectedRequestsScope =
+          setupSuccessfulGetDistributionGroupUsersResponse(
+            setupSuccessfulPostUploadResponse(
+              setupSuccessfulUploadFinishedResponse(
+                setupSuccessfulPatchUploadFinishedResponse(
+                  setupSuccessfulGetUploadResponse(
+                    setupSuccessfulSetUploadMetadataResponse(
+                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+                    )
+                  )
+                )
+              )
             )
-            // )
-          )
-        );
+          );
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
@@ -524,13 +525,17 @@ describe("release command", () => {
     beforeEach(() => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
-          //setupSuccessfulUploadResponse(
-          setupSuccessfulPatchUploadResponse(
+          setupSuccessfulGetUploadResponse(
             setupSuccessfulCreateReleaseResponse(
-              setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
+              setupSuccessfulSetUploadMetadataResponse(
+                setupSuccessfulUploadFinishedResponse(
+                  setupSuccessfulPatchUploadFinishedResponse(
+                    setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
+                  )
+                )
+              )
             )
           )
-          //)
         )
       );
     });
@@ -747,8 +752,8 @@ describe("release command", () => {
 
   function setupSuccessfulAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope
-      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/uploads/releases/${fakeReleaseUploadingId}`, {
-        upload_status: "aborted",
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/release_uploads/${fakeReleaseUploadingId}`, {
+        status: "aborted",
       })
       .reply(200, (uri: any, requestBody: any) => {
         abortSymbolSpy(requestBody);

@@ -155,8 +155,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       } catch (abortError) {
         debug("Failed to abort release upload");
       }
-
-      throw error;
+      throw failure(ErrorCodes.Exception, error.message);
     }
   }
 
