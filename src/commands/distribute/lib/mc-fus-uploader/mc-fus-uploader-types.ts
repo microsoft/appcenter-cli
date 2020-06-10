@@ -66,7 +66,6 @@ export interface IUploadStatus {
   ChunkQueue: Array<number>;
   Connected: boolean;
   EndTime: Date;
-  HealthCheckRunning: boolean;
   InflightChunks: InflightModelChunk[];
   InflightSet: Set<number>;
   AbortController: AbortController;

@@ -70,7 +70,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     ChunkQueue: [],
     Connected: true,
     EndTime: new Date(),
-    HealthCheckRunning: false,
     InflightChunks: [],
     InflightSet: new Set(),
     AbortController: new AbortController(),
@@ -290,10 +289,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
   }
 
   function startUpload() {
-    // Only allow one health check at a time.
-    if (uploadStatus.HealthCheckRunning === true) {
-      return;
-    }
     setState(McFusUploadState.Uploading);
 
     // Failing shows progress
@@ -337,7 +332,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadStatus.ServiceCallback.AutoRetryDelay = 1;
     uploadStatus.ServiceCallback.FailureCount = 0;
     uploadStatus.WorkerErrorCount = 0;
-    uploadStatus.HealthCheckRunning = false;
 
     // Copy all the required settings on to the upload data.
     uploadData.AssetId = settings.AssetId;
@@ -419,14 +413,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
   function log(message: string, properties: LogProperties = {}, level: McFusMessageLevel = McFusMessageLevel.Information) {
     properties.VerboseMessage = "mc-fus-uploader - " + (properties.VerboseMessage ? properties.VerboseMessage : message);
     properties = getLoggingProperties(properties);
-    if (window.console && uploadData.LogToConsole === true) {
-      if (level === McFusMessageLevel.Error) {
-        console.error(message, properties, level);
-      } else {
-        console.log(message, properties, level);
-      }
-    }
-
     eventHandlers.onMessage(message, properties, level);
   }
 
