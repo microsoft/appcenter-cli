@@ -28,7 +28,7 @@ function Get-Root {
 
 if (!(Get-Module -ListAvailable -Name Pester)) {
   Write-Host "Installing Pester"
-  Install-Module -Name Pester -Force -SkipPublisherCheck
+  Install-Module -Name Pester -Force -SkipPublisherCheck -RequiredVersion 4.9.0
 }
 
 Import-Module Pester
