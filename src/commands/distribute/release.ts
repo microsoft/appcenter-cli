@@ -25,7 +25,7 @@ import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/m
 import * as uuid from "uuid";
 import { Worker } from "worker_threads";
 import "abort-controller/polyfill";
-import {environments} from "../../util/profile/environments";
+import { environments } from "../../util/profile/environments";
 
 const fetch = require("node-fetch");
 

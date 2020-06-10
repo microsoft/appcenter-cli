@@ -69,15 +69,15 @@ describe("release command", () => {
           setupSuccessfulSetUploadMetadataResponse(
             setupSuccessfulGetDistributionGroupUsersResponse(
               setupSuccessfulPostUploadResponse(
-                  setupSuccessfulPatchUploadFinishedResponse(
-                    setupSuccessfulCreateReleaseResponse(
-                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
-                    )
+                setupSuccessfulPatchUploadFinishedResponse(
+                  setupSuccessfulCreateReleaseResponse(
+                    setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
                   )
                 )
               )
             )
           )
+        )
       );
       skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
@@ -119,12 +119,12 @@ describe("release command", () => {
     beforeEach(() => {
       expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(
         setupSuccessfulPostUploadResponse(
-         // setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost)), false)
-            )
+          // setupSuccessfulUploadResponse(
+          setupSuccessfulPatchUploadResponse(
+            setupSuccessfulCreateReleaseResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost)), false)
           )
-       // )
+        )
+        // )
       );
       skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
@@ -163,9 +163,9 @@ describe("release command", () => {
     beforeEach(() => {
       expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(
         setupSuccessfulPostUploadResponse(
-         // setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost)))
-            //)
+          // setupSuccessfulUploadResponse(
+          setupSuccessfulPatchUploadResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost)))
+          //)
         )
       );
       skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
@@ -196,11 +196,11 @@ describe("release command", () => {
       beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
-           // setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
-                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
-              )
-           // )
+            // setupSuccessfulUploadResponse(
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+            )
+            // )
           )
         );
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
@@ -344,13 +344,13 @@ describe("release command", () => {
       beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
-          //  setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
-                setupSuccessfulCreateReleaseResponse(
-                  setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
-                )
+            //  setupSuccessfulUploadResponse(
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulCreateReleaseResponse(
+                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
               )
-          //  )
+            )
+            //  )
           )
         );
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
@@ -377,11 +377,11 @@ describe("release command", () => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
             //setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
-                setupSuccessfulCreateReleaseResponse(
-                  setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
-                )
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulCreateReleaseResponse(
+                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
               )
+            )
             //)
           )
         );
@@ -409,11 +409,11 @@ describe("release command", () => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
             //setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
-                setupSuccessfulCreateReleaseResponse(
-                  setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)), true)
-                )
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulCreateReleaseResponse(
+                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)), true)
               )
+            )
             //)
           )
         );
@@ -443,11 +443,11 @@ describe("release command", () => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
             //setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
-                setupSuccessfulCreateReleaseResponse(
-                  setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)), false, true)
-                )
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulCreateReleaseResponse(
+                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)), false, true)
               )
+            )
             //)
           )
         );
@@ -476,8 +476,9 @@ describe("release command", () => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
           //setupFailedUploadResponse(
-            setupSuccessfulAbortUploadResponse(Nock(fakeHost)))
-            //)
+          setupSuccessfulAbortUploadResponse(Nock(fakeHost))
+        )
+        //)
       );
       skippedRequestsScope = setupSuccessfulCreateReleaseResponse(setupSuccessfulPatchUploadResponse(Nock(fakeHost)));
     });
@@ -503,8 +504,8 @@ describe("release command", () => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
           //setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(setupFailedCreateReleaseResponse(Nock(fakeHost)))
-            //)
+          setupSuccessfulPatchUploadResponse(setupFailedCreateReleaseResponse(Nock(fakeHost)))
+          //)
         )
       );
 
@@ -532,9 +533,9 @@ describe("release command", () => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
           //setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(setupFailedGetDistributionGroupResponse(Nock(fakeHost)))
-            )
+          setupSuccessfulPatchUploadResponse(
+            setupSuccessfulCreateReleaseResponse(setupFailedGetDistributionGroupResponse(Nock(fakeHost)))
+          )
           //)
         )
       );
@@ -563,11 +564,11 @@ describe("release command", () => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
           //setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(
-                setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
-              )
+          setupSuccessfulPatchUploadResponse(
+            setupSuccessfulCreateReleaseResponse(
+              setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
             )
+          )
           //)
         )
       );
@@ -725,25 +726,31 @@ describe("release command", () => {
   }
 
   function setupSuccessfulSetUploadMetadataResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/upload/set_metadata/${fakeGuid}`).query(true).reply(200, (uri: any, requestBody: any) => {
-      postSymbolSpy(requestBody);
-      return {
-        resume_restart: false,
-        chunk_list: [1],
-        chunk_size: releaseFileContent.length,
-        blob_partitions: 1
-      };
-    });
+    return nockScope
+      .post(`/upload/set_metadata/${fakeGuid}`)
+      .query(true)
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+          resume_restart: false,
+          chunk_list: [1],
+          chunk_size: releaseFileContent.length,
+          blob_partitions: 1,
+        };
+      });
   }
 
   function setupSuccessfulUploadFinishedResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/upload/finished/${fakeGuid}`).query(true).reply(200, (uri: any, requestBody: any) => {
-      postSymbolSpy(requestBody);
-      return {
-        error: false,
-        state: "Done"
-      }
-    });
+    return nockScope
+      .post(`/upload/finished/${fakeGuid}`)
+      .query(true)
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+          error: false,
+          state: "Done",
+        };
+      });
   }
 
   function setupSuccessfulGetUploadResponse(nockScope: Nock.Scope): Nock.Scope {
@@ -753,7 +760,7 @@ describe("release command", () => {
         patchSymbolSpy(requestBody);
         return {
           release_distinct_id: fakeReleaseId,
-          upload_status: "readyToBePublished"
+          upload_status: "readyToBePublished",
         };
       });
   }
