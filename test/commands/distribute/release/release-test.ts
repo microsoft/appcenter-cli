@@ -525,13 +525,17 @@ describe("release command", () => {
     beforeEach(() => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
-          //setupSuccessfulUploadResponse(
-          setupSuccessfulPatchUploadResponse(
+          setupSuccessfulGetUploadResponse(
             setupSuccessfulCreateReleaseResponse(
-              setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
+              setupSuccessfulSetUploadMetadataResponse(
+                setupSuccessfulUploadFinishedResponse(
+                  setupSuccessfulPatchUploadFinishedResponse(
+                    setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
+                  )
+                )
+              )
             )
           )
-          //)
         )
       );
     });
