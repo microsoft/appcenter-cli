@@ -20,45 +20,13 @@ import { DefaultApp, getUser } from "../../util/profile";
 import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
-import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusFile, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+import { McFusUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
-
-const fetch = require("node-fetch");
-
-if (!globalThis.fetch) {
-  globalThis.fetch = fetch;
-}
-
-export class File implements McFusFile {
-  readonly name: string;
-
-  public constructor(name: string) {
-    this.name = name;
-  }
-
-  get size(): number {
-    const stats = fs.statSync(this.name);
-    return stats["size"];
-  }
-
-  slice(start: number, end: number): Buffer {
-    const data = Buffer.alloc(end - start);
-    const fd = fs.openSync(this.name, "r");
-    fs.readSync(fd, data, 0, data.length, start);
-    return data;
-  }
-}
+import fetch from "node-fetch";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
-
-const globalAsAny = global as any;
-globalAsAny.window = {};
-(URL as any).createObjectURL = () => {};
-
-// For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
-globalAsAny.window.File = File;
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -436,7 +404,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
         },
       };
       this.mcFusUploader = new McFusUploader(uploadSettings);
-      const testFile = new File(this.filePath);
+      const testFile = new McFile(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
   }

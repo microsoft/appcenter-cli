@@ -13,8 +13,29 @@ import {
   McFusFile,
   LogProperties,
 } from "./mc-fus-uploader-types";
-
+import * as fs from "fs";
+import fetch from "node-fetch";
 import MimeTypes from "./mc-fus-mime-types";
+
+export class McFile implements McFusFile {
+  readonly name: string;
+
+  public constructor(name: string) {
+    this.name = name;
+  }
+
+  get size(): number {
+    const stats = fs.statSync(this.name);
+    return stats["size"];
+  }
+
+  slice(start: number, end: number): Buffer {
+    const data = Buffer.alloc(end - start);
+    const fd = fs.openSync(this.name, "r");
+    fs.readSync(fd, data, 0, data.length, start);
+    return data;
+  }
+}
 
 class HttpError extends Error {
   readonly status: number;
