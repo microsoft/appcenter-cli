@@ -150,11 +150,7 @@ describe("release command", () => {
     describe("when all network requests are successful (no release notes)", () => {
       beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(
-          setupSuccessfulPostUploadResponse(
-            // setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost).log(console.log)))
-            //)
-          )
+          setupSuccessfulAddStoreResponse(Nock(fakeHost))
         );
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
