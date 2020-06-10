@@ -75,7 +75,6 @@ export interface IUploadStatus {
   StartTime: Date;
   State: McFusUploadState;
   TransferQueueRate: number[];
-  UseSingleThreadUpload: boolean;
   Workers: IWorker[];
   WorkerErrorCount: number;
 }
@@ -149,5 +148,5 @@ export type LogProperties = { [key: string]: string | string[] | number | boolea
 export interface McFusFile {
   readonly name: string;
   readonly size: number;
-  slice(start: number, end: number): Blob | Buffer;
+  slice(start: number, end: number): Buffer;
 }

@@ -11,62 +11,11 @@ import {
   IInitializeSettings,
   IOptionalSettings,
   IOnResumeStartParams,
-  IWorker,
   McFusFile,
   LogProperties,
 } from "./mc-fus-uploader-types";
-import { Worker } from "worker_threads";
 
 import MimeTypes from "./mc-fus-mime-types";
-
-// Build a worker from an anonymous function body
-let blobURL;
-if (URL.createObjectURL) {
-  blobURL = URL.createObjectURL(new Blob(["(", scriptFunction.toString(), ")()"], { type: "application/javascript" }));
-}
-
-function scriptFunction(this: IWorker) {
-  const mcfusWorker = this;
-  mcfusWorker.Domain = "";
-  mcfusWorker.onmessage = (evt) => {
-    if (evt.data.Domain) {
-      mcfusWorker.Domain = evt.data.Domain;
-      return;
-    }
-
-    if (!evt.data.Chunk) {
-      return;
-    }
-
-    mcfusWorker.sendChunk(evt.data.Chunk, evt.data.ChunkNumber, evt.data.Url, evt.data.CorrelationId);
-  };
-
-  mcfusWorker.sendChunk = (chunk, chunkNumber, url, correlationId) => {
-    //@ts-ignore
-    //this check addresses a trailing zeros bug, where part of the chunk will be empty. Simply touching the size is enough to "fix" the problem
-    const size = chunk.size;
-
-    fetch(mcfusWorker.Domain + "/" + url, {
-      method: "POST",
-      headers: {
-        "X-Correlation-ID": correlationId,
-      },
-      body: chunk,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new HttpError(response.status, response.statusText);
-        }
-        return response.json();
-      })
-      .then((json) => {
-        mcfusWorker.postMessage({ Error: json.Error, ChunkNumber: chunkNumber });
-      })
-      .catch((error) => {
-        mcfusWorker.postMessage({ Error: true, ChunkNumber: chunkNumber });
-      });
-  };
-}
 
 class HttpError extends Error {
   readonly status: number;
@@ -81,7 +30,6 @@ class HttpError extends Error {
 }
 
 export const McFusUploader = function (this: any, args: IInitializeSettings) {
-  const maxWorkerAgeInSeconds = 40;
   let ambiguousProgress = 0;
   let progressUpdateRate = 0;
   const maxNumberOfConcurrentUploads = 10;
@@ -135,7 +83,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     StartTime: new Date(),
     State: McFusUploadState.New,
     TransferQueueRate: [],
-    UseSingleThreadUpload: false,
     Workers: [],
     WorkerErrorCount: 0,
   };
@@ -211,8 +158,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     setState(McFusUploadState.Completed);
     const completeMessage =
       "UploadCompleted: " +
-      " Multithreaded: " +
-      !useSingleThreadUploader() +
       " total time: " +
       uploadStats.TotalTimeInSeconds +
       " seconds. Average speed: " +
@@ -303,13 +248,9 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
               ChunksMissing: response.missing_chunks,
             });
 
-            if (useSingleThreadUploader()) {
-              for (let i = 0; i < Math.min(maxNumberOfConcurrentUploads, uploadStatus.ChunkQueue.length); i++) {
-                singleThreadedUpload();
-              }
-              return;
+            for (let i = 0; i < Math.min(maxNumberOfConcurrentUploads, uploadStatus.ChunkQueue.length); i++) {
+              singleThreadedUpload();
             }
-
             return;
           }
 
@@ -322,9 +263,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     });
   }
 
-  function formatAsDoubleDigit(number: number) {
-    return number >= 0 && number < 10 ? "0" + number : number;
-  }
 
   function hasRequiredSettings(settings: IRequiredSettings) {
     let hasSettings = true;
@@ -388,11 +326,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
 
     // Hookup all the event user defined event handlers.
     hookupEventListeners(settings);
-
-    // Make sure browser supports all required features.
-    if (!isClassesSupported()) {
-      setState(McFusUploadState.Error);
-    }
 
     // After all checks have completed finally proceed
     // to initialize all the upload required fields.
@@ -466,34 +399,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     }
   }
 
-  function isNodeEnvironment() {
-    return typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-  }
-
-  function isClassesSupported() {
-
-    // Check if the current platform isn't a browser.
-    if (isNodeEnvironment()) {
-      return true;
-    }
-
-    // Setup default value.
-    let isSupported = true;
-
-    // Detect browser support for web workers.
-    if (typeof Worker === "undefined") {
-      error("Browser does not support web workers", {}, McFusUploadState.Error);
-      isSupported = false;
-    }
-
-    // Detect browser support for file API.
-    if (typeof window.File === "undefined") {
-      error("Browser does not support the html 5 file api.", {}, McFusUploadState.Error);
-      isSupported = false;
-    }
-    return isSupported;
-  }
-
   function isUploadInProgress() {
     return (
       uploadStatus.State === McFusUploadState.Initialized ||
@@ -502,11 +407,8 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     );
   }
 
-  function isValidChunk(chunk: Blob | Buffer): boolean {
+  function isValidChunk(chunk: Buffer): boolean {
     if (!chunk) {
-      return false;
-    }
-    if (!isNodeEnvironment() && chunk instanceof Blob && (chunk as Blob).size === 0) {
       return false;
     }
     if (chunk instanceof Buffer && (chunk as Buffer).length === 0) {
@@ -536,15 +438,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadData.LogToConsole = settings.LogToConsole || false;
     uploadData.Uploaders = settings.Uploaders || 8;
     uploadData.WorkerScript = settings.WorkerScript || "/js/worker.js";
-  }
-
-  function removeInflightChunk(chunkNumber: number) {
-    for (let i = 0; i < uploadStatus.InflightChunks.length; i++) {
-      if (uploadStatus.InflightChunks[i].getChunkNumber() === chunkNumber) {
-        uploadStatus.InflightChunks.splice(i, 1);
-        break;
-      }
-    }
   }
 
   function reportProgress() {
@@ -726,10 +619,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     eventHandlers.onStateChanged(state);
   }
 
-  this.getScript = function getScript() {
-    return "(" + scriptFunction.toString() + ")()";
-  };
-
   function singleThreadedUpload() {
     if (uploadStatus.ChunkQueue.length === 0 && uploadStatus.InflightSet.size === 0) {
       uploadStatus.EndTime = new Date();
@@ -775,18 +664,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadStatus.AbortController.abort();
   }
 
-  function toTimeString(date: Date) {
-    return (
-      formatAsDoubleDigit(date.getHours()) +
-      ":" +
-      formatAsDoubleDigit(date.getMinutes()) +
-      ":" +
-      formatAsDoubleDigit(date.getSeconds()) +
-      "." +
-      formatAsDoubleDigit(date.getMilliseconds())
-    );
-  }
-
   function getLoggingProperties(data: LogProperties) {
     const properties = {
       AssetId: uploadData.AssetId,
@@ -797,7 +674,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     return properties;
   }
 
-  function uploadChunk(chunk: Blob | Buffer, chunkNumber: number) {
+  function uploadChunk(chunk: Buffer, chunkNumber: number) {
     uploadStatus.InflightSet.add(chunkNumber);
     log("Starting upload for chunk: " + chunkNumber);
     sendRequest({
@@ -848,14 +725,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         singleThreadedUpload();
       }, 1000 * 10 /* 10 seconds */);
     }
-  }
-
-  function useSingleThreadUploader() {
-    // The uploader switches to single threaded under these conditions:
-    // 1. The browser is incompatible.
-    // 2. The upload has recovered too many workers.
-    // 3. Node version do not support workers.
-    return true;
   }
 
   this.Start = function (file: McFusFile) {
