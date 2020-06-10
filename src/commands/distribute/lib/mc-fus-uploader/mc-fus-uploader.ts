@@ -19,23 +19,6 @@ import { Worker } from "worker_threads";
 
 import MimeTypes from "./mc-fus-mime-types";
 
-export class WorkerNode extends Worker implements IWorker {
-  Domain: string = "";
-  set onmessage(value: (ev: MessageEvent) => any) {
-    super.addListener("message", value);
-  }
-  set onerror(value: () => any) {
-    super.addListener("error", value);
-  }
-  sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void {}
-  postMessage(message: any): void {
-    super.postMessage(message);
-  }
-  terminate(): void {
-    super.terminate();
-  }
-}
-
 // Build a worker from an anonymous function body
 let blobURL;
 if (URL.createObjectURL) {
@@ -160,9 +143,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
   // Exposed for testing.
   this.uploadStatus = uploadStatus;
 
-  let mcworker: IWorker | null = null;
-
-  this.mcworker = mcworker;
   const eventHandlers = {
     onProgressChanged: (progress: IProgress) => {},
     onCompleted: (uploadStats: IUploadStats) => {},
@@ -247,49 +227,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     eventHandlers.onCompleted(uploadStats);
   }
 
-  function dispatchWorker(worker: IWorker) {
-    // if we are done then call finished and return
-    if (uploadStatus.ChunkQueue.length === 0) {
-      removeWorker(worker);
-      log("Worker finished.");
-      return;
-    }
-
-    // if we are not uploading chunks there is nothing to do.
-    if (uploadStatus.State !== McFusUploadState.Uploading) {
-      return;
-    }
-
-    const chunkToSend = uploadStatus.ChunkQueue.shift();
-
-    // If other worker beat us to grab a chunk we're done
-    if (chunkToSend === undefined) {
-      return;
-    }
-
-    // Otherwise just start processing and uploading the chunk
-    const start = (chunkToSend - 1) * uploadData.ChunkSize;
-    const end = Math.min(chunkToSend * uploadData.ChunkSize, uploadData.File!.size);
-    const chunk = uploadData.File!.slice(start, end);
-    const url = `${uploadBaseUrls.UploadChunk}${uploadData.AssetId}?block_number=${chunkToSend}&token=${uploadData.UrlEncodedToken}`;
-
-    // Don't request if chunk is empty
-    if (!isValidChunk(chunk)) {
-      return;
-    }
-
-    worker.postMessage({
-      Chunk: chunk,
-      ChunkNumber: chunkToSend,
-      Url: url,
-      CorrelationId: uploadData.CorrelationId,
-      CorrelationVector: uploadData.CorrelationVector,
-    });
-
-    // Track the current chunk as in-flight.
-    uploadStatus.InflightChunks.push(new InflightModelChunk(chunkToSend, worker));
-  }
-
   function enqueueChunks(chunks: number[]) {
     // if the queue is empty then just add all the chunks
     if (uploadStatus.ChunkQueue.length === 0) {
@@ -321,8 +258,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
 
     setState(McFusUploadState.Verifying);
     log("Verifying upload on server.");
-
-    stopAllWorkers();
 
     sendRequest({
       type: "POST",
@@ -422,75 +357,14 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     if (uploadStatus.HealthCheckRunning === true) {
       return;
     }
+    setState(McFusUploadState.Uploading);
 
-    if (useSingleThreadUploader()) {
-      if (uploadStatus.Workers.length > 0) {
-        stopAllWorkers();
-      } else {
-        setState(McFusUploadState.Uploading);
-      }
-
-      // Failing shows progress
-      eventHandlers.onProgressChanged({ percentCompleted: ++ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
-      log("Starting singleThreadedUpload with chunks: " + uploadStatus.ChunkQueue);
-      for (let i = 0; i < Math.min(maxNumberOfConcurrentUploads, uploadStatus.ChunkQueue.length); i++) {
-        singleThreadedUpload();
-      }
-
-      return;
+    // Failing shows progress
+    eventHandlers.onProgressChanged({ percentCompleted: ++ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
+    log("Starting singleThreadedUpload with chunks: " + uploadStatus.ChunkQueue);
+    for (let i = 0; i < Math.min(maxNumberOfConcurrentUploads, uploadStatus.ChunkQueue.length); i++) {
+      singleThreadedUpload();
     }
-
-    uploadStatus.HealthCheckRunning = true;
-    log("Health check: " + toTimeString(new Date()));
-
-    // If the we are not uploading there's nothing to check.
-    if (!isUploadInProgress()) {
-      log("Upload is not in progress. Stopping health check.");
-      uploadStatus.HealthCheckRunning = false;
-      return;
-    }
-
-    // Look at the current queue and determine if there's pending work
-    if (uploadStatus.ChunkQueue.length === 0 && uploadStatus.Workers.length === 0) {
-      uploadStatus.EndTime = new Date();
-      finishUpload();
-    } else {
-      // Calculate the current chunk age and see if it's considered as stale.
-      const now = new Date();
-      const stuckChunks: InflightModelChunk[] = [];
-
-      for (const inflightChunk of uploadStatus.InflightChunks) {
-        // If a chunk has exceeded its maximum time to live we assume it has
-        // become stale, proceed to terminate it and create a replacement
-        const ageInSeconds = (now.getTime() - inflightChunk.getStarted().getTime()) / 1000;
-        if (ageInSeconds > maxWorkerAgeInSeconds) {
-          stuckChunks.push(inflightChunk);
-        }
-      }
-
-      if (stuckChunks.length > 0) {
-        // Failing shows progress
-        eventHandlers.onProgressChanged({ percentCompleted: ++ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
-        for (const stuckChunk of stuckChunks) {
-          // Keep track of the amount of replaced workers.
-          uploadStatus.WorkerErrorCount++;
-
-          removeInflightChunk(stuckChunk.getChunkNumber());
-          enqueueChunks([stuckChunk.getChunkNumber()]);
-
-          // Replace the stuck worker with a new one.
-          removeWorker(stuckChunk.getWorker());
-          startWorker();
-        }
-      }
-    }
-
-    if (uploadStatus.Workers.length === 0 && uploadStatus.ChunkQueue.length > 0) {
-      initWorkers();
-    }
-
-    uploadStatus.HealthCheckRunning = false;
-    setTimeout(healthCheck, 5 * 1000);
   }
 
   function hookupEventListeners(settings: IEventSettings) {
@@ -540,25 +414,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadData.Tenant = settings.Tenant;
 
     log("Upload created");
-  }
-
-  function initWorkers() {
-    // Mark the current upload as in progress
-    setState(McFusUploadState.Uploading);
-
-    // Kill all existing workers (if any)
-    if (uploadStatus.Workers.length > 0) {
-      stopAllWorkers();
-    }
-
-    // Calculate the number of worker threads to use
-    log("# of workers needed: " + uploadStatus.ChunkQueue.length);
-
-    const numberOfWorkers = Math.min(uploadData.Uploaders, uploadStatus.ChunkQueue.length);
-    for (let i = 0; i < numberOfWorkers; i++) {
-      // Stagger worker creation to avoid startup contention
-      startWorker();
-    }
   }
 
   function invokeCallback(location: string) {
@@ -687,16 +542,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     for (let i = 0; i < uploadStatus.InflightChunks.length; i++) {
       if (uploadStatus.InflightChunks[i].getChunkNumber() === chunkNumber) {
         uploadStatus.InflightChunks.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  function removeWorker(worker: IWorker) {
-    for (let i = 0; i < uploadStatus.Workers.length; i++) {
-      if (worker === uploadStatus.Workers[i]) {
-        worker.terminate();
-        uploadStatus.Workers.splice(i, 1);
         break;
       }
     }
@@ -881,62 +726,9 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     eventHandlers.onStateChanged(state);
   }
 
-  this.setWorker = function setWorker(worker: IWorker) {
-    mcworker = worker;
-  };
-
   this.getScript = function getScript() {
     return "(" + scriptFunction.toString() + ")()";
   };
-
-  function setupWorker() {
-    let worker: IWorker | null = null;
-    try {
-      // log("Browser cannot create workers from blob. Falling back to single thread upload.");
-      uploadStatus.UseSingleThreadUpload = true;
-      return;
-      worker = new WorkerNode(__dirname + "/release-worker.js");
-    } catch (err) {
-      // Current versions of Safari won't allow the blob script.
-      log("Browser cannot create workers from blob. Falling back to single thread upload.");
-      uploadStatus.UseSingleThreadUpload = true;
-      return;
-    }
-    worker!.postMessage({ Domain: uploadData.UploadDomain });
-
-    worker!.onmessage = function (msg: any) {
-      const { ChunkNumber, Error } = isNodeEnvironment() ? msg : msg.data;
-      if (Error === true) {
-        // Keep track of the amount of replaced workers.
-        uploadStatus.WorkerErrorCount++;
-
-        // The chunk was not uploaded successfully
-        // get it back on the queue for retry
-        enqueueChunks([ChunkNumber]);
-        log("Upload for chunk #: " + ChunkNumber + " failed and will be retried.");
-      } else {
-        removeInflightChunk(ChunkNumber);
-        // Successful upload, mark completion and discard the chunk.
-        uploadStatus.BlocksCompleted++;
-        if (uploadStatus.BlocksCompleted % progressUpdateRate === 0) {
-          reportProgress();
-        }
-      }
-
-      // Dispatch the worker instance again to keep processing
-      dispatchWorker(worker!);
-    };
-
-    worker!.onerror = function () {
-      //chunk data is lost, as is chunk number, relying on the finalize to catch this
-      log("Worker crashed. Recovering...");
-
-      // Dispatch the worker instance again to keep processing
-      dispatchWorker(worker!);
-    };
-
-    return worker;
-  }
 
   function singleThreadedUpload() {
     if (uploadStatus.ChunkQueue.length === 0 && uploadStatus.InflightSet.size === 0) {
@@ -977,37 +769,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     }
 
     uploadChunk(chunk, chunkNumber);
-  }
-
-  function startWorker() {
-    setTimeout(function () {
-      const worker = setupWorker();
-      if (!worker) {
-        return;
-      }
-
-      // add the new worker to the pool
-      uploadStatus.Workers.push(worker);
-
-      log("Worker started at: " + toTimeString(new Date()));
-
-      // start the upload process on the worker
-      dispatchWorker(worker);
-    }, 20);
-  }
-
-  function stopAllWorkers() {
-    log("Stopping all workers.");
-
-    // Tell all workers to abort their calls and close.
-    for (const worker of uploadStatus.Workers) {
-      worker.terminate();
-    }
-
-    // Once all workers have stopped lets reset the collection.
-    enqueueChunks(uploadStatus.InflightChunks.map((chunk) => chunk.getChunkNumber()));
-    uploadStatus.Workers = [];
-    uploadStatus.InflightChunks = [];
   }
 
   function abortSingleThreadedUploads() {
@@ -1094,12 +855,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     // 1. The browser is incompatible.
     // 2. The upload has recovered too many workers.
     // 3. Node version do not support workers.
-    return (
-      (window && window.navigator && window.navigator.userAgent.indexOf("Edge") > -1) ||
-      uploadStatus.WorkerErrorCount > uploadStatus.MaxErrorCount ||
-      uploadStatus.UseSingleThreadUpload
-      // (isNodeEnvironment() && !mcworker)
-    );
+    return true;
   }
 
   this.Start = function (file: McFusFile) {
@@ -1159,10 +915,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
 
     setState(McFusUploadState.Uploading);
 
-    for (const worker of uploadStatus.Workers) {
-      dispatchWorker(worker);
-    }
-
     healthCheck();
   };
 
@@ -1177,7 +929,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         log(response.message);
         setState(McFusUploadState.Cancelled);
 
-        stopAllWorkers();
         abortSingleThreadedUploads();
       },
     });

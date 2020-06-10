@@ -23,7 +23,6 @@ import * as fs from "fs";
 import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import * as uuid from "uuid";
-import { Worker } from "worker_threads";
 import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
 
@@ -62,8 +61,6 @@ globalAsAny.window = {};
 
 // For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
 globalAsAny.window.File = File;
-
-globalAsAny.Worker = WorkerNode;
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
