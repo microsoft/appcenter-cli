@@ -2,6 +2,8 @@ Describe "distribute release" {
   $appDisplayName = "TestDistributeRelease$((Get-Date).ToString("yyyy-MM-dd_HH.mm.ffffff"))"
   $appOs = "Custom"
   $appPlatform = "Custom"
+
+  $Env:DEBUG = "appcenter-cli:commands:*"
   Write-Host "RUN: appcenter apps create --platform $appPlatform --os $appOs --display-name $appDisplayName --output json"
   $appRaw = appcenter apps create --platform $appPlatform --os $appOs --display-name $appDisplayName --output json
   Write-Host "appRaw: $appRaw"
