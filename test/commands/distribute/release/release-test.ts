@@ -92,6 +92,7 @@ describe("release command", () => {
       const command = new ReleaseBinaryCommand(
         getCommandArgs(["-f", releaseFilePath, "-r", releaseNotes, "-g", fakeDistributionGroupName])
       );
+      command.setWorker(new WorkerNode(__dirname + "/mockWorker.js"));
       const result = await command.execute();
 
       // Assert
