@@ -8,7 +8,7 @@ import * as ChaiAsPromised from "chai-as-promised";
 
 use(ChaiAsPromised);
 
-import ReleaseBinaryCommand from "../../../../src/commands/distribute/release";
+import ReleaseBinaryCommand, { WorkerNode } from "../../../../src/commands/distribute/release";
 import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
 
 Temp.track();
@@ -64,14 +64,16 @@ describe("release command", () => {
 
   describe("when all network requests are successful (group)", () => {
     beforeEach(() => {
-      expectedRequestsScope = setupSuccessfulSetUploadMetadataResponse(
-        setupSuccessfulUploadChunkResponse(
-          setupSuccessfulGetDistributionGroupUsersResponse(
-            setupSuccessfulPostUploadResponse(
-              setupSuccessfulUploadResponse(
-                setupSuccessfulPatchUploadResponse(
-                  setupSuccessfulCreateReleaseResponse(
-                    setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+      expectedRequestsScope = setupSuccessfulUploadFinishedResponse(
+        setupSuccessfulSetUploadMetadataResponse(
+          setupSuccessfulUploadChunkResponse(
+            setupSuccessfulGetDistributionGroupUsersResponse(
+              setupSuccessfulPostUploadResponse(
+                setupSuccessfulUploadResponse(
+                  setupSuccessfulPatchUploadResponse(
+                    setupSuccessfulCreateReleaseResponse(
+                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+                    )
                   )
                 )
               )
@@ -734,6 +736,17 @@ describe("release command", () => {
       postSymbolSpy(requestBody);
     });
   }
+
+  function setupSuccessfulUploadFinishedResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.post(`/upload/finished/${fakeGuid}`).query(true).reply(200, (uri: any, requestBody: any) => {
+      postSymbolSpy(requestBody);
+      return {
+        error: false,
+        state: "Done"
+      }
+    });
+  }
+
 
   function setupSuccessfulUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.post(fakeUploadUrl).reply(200, (uri: any, requestBody: any) => {
