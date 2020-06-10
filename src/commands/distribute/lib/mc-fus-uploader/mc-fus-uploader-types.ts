@@ -24,16 +24,6 @@ export interface IRequiredSettings {
   UrlEncodedToken: string;
 }
 
-export interface IWorker {
-  // TODO Consider adding "worker-threads" to the library and specify it instead of ""
-  onmessage: ((this: AbstractWorker | any, ev: MessageEvent) => any) | null;
-  postMessage(message: any): void;
-  terminate(): void;
-  onerror: ((this: AbstractWorker | any, ev: ErrorEvent) => any) | null;
-  Domain: string;
-  sendChunk(chunk: any, chunkNumber: number, url: string, correlationId: string): void;
-}
-
 export interface IEventSettings {
   onProgressChanged(progress: IProgress): void;
   onCompleted(uploadStats: IUploadStats): void;
@@ -48,8 +38,6 @@ export interface IOptionalSettings {
   CorrelationId?: string;
   CorrelationVector?: string;
   LogToConsole?: boolean;
-  Uploaders?: number;
-  WorkerScript?: string;
 }
 
 export interface IInitializeSettings extends IRequiredSettings, IEventSettings, IOptionalSettings {}
@@ -66,8 +54,6 @@ export interface IUploadStatus {
   ChunkQueue: Array<number>;
   Connected: boolean;
   EndTime: Date;
-  HealthCheckRunning: boolean;
-  InflightChunks: InflightModelChunk[];
   InflightSet: Set<number>;
   AbortController: AbortController;
   MaxErrorCount: number;
@@ -75,9 +61,6 @@ export interface IUploadStatus {
   StartTime: Date;
   State: McFusUploadState;
   TransferQueueRate: number[];
-  UseSingleThreadUpload: boolean;
-  Workers: IWorker[];
-  WorkerErrorCount: number;
 }
 
 export interface IServiceCallback {
@@ -106,8 +89,6 @@ export interface IUploadData {
   UrlEncodedToken: string;
   TotalBlocks: number;
   UploadDomain: string;
-  Uploaders: number;
-  WorkerScript: string;
 }
 
 export interface IUploadStats {
@@ -116,38 +97,10 @@ export interface IUploadStats {
   AverageSpeedInMbps: number;
 }
 
-export interface IInflightChunk {
-  getWorker(): any;
-  getChunkNumber(): number;
-  getStarted(): Date;
-}
-
-export class InflightModelChunk implements IInflightChunk {
-  private chunkNumber: number;
-  private started: Date;
-  private worker: any;
-
-  public constructor(chunk: number, worker: any) {
-    this.worker = worker;
-    this.chunkNumber = chunk;
-    this.started = new Date();
-  }
-
-  public getWorker(): any {
-    return this.worker;
-  }
-  public getChunkNumber(): number {
-    return this.chunkNumber;
-  }
-  public getStarted(): Date {
-    return this.started;
-  }
-}
-
 export type LogProperties = { [key: string]: string | string[] | number | boolean | undefined };
 
 export interface McFusFile {
   readonly name: string;
   readonly size: number;
-  slice(start: number, end: number): Blob | Buffer;
+  slice(start: number, end: number): Buffer;
 }
