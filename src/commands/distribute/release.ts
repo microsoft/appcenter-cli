@@ -435,7 +435,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
           if (level === McFusMessageLevel.Error) {
             this.mcFusUploader.Cancel();
-            reject();
+            reject(new Error(`Uploading file error: ${message}`));
           }
         },
         onStateChanged: (status: McFusUploadState): void => {
@@ -470,9 +470,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
       },
       body: '{"upload_status":"uploadFinished"}',
     });
+    if (!response.ok) {
+      throw failure(ErrorCodes.Exception, `Failed to patch release upload. HTTP Status:${response.status} - ${response.statusText}`);
+    }
     const json = await response.json();
-    if (json.upload_status !== "uploadFinished") {
-      throw failure(ErrorCodes.Exception, `failed to patch release upload ${json}`);
+    const { upload_status, message } = json;
+    if (upload_status !== "uploadFinished") {
+      throw failure(ErrorCodes.Exception, `Failed to patch release upload: ${message}`);
     }
   }
 
@@ -487,8 +491,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           resolve(Number(releaseId));
         } else if (response.upload_status === "error") {
           clearInterval(timerId);
-          debug(`Loading release id failed: ${response.error_details}`);
-          reject();
+          reject(new Error(`Loading release id failed: ${response.error_details}`));
         }
       }, 2000);
     });
