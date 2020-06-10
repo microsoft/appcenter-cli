@@ -29,9 +29,9 @@ export function getPortalOrgLink(portalBaseUrl: string, orgName: string): string
 }
 
 export function getPortalUploadLink(portalBaseUrl: string, ownerName: string, appName: string): string {
-  return portalBaseUrl + "/api/v0.1/apps/" + ownerName + "/" + appName + "/uploads/releases";
+  return portalBaseUrl + "/v0.1/apps/" + ownerName + "/" + appName + "/uploads/releases";
 }
 
 export function getPortalPatchUploadLink(portalBaseUrl: string, ownerName: string, appName: string, uploadId: string): string {
-  return portalBaseUrl + "/api/v0.1/apps/" + ownerName + "/" + appName + "/uploads/releases/" + uploadId;
+  return portalBaseUrl + "/v0.1/apps/" + ownerName + "/" + appName + "/uploads/releases/" + uploadId;
 }

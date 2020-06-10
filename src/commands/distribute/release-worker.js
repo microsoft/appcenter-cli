@@ -12,21 +12,21 @@ function sendChunk(chunk, chunkNumber, url, correlationId, domain) {
     },
     body: chunk,
   })
-    .then((response) => {
-      if (!response.ok) {
-        console.log("worker upload error, not ok");
-        throw new HttpError(response.status, response.statusText);
-      }
-      return response.json();
-    })
-    .then((json) => {
-      console.log("worker upload complete:", json);
-      parentPort.postMessage({ Error: json.Error, ChunkNumber: chunkNumber });
-    })
-    .catch((error) => {
-      console.log("worker upload error:", error);
-      parentPort.postMessage({ Error: true, ChunkNumber: chunkNumber });
-    });
+  .then((response) => {
+    if (!response.ok) {
+      console.log("worker upload error, not ok");
+      throw new HttpError(response.status, response.statusText);
+    }
+    return response.json();
+  })
+  .then((json) => {
+    console.log("worker upload complete:", json);
+    parentPort.postMessage({ Error: json.Error, ChunkNumber: chunkNumber });
+  })
+  .catch((error) => {
+    console.log("worker upload error:", error);
+    parentPort.postMessage({ Error: true, ChunkNumber: chunkNumber });
+  });
 }
 
 parentPort.on("message", (evt) => {

@@ -25,6 +25,7 @@ import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/m
 import * as uuid from "uuid";
 import { Worker } from "worker_threads";
 import "abort-controller/polyfill";
+import { environments } from "../../util/profile/environments";
 
 const fetch = require("node-fetch");
 
@@ -134,6 +135,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public mandatory: boolean;
 
   private mcFusUploader?: any;
+  private mcWorker: IWorker;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -416,7 +418,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
     debug("Creating release upload");
     const profile = getUser();
-    const url = getPortalUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName);
+    const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
     const accessToken = await profile.accessToken;
     const response = await fetch(url, {
       method: "POST",
@@ -463,16 +465,20 @@ export default class ReleaseBinaryCommand extends AppCommand {
       };
       this.mcFusUploader = new McFusUploader(uploadSettings);
       const worker = new WorkerNode(__dirname + "/release-worker.js");
-      this.mcFusUploader.setWorker(worker);
+      this.mcFusUploader.setWorker(this.mcWorker ?? worker);
       const testFile = new File(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
   }
 
+  public setWorker(worker: IWorker) {
+    this.mcWorker = worker;
+  }
+
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {
     debug("Patching the upload");
     const profile = getUser();
-    const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+    const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
     const accessToken = await profile.accessToken;
     const response = await fetch(url, {
       method: "PATCH",
@@ -510,7 +516,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       debug("Loading release id...");
       const profile = getUser();
-      const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+      const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
       const accessToken = await profile.accessToken;
       const response = await fetch(url, {
         method: "GET",
