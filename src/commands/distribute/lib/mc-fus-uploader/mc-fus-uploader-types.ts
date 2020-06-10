@@ -38,7 +38,6 @@ export interface IOptionalSettings {
   CorrelationId?: string;
   CorrelationVector?: string;
   LogToConsole?: boolean;
-  Uploaders?: number;
 }
 
 export interface IInitializeSettings extends IRequiredSettings, IEventSettings, IOptionalSettings {}
@@ -90,7 +89,6 @@ export interface IUploadData {
   UrlEncodedToken: string;
   TotalBlocks: number;
   UploadDomain: string;
-  Uploaders: number;
 }
 
 export interface IUploadStats {

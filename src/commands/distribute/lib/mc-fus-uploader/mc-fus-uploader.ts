@@ -53,7 +53,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     UrlEncodedToken: "",
     TotalBlocks: 0,
     UploadDomain: "",
-    Uploaders: 8,
   };
 
   // Exposed for testing.
@@ -113,7 +112,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     // Megabytes per second
     const speed = (uploadStatus.BlocksCompleted * uploadData.ChunkSize) / 1024 / 1024 / seconds;
 
-    // Times 8 to convert bits to bytes
+    // Times 8 to convert bytes to bits 
     const rate = speed * 8;
     return rate;
   }
@@ -397,7 +396,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     if (!chunk) {
       return false;
     }
-    if (chunk instanceof Buffer && (chunk as Buffer).length === 0) {
+    if (chunk.length === 0) {
       return false;
     }
     return true;
@@ -414,7 +413,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadData.CorrelationId = settings.CorrelationId || settings.AssetId;
     uploadData.CorrelationVector = settings.CorrelationVector || "";
     uploadData.LogToConsole = settings.LogToConsole || false;
-    uploadData.Uploaders = settings.Uploaders || 8;
   }
 
   function reportProgress() {
