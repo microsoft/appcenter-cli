@@ -149,9 +149,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const uploadDomain = releaseUploadParams.upload_domain;
 
     try {
-      await this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain);
-      await this.patchUpload(app, uploadId);
-      return await this.loadReleaseIdUntilSuccess(app, uploadId);
+      await out.progress("Uploading release binary...", this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain));
+      await out.progress("Finishing the upload...", this.patchUpload(app, uploadId));
+      return await out.progress("Checking the uploaded file...", this.loadReleaseIdUntilSuccess(app, uploadId));
     } catch (error) {
       try {
         out.text("Release upload failed");
