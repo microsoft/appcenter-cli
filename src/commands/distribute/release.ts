@@ -31,7 +31,6 @@ if (!globalThis.fetch) {
   globalThis.fetch = fetch;
 }
 
-
 export class File implements McFusFile {
   readonly name: string;
 
@@ -122,7 +121,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStats, releaseNotesString] = await out.progress(
+    const [distributionGroupUsersCount, storeInformation, releaseNotesString] = await out.progress(
       "Loading prerequisites...",
       this.getPrerequisites(client)
     );
@@ -298,12 +297,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async getPrerequisites(
-    client: AppCenterClient
-  ): Promise<[number | null, models.ExternalStoreResponse | null, fs.Stats, string]> {
-    // load release binary file
-    const fileStats = await this.getReleaseFileStream();
-
+  private async getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, string]> {
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
 
@@ -319,7 +313,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       storeInformation = this.getStoreDetails(client);
     }
 
-    return Promise.all([distributionGroupUsersNumber, storeInformation, fileStats, releaseNotesString]);
+    return Promise.all([distributionGroupUsersNumber, storeInformation, releaseNotesString]);
   }
 
   private async getReleaseFileStream(): Promise<fs.Stats> {
