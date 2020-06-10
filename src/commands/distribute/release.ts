@@ -21,7 +21,7 @@ import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+import { McFusFile, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
 
@@ -115,7 +115,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public mandatory: boolean;
 
   private mcFusUploader?: any;
-  private mcWorker: IWorker;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -447,10 +446,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const testFile = new File(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
-  }
-
-  public setWorker(worker: IWorker) {
-    this.mcWorker = worker;
   }
 
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {

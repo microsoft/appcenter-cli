@@ -1,5 +1,4 @@
 import {
-  InflightModelChunk,
   IUploadData,
   IUploadStatus,
   McFusUploadState,
@@ -36,7 +35,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
 
   const uploadBaseUrls = {
     CancelUpload: "upload/cancel/",
-    RestartUrl: "upload/restart/",
     SetMetadata: "upload/set_metadata/",
     UploadChunk: "upload/upload_chunk/",
     UploadFinished: "upload/finished/",
@@ -56,7 +54,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     TotalBlocks: 0,
     UploadDomain: "",
     Uploaders: 8,
-    WorkerScript: "",
   };
 
   // Exposed for testing.
@@ -70,7 +67,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     ChunkQueue: [],
     Connected: true,
     EndTime: new Date(),
-    InflightChunks: [],
     InflightSet: new Set(),
     AbortController: new AbortController(),
     MaxErrorCount: 20,
@@ -82,8 +78,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     StartTime: new Date(),
     State: McFusUploadState.New,
     TransferQueueRate: [],
-    Workers: [],
-    WorkerErrorCount: 0,
   };
 
   // Exposed for testing.
@@ -331,7 +325,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadStatus.ServiceCallback.AutoRetryCount = 5;
     uploadStatus.ServiceCallback.AutoRetryDelay = 1;
     uploadStatus.ServiceCallback.FailureCount = 0;
-    uploadStatus.WorkerErrorCount = 0;
 
     // Copy all the required settings on to the upload data.
     uploadData.AssetId = settings.AssetId;
@@ -422,7 +415,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     uploadData.CorrelationVector = settings.CorrelationVector || "";
     uploadData.LogToConsole = settings.LogToConsole || false;
     uploadData.Uploaders = settings.Uploaders || 8;
-    uploadData.WorkerScript = settings.WorkerScript || "/js/worker.js";
   }
 
   function reportProgress() {
@@ -729,49 +721,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     setMetadata();
   };
 
-  this.Restart = function () {
-    log("UploadRestarted");
-
-    sendRequest({
-      type: "POST",
-      useAuthentication: true,
-      url: uploadBaseUrls.RestartUrl + encodeURIComponent(uploadData.AssetId),
-      success: function (response) {
-        if (response.error) {
-          error(response.message);
-          return;
-        }
-
-        setState(McFusUploadState.Uploading);
-        uploadStatus.StartTime = new Date();
-        startUpload();
-      },
-    });
-  };
-
-  this.Pause = function () {
-    if (!isUploadInProgress()) {
-      error("Cannot pause an upload that is not in progress.");
-      return;
-    }
-
-    log("UploadPaused");
-    setState(McFusUploadState.Paused);
-  };
-
-  this.Continue = function () {
-    if (uploadStatus.State !== McFusUploadState.Paused) {
-      error("Cannot resume and upload that is not paused.");
-      return;
-    }
-
-    log("UploadContinued");
-
-    setState(McFusUploadState.Uploading);
-
-    startUpload();
-  };
-
   this.Cancel = function () {
     log("UploadCancelled");
 
@@ -786,10 +735,6 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         abortSingleThreadedUploads();
       },
     });
-  };
-
-  this.Reset = function (settings: IInitializeSettings) {
-    initializeUpload(settings);
   };
 
   initializeUpload(args);
