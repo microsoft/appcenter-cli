@@ -192,8 +192,8 @@ describe("release command", () => {
                 )
               )
             )
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
           );
+        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
       it("should return success for zip file", async () => {
