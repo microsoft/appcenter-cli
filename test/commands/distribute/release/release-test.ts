@@ -179,16 +179,21 @@ describe("release command", () => {
 
     describe("when build version specified", () => {
       beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            // setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+        expectedRequestsScope =
+          setupSuccessfulGetDistributionGroupUsersResponse(
+            setupSuccessfulPostUploadResponse(
+              setupSuccessfulUploadFinishedResponse(
+                setupSuccessfulPatchUploadFinishedResponse(
+                  setupSuccessfulGetUploadResponse(
+                    setupSuccessfulSetUploadMetadataResponse(
+                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+                    )
+                  )
+                )
+              )
             )
-            // )
-          )
-        );
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+          );
       });
 
       it("should return success for zip file", async () => {
@@ -743,8 +748,8 @@ describe("release command", () => {
 
   function setupSuccessfulAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope
-      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/uploads/releases/${fakeReleaseUploadingId}`, {
-        upload_status: "aborted",
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/release_uploads/${fakeReleaseUploadingId}`, {
+        status: "aborted",
       })
       .reply(200, (uri: any, requestBody: any) => {
         abortSymbolSpy(requestBody);
