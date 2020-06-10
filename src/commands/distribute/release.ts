@@ -434,7 +434,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<any> {
       return new Promise(async (resolve, reject) => {
         const profile = getUser();
-        const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+        const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
         const accessToken = await profile.accessToken;
         console.log("145 accessToken = ", accessToken);
         fetch(url, {
@@ -482,7 +482,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async loadReleaseId(app: DefaultApp, uploadId: string): Promise<any> {
     try {
       const profile = getUser();
-      const url = getPortalPatchUploadLink(getPortalUrlForEndpoint(profile.endpoint), app.ownerName, app.appName, uploadId);
+      const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
       const accessToken = await profile.accessToken;
       return fetch(url, {
         method: "GET",
