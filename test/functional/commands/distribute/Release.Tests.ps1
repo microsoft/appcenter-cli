@@ -11,6 +11,9 @@ Describe "distribute release" {
   $appFullName = $app.owner.name + "/" + $app.name
   appcenter apps set-current $appFullName
 
+  # Sleep for a bit to make sure the app exists
+  Start-Sleep -Seconds 10
+
   It "creates a release when mandatory flag is set to true" {
     # Arrange
     $fileName = "Dummy.zip"
