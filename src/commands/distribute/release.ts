@@ -20,8 +20,8 @@ import { DefaultApp, getUser, getPortalUrlForEndpoint } from "../../util/profile
 import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
-import { McFusUploader } from "@appcenter/mc-fus-uploader";
-import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "@appcenter/mc-fus-uploader/out/src/mc-fus-uploader-types";
+import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import * as uuid from "uuid";
 import { Worker } from "worker_threads";
 import "abort-controller/polyfill";
