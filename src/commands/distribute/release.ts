@@ -134,6 +134,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
+  private mcWorker: IWorker;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -419,10 +421,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
       };
       const uploader = new McFusUploader(uploadSettings);
       const worker = new WorkerNode(__dirname + "/worker.js");
-      uploader.setWorker(worker);
+      uploader.setWorker(this.mcWorker ?? worker);
       const testFile = new File(this.filePath);
       uploader.Start(testFile);
     });
+  }
+
+  public setWorker(worker: IWorker) {
+    this.mcWorker = worker;
   }
 
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<any> {
