@@ -404,7 +404,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const profile = getUser();
     const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
     const accessToken = await profile.accessToken;
-    const body = `{"build_version":"${this.buildVersion}", "build_number" : "${this.buildNumber}"}`;
+    const body = JSON.stringify({build_version: this.buildVersion, build_number: this.buildNumber});
     const response = await fetch(url, {
       method: "POST",
       headers: {
