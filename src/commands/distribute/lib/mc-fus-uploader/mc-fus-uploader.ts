@@ -418,13 +418,7 @@ export const McFusUploader: any = function (this: any, args: IInitializeSettings
   }
 
   function isValidChunk(chunk: Buffer): boolean {
-    if (!chunk) {
-      return false;
-    }
-    if (chunk.length === 0) {
-      return false;
-    }
-    return true;
+    return chunk && chunk.length > 0;
   }
 
   function log(message: string, properties: LogProperties = {}, level: McFusMessageLevel = McFusMessageLevel.Information) {
