@@ -346,10 +346,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const profile = getUser();
     const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
     let accessToken = "";
-    if (profile) {
+    if (this.token) {
+      accessToken = this.token;
+    } else if (profile) {
       accessToken = await profile.accessToken;
     }
-    accessToken = this.token;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -404,10 +405,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const profile = getUser();
     const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
     let accessToken = "";
-    if (profile) {
+    if (this.token) {
+      accessToken = this.token;
+    } else if (profile) {
       accessToken = await profile.accessToken;
     }
-    accessToken = this.token;
     const response = await fetch(url, {
       method: "PATCH",
       headers: {
@@ -449,10 +451,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const profile = getUser();
       const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
       let accessToken = "";
-      if (profile) {
+      if (this.token) {
+        accessToken = this.token;
+      } else if (profile) {
         accessToken = await profile.accessToken;
       }
-      accessToken = this.token;
       const response = await fetch(url, {
         method: "GET",
         headers: {
