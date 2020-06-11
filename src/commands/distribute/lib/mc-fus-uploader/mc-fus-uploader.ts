@@ -30,7 +30,7 @@ export class McFile implements McFusFile {
   }
 
   get fileName(): string {
-    return this.name.replace(/^.*[\\\/]/, '');
+    return this.name.replace(/^.*[\\\/]/, "");
   }
 
   slice(start: number, end: number): Buffer {
@@ -137,7 +137,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     // Megabytes per second
     const speed = (uploadStatus.BlocksCompleted * uploadData.ChunkSize) / 1024 / 1024 / seconds;
 
-    // Times 8 to convert bytes to bits 
+    // Times 8 to convert bytes to bits
     const rate = speed * 8;
     return rate;
   }

@@ -17,7 +17,7 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build": "gulp build:raw",
+    "build": "npm run lint && gulp build:raw",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s",
