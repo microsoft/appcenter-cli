@@ -1,4 +1,4 @@
-export default {
+export const MimeTypes: any = {
   apk: "application/vnd.android.package-archive",
   aab: "application/vnd.android.package-archive",
   msi: "application/x-msi",

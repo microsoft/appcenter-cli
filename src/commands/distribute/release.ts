@@ -19,7 +19,6 @@ import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser } from "../../util/profile";
 import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
-import * as fs from "fs";
 import { McFusUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import "abort-controller/polyfill";
@@ -284,19 +283,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return Promise.all([distributionGroupUsersNumber, storeInformation, releaseNotesString]);
   }
 
-  private async getReleaseFileStream(): Promise<fs.Stats> {
-    try {
-      const fileStats = await Pfs.stat(this.filePath);
-      return fileStats;
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
-      } else {
-        throw error;
-      }
-    }
-  }
-
   private async getReleaseNotesString(): Promise<string> {
     if (!_.isNil(this.releaseNotesFile)) {
       try {
@@ -482,12 +468,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         `HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`
       );
     }
-  }
-
-  private extractReleaseId(releaseUrl: string): number {
-    const releaseId = Number(_(releaseUrl).split("/").last());
-    console.assert(Number.isSafeInteger(releaseId) && releaseId > 0, `API returned unexpected release URL: ${releaseUrl}`);
-    return releaseId;
   }
 
   private async getDistributeRelease(

@@ -15,7 +15,7 @@ import {
 } from "./mc-fus-uploader-types";
 import * as fs from "fs";
 import fetch from "node-fetch";
-import MimeTypes from "./mc-fus-mime-types";
+import { MimeTypes } from "./mc-fus-mime-types";
 
 export class McFile implements McFusFile {
   readonly name: string;
@@ -53,7 +53,7 @@ class HttpError extends Error {
   }
 }
 
-export const McFusUploader = function (this: any, args: IInitializeSettings) {
+export const McFusUploader: any = function (this: any, args: IInitializeSettings) {
   let ambiguousProgress = 0;
   let progressUpdateRate = 0;
   const maxNumberOfConcurrentUploads = 10;
@@ -229,12 +229,12 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         encodeURIComponent(uploadData.AssetId) +
         "?callback=" +
         encodeURIComponent(uploadData.CallbackUrl),
-      error: function (err) {
+      error: function (err: Error) {
         log("Finalize upload failed. Trying to autorecover... " + err.message);
         setState(McFusUploadState.Uploading);
         startUpload();
       },
-      success: function (response) {
+      success: function (response: any) {
         // it's possible that the health check called complete before this method did.
         // Log the current status and proceed with response verification.
         if (uploadStatus.State !== McFusUploadState.Verifying) {
@@ -378,7 +378,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         url: callbackUrl,
         useBaseDomain: false,
         useAuthentication: false,
-        error: function (err) {
+        error: function (err: Error) {
           const errorMessage = "Callback failed. Status: " + err.message;
 
           // Non-fatal error, just log info
@@ -471,7 +471,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     eventHandlers.onProgressChanged(progress);
   }
 
-  function sendRequest(requestOptions) {
+  function sendRequest(requestOptions: any) {
     // Check if the caller specifies a fully qualified url
     // or if it needs the McFus base domain to be appended.
     let requestUrl;
@@ -553,7 +553,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         "&file_size=" +
         encodeURIComponent(uploadData.File!.size) +
         mimeTypeParam,
-      error: function (err) {
+      error: function (err: Error) {
         if (err instanceof HttpError) {
           Object.assign(logProperties, {
             StatusCode: err.status,
@@ -564,7 +564,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
           error("Upload Failed. No network detected. Please try again.", {}, McFusUploadState.Error);
         }
       },
-      success: function (response) {
+      success: function (response: any) {
         eventHandlers.onProgressChanged({ percentCompleted: ++ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
         // if we get an html document back we likely have a server error so report it and stop
         if (response.error === undefined && response.toString().indexOf("<!DOCTYPE html>") === 0) {
@@ -682,11 +682,11 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
       useAuthentication: true,
       chunk: chunk,
       url: uploadBaseUrls.UploadChunk + encodeURIComponent(uploadData.AssetId) + "?block_number=" + chunkNumber,
-      error: function (err) {
+      error: function (err: Error) {
         uploadStatus.InflightSet.delete(chunkNumber);
         uploadChunkErrorHandler(err, chunkNumber);
       },
-      success: function (response) {
+      success: function (response: any) {
         uploadStatus.InflightSet.delete(chunkNumber);
         if (response.error) {
           uploadChunkErrorHandler(response.error, chunkNumber);
@@ -706,7 +706,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
     });
   }
 
-  function uploadChunkErrorHandler(error, chunkNumber: number) {
+  function uploadChunkErrorHandler(error: Error, chunkNumber: number) {
     ++uploadStatus.ChunksFailedCount;
     uploadStatus.ChunkQueue.push(chunkNumber);
     if (error instanceof HttpError) {
@@ -751,7 +751,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
       type: "POST",
       useAuthentication: true,
       url: uploadBaseUrls.CancelUpload + encodeURIComponent(uploadData.AssetId),
-      success: function (response) {
+      success: function (response: any) {
         log(response.message);
         setState(McFusUploadState.Cancelled);
 
