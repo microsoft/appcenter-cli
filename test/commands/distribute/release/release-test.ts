@@ -8,7 +8,7 @@ import * as ChaiAsPromised from "chai-as-promised";
 
 use(ChaiAsPromised);
 
-import ReleaseBinaryCommand, { WorkerNode } from "../../../../src/commands/distribute/release";
+import ReleaseBinaryCommand from "../../../../src/commands/distribute/release";
 import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
 
 Temp.track();
@@ -63,11 +63,13 @@ describe("release command", () => {
   });
   context("Successful requests", ()=>{
     beforeEach(()=>{
-      expectedRequestsScope = setupSuccessfulUploadFinishedResponse(
-        setupSuccessfulGetUploadResponse(
-          setupSuccessfulSetUploadMetadataResponse(
-            setupSuccessfulPostUploadResponse(
-              setupSuccessfulPatchUploadFinishedResponse(Nock(fakeHost))
+      expectedRequestsScope = setupSuccessfulUploadChunkResponse(
+        setupSuccessfulUploadFinishedResponse(
+          setupSuccessfulGetUploadResponse(
+            setupSuccessfulSetUploadMetadataResponse(
+              setupSuccessfulPostUploadResponse(
+                setupSuccessfulPatchUploadFinishedResponse(Nock(fakeHost))
+              )
             )
           )
         )
@@ -180,13 +182,15 @@ describe("release command", () => {
     describe("when build version specified", () => {
       beforeEach(() => {
         expectedRequestsScope =
-          setupSuccessfulGetDistributionGroupUsersResponse(
-            setupSuccessfulPostUploadResponse(
-              setupSuccessfulUploadFinishedResponse(
-                setupSuccessfulPatchUploadFinishedResponse(
-                  setupSuccessfulGetUploadResponse(
-                    setupSuccessfulSetUploadMetadataResponse(
-                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+          setupSuccessfulUploadChunkResponse(
+            setupSuccessfulGetDistributionGroupUsersResponse(
+              setupSuccessfulPostUploadResponse(
+                setupSuccessfulUploadFinishedResponse(
+                  setupSuccessfulPatchUploadFinishedResponse(
+                    setupSuccessfulGetUploadResponse(
+                      setupSuccessfulSetUploadMetadataResponse(
+                        setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+                      )
                     )
                   )
                 )
@@ -320,21 +324,28 @@ describe("release command", () => {
   });
 
   context("silent", () => {
-    describe("when notifying testers by default", () => {
-      beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            //  setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(
-                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
+    beforeEach(() => {
+      expectedRequestsScope = setupSuccessfulUploadChunkResponse(
+        setupSuccessfulUploadFinishedResponse(
+          setupSuccessfulPatchUploadFinishedResponse(
+            setupSuccessfulGetUploadResponse(
+              setupSuccessfulGetDistributionGroupUsersResponse(
+                setupSuccessfulPostUploadResponse(
+                  setupSuccessfulSetUploadMetadataResponse(
+                    setupSuccessfulCreateReleaseResponse(
+                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)))
+                    )
+                  )
+                )
               )
             )
-            //  )
           )
-        );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
-      });
+        )
+      );
+      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+    });
+
+    describe("when notifying testers by default", () => {
 
       it("should successfully distribute the release", async () => {
         // Arrange
@@ -350,20 +361,6 @@ describe("release command", () => {
     });
 
     describe("when notifying testers", () => {
-      beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            //setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(
-                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)))
-              )
-            )
-            //)
-          )
-        );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
-      });
 
       it("should successfully distribute the release", async () => {
         // Arrange
@@ -380,18 +377,7 @@ describe("release command", () => {
 
     describe("when not notifying testers", () => {
       beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            //setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(
-                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)), true)
-              )
-            )
-            //)
-          )
-        );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+        expectedRequestsScope = setupSuccessfulAddGroupResponse((Nock(fakeHost)), true)
       });
 
       it("should successfully distribute the release", async () => {
@@ -409,21 +395,29 @@ describe("release command", () => {
   });
 
   context("mandatory", () => {
-    describe("when distributing with mandatory flag set to true", () => {
-      beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-          setupSuccessfulPostUploadResponse(
-            //setupSuccessfulUploadResponse(
-            setupSuccessfulPatchUploadResponse(
-              setupSuccessfulCreateReleaseResponse(
-                setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost)), false, true)
+
+    beforeEach(() => {
+      expectedRequestsScope = setupSuccessfulUploadChunkResponse(
+        setupSuccessfulUploadFinishedResponse(
+          setupSuccessfulPatchUploadFinishedResponse(
+            setupSuccessfulGetUploadResponse(
+              setupSuccessfulGetDistributionGroupUsersResponse(
+                setupSuccessfulPostUploadResponse(
+                  setupSuccessfulSetUploadMetadataResponse(
+                    setupSuccessfulCreateReleaseResponse(
+                      setupSuccessfulAddGroupResponse(setupSuccsessFulGetDistributionGroupResponse(Nock(fakeHost).log(console.log)), false, true)
+                    )
+                  )
+                )
               )
             )
-            //)
           )
-        );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
-      });
+        )
+      );
+      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+    });
+
+    describe("when distributing with mandatory flag set to true", () => {
 
       it("should successfully distribute the release", async () => {
         // Arrange
@@ -622,7 +616,6 @@ describe("release command", () => {
 
   function prepareTestCommand(args: string[]) : ReleaseBinaryCommand {
     const command = new ReleaseBinaryCommand(getCommandArgs(args));
-    command.setWorker(new WorkerNode(__dirname + "/mockWorker.js"));
     return command;
   }
 
@@ -681,7 +674,7 @@ describe("release command", () => {
     });
   }
 
-  function setupSuccessfulSetUploadMetadataResponse(nockScope: Nock.Scope): Nock.Scope {
+  function setupSuccessfulSetUploadMetadataResponse(nockScope: Nock.Scope, overrideFileSize? : number): Nock.Scope {
     return nockScope
       .post(`/upload/set_metadata/${fakeGuid}`)
       .query(true)
@@ -690,9 +683,29 @@ describe("release command", () => {
         return {
           resume_restart: false,
           chunk_list: [1],
-          chunk_size: releaseFileContent.length,
+          chunk_size: overrideFileSize ?? releaseFileContent.length,
           blob_partitions: 1,
         };
+      });
+  }
+
+  function setupSuccessfulUploadChunkResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope
+      .post(`/upload/upload_chunk/${fakeGuid}`)
+      .query(true)
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+        };
+      });
+  }
+
+  function setupFailedUploadChunkResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope
+      .post(`/upload/upload_chunk/${fakeGuid}`)
+      .query(true)
+      .reply(500, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
       });
   }
 
