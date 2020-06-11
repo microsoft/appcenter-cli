@@ -62,7 +62,7 @@
     "@types/opener": "1.4.0",
     "@types/pumpify": "1.4.1",
     "@types/qs": "6.9.3",
-    "@types/request": "2.48.4",
+    "@types/request": "2.48.5",
     "@types/rimraf": "3.0.0",
     "@types/semver": "7.1.0",
     "@types/sinon": "9.0.4",
