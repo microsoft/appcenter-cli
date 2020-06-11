@@ -16,6 +16,7 @@ import {
 import * as fs from "fs";
 import fetch from "node-fetch";
 import { MimeTypes } from "./mc-fus-mime-types";
+import "abort-controller/polyfill";
 
 export class McFile implements McFusFile {
   readonly name: string;

@@ -17,11 +17,10 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser } from "../../util/profile";
-import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
+import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import { McFusUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
@@ -344,7 +343,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
     debug("Creating release upload");
     const profile = getUser();
-    const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
+    const url = getFileUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
     const accessToken = await profile.accessToken;
     const response = await fetch(url, {
       method: "POST",
@@ -398,7 +397,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {
     debug("Patching the upload");
     const profile = getUser();
-    const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
+    const url = getPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
     const accessToken = await profile.accessToken;
     const response = await fetch(url, {
       method: "PATCH",
@@ -439,7 +438,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       debug("Loading release id...");
       const profile = getUser();
-      const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
+      const url = getPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
       const accessToken = await profile.accessToken;
       const response = await fetch(url, {
         method: "GET",
