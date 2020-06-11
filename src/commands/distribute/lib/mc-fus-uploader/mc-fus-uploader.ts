@@ -29,6 +29,10 @@ export class McFile implements McFusFile {
     return stats["size"];
   }
 
+  get fileName(): string {
+    return this.name.replace(/^.*[\\\/]/, '');
+  }
+
   slice(start: number, end: number): Buffer {
     const data = Buffer.alloc(end - start);
     const fd = fs.openSync(this.name, "r");
@@ -362,7 +366,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         "/" +
         encodeURIComponent(uploadData.AssetId) +
         "?file_name=" +
-        encodeURIComponent(uploadData.File!.name) +
+        encodeURIComponent(uploadData.File!.fileName) +
         "&file_size=" +
         encodeURIComponent(uploadData.File!.size) +
         "&location=" +
@@ -531,11 +535,11 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
   function setMetadata() {
     eventHandlers.onProgressChanged({ percentCompleted: ++ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
     const logProperties = {
-      fileName: uploadData.File!.name,
+      fileName: uploadData.File!.fileName,
       fileSize: uploadData.File!.size,
     };
     log("Setting Metadata.", logProperties);
-    const fileExt = uploadData.File!.name.split(".").pop() as string;
+    const fileExt = uploadData.File!.fileName.split(".").pop() as string;
     const mimeTypeParam = MimeTypes[fileExt] ? `&content_type=${encodeURIComponent(MimeTypes[fileExt])}` : ``;
 
     sendRequest({
@@ -545,7 +549,7 @@ export const McFusUploader = function (this: any, args: IInitializeSettings) {
         uploadBaseUrls.SetMetadata +
         encodeURIComponent(uploadData.AssetId) +
         "?file_name=" +
-        encodeURIComponent(uploadData.File!.name) +
+        encodeURIComponent(uploadData.File!.fileName) +
         "&file_size=" +
         encodeURIComponent(uploadData.File!.size) +
         mimeTypeParam,
