@@ -456,22 +456,13 @@ describe("release command", () => {
 
   describe("when release upload fails", () => {
     beforeEach(() => {
-      expectedRequestsScope =
-        setupSuccessfulGetDistributionGroupUsersResponse(
-          setupFailedUploadChunkResponse(
-            setupSuccessfulAbortUploadResponse(
-              setupSuccessfulSetUploadMetadataResponse(Nock(fakeHost).log(console.log))
-            )
-          )
-        );
+      expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+        setupFailedUploadChunkResponse(setupSuccessfulAbortUploadResponse(setupSuccessfulSetUploadMetadataResponse(Nock(fakeHost))))
+      );
       skippedRequestsScope = setupSuccessfulCreateReleaseResponse(
         setupSuccessfulPatchUploadFinishedResponse(
           setupSuccessfulUploadFinishedResponse(
-            setupSuccessfulPostUploadResponse(
-              setupSuccessfulAddGroupResponse(
-                setupSuccessfulPatchUploadResponse(Nock(fakeHost))
-              )
-            )
+            setupSuccessfulPostUploadResponse(setupSuccessfulAddGroupResponse(setupSuccessfulPatchUploadResponse(Nock(fakeHost))))
           )
         )
       );
@@ -487,27 +478,23 @@ describe("release command", () => {
       const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
 
       // Assert
-      testFailure(result, "Uploading file error: Upload Failed. Encountered too many errors while uploading. Please try again.", expectedRequestsScope, skippedRequestsScope);
+      testFailure(
+        result,
+        "Uploading file error: Upload Failed. Encountered too many errors while uploading. Please try again.",
+        expectedRequestsScope,
+        skippedRequestsScope
+      );
     });
   });
 
   describe("when creating the release fails", () => {
     beforeEach(() => {
-
-      expectedRequestsScope =
-        setupSuccessfulGetDistributionGroupUsersResponse(
-            setupFailedSetUploadMetadataResponse(Nock(fakeHost).log(console.log))
-        );
+      expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(setupFailedSetUploadMetadataResponse(Nock(fakeHost)));
       skippedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulCreateReleaseResponse(
-          (
-            setupSuccessfulUploadChunkResponse(
-              setupSuccessfulUploadFinishedResponse(
-                setupSuccessfulPostUploadResponse(
-                  setupSuccessfulAddGroupResponse(
-                    setupSuccessfulPatchUploadResponse(Nock(fakeHost))
-                  ))
-              )
+          setupSuccessfulUploadChunkResponse(
+            setupSuccessfulUploadFinishedResponse(
+              setupSuccessfulPostUploadResponse(setupSuccessfulAddGroupResponse(setupSuccessfulPatchUploadResponse(Nock(fakeHost))))
             )
           )
         )
@@ -524,33 +511,30 @@ describe("release command", () => {
       const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
 
       // Assert
-      testFailure(result, `Uploading file error: The asset cannot be uploaded. Failed to set metadata.`, expectedRequestsScope, skippedRequestsScope);
+      testFailure(
+        result,
+        `Uploading file error: The asset cannot be uploaded. Failed to set metadata.`,
+        expectedRequestsScope,
+        skippedRequestsScope
+      );
     });
   });
 
   describe("when getting the distribution group fails", () => {
     beforeEach(() => {
-
       expectedRequestsScope = setupSuccessfulSetUploadMetadataResponse(
         setupSuccessfulUploadChunkResponse(
-          setupSuccessfulUploadFinishedResponse(
-            setupSuccessfulPatchUploadFinishedResponse(
-              setupSuccessfulPostUploadResponse(
-                setupSuccessfulAbortUploadResponse(
-                  setupFailedGetDistributionGroupResponse(Nock(fakeHost).log(console.log))
-                ))))
-        )
-      );
-      skippedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-        setupSuccessfulCreateReleaseResponse(
-          (
-            (
-              setupSuccessfulAddGroupResponse(
-                setupSuccessfulPatchUploadResponse(Nock(fakeHost))
+          setupSuccessfulGetUploadResponse(
+            setupSuccessfulUploadFinishedResponse(
+              setupSuccessfulPatchUploadFinishedResponse(
+                setupSuccessfulPostUploadResponse(setupFailedGetDistributionGroupResponse(Nock(fakeHost)))
               )
             )
           )
         )
+      );
+      skippedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+        setupSuccessfulCreateReleaseResponse(setupSuccessfulAddGroupResponse(setupSuccessfulPatchUploadResponse(Nock(fakeHost))))
       );
     });
 
@@ -573,11 +557,13 @@ describe("release command", () => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
         setupSuccessfulPostUploadResponse(
           setupSuccessfulGetUploadResponse(
-            setupSuccessfulCreateReleaseResponse(
-              setupSuccessfulSetUploadMetadataResponse(
-                setupSuccessfulUploadFinishedResponse(
-                  setupSuccessfulPatchUploadFinishedResponse(
-                    setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
+            setupSuccessfulUploadChunkResponse(
+              setupSuccessfulCreateReleaseResponse(
+                setupSuccessfulSetUploadMetadataResponse(
+                  setupSuccessfulUploadFinishedResponse(
+                    setupSuccessfulPatchUploadFinishedResponse(
+                      setupSuccsessFulGetDistributionGroupResponse(setupFailedAddGroupResponse(Nock(fakeHost)))
+                    )
                   )
                 )
               )
