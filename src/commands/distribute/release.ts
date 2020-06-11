@@ -345,7 +345,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     debug("Creating release upload");
     const profile = getUser();
     const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
-    let accessToken = ""
+    let accessToken = "";
     if (profile) {
       accessToken = await profile.accessToken;
     }
@@ -403,7 +403,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     debug("Patching the upload");
     const profile = getUser();
     const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
-    let accessToken = ""
+    let accessToken = "";
     if (profile) {
       accessToken = await profile.accessToken;
     }
@@ -448,7 +448,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       debug("Loading release id...");
       const profile = getUser();
       const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
-      let accessToken = ""
+      let accessToken = "";
       if (profile) {
         accessToken = await profile.accessToken;
       }
