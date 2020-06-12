@@ -3,7 +3,6 @@ import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
-import { getOrgsNamesList } from "../../orgs/lib/org-users-helper";
 import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
@@ -72,13 +71,8 @@ export class TestCloudUploader {
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
-    const orgs = await getOrgsNamesList(this._client);
-    let isOrg = false;
-    for (const org of orgs) {
-      if (org.name === this._userName) {
-        isOrg = true;
-      }
-    }
+    const app = await this._client.appsOperations.get(this._userName, this._appName);
+    const isOrg = app.owner.type === "org";
 
     const manifest = await progressWithResult<TestManifest>("Validating arguments", this.validateAndParseManifest());
 
