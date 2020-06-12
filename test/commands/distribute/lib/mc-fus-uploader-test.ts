@@ -29,10 +29,6 @@ class McFile implements McFusFile {
 
 (URL as any).createObjectURL = () => {};
 
-// For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
-
-// End of stub of browser dependencies
-
 describe("McFusUploader", () => {
   describe("#Start", () => {
     const onProgressMock = TypeMoq.Mock.ofInstance((_progress: IProgress) => {});
