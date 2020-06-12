@@ -17,11 +17,10 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, Profile } from "../../util/profile";
-import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
+import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
-import { McFusUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-import "abort-controller/polyfill";
+import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusMessageLevel, McFusUploader, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
@@ -80,7 +79,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
-  private mcFusUploader?: any;
+  private mcFusUploader?: McFusUploader;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -346,15 +345,15 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const profile = getUser();
     const endpoint = await this.getEndpoint(profile);
     const accessToken = await this.getToken(profile);
-    const url = getPortalUploadLink(endpoint, app.ownerName, app.appName);
-    const body = JSON.stringify({build_version: this.buildVersion, build_number: this.buildNumber});
+    const url = getFileUploadLink(endpoint, app.ownerName, app.appName);
+    const body = JSON.stringify({ build_version: this.buildVersion, build_number: this.buildNumber });
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-token": accessToken,
       },
-      body: body
+      body: body,
     });
     const json = await response.json();
     if (!json.package_asset_id || (json.statusCode && json.statusCode !== 200)) {
@@ -391,7 +390,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           resolve();
         },
       };
-      this.mcFusUploader = new McFusUploader(uploadSettings);
+      this.mcFusUploader = new McFusNodeUploader(uploadSettings);
       const testFile = new McFile(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
@@ -402,7 +401,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const profile = getUser();
     const endpoint = await this.getEndpoint(profile);
     const accessToken = await this.getToken(profile);
-    const url = getPortalPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
+    const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
     const response = await fetch(url, {
       method: "PATCH",
       headers: {
@@ -444,7 +443,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const profile = getUser();
       const endpoint = await this.getEndpoint(profile);
       const accessToken = await this.getToken(profile);
-      const url = getPortalPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
+      const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
       const response = await fetch(url, {
         method: "GET",
         headers: {

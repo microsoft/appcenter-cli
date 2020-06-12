@@ -1,3 +1,8 @@
+export interface McFusUploader {
+  Start(file: McFusFile): void;
+  Cancel(): void;
+}
+
 export enum McFusMessageLevel {
   Information = 0,
   Verbose = 1,
