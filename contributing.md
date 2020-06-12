@@ -224,7 +224,9 @@ you tests to keep things consistent across the entire codebase.
 #### test/functional
 
 Tests that call the appcenter-cli from PowerShell to execute against an App Center internal test environment live here.
-Files called \*Tests.ps1 run automatically. The [Pester test runner](https://github.com/pester/Pester/wiki/Pester) runs the tests. You can run theses tests locally by [creating an API token for App Center](https://docs.microsoft.com/appcenter/api-docs/#creating-an-app-center-app-api-token) and using it to call Invoke-FunctionalTests.ps1.
+Files called \*Tests.ps1 run automatically. The [Pester test runner](https://github.com/pester/Pester/wiki/Pester) runs the tests.
+
+You can run theses tests locally, keeping in mind they will log on to your account and perform destructive operations. Consider using a dedicated testing account. Run the tests by [creating an API token for App Center](https://docs.microsoft.com/appcenter/api-docs/#creating-an-app-center-app-api-token) and using it to call Invoke-FunctionalTests.ps1. The tests will connect to your account and perform operations.
 
 ## Naming conventions
 
