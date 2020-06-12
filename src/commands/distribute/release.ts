@@ -16,54 +16,16 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
-import { DefaultApp, getUser, getPortalUrlForEndpoint } from "../../util/profile";
+import { DefaultApp, getUser, Profile } from "../../util/profile";
 import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
-import * as fs from "fs";
-import { McFusUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusFile, IWorker, McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-import * as uuid from "uuid";
-import { Worker } from "worker_threads";
+import { McFusUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
-
-const fetch = require("node-fetch");
-
-if (!globalThis.fetch) {
-  globalThis.fetch = fetch;
-}
-
-
-export class File implements McFusFile {
-  readonly name: string;
-
-  public constructor(name: string) {
-    this.name = name;
-  }
-
-  get size(): number {
-    const stats = fs.statSync(this.name);
-    return stats["size"];
-  }
-
-  slice(start: number, end: number): Buffer {
-    const data = Buffer.alloc(end - start);
-    const fd = fs.openSync(this.name, "r");
-    fs.readSync(fd, data, 0, data.length, start);
-    return data;
-  }
-}
+import fetch from "node-fetch";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
-
-const globalAsAny = global as any;
-globalAsAny.window = {};
-(URL as any).createObjectURL = () => {};
-
-// For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
-globalAsAny.window.File = File;
-
-globalAsAny.Worker = WorkerNode;
 
 @help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -119,7 +81,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public mandatory: boolean;
 
   private mcFusUploader?: any;
-  private mcWorker: IWorker;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -127,7 +88,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStats, releaseNotesString] = await out.progress(
+    const [distributionGroupUsersCount, storeInformation, releaseNotesString] = await out.progress(
       "Loading prerequisites...",
       this.getPrerequisites(client)
     );
@@ -149,9 +110,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const uploadDomain = releaseUploadParams.upload_domain;
 
     try {
-      await this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain);
-      await this.patchUpload(app, uploadId);
-      return await this.loadReleaseIdUntilSuccess(app, uploadId);
+      await out.progress("Uploading release binary...", this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain));
+      await out.progress("Finishing the upload...", this.patchUpload(app, uploadId));
+      return await out.progress("Checking the uploaded file...", this.loadReleaseIdUntilSuccess(app, uploadId));
     } catch (error) {
       try {
         out.text("Release upload failed");
@@ -160,8 +121,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       } catch (abortError) {
         debug("Failed to abort release upload");
       }
-
-      throw error;
+      throw failure(ErrorCodes.Exception, error.message);
     }
   }
 
@@ -304,12 +264,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async getPrerequisites(
-    client: AppCenterClient
-  ): Promise<[number | null, models.ExternalStoreResponse | null, fs.Stats, string]> {
-    // load release binary file
-    const fileStats = await this.getReleaseFileStream();
-
+  private async getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, string]> {
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
 
@@ -325,20 +280,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       storeInformation = this.getStoreDetails(client);
     }
 
-    return Promise.all([distributionGroupUsersNumber, storeInformation, fileStats, releaseNotesString]);
-  }
-
-  private async getReleaseFileStream(): Promise<fs.Stats> {
-    try {
-      const fileStats = await Pfs.stat(this.filePath);
-      return fileStats;
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
-      } else {
-        throw error;
-      }
-    }
+    return Promise.all([distributionGroupUsersNumber, storeInformation, releaseNotesString]);
   }
 
   private async getReleaseNotesString(): Promise<string> {
@@ -402,8 +344,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
     debug("Creating release upload");
     const profile = getUser();
-    const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
-    const accessToken = await profile.accessToken;
+    const endpoint = await this.getEndpoint(profile);
+    const accessToken = await this.getToken(profile);
+    const url = getPortalUploadLink(endpoint, app.ownerName, app.appName);
     const body = JSON.stringify({build_version: this.buildVersion, build_number: this.buildNumber});
     const response = await fetch(url, {
       method: "POST",
@@ -436,7 +379,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
           if (level === McFusMessageLevel.Error) {
             this.mcFusUploader.Cancel();
-            reject();
+            reject(new Error(`Uploading file error: ${message}`));
           }
         },
         onStateChanged: (status: McFusUploadState): void => {
@@ -449,20 +392,17 @@ export default class ReleaseBinaryCommand extends AppCommand {
         },
       };
       this.mcFusUploader = new McFusUploader(uploadSettings);
-      const testFile = new File(this.filePath);
+      const testFile = new McFile(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
-  }
-
-  public setWorker(worker: IWorker) {
-    this.mcWorker = worker;
   }
 
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {
     debug("Patching the upload");
     const profile = getUser();
-    const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
-    const accessToken = await profile.accessToken;
+    const endpoint = await this.getEndpoint(profile);
+    const accessToken = await this.getToken(profile);
+    const url = getPortalPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
     const response = await fetch(url, {
       method: "PATCH",
       headers: {
@@ -471,9 +411,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
       },
       body: '{"upload_status":"uploadFinished"}',
     });
+    if (!response.ok) {
+      throw failure(ErrorCodes.Exception, `Failed to patch release upload. HTTP Status:${response.status} - ${response.statusText}`);
+    }
     const json = await response.json();
-    if (json.upload_status !== "uploadFinished") {
-      throw failure(ErrorCodes.Exception, `failed to patch release upload ${json}`);
+    const { upload_status, message } = json;
+    if (upload_status !== "uploadFinished") {
+      throw failure(ErrorCodes.Exception, `Failed to patch release upload: ${message}`);
     }
   }
 
@@ -488,8 +432,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           resolve(Number(releaseId));
         } else if (response.upload_status === "error") {
           clearInterval(timerId);
-          debug(`Loading release id failed: ${response.error_details}`);
-          reject();
+          reject(new Error(`Loading release id failed: ${response.error_details}`));
         }
       }, 2000);
     });
@@ -499,8 +442,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       debug("Loading release id...");
       const profile = getUser();
-      const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
-      const accessToken = await profile.accessToken;
+      const endpoint = await this.getEndpoint(profile);
+      const accessToken = await this.getToken(profile);
+      const url = getPortalPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -512,6 +456,26 @@ export default class ReleaseBinaryCommand extends AppCommand {
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to get release id for upload id: ${uploadId}, error: ${JSON.stringify(error)}`);
     }
+  }
+
+  private async getToken(profile: Profile): Promise<string> {
+    let accessToken = "";
+    if (this.token && this.token.length > 0) {
+      accessToken = this.token;
+    } else if (profile) {
+      accessToken = await profile.accessToken;
+    }
+    return accessToken;
+  }
+
+  private async getEndpoint(profile: Profile): Promise<string> {
+    let endpoint = "";
+    if (this.environmentName) {
+      endpoint = environments(this.environmentName).endpoint;
+    } else if (profile) {
+      endpoint = profile.endpoint;
+    }
+    return endpoint;
   }
 
   private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
@@ -528,12 +492,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         `HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`
       );
     }
-  }
-
-  private extractReleaseId(releaseUrl: string): number {
-    const releaseId = Number(_(releaseUrl).split("/").last());
-    console.assert(Number.isSafeInteger(releaseId) && releaseId > 0, `API returned unexpected release URL: ${releaseUrl}`);
-    return releaseId;
   }
 
   private async getDistributeRelease(
