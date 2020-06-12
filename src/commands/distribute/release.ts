@@ -19,8 +19,8 @@ import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, Profile } from "../../util/profile";
 import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
-import { McFusUploader, McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusMessageLevel, McFusUploader, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
