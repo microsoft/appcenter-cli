@@ -554,7 +554,7 @@ export const McFusUploader: any = function (this: any, args: IInitializeSettings
             StatusCode: err.status,
             StatusText: err.statusText,
           });
-          error("The asset cannot be uploaded. Try creating a new one.", logProperties);
+          error("The asset cannot be uploaded. Failed to set metadata.", logProperties);
         } else {
           error("Upload Failed. No network detected. Please try again.", {}, McFusUploadState.Error);
         }

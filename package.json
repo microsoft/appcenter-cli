@@ -20,7 +20,7 @@
     "build": "npm run lint && gulp build:raw",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
-    "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s",
+    "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s --timeout 4000",
     "rebuild-test": "npm run build && npm run test",
     "test:ci": "mocha --require ts-node/register --reporter mocha-junit-reporter ./test/**/*-test.[tj]s",
     "watch-test": "mocha --require ts-node/register ./test/**/*-test.[tj]s --watch",
