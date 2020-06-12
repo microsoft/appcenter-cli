@@ -18,7 +18,7 @@ import * as fs from "fs";
 import fetch from "node-fetch";
 import { MimeTypes } from "./mc-fus-mime-types";
 import * as Path from "path";
-import "abort-controller/polyfill";
+import { AbortController } from "abort-controller";
 
 export class McFile implements McFusFile {
   private path: string;
