@@ -10,34 +10,26 @@ import {
 import * as TypeMoq from "typemoq";
 import * as assert from "assert";
 import * as uuid from "uuid";
-import "abort-controller/polyfill";
 
 import * as Nock from "nock";
 
 class McFile implements McFusFile {
   name: string;
-  fileSize: number;
+  size: number;
 
   constructor(name: string, filesize: number) {
     this.name = name;
-    this.fileSize = filesize;
+    this.size = filesize;
   }
 
   slice(start: number, end: number): Buffer {
     throw new Error("Method not implemented.");
   }
-
-  get size(): number {
-    return this.fileSize;
-  }
 }
 
-const globalAsAny = global as any;
-globalAsAny.window = {};
 (URL as any).createObjectURL = () => {};
 
 // For the following two dependencies, we might want to move it to tests if we want to cover isBrowserSupported
-globalAsAny.window.File = McFile;
 
 // End of stub of browser dependencies
 
