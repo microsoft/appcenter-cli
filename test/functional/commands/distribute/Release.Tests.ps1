@@ -8,8 +8,7 @@ Describe "distribute release" {
 
   It "creates a release when mandatory flag is set to true" {
     # Arrange
-    $fileName = "Dummy.zip"
-    "DummyData" | Out-File -FilePath $fileName
+    $fileName = "./test/functional/dummyapk.apk"
 
     # Act
     $r1 = appcenter distribute release -g Collaborators -f $fileName --build-version 1 --mandatory --output json | ConvertFrom-Json

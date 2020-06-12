@@ -16,7 +16,7 @@ import {
 import * as fs from "fs";
 import fetch from "node-fetch";
 import { MimeTypes } from "./mc-fus-mime-types";
-const Path = require('path');
+const Path = require("path");
 
 export class McFile implements McFusFile {
   private path: string;
