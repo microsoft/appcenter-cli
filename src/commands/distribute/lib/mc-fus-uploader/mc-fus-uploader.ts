@@ -5,6 +5,7 @@ import {
   IProgress,
   IUploadStats,
   McFusMessageLevel,
+  McFusUploader,
   IRequiredSettings,
   IEventSettings,
   IInitializeSettings,
@@ -54,17 +55,13 @@ class HttpError extends Error {
     this.statusText = statusText;
   }
 }
-export interface McFusUploader {
-  Start(file: McFusFile): void;
-  Cancel(): void;
-}
 
 export class McFusNodeUploader implements McFusUploader {
   ambiguousProgress: number = 0;
   progressUpdateRate: number = 0;
   maxNumberOfConcurrentUploads: number = 10;
 
-  uploadBaseUrls: any = {
+  readonly uploadBaseUrls: any = {
     CancelUpload: "upload/cancel/",
     SetMetadata: "upload/set_metadata/",
     UploadChunk: "upload/upload_chunk/",
@@ -72,7 +69,7 @@ export class McFusNodeUploader implements McFusUploader {
     UploadStatus: "upload/status/",
   };
 
-  uploadData: IUploadData = {
+  readonly uploadData: IUploadData = {
     AssetId: "00000000-0000-0000-0000-000000000000",
     BlobPartitions: 0,
     CallbackUrl: "",
@@ -86,7 +83,7 @@ export class McFusNodeUploader implements McFusUploader {
     UploadDomain: "",
   };
 
-  uploadStatus: IUploadStatus = {
+  readonly uploadStatus: IUploadStatus = {
     AutoRetryCount: 0,
     AverageSpeed: 0,
     BlocksCompleted: 0,
@@ -107,7 +104,7 @@ export class McFusNodeUploader implements McFusUploader {
     TransferQueueRate: [],
   };
 
-  eventHandlers: any = {
+  readonly eventHandlers: any = {
     onProgressChanged: (progress: IProgress) => {},
     onCompleted: (uploadStats: IUploadStats) => {},
     onResumeRestart: (onResumeStartParams: IOnResumeStartParams) => {},
