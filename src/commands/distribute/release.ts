@@ -16,13 +16,11 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
-import { DefaultApp, getUser } from "../../util/profile";
-import { getPortalUploadLink, getPortalPatchUploadLink } from "../../util/portal/portal-helper";
+import { DefaultApp, getUser, Profile } from "../../util/profile";
+import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
-import * as fs from "fs";
-import { McFusUploader, McFile } from "./lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusUploader, McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import { McFusMessageLevel, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
-import "abort-controller/polyfill";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
@@ -81,7 +79,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
-  private mcFusUploader?: any;
+  private mcFusUploader?: McFusUploader;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -284,19 +282,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return Promise.all([distributionGroupUsersNumber, storeInformation, releaseNotesString]);
   }
 
-  private async getReleaseFileStream(): Promise<fs.Stats> {
-    try {
-      const fileStats = await Pfs.stat(this.filePath);
-      return fileStats;
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
-      } else {
-        throw error;
-      }
-    }
-  }
-
   private async getReleaseNotesString(): Promise<string> {
     if (!_.isNil(this.releaseNotesFile)) {
       try {
@@ -358,15 +343,17 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<any> {
     debug("Creating release upload");
     const profile = getUser();
-    const url = getPortalUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName);
-    const accessToken = await profile.accessToken;
+    const endpoint = await this.getEndpoint(profile);
+    const accessToken = await this.getToken(profile);
+    const url = getFileUploadLink(endpoint, app.ownerName, app.appName);
+    const body = JSON.stringify({ build_version: this.buildVersion, build_number: this.buildNumber });
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-token": accessToken,
       },
-      body: "{}",
+      body: body,
     });
     const json = await response.json();
     if (!json.package_asset_id || (json.statusCode && json.statusCode !== 200)) {
@@ -403,7 +390,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           resolve();
         },
       };
-      this.mcFusUploader = new McFusUploader(uploadSettings);
+      this.mcFusUploader = new McFusNodeUploader(uploadSettings);
       const testFile = new McFile(this.filePath);
       this.mcFusUploader.Start(testFile);
     });
@@ -412,8 +399,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async patchUpload(app: DefaultApp, uploadId: string): Promise<void> {
     debug("Patching the upload");
     const profile = getUser();
-    const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
-    const accessToken = await profile.accessToken;
+    const endpoint = await this.getEndpoint(profile);
+    const accessToken = await this.getToken(profile);
+    const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
     const response = await fetch(url, {
       method: "PATCH",
       headers: {
@@ -453,8 +441,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       debug("Loading release id...");
       const profile = getUser();
-      const url = getPortalPatchUploadLink(environments(this.environmentName).endpoint, app.ownerName, app.appName, uploadId);
-      const accessToken = await profile.accessToken;
+      const endpoint = await this.getEndpoint(profile);
+      const accessToken = await this.getToken(profile);
+      const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -466,6 +455,26 @@ export default class ReleaseBinaryCommand extends AppCommand {
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to get release id for upload id: ${uploadId}, error: ${JSON.stringify(error)}`);
     }
+  }
+
+  private async getToken(profile: Profile): Promise<string> {
+    let accessToken = "";
+    if (this.token && this.token.length > 0) {
+      accessToken = this.token;
+    } else if (profile) {
+      accessToken = await profile.accessToken;
+    }
+    return accessToken;
+  }
+
+  private async getEndpoint(profile: Profile): Promise<string> {
+    let endpoint = "";
+    if (this.environmentName) {
+      endpoint = environments(this.environmentName).endpoint;
+    } else if (profile) {
+      endpoint = profile.endpoint;
+    }
+    return endpoint;
   }
 
   private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
@@ -482,12 +491,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         `HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`
       );
     }
-  }
-
-  private extractReleaseId(releaseUrl: string): number {
-    const releaseId = Number(_(releaseUrl).split("/").last());
-    console.assert(Number.isSafeInteger(releaseId) && releaseId > 0, `API returned unexpected release URL: ${releaseUrl}`);
-    return releaseId;
   }
 
   private async getDistributeRelease(

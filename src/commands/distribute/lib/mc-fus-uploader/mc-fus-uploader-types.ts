@@ -102,6 +102,5 @@ export type LogProperties = { [key: string]: string | string[] | number | boolea
 export interface McFusFile {
   readonly name: string;
   readonly size: number;
-  readonly fileName: string;
   slice(start: number, end: number): Buffer;
 }

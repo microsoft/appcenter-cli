@@ -27,11 +27,3 @@ export function getPortalTestLink(
 export function getPortalOrgLink(portalBaseUrl: string, orgName: string): string {
   return `${portalBaseUrl}/orgs/${orgName}`;
 }
-
-export function getPortalUploadLink(portalBaseUrl: string, ownerName: string, appName: string): string {
-  return portalBaseUrl + "/v0.1/apps/" + ownerName + "/" + appName + "/uploads/releases";
-}
-
-export function getPortalPatchUploadLink(portalBaseUrl: string, ownerName: string, appName: string, uploadId: string): string {
-  return portalBaseUrl + "/v0.1/apps/" + ownerName + "/" + appName + "/uploads/releases/" + uploadId;
-}
