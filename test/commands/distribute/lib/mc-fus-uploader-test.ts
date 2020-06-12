@@ -27,10 +27,6 @@ class McFile implements McFusFile {
     throw new Error("Method not implemented.");
   }
 
-  get fileName(): string {
-    return this.name;
-  }
-
   get size(): number {
     return this.fileSize;
   }
