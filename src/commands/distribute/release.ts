@@ -371,7 +371,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         UploadDomain: uploadDomain,
         Tenant: "distribution",
         onProgressChanged: (progress: any) => {
-          //todo nice to have updated progress log
           debug("onProgressChanged: " + progress.percentCompleted);
         },
         onMessage: (message: string, properties: any, level: any) => {
@@ -382,8 +381,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           }
         },
         onStateChanged: (status: McFusUploadState): void => {
-          //todo get state title
-          debug(`onStateChanged: ${status}`);
+          debug(`onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: any) => {
           debug("Upload completed, total time: " + uploadStats.TotalTimeInSeconds);

@@ -10,7 +10,6 @@ import {
 import * as TypeMoq from "typemoq";
 import * as assert from "assert";
 import * as uuid from "uuid";
-
 import * as Nock from "nock";
 
 class McFile implements McFusFile {
@@ -26,8 +25,6 @@ class McFile implements McFusFile {
     throw new Error("Method not implemented.");
   }
 }
-
-(URL as any).createObjectURL = () => {};
 
 describe("McFusUploader", () => {
   describe("#Start", () => {
