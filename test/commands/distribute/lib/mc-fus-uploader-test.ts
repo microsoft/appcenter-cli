@@ -1,4 +1,4 @@
-import { McFusUploader } from "../../../../src/commands/distribute/lib/mc-fus-uploader/mc-fus-uploader";
+import { McFusNodeUploader } from "../../../../src/commands/distribute/lib/mc-fus-uploader/mc-fus-uploader";
 import {
   IInitializeSettings,
   McFusMessageLevel,
@@ -75,7 +75,7 @@ describe("McFusUploader", () => {
         const setMetadata = nock("http://upload.ms")
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
-        const uploader = new McFusUploader(uploadSettings);
+        const uploader = new McFusNodeUploader(uploadSettings);
         uploader.Start(null);
         onMessageMock.verify(
           (callback) =>
@@ -98,7 +98,7 @@ describe("McFusUploader", () => {
         const setMetadata = nock("http://upload.ms")
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
-        const uploader = new McFusUploader(uploadSettings);
+        const uploader = new McFusNodeUploader(uploadSettings);
         uploader.Start(new McFile("test", 0));
         onMessageMock.verify(
           (callback) =>
@@ -123,7 +123,7 @@ describe("McFusUploader", () => {
       const testFile = new McFile("test1", 100);
 
       beforeEach(() => {
-        uploader = new McFusUploader(uploadSettings);
+        uploader = new McFusNodeUploader(uploadSettings);
         nock.cleanAll();
       });
 
