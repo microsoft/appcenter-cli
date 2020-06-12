@@ -60,7 +60,6 @@ export interface McFusUploader {
 }
 
 export class McFusNodeUploader implements McFusUploader {
-
   ambiguousProgress: number = 0;
   progressUpdateRate: number = 0;
   maxNumberOfConcurrentUploads: number = 10;
@@ -119,7 +118,7 @@ export class McFusNodeUploader implements McFusUploader {
   constructor(args: IInitializeSettings) {
     this.initializeUpload(args);
   }
-  
+
   calculateAverageSpeed() {
     if (this.uploadStatus.TransferQueueRate.length === 0) {
       return 0;
@@ -225,61 +224,61 @@ export class McFusNodeUploader implements McFusUploader {
 
     this.setState(McFusUploadState.Verifying);
     this.log("Verifying upload on server.");
-
+    const self = this;
     this.sendRequest({
       type: "POST",
       useAuthentication: true,
       url:
-      this.uploadBaseUrls.UploadFinished +
-        encodeURIComponent(this.uploadData.AssetId) +
+        self.uploadBaseUrls.UploadFinished +
+        encodeURIComponent(self.uploadData.AssetId) +
         "?callback=" +
-        encodeURIComponent(this.uploadData.CallbackUrl),
+        encodeURIComponent(self.uploadData.CallbackUrl),
       error: function (err: Error) {
-        this.log("Finalize upload failed. Trying to autorecover... " + err.message);
-        this.setState(McFusUploadState.Uploading);
-        this.startUpload();
+        self.log("Finalize upload failed. Trying to autorecover... " + err.message);
+        self.setState(McFusUploadState.Uploading);
+        self.startUpload();
       },
       success: function (response: any) {
         // it's possible that the health check called complete before this method did.
         // Log the current status and proceed with response verification.
-        if (this.uploadStatus.State !== McFusUploadState.Verifying) {
-          this.log("Verifying: Upload status has changed, current status: " + this.uploadStatus.State);
+        if (self.uploadStatus.State !== McFusUploadState.Verifying) {
+          self.log("Verifying: Upload status has changed, current status: " + self.uploadStatus.State);
         }
 
         //if no error then execute callback
         if (response.error === false && response.state === "Done") {
-          this.log("UploadFinalized. McFus reported the upload as completed. Status message: " + response.message, {
+          self.log("UploadFinalized. McFus reported the upload as completed. Status message: " + response.message, {
             location: response.location,
           });
 
           // Finally report upload completion.
-          this.completeUpload();
+          self.completeUpload();
 
           // Attempt to perform a callback
-          this.invokeCallback(response.raw_location);
+          self.invokeCallback(response.raw_location);
         } else {
           // if chunks are missing enqueue missing chunks
           if (response.missing_chunks && response.missing_chunks.length > 0) {
             // If there are missing chunks lets adjust the completed count.
-            this.uploadStatus.BlocksCompleted = this.uploadData.TotalBlocks - response.missing_chunks.length;
+            self.uploadStatus.BlocksCompleted = self.uploadData.TotalBlocks - response.missing_chunks.length;
 
-            this.enqueueChunks(response.missing_chunks);
-            this.setState(McFusUploadState.Uploading);
+            self.enqueueChunks(response.missing_chunks);
+            self.setState(McFusUploadState.Uploading);
 
-            this.log("Finalizing found missing " + response.missing_chunks.length + " chunks. Requeuing chunks.", {
+            self.log("Finalizing found missing " + response.missing_chunks.length + " chunks. Requeuing chunks.", {
               ChunksMissing: response.missing_chunks,
             });
 
-            const concurrentUploads = Math.min(this.maxNumberOfConcurrentUploads, this.uploadStatus.ChunkQueue.length);
+            const concurrentUploads = Math.min(self.maxNumberOfConcurrentUploads, self.uploadStatus.ChunkQueue.length);
             for (let i = 0; i < concurrentUploads; i++) {
-              this.singleThreadedUpload();
+              self.singleThreadedUpload();
             }
             return;
           }
 
           // if no chunks are missing this must be an unhandled error
           // display the details to the user and stop the upload.
-          this.error(response.message);
+          self.error(response.message);
         }
       },
     });
@@ -315,7 +314,12 @@ export class McFusNodeUploader implements McFusUploader {
     this.setState(McFusUploadState.Uploading);
 
     // Failing shows progress
-    this.eventHandlers.onProgressChanged({ percentCompleted: ++this.ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
+    this.eventHandlers.onProgressChanged({
+      percentCompleted: ++this.ambiguousProgress,
+      Rate: "",
+      AverageSpeed: "",
+      TimeRemaining: "",
+    });
     this.log("Starting singleThreadedUpload with chunks: " + this.uploadStatus.ChunkQueue);
     const concurrentUploads = Math.min(this.maxNumberOfConcurrentUploads, this.uploadStatus.ChunkQueue.length);
     for (let i = 0; i < concurrentUploads; i++) {
@@ -368,7 +372,7 @@ export class McFusNodeUploader implements McFusUploader {
   invokeCallback(location: string) {
     if (this.uploadData.CallbackUrl && this.uploadData.CallbackUrl !== "") {
       const callbackUrl =
-      this.uploadData.CallbackUrl +
+        this.uploadData.CallbackUrl +
         "/" +
         encodeURIComponent(this.uploadData.AssetId) +
         "?file_name=" +
@@ -377,8 +381,8 @@ export class McFusNodeUploader implements McFusUploader {
         encodeURIComponent(this.uploadData.File!.size) +
         "&location=" +
         location;
-        this.log("Callback was supplied. Invoking callback on: " + callbackUrl);
-
+      this.log("Callback was supplied. Invoking callback on: " + callbackUrl);
+      const self = this;
       this.sendRequest({
         type: "POST",
         url: callbackUrl,
@@ -388,28 +392,28 @@ export class McFusNodeUploader implements McFusUploader {
           const errorMessage = "Callback failed. Status: " + err.message;
 
           // Non-fatal error, just log info
-          this.log(errorMessage, { FailedCallback: this.uploadData.CallbackUrl });
+          self.log(errorMessage, { FailedCallback: self.uploadData.CallbackUrl });
 
           // If we still have retries available go ahead with the success callback.
-          if (this.uploadStatus.ServiceCallback.AutoRetryCount > 0) {
+          if (self.uploadStatus.ServiceCallback.AutoRetryCount > 0) {
             setTimeout(function () {
-              this.invokeCallback(location);
-            }, this.uploadStatus.ServiceCallback.AutoRetryDelay * 10);
+              self.invokeCallback(location);
+            }, self.uploadStatus.ServiceCallback.AutoRetryDelay * 10);
 
-            this.uploadStatus.ServiceCallback.AutoRetryCount--;
-            this.uploadStatus.ServiceCallback.FailureCount++;
+            self.uploadStatus.ServiceCallback.AutoRetryCount--;
+            self.uploadStatus.ServiceCallback.FailureCount++;
 
             // Increment the backoff in multiples of 5 for
             // subsequent attempts. (5, 25, 125 and so on)
-            this.uploadStatus.ServiceCallback.AutoRetryDelay *= 5;
+            self.uploadStatus.ServiceCallback.AutoRetryDelay *= 5;
           } else {
-            this.log(
+            self.log(
               "Callback retries depleted. The upload completed but the uploader was unable to perform a successful callback notifying completion."
             );
           }
         },
         success: function () {
-          this.log("Callback succeeded.");
+          self.log("Callback succeeded.");
         },
       });
     }
@@ -502,13 +506,14 @@ export class McFusNodeUploader implements McFusUploader {
       const size = requestOptions.chunk.size;
       body = requestOptions.chunk;
     }
+    const self = this;
     fetch(requestUrl, {
       method: requestOptions.type,
       headers: {
-        "X-Correlation-ID": this.uploadData.CorrelationId,
+        "X-Correlation-ID": self.uploadData.CorrelationId,
       },
       body: body,
-      signal: this.uploadStatus.AbortController.signal,
+      signal: self.uploadStatus.AbortController.signal,
     })
       .then((response) => {
         if (!response.ok) {
@@ -533,7 +538,12 @@ export class McFusNodeUploader implements McFusUploader {
   }
 
   setMetadata() {
-    this.eventHandlers.onProgressChanged({ percentCompleted: ++this.ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
+    this.eventHandlers.onProgressChanged({
+      percentCompleted: ++this.ambiguousProgress,
+      Rate: "",
+      AverageSpeed: "",
+      TimeRemaining: "",
+    });
     const logProperties = {
       fileName: this.uploadData.File!.name,
       fileSize: this.uploadData.File!.size,
@@ -541,17 +551,17 @@ export class McFusNodeUploader implements McFusUploader {
     this.log("Setting Metadata.", logProperties);
     const fileExt = this.uploadData.File!.name.split(".").pop() as string;
     const mimeTypeParam = MimeTypes[fileExt] ? `&content_type=${encodeURIComponent(MimeTypes[fileExt])}` : ``;
-
+    const self = this;
     this.sendRequest({
       type: "POST",
       useAuthentication: true,
       url:
-      this.uploadBaseUrls.SetMetadata +
-        encodeURIComponent(this.uploadData.AssetId) +
+        self.uploadBaseUrls.SetMetadata +
+        encodeURIComponent(self.uploadData.AssetId) +
         "?file_name=" +
-        encodeURIComponent(this.uploadData.File!.name) +
+        encodeURIComponent(self.uploadData.File!.name) +
         "&file_size=" +
-        encodeURIComponent(this.uploadData.File!.size) +
+        encodeURIComponent(self.uploadData.File!.size) +
         mimeTypeParam,
       error: function (err: Error) {
         if (err instanceof HttpError) {
@@ -559,18 +569,23 @@ export class McFusNodeUploader implements McFusUploader {
             StatusCode: err.status,
             StatusText: err.statusText,
           });
-          this.error("The asset cannot be uploaded. Failed to set metadata.", logProperties);
+          self.error("The asset cannot be uploaded. Failed to set metadata.", logProperties);
         } else {
-          this.error("Upload Failed. No network detected. Please try again.", {}, McFusUploadState.Error);
+          self.error("Upload Failed. No network detected. Please try again." + err, {}, McFusUploadState.Error);
         }
       },
       success: function (response: any) {
-        this.eventHandlers.onProgressChanged({ percentCompleted: ++this.ambiguousProgress, Rate: "", AverageSpeed: "", TimeRemaining: "" });
+        self.eventHandlers.onProgressChanged({
+          percentCompleted: ++self.ambiguousProgress,
+          Rate: "",
+          AverageSpeed: "",
+          TimeRemaining: "",
+        });
         // if we get an html document back we likely have a server error so report it and stop
         if (response.error === undefined && response.toString().indexOf("<!DOCTYPE html>") === 0) {
           //strip off everything outside the body tags
           const body = response.replace(/^[\S\s]*<body[^>]*?>/i, "").replace(/<\/body[\S\s]*$/i, "");
-          this.error(body);
+          self.error(body);
           return;
         }
 
@@ -580,34 +595,34 @@ export class McFusNodeUploader implements McFusUploader {
             StatusCode: response.currentTarget.status,
             StatusText: response.currentTarget.statusText,
           });
-          this.error(response.message, logProperties);
+          self.error(response.message, logProperties);
           return;
         }
 
         Object.assign(logProperties, { serverLocation: response.server_location, chunkSize: response.chunk_size });
-        this.log("Set metadata completed.", logProperties);
-        this.uploadData.ChunkSize = response.chunk_size;
-        this.uploadData.BlobPartitions = response.blob_partitions;
+        self.log("Set metadata completed.", logProperties);
+        self.uploadData.ChunkSize = response.chunk_size;
+        self.uploadData.BlobPartitions = response.blob_partitions;
 
         // Calculate the number of chunks to send
-        this.uploadData.TotalBlocks = Math.ceil(this.uploadData.File!.size / this.uploadData.ChunkSize);
-        this.progressUpdateRate = Math.ceil(this.uploadData.TotalBlocks / 100);
-        this.log("Chunks to upload: " + this.uploadData.TotalBlocks);
+        self.uploadData.TotalBlocks = Math.ceil(self.uploadData.File!.size / self.uploadData.ChunkSize);
+        self.progressUpdateRate = Math.ceil(self.uploadData.TotalBlocks / 100);
+        self.log("Chunks to upload: " + self.uploadData.TotalBlocks);
 
-        this.enqueueChunks(response.chunk_list);
+        self.enqueueChunks(response.chunk_list);
 
         // Handle the restart/resume/recovery scenario
         if (response.resume_restart) {
-          this.setState(McFusUploadState.ResumeOrRestart);
+          self.setState(McFusUploadState.ResumeOrRestart);
           const remainingChunksToUpload = response.chunk_list.length;
-          this.log("Chunks remaining to upload: " + remainingChunksToUpload);
+          self.log("Chunks remaining to upload: " + remainingChunksToUpload);
 
-          this.uploadStatus.BlocksCompleted = this.uploadData.TotalBlocks - remainingChunksToUpload;
-          this.eventHandlers.onResumeRestart({ NumberOfChunksRemaining: remainingChunksToUpload });
+          self.uploadStatus.BlocksCompleted = self.uploadData.TotalBlocks - remainingChunksToUpload;
+          self.eventHandlers.onResumeRestart({ NumberOfChunksRemaining: remainingChunksToUpload });
         } else {
-          this.uploadStatus.BlocksCompleted = 0;
-          this.uploadStatus.StartTime = new Date();
-          this.startUpload();
+          self.uploadStatus.BlocksCompleted = 0;
+          self.uploadStatus.StartTime = new Date();
+          self.startUpload();
         }
       },
     });
@@ -677,31 +692,32 @@ export class McFusNodeUploader implements McFusUploader {
   uploadChunk(chunk: Buffer, chunkNumber: number) {
     this.uploadStatus.InflightSet.add(chunkNumber);
     this.log("Starting upload for chunk: " + chunkNumber);
+    const self = this;
     this.sendRequest({
       type: "POST",
       useAuthentication: true,
       chunk: chunk,
-      url: this.uploadBaseUrls.UploadChunk + encodeURIComponent(this.uploadData.AssetId) + "?block_number=" + chunkNumber,
+      url: self.uploadBaseUrls.UploadChunk + encodeURIComponent(self.uploadData.AssetId) + "?block_number=" + chunkNumber,
       error: function (err: Error) {
-        this.uploadStatus.InflightSet.delete(chunkNumber);
-        this.uploadChunkErrorHandler(err, chunkNumber);
+        self.uploadStatus.InflightSet.delete(chunkNumber);
+        self.uploadChunkErrorHandler(err, chunkNumber);
       },
       success: function (response: any) {
-        this.uploadStatus.InflightSet.delete(chunkNumber);
+        self.uploadStatus.InflightSet.delete(chunkNumber);
         if (response.error) {
-          this.uploadChunkErrorHandler(response.error, chunkNumber);
+          self.uploadChunkErrorHandler(response.error, chunkNumber);
           return;
         } else {
           // If a user is struggling to upload, we can increase the MaxErrorCount on each success in order to keep trying while they are making some progress.
-          ++this.uploadStatus.MaxErrorCount;
-          this.uploadStatus.Connected = true;
-          this.log("ChunkSucceeded: " + chunkNumber + ".");
-          if (++this.uploadStatus.BlocksCompleted % this.progressUpdateRate === 0) {
-            this.reportProgress();
+          ++self.uploadStatus.MaxErrorCount;
+          self.uploadStatus.Connected = true;
+          self.log("ChunkSucceeded: " + chunkNumber + ".");
+          if (++self.uploadStatus.BlocksCompleted % self.progressUpdateRate === 0) {
+            self.reportProgress();
           }
         }
 
-        this.singleThreadedUpload();
+        self.singleThreadedUpload();
       },
     });
   }
@@ -721,8 +737,9 @@ export class McFusNodeUploader implements McFusUploader {
       this.log("ChunkFailed: " + chunkNumber + ": " + error.message);
       this.uploadStatus.Connected = false;
       this.log("No network detected. Attempting chunk upload again in 10s.");
+      const self = this;
       setTimeout(() => {
-        this.singleThreadedUpload();
+        self.singleThreadedUpload();
       }, 1000 * 10 /* 10 seconds */);
     }
   }
@@ -742,21 +759,22 @@ export class McFusNodeUploader implements McFusUploader {
     this.uploadData.File = file;
     this.setState(McFusUploadState.Initialized);
     this.setMetadata();
-  };
+  }
 
   Cancel() {
     this.log("UploadCancelled");
 
+    const self = this;
     this.sendRequest({
       type: "POST",
       useAuthentication: true,
-      url: this.uploadBaseUrls.CancelUpload + encodeURIComponent(this.uploadData.AssetId),
+      url: self.uploadBaseUrls.CancelUpload + encodeURIComponent(self.uploadData.AssetId),
       success: function (response: any) {
-        this.log(response.message);
-        this.setState(McFusUploadState.Cancelled);
+        self.log(response.message);
+        self.setState(McFusUploadState.Cancelled);
 
-        this.abortSingleThreadedUploads();
+        self.abortSingleThreadedUploads();
       },
     });
-  };
-};
+  }
+}

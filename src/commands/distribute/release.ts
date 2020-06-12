@@ -346,13 +346,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const endpoint = await this.getEndpoint(profile);
     const accessToken = await this.getToken(profile);
     const url = getFileUploadLink(endpoint, app.ownerName, app.appName);
+    const body = JSON.stringify({ build_version: this.buildVersion, build_number: this.buildNumber });
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-token": accessToken,
       },
-      body: "{}",
+      body: body,
     });
     const json = await response.json();
     if (!json.package_asset_id || (json.statusCode && json.statusCode !== 200)) {
