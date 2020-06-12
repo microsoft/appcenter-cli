@@ -12,7 +12,7 @@ import * as assert from "assert";
 import * as uuid from "uuid";
 import "abort-controller/polyfill";
 
-import nock = require("nock");
+import * as Nock from "nock";
 
 class McFile implements McFusFile {
   name: string;
@@ -68,7 +68,7 @@ describe("McFusUploader", () => {
 
     context("When an invalid file is provided", () => {
       it("Should send a message and return when the file is null", () => {
-        const setMetadata = nock("http://upload.ms")
+        const setMetadata = Nock("http://upload.ms")
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
         const uploader = new McFusNodeUploader(uploadSettings);
@@ -91,7 +91,7 @@ describe("McFusUploader", () => {
       });
 
       it("Should send a message and return when the file is empty", () => {
-        const setMetadata = nock("http://upload.ms")
+        const setMetadata = Nock("http://upload.ms")
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
         const uploader = new McFusNodeUploader(uploadSettings);
@@ -120,11 +120,11 @@ describe("McFusUploader", () => {
 
       beforeEach(() => {
         uploader = new McFusNodeUploader(uploadSettings);
-        nock.cleanAll();
+        Nock.cleanAll();
       });
 
       it("Should be initialized and set metadata", () => {
-        const setMetadata = nock("http://upload.ms")
+        const setMetadata = Nock("http://upload.ms")
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
         uploader.Start(testFile);
@@ -138,8 +138,8 @@ describe("McFusUploader", () => {
 
       context("When the POST to upload/set_metadata fails", () => {
         it("Should log an error message and be in failed state", (done) => {
-          nock.cleanAll();
-          nock("http://upload.ms")
+          Nock.cleanAll();
+          Nock("http://upload.ms")
             .post((uri) => uri.includes("set_metadata"))
             .reply(500, "{}")
             .persist();
@@ -164,8 +164,8 @@ describe("McFusUploader", () => {
       context("When the POST to upload/set_metadata succeeds", () => {
         context("When getting an html document or non-JSON response back", () => {
           it("Should strip off everything outside the body tags and log an error and be in failed state", (done) => {
-            nock.cleanAll();
-            const request = nock("http://upload.ms").post(/.*/).reply(200, "<!DOCTYPE html><html></html>").persist();
+            Nock.cleanAll();
+            const request = Nock("http://upload.ms").post(/.*/).reply(200, "<!DOCTYPE html><html></html>").persist();
             uploader.Start(testFile);
             setTimeout(function () {
               onMessageMock.verify(
@@ -191,8 +191,8 @@ describe("McFusUploader", () => {
 
       context("When file is already being uploaded", () => {
         it("Should emit a warning and return without updating the file", () => {
-          nock.cleanAll();
-          nock("http://upload.ms").post(/.*/).reply(200, "{}");
+          Nock.cleanAll();
+          Nock("http://upload.ms").post(/.*/).reply(200, "{}");
           uploader.Start(testFile);
           uploader.Start(new McFile("test2", 200));
           onMessageMock.verify(
@@ -210,7 +210,7 @@ describe("McFusUploader", () => {
           onStateChangedMock.verify((callback) => callback(McFusUploadState.New), TypeMoq.Times.once());
           onStateChangedMock.verify((callback) => callback(McFusUploadState.Initialized), TypeMoq.Times.once());
           onStateChangedMock.verify((callback) => callback(McFusUploadState.FatalError), TypeMoq.Times.never());
-          assert.strictEqual(nock.isDone(), true);
+          assert.strictEqual(Nock.isDone(), true);
         });
       });
     });
