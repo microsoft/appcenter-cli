@@ -47,6 +47,7 @@
     "dist"
   ],
   "devDependencies": {
+    "@types/uuid": "^8.0.0",
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "7.1.2",
     "@types/debug": "4.1.5",
@@ -97,10 +98,10 @@
     "prettier": "2.0.5",
     "sinon": "9.0.2",
     "ts-node": "8.10.1",
+    "typemoq": "^2.1.0",
     "typescript": "3.9.3"
   },
   "dependencies": {
-    "@types/uuid": "^8.0.0",
     "abort-controller": "^3.0.0",
     "appcenter-file-upload-client": "0.0.24",
     "azure-storage": "2.10.3",
@@ -138,7 +139,6 @@
     "strip-ansi": "6.0.0",
     "temp": "0.9.1",
     "through2": "3.0.1",
-    "typemoq": "^2.1.0",
     "unzipper": "0.10.11",
     "update-notifier": "4.1.0",
     "uuid": "^7.0.3",
