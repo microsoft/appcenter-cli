@@ -467,11 +467,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async getEndpoint(profile: Profile): Promise<string> {
     let endpoint = "";
-    if (this.environmentName) {
-      endpoint = environments(this.environmentName).endpoint;
-    } else if (profile) {
+    if (profile) {
       endpoint = profile.endpoint;
-    }
+    } else {
+      endpoint = environments(this.environmentName).endpoint;
+    } 
     return endpoint;
   }
 
