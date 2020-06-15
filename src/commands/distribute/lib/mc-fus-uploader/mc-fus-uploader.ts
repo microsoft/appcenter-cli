@@ -117,7 +117,7 @@ export class McFusNodeUploader implements McFusUploader {
     this.initializeUpload(args);
   }
 
-  private calculateAverageSpeed() {
+  private calculateAverageSpeed(): number {
     if (this.uploadStatus.TransferQueueRate.length === 0) {
       return 0;
     }
@@ -131,7 +131,7 @@ export class McFusNodeUploader implements McFusUploader {
     return rateSum / this.uploadStatus.TransferQueueRate.length;
   }
 
-  private calculateRate() {
+  private calculateRate(): number {
     // Get the elapsed time in seconds
     const diff = new Date().getTime() - this.uploadStatus.StartTime.getTime();
     const seconds = diff / 1000;
@@ -144,7 +144,7 @@ export class McFusNodeUploader implements McFusUploader {
     return rate;
   }
 
-  private calculateTimeRemaining() {
+  private calculateTimeRemaining(): number {
     // calculate time remaining using chunks to avoid hitting the disc for size
     const dataRemaining = this.uploadStatus.ChunkQueue.length * this.uploadData.ChunkSize;
     if (this.uploadStatus.AverageSpeed > 0 && dataRemaining > 0) {
@@ -282,7 +282,7 @@ export class McFusNodeUploader implements McFusUploader {
     });
   }
 
-  private hasRequiredSettings(settings: IRequiredSettings) {
+  private hasRequiredSettings(settings: IRequiredSettings): boolean {
     let hasSettings = true;
 
     if (!settings.AssetId) {
@@ -417,7 +417,7 @@ export class McFusNodeUploader implements McFusUploader {
     }
   }
 
-  private isUploadInProgress() {
+  private isUploadInProgress(): boolean {
     return (
       this.uploadStatus.State === McFusUploadState.Initialized ||
       this.uploadStatus.State === McFusUploadState.Uploading ||
@@ -677,7 +677,7 @@ export class McFusNodeUploader implements McFusUploader {
     this.uploadStatus.AbortController.abort();
   }
 
-  private getLoggingProperties(data: LogProperties) {
+  private getLoggingProperties(data: LogProperties): LogProperties {
     const properties = {
       AssetId: this.uploadData.AssetId,
       CorrelationId: this.uploadData.CorrelationId,
@@ -742,7 +742,7 @@ export class McFusNodeUploader implements McFusUploader {
     }
   }
 
-  public start(file: McFusFile): void {
+  public start(file: McFusFile) {
     if (!file || file.size <= 0) {
       this.error("A file must be specified and must not be empty.", {}, McFusUploadState.Error);
       return;
