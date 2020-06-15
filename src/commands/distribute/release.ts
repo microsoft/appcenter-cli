@@ -389,8 +389,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
         },
       };
       this.mcFusUploader = new McFusNodeUploader(uploadSettings);
-      const testFile = new McFile(this.filePath);
-      this.mcFusUploader.Start(testFile);
+      const appFile = new McFile(this.filePath);
+      this.mcFusUploader.Start(appFile);
     });
   }
 
