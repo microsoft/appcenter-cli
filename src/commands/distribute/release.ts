@@ -20,7 +20,14 @@ import { DefaultApp, getUser, Profile } from "../../util/profile";
 import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusMessageLevel, McFusUploader, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+import {
+  McFusMessageLevel,
+  McFusUploader,
+  McFusUploadState,
+  IProgress,
+  LogProperties,
+  IUploadStats,
+} from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
@@ -370,10 +377,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
         UrlEncodedToken: urlEncodedToken,
         UploadDomain: uploadDomain,
         Tenant: "distribution",
-        onProgressChanged: (progress: any) => {
+        onProgressChanged: (progress: IProgress) => {
           debug("onProgressChanged: " + progress.percentCompleted);
         },
-        onMessage: (message: string, properties: any, level: any) => {
+        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
           debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
           if (level === McFusMessageLevel.Error) {
             this.mcFusUploader.cancel();
@@ -383,7 +390,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
         onStateChanged: (status: McFusUploadState): void => {
           debug(`onStateChanged: ${status.toString()}`);
         },
-        onCompleted: (uploadStats: any) => {
+        onCompleted: (uploadStats: IUploadStats) => {
           debug("Upload completed, total time: " + uploadStats.TotalTimeInSeconds);
           resolve();
         },

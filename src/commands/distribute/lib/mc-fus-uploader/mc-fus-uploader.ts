@@ -135,6 +135,9 @@ export class McFusNodeUploader implements McFusUploader {
     // Get the elapsed time in seconds
     const diff = new Date().getTime() - this.uploadStatus.StartTime.getTime();
     const seconds = diff / 1000;
+    if (seconds === 0) {
+      return 0;
+    }
 
     // Megabytes per second
     const speed = (this.uploadStatus.BlocksCompleted * this.uploadData.ChunkSize) / 1024 / 1024 / seconds;
@@ -148,12 +151,8 @@ export class McFusNodeUploader implements McFusUploader {
     // calculate time remaining using chunks to avoid hitting the disc for size
     const dataRemaining = this.uploadStatus.ChunkQueue.length * this.uploadData.ChunkSize;
     if (this.uploadStatus.AverageSpeed > 0 && dataRemaining > 0) {
-      let timeInSeconds = (dataRemaining * 8) / (1024 * 1024 * this.uploadStatus.AverageSpeed);
-      const hours = Math.floor(timeInSeconds / 60 / 60);
-      timeInSeconds -= hours * 60 * 60;
-      return timeInSeconds;
+      return (dataRemaining * 80000) / (1024 * 1024 * this.uploadStatus.AverageSpeed);
     }
-
     return 0;
   }
 
