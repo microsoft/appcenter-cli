@@ -148,10 +148,10 @@ export class McFusNodeUploader implements McFusUploader {
   }
 
   private calculateTimeRemaining(): number {
-    // calculate time remaining using chunks to avoid hitting the disc for size
-    const dataRemaining = this.uploadStatus.ChunkQueue.length * this.uploadData.ChunkSize;
+    const dataRemaining = this.uploadData.FileSize - this.uploadStatus.BlocksCompleted * this.uploadData.ChunkSize;
     if (this.uploadStatus.AverageSpeed > 0 && dataRemaining > 0) {
-      return (dataRemaining * 80000) / (1024 * 1024 * this.uploadStatus.AverageSpeed);
+      const timeSec = Math.floor((dataRemaining * 8) / (1024 * 1024 * this.uploadStatus.AverageSpeed));
+      return timeSec;
     }
     return 0;
   }
@@ -182,7 +182,7 @@ export class McFusNodeUploader implements McFusUploader {
       uploadStats.AverageSpeedInMbps +
       " Mbps.";
     this.log(completeMessage, {
-      UploadFileSize: this.uploadData.File!.size,
+      UploadFileSize: this.uploadData.FileSize,
       UploadSpeed: uploadStats.AverageSpeedInMbps,
       ElapsedSeconds: uploadStats.TotalTimeInSeconds,
     });
@@ -375,7 +375,7 @@ export class McFusNodeUploader implements McFusUploader {
         "?file_name=" +
         encodeURIComponent(this.uploadData.File!.name) +
         "&file_size=" +
-        encodeURIComponent(this.uploadData.File!.size) +
+        encodeURIComponent(this.uploadData.FileSize) +
         "&location=" +
         location;
       this.log("Callback was supplied. Invoking callback on: " + callbackUrl);
@@ -543,7 +543,7 @@ export class McFusNodeUploader implements McFusUploader {
     });
     const logProperties = {
       fileName: this.uploadData.File!.name,
-      fileSize: this.uploadData.File!.size,
+      fileSize: this.uploadData.FileSize,
     };
     this.log("Setting Metadata.", logProperties);
     const fileExt = this.uploadData.File!.name.split(".").pop() as string;
@@ -558,7 +558,7 @@ export class McFusNodeUploader implements McFusUploader {
         "?file_name=" +
         encodeURIComponent(self.uploadData.File!.name) +
         "&file_size=" +
-        encodeURIComponent(self.uploadData.File!.size) +
+        encodeURIComponent(self.uploadData.FileSize) +
         mimeTypeParam,
       error: function (err: Error) {
         if (err instanceof HttpError) {
@@ -602,7 +602,7 @@ export class McFusNodeUploader implements McFusUploader {
         self.uploadData.BlobPartitions = response.blob_partitions;
 
         // Calculate the number of chunks to send
-        self.uploadData.TotalBlocks = Math.ceil(self.uploadData.File!.size / self.uploadData.ChunkSize);
+        self.uploadData.TotalBlocks = Math.ceil(self.uploadData.FileSize / self.uploadData.ChunkSize);
         self.progressUpdateRate = Math.ceil(self.uploadData.TotalBlocks / 100);
         self.log("Chunks to upload: " + self.uploadData.TotalBlocks);
 
@@ -661,7 +661,7 @@ export class McFusNodeUploader implements McFusUploader {
 
     // Otherwise just start processing and uploading the chunk
     const start = (chunkNumber - 1) * this.uploadData.ChunkSize;
-    const end = Math.min(chunkNumber * this.uploadData.ChunkSize, this.uploadData.File!.size);
+    const end = Math.min(chunkNumber * this.uploadData.ChunkSize, this.uploadData.FileSize);
     const chunk = this.uploadData.File!.slice(start, end);
 
     // Don't request if chunk is empty or in the wrong state
@@ -754,6 +754,7 @@ export class McFusNodeUploader implements McFusUploader {
     }
 
     this.uploadData.File = file;
+    this.uploadData.FileSize = file.size;
     this.setState(McFusUploadState.Initialized);
     this.setMetadata();
   }

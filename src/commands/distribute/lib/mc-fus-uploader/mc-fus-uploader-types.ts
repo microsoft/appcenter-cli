@@ -89,6 +89,7 @@ export interface IUploadData {
   CorrelationVector: string;
   ChunkSize: number;
   File?: McFusFile;
+  FileSize?: number;
   LogToConsole: boolean;
   Tenant: string;
   UrlEncodedToken: string;

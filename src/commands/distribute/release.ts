@@ -226,6 +226,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private validateParameters(): void {
     debug("Checking for invalid parameter combinations");
+    if (!_.isNil(this.filePath)) {
+      const binary = new McFile(this.filePath);
+      if (!binary || binary.size <= 0) {
+        throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
+      }
+    }
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
