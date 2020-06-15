@@ -471,7 +471,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       endpoint = profile.endpoint;
     } else {
       endpoint = environments(this.environmentName).endpoint;
-    } 
+    }
     return endpoint;
   }
 
