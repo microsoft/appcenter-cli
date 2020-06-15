@@ -376,7 +376,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
         onMessage: (message: string, properties: any, level: any) => {
           debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
           if (level === McFusMessageLevel.Error) {
-            this.mcFusUploader.Cancel();
+            this.mcFusUploader.cancel();
             reject(new Error(`Uploading file error: ${message}`));
           }
         },
@@ -390,7 +390,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       };
       this.mcFusUploader = new McFusNodeUploader(uploadSettings);
       const appFile = new McFile(this.filePath);
-      this.mcFusUploader.Start(appFile);
+      this.mcFusUploader.start(appFile);
     });
   }
 

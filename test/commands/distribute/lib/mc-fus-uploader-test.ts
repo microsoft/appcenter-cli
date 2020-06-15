@@ -27,7 +27,7 @@ class McFile implements McFusFile {
 }
 
 describe("McFusUploader", () => {
-  describe("#Start", () => {
+  describe("#start", () => {
     const onProgressMock = TypeMoq.Mock.ofInstance((_progress: IProgress) => {});
     const onMessageMock = TypeMoq.Mock.ofInstance(
       (_message: string, _properties: LogProperties, _messageLevel: McFusMessageLevel) => {}
@@ -57,7 +57,7 @@ describe("McFusUploader", () => {
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
         const uploader = new McFusNodeUploader(uploadSettings);
-        uploader.Start(null);
+        uploader.start(null);
         onMessageMock.verify(
           (callback) =>
             callback(
@@ -80,7 +80,7 @@ describe("McFusUploader", () => {
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
         const uploader = new McFusNodeUploader(uploadSettings);
-        uploader.Start(new McFile("test", 0));
+        uploader.start(new McFile("test", 0));
         onMessageMock.verify(
           (callback) =>
             callback(
@@ -112,7 +112,7 @@ describe("McFusUploader", () => {
         const setMetadata = Nock("http://upload.ms")
           .post((uri) => uri.includes("set_metadata"))
           .reply(200, "{}");
-        uploader.Start(testFile);
+        uploader.start(testFile);
 
         assert.strictEqual(uploader.uploadData.File, testFile);
         onProgressMock.verify((callback) => callback(TypeMoq.It.isAny()), TypeMoq.Times.once());
@@ -128,7 +128,7 @@ describe("McFusUploader", () => {
             .post((uri) => uri.includes("set_metadata"))
             .reply(500, "{}")
             .persist();
-          uploader.Start(testFile);
+          uploader.start(testFile);
           setTimeout(function () {
             onMessageMock.verify(
               (callback) =>
@@ -151,7 +151,7 @@ describe("McFusUploader", () => {
           it("Should strip off everything outside the body tags and log an error and be in failed state", (done) => {
             Nock.cleanAll();
             const request = Nock("http://upload.ms").post(/.*/).reply(200, "<!DOCTYPE html><html></html>").persist();
-            uploader.Start(testFile);
+            uploader.start(testFile);
             setTimeout(function () {
               onMessageMock.verify(
                 (callback) =>
@@ -178,8 +178,8 @@ describe("McFusUploader", () => {
         it("Should emit a warning and return without updating the file", () => {
           Nock.cleanAll();
           Nock("http://upload.ms").post(/.*/).reply(200, "{}");
-          uploader.Start(testFile);
-          uploader.Start(new McFile("test2", 200));
+          uploader.start(testFile);
+          uploader.start(new McFile("test2", 200));
           onMessageMock.verify(
             (callback) =>
               callback(

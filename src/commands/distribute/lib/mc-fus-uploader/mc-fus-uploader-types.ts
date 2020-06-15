@@ -1,6 +1,6 @@
 export interface McFusUploader {
-  Start(file: McFusFile): void;
-  Cancel(): void;
+  start(file: McFusFile): void;
+  cancel(): void;
 }
 
 export enum McFusMessageLevel {
