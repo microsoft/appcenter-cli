@@ -846,14 +846,6 @@ describe("release command", () => {
       });
   }
 
-  function setupFailedCreateReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope
-      .put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
-        release_notes: releaseNotes,
-      })
-      .reply(404);
-  }
-
   function setupSuccessfulAddGroupResponse(nockScope: Nock.Scope, silent = false, mandatory = false): Nock.Scope {
     const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
     const expectedBody = {
