@@ -480,13 +480,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async getEndpoint(profile: Profile): Promise<string> {
-    let endpoint = "";
-    if (profile) {
-      endpoint = profile.endpoint;
+    if (this.environmentName || !profile) {
+      return environments(this.environmentName).endpoint;
     } else {
-      endpoint = environments(this.environmentName).endpoint;
+      return profile.endpoint;
     }
-    return endpoint;
   }
 
   private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
