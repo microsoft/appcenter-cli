@@ -34,10 +34,10 @@ describe("McFusUploader", () => {
     );
     const onStateChangedMock = TypeMoq.Mock.ofInstance((_state: McFusUploadState) => {});
     const uploadSettings: IInitializeSettings = {
-      AssetId: uuid.v4(),
-      UrlEncodedToken: "encodedToken",
-      UploadDomain: "http://upload.ms",
-      Tenant: "distribution",
+      assetId: uuid.v4(),
+      urlEncodedToken: "encodedToken",
+      uploadDomain: "http://upload.ms",
+      tenant: "distribution",
       onProgressChanged: onProgressMock.object,
       onMessage: onMessageMock.object,
       onStateChanged: onStateChangedMock.object,
@@ -67,7 +67,7 @@ describe("McFusUploader", () => {
             ),
           TypeMoq.Times.once()
         );
-        assert.strictEqual(uploader.uploadData.File, undefined);
+        assert.strictEqual(uploader.uploadData.file, undefined);
         onProgressMock.verify((callback) => callback(TypeMoq.It.isAny()), TypeMoq.Times.never());
         onStateChangedMock.verify((callback) => callback(McFusUploadState.New), TypeMoq.Times.once());
         onStateChangedMock.verify((callback) => callback(McFusUploadState.Initialized), TypeMoq.Times.never());
@@ -90,7 +90,7 @@ describe("McFusUploader", () => {
             ),
           TypeMoq.Times.once()
         );
-        assert.strictEqual(uploader.uploadData.File, undefined);
+        assert.strictEqual(uploader.uploadData.file, undefined);
         onProgressMock.verify((callback) => callback(TypeMoq.It.isAny()), TypeMoq.Times.never());
         onStateChangedMock.verify((callback) => callback(McFusUploadState.New), TypeMoq.Times.once());
         onStateChangedMock.verify((callback) => callback(McFusUploadState.Initialized), TypeMoq.Times.never());
@@ -100,7 +100,7 @@ describe("McFusUploader", () => {
     });
 
     context("When file is valid", () => {
-      let uploader: any;
+      let uploader: McFusNodeUploader;
       const testFile = new McFile("test1", 100);
 
       beforeEach(() => {
@@ -114,7 +114,7 @@ describe("McFusUploader", () => {
           .reply(200, "{}");
         uploader.start(testFile);
 
-        assert.strictEqual(uploader.uploadData.File, testFile);
+        assert.strictEqual(uploader.uploadData.file, testFile);
         onProgressMock.verify((callback) => callback(TypeMoq.It.isAny()), TypeMoq.Times.once());
         onStateChangedMock.verify((callback) => callback(McFusUploadState.New), TypeMoq.Times.once());
         onStateChangedMock.verify((callback) => callback(McFusUploadState.Initialized), TypeMoq.Times.once());
@@ -139,7 +139,7 @@ describe("McFusUploader", () => {
                 ),
               TypeMoq.Times.once()
             );
-            assert.strictEqual(uploader.uploadStatus.State, McFusUploadState.FatalError);
+            assert.strictEqual(uploader.uploadStatus.state, McFusUploadState.FatalError);
             onStateChangedMock.verify((callback) => callback(McFusUploadState.FatalError), TypeMoq.Times.once());
             done();
           }, 200);
@@ -162,7 +162,7 @@ describe("McFusUploader", () => {
                   ),
                 TypeMoq.Times.once()
               );
-              assert.strictEqual(uploader.uploadStatus.State, McFusUploadState.FatalError);
+              assert.strictEqual(uploader.uploadStatus.state, McFusUploadState.FatalError);
               onProgressMock.verify((callback) => callback(TypeMoq.It.isAny()), TypeMoq.Times.once());
               onStateChangedMock.verify((callback) => callback(McFusUploadState.New), TypeMoq.Times.once());
               onStateChangedMock.verify((callback) => callback(McFusUploadState.Initialized), TypeMoq.Times.once());
@@ -190,7 +190,7 @@ describe("McFusUploader", () => {
             TypeMoq.Times.once()
           );
 
-          assert.strictEqual(uploader.uploadData.File, testFile);
+          assert.strictEqual(uploader.uploadData.file, testFile);
           onProgressMock.verify((callback) => callback(TypeMoq.It.isAny()), TypeMoq.Times.once());
           onStateChangedMock.verify((callback) => callback(McFusUploadState.New), TypeMoq.Times.once());
           onStateChangedMock.verify((callback) => callback(McFusUploadState.Initialized), TypeMoq.Times.once());

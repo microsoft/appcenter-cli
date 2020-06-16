@@ -27,6 +27,7 @@ import {
   IProgress,
   LogProperties,
   IUploadStats,
+  IInitializeSettings,
 } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
@@ -226,12 +227,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private validateParameters(): void {
     debug("Checking for invalid parameter combinations");
-    if (!_.isNil(this.filePath)) {
-      const binary = new McFile(this.filePath);
-      if (!binary || binary.size <= 0) {
-        throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
-      }
-    }
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
@@ -262,6 +257,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
           ErrorCodes.InvalidParameter,
           `--build-version and --build-number must both be specified when uploading ${this.fileExtension} files`
         );
+      }
+    }
+    if (!_.isNil(this.filePath)) {
+      const binary = new McFile(this.filePath);
+      if (!binary || binary.size <= 0) {
+        throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
       }
     }
   }
@@ -378,11 +379,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private uploadFileToUri(assetId: string, urlEncodedToken: string, uploadDomain: string): Promise<any> {
     return new Promise((resolve, reject) => {
       debug("Uploading the release binary");
-      const uploadSettings: any = {
-        AssetId: assetId,
-        UrlEncodedToken: urlEncodedToken,
-        UploadDomain: uploadDomain,
-        Tenant: "distribution",
+      const uploadSettings: IInitializeSettings = {
+        assetId: assetId,
+        urlEncodedToken: urlEncodedToken,
+        uploadDomain: uploadDomain,
+        tenant: "distribution",
         onProgressChanged: (progress: IProgress) => {
           debug("onProgressChanged: " + progress.percentCompleted);
         },
@@ -397,7 +398,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           debug(`onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
-          debug("Upload completed, total time: " + uploadStats.TotalTimeInSeconds);
+          debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
           resolve();
         },
       };
