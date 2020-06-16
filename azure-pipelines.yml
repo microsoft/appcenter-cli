@@ -39,7 +39,7 @@ jobs:
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   - script: |
-      npm run test:ci || true
+      npm run test:ci || [ -f './test-result.xml' ]
     displayName: 'Run tests (with JUnit output)'
 
   - task: PublishTestResults@2
@@ -64,10 +64,14 @@ jobs:
       pwsh: true
     displayName: 'Run functional tests'
 
+  - script: |
+      [ -f './test/functional/test-result.xml' ]
+    displayName: 'Verify that functional test result file exists'
+
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
-      testResultsFiles: '**/testresult.xml'
+      testResultsFiles: 'test/functional/test-result.xml'
       searchFolder: '$(Build.SourcesDirectory)/test'
       failTaskOnFailedTests: true
       testRunTitle: 'Verify functional test result'
