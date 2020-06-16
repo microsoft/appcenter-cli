@@ -65,13 +65,13 @@ jobs:
     displayName: 'Run functional tests'
 
   - script: |
-      [ -f './test/functional/test-result.xml' ]
+      [ -f './test/functional/testresult.xml' ]
     displayName: 'Verify that functional test result file exists'
 
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
-      testResultsFiles: 'test/functional/test-result.xml'
+      testResultsFiles: 'test/functional/testresult.xml'
       searchFolder: '$(Build.SourcesDirectory)/test'
       failTaskOnFailedTests: true
       testRunTitle: 'Verify functional test result'
