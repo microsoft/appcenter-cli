@@ -1,6 +1,6 @@
 export interface McFusUploader {
-  Start(file: McFusFile): void;
-  Cancel(): void;
+  start(file: McFusFile): void;
+  cancel(): void;
 }
 
 export enum McFusMessageLevel {
@@ -23,83 +23,84 @@ export enum McFusUploadState {
 }
 
 export interface IRequiredSettings {
-  AssetId: string;
-  UploadDomain: string;
-  Tenant: string;
-  UrlEncodedToken: string;
+  assetId: string;
+  uploadDomain: string;
+  tenant: string;
+  urlEncodedToken: string;
 }
 
 export interface IEventSettings {
   onProgressChanged(progress: IProgress): void;
   onCompleted(uploadStats: IUploadStats): void;
-  onResumeRestart(OnResumeStartParams: IOnResumeStartParams): void;
+  onResumeRestart?(OnResumeStartParams: IOnResumeStartParams): void;
   onMessage(message: string, properties: LogProperties, messageLevel: McFusMessageLevel): void;
   onStateChanged(state: McFusUploadState): void;
 }
 
 export interface IOptionalSettings {
-  AssetId: string;
-  CallbackUrl?: string;
-  CorrelationId?: string;
-  CorrelationVector?: string;
-  LogToConsole?: boolean;
+  assetId: string;
+  callbackUrl?: string;
+  correlationId?: string;
+  correlationVector?: string;
+  logToConsole?: boolean;
 }
 
 export interface IInitializeSettings extends IRequiredSettings, IEventSettings, IOptionalSettings {}
 
 export interface IOnResumeStartParams {
-  NumberOfChunksRemaining: number;
+  numberOfChunksRemaining: number;
 }
 
 export interface IUploadStatus {
-  AutoRetryCount: number;
-  AverageSpeed: number;
-  BlocksCompleted: number;
-  ChunksFailedCount: number;
-  ChunkQueue: Array<number>;
-  Connected: boolean;
-  EndTime: Date;
-  InflightSet: Set<number>;
-  AbortController: AbortController;
-  MaxErrorCount: number;
-  ServiceCallback: IServiceCallback;
-  StartTime: Date;
-  State: McFusUploadState;
-  TransferQueueRate: number[];
+  autoRetryCount: number;
+  averageSpeed: number;
+  blocksCompleted: number;
+  chunksFailedCount: number;
+  chunkQueue: Array<number>;
+  connected: boolean;
+  endTime: Date;
+  inflightSet: Set<number>;
+  abortController: AbortController;
+  maxErrorCount: number;
+  serviceCallback: IServiceCallback;
+  startTime: Date;
+  state: McFusUploadState;
+  transferQueueRate: number[];
 }
 
 export interface IServiceCallback {
-  AutoRetryCount: number;
-  AutoRetryDelay: number;
-  FailureCount: number;
+  autoRetryCount: number;
+  autoRetryDelay: number;
+  failureCount: number;
 }
 
 export interface IProgress {
   percentCompleted: number;
-  Rate: string;
-  AverageSpeed: string;
-  TimeRemaining: string;
+  rate: string;
+  averageSpeed: string;
+  timeRemaining: string;
 }
 
 export interface IUploadData {
-  AssetId: string;
-  BlobPartitions: number;
-  CallbackUrl: string;
-  CorrelationId: string;
-  CorrelationVector: string;
-  ChunkSize: number;
-  File?: McFusFile;
-  LogToConsole: boolean;
-  Tenant: string;
-  UrlEncodedToken: string;
-  TotalBlocks: number;
-  UploadDomain: string;
+  assetId: string;
+  blobPartitions: number;
+  callbackUrl: string;
+  correlationId: string;
+  correlationVector: string;
+  chunkSize: number;
+  file?: McFusFile;
+  fileSize?: number;
+  logToConsole: boolean;
+  tenant: string;
+  urlEncodedToken: string;
+  totalBlocks: number;
+  uploadDomain: string;
 }
 
 export interface IUploadStats {
-  AssetId: string;
-  TotalTimeInSeconds: string;
-  AverageSpeedInMbps: number;
+  assetId: string;
+  totalTimeInSeconds: string;
+  averageSpeedInMbps: number;
 }
 
 export type LogProperties = { [key: string]: string | string[] | number | boolean | undefined };

@@ -20,7 +20,15 @@ import { DefaultApp, getUser, Profile } from "../../util/profile";
 import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
-import { McFusMessageLevel, McFusUploader, McFusUploadState } from "./lib/mc-fus-uploader/mc-fus-uploader-types";
+import {
+  McFusMessageLevel,
+  McFusUploader,
+  McFusUploadState,
+  IProgress,
+  LogProperties,
+  IUploadStats,
+  IInitializeSettings,
+} from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
@@ -251,6 +259,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
         );
       }
     }
+    if (!_.isNil(this.filePath)) {
+      const binary = new McFile(this.filePath);
+      if (!binary || binary.size <= 0) {
+        throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
+      }
+    }
   }
 
   private validateParametersWithPrerequisites(storeInformation: models.ExternalStoreResponse): void {
@@ -365,32 +379,32 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private uploadFileToUri(assetId: string, urlEncodedToken: string, uploadDomain: string): Promise<any> {
     return new Promise((resolve, reject) => {
       debug("Uploading the release binary");
-      const uploadSettings: any = {
-        AssetId: assetId,
-        UrlEncodedToken: urlEncodedToken,
-        UploadDomain: uploadDomain,
-        Tenant: "distribution",
-        onProgressChanged: (progress: any) => {
+      const uploadSettings: IInitializeSettings = {
+        assetId: assetId,
+        urlEncodedToken: urlEncodedToken,
+        uploadDomain: uploadDomain,
+        tenant: "distribution",
+        onProgressChanged: (progress: IProgress) => {
           debug("onProgressChanged: " + progress.percentCompleted);
         },
-        onMessage: (message: string, properties: any, level: any) => {
+        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
           debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
           if (level === McFusMessageLevel.Error) {
-            this.mcFusUploader.Cancel();
+            this.mcFusUploader.cancel();
             reject(new Error(`Uploading file error: ${message}`));
           }
         },
         onStateChanged: (status: McFusUploadState): void => {
           debug(`onStateChanged: ${status.toString()}`);
         },
-        onCompleted: (uploadStats: any) => {
-          debug("Upload completed, total time: " + uploadStats.TotalTimeInSeconds);
+        onCompleted: (uploadStats: IUploadStats) => {
+          debug("Upload completed, total time: " + uploadStats.totalTimeInSeconds);
           resolve();
         },
       };
       this.mcFusUploader = new McFusNodeUploader(uploadSettings);
-      const testFile = new McFile(this.filePath);
-      this.mcFusUploader.Start(testFile);
+      const appFile = new McFile(this.filePath);
+      this.mcFusUploader.start(appFile);
     });
   }
 
