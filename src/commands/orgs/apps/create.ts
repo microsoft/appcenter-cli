@@ -92,25 +92,24 @@ export default class OrgAppCreateCommand extends Command {
       appAttributes.releaseType = this.release_type;
     }
 
-    const createAppResponse = await out.progress(
-      "Creating app in org...",
-      clientRequest<models.AppResponse>((cb) => client.appsOperations.createForOrg(this.orgName, appAttributes, cb))
-    );
+    try {
+      const createAppResponse = await out.progress(
+        "Creating app in org...",
+        clientRequest<models.AppResponse>((cb) => client.appsOperations.createForOrg(this.orgName, appAttributes, cb))
+      );
 
-    const statusCode = createAppResponse.response.statusCode;
-    if (statusCode >= 400) {
-      switch (statusCode) {
-        case 400:
-          return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
+      reportApp(createAppResponse.result);
+
+      return success();
+    } catch (error) {
+      switch (error.statusCode) {
         case 404:
           return failure(ErrorCodes.NotFound, "there appears to be no such org");
         case 409:
           return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
+        default:
+          return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
       }
     }
-
-    reportApp(createAppResponse.result);
-
-    return success();
   }
 }
