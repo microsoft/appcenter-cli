@@ -1,15 +1,16 @@
 Describe "distribute release" {
-  $appDisplayName = "TestDistributeRelease$((Get-Date).ToString("yyyy-MM-dd_HH.mm.ffffff"))"
-  $appOs = "Custom"
-  $appPlatform = "Custom"
-  $app = appcenter apps create --platform $appPlatform --os $appOs --display-name $appDisplayName --output json | ConvertFrom-Json
-  $appFullName = $app.owner.name + "/" + $app.name
-  appcenter apps set-current $appFullName
 
   It "creates a release when mandatory flag is set to true" {
-    # Arrange
+    $appDisplayName = "TestDistributeRelease$((Get-Date).ToString("yyyy-MM-dd_HH.mm.ffffff"))"
+    $appOs = "Custom"
+    $appPlatform = "Custom"
+    $app = appcenter apps create --platform $appPlatform --os $appOs --display-name $appDisplayName --output json | ConvertFrom-Json
+    $appFullName = $app.owner.name + "/" + $app.name
+    appcenter apps set-current $appFullName
+
+    # A 10 MB file should be enough to test uploader logic.
     $fileName = "Dummy.zip"
-    "DummyData" | Out-File -FilePath $fileName
+    [io.file]::Create($filename).SetLength(1024 * 1024 * 10).Close
 
     # Act
     $r1 = appcenter distribute release -g Collaborators -f $fileName --build-version 1 --mandatory --output json | ConvertFrom-Json
@@ -20,8 +21,10 @@ Describe "distribute release" {
     $r2.mandatoryUpdate | Should -Be "True"
 
     Remove-Item $fileName
-  }
 
-  # Cleanup
-  appcenter apps delete --app $appFullName --quiet
+    # Cleanup
+    # Note: don't put this command under the test: it ignores the async execution 
+    # of the command and the test fails.
+    appcenter apps delete --app $appFullName --quiet
+  }
 }
