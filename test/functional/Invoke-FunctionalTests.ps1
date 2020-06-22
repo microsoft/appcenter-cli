@@ -15,8 +15,16 @@ param
   [Parameter(Mandatory = $true)]
   [ValidatePattern("[0-9a-f]{40}")]
   [string]
-  $Token
+  $Token,
+  # The environment to run tests in. Defaults to 'int'. Use 'prod' to test against appcenter.ms.
+  [ValidateSet('int', 'prod', 'local')]
+  [string]
+  $Environment
 )
+
+if (!$PSBoundParameters.ContainsKey('Environment')) {
+  $Environment = 'int'
+}
 
 function Get-ScriptDirectory {
   Split-Path -parent $PSCommandPath
@@ -39,7 +47,7 @@ $env:PATH = "$(Get-ScriptDirectory)/bin:" + $env:PATH
 $env:CLI_ROOT = Get-Root
 
 Write-Host "Signing in to App Center"
-$loginResult = appcenter login --env int --token $Token
+$loginResult = appcenter login --env $Environment --token $Token
 
 if (!$loginResult.StartsWith("Logged in as")) {
   throw "Login failed: $loginResult"
