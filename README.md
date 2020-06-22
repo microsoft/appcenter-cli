@@ -95,6 +95,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter orgs list` | Lists organizations in which current user is collaborator |
 | `appcenter orgs show` | Show information about organization |
 | `appcenter orgs update` | Update organization information |
+| `appcenter orgs apps create` | Create a new app in an organization |
 | `appcenter orgs apps list` | Lists applications of organization |
 | `appcenter orgs collaborators list` | Lists collaborators of organization |
 | `appcenter orgs collaborators update` | Update list of organization collaborators |
