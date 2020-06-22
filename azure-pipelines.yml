@@ -71,8 +71,8 @@ jobs:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
-      testResultsFiles: 'test/functional/testresult.xml'
-      searchFolder: '$(Build.SourcesDirectory)/test'
+      testResultsFiles: 'testresult.xml'
+      searchFolder: '$(Build.SourcesDirectory)/test/functional'
       failTaskOnFailedTests: true
       testRunTitle: 'Verify functional test result'
     displayName: 'Verify functional test result'
