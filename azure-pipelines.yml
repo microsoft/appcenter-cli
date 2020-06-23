@@ -39,7 +39,7 @@ jobs:
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   - script: |
-      npm run test:ci || [ -f './test-result.xml' ]
+      npm run test:ci || [ -f './test-results.xml' ]
     displayName: 'Run tests (with JUnit output)'
 
   - task: PublishTestResults@2
@@ -71,8 +71,8 @@ jobs:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
-      testResultsFiles: 'test/functional/testresult.xml'
-      searchFolder: '$(Build.SourcesDirectory)/test'
+      testResultsFiles: 'testresult.xml'
+      searchFolder: '$(Build.SourcesDirectory)/test/functional'
       failTaskOnFailedTests: true
       testRunTitle: 'Verify functional test result'
     displayName: 'Verify functional test result'
