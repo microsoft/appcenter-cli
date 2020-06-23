@@ -21,7 +21,7 @@ is used to record and playback mock http traffic.
 Install the latest version of Node 10 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
-Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
+Also have a working git installation. The code is available from this [repo](https://github.com/microsoft/appcenter-cli).
 
 ### Optional Tools
 

@@ -17739,7 +17739,7 @@ export interface Errors {
      * pagination.
      *
      * @param {string} [options.filter] A filter as specified in
-     * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+     * https://github.com/microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
      *
      * @param {string} [options.inlinecount] Controls whether or not to include a
      * count of all the items across all pages. Possible values include:
@@ -17782,7 +17782,7 @@ export interface Errors {
      * pagination.
      *
      * @param {string} [options.filter] A filter as specified in
-     * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+     * https://github.com/microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
      *
      * @param {string} [options.inlinecount] Controls whether or not to include a
      * count of all the items across all pages. Possible values include:
