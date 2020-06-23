@@ -55,7 +55,7 @@
     "@types/glob": "7.1.2",
     "@types/inquirer": "6.5.0",
     "@types/jsonwebtoken": "8.5.0",
-    "@types/lodash": "4.14.155",
+    "@types/lodash": "4.14.156",
     "@types/minimist": "1.2.0",
     "@types/mkdirp": "1.0.1",
     "@types/mocha": "7.0.2",
