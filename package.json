@@ -138,7 +138,7 @@
     "split2": "3.1.1",
     "strip-ansi": "6.0.0",
     "temp": "0.9.1",
-    "through2": "3.0.1",
+    "through2": "3.0.2",
     "unzipper": "0.10.11",
     "update-notifier": "4.1.0",
     "uuid": "7.0.3",
