@@ -398,6 +398,58 @@ export function runHermesEmitBinaryCommand(
         });
       });
     });
+  }).then(() => {
+    if (!sourcemapOutput) return null;
+
+    const composeSourceMapsPath = getComposeSourceMapsPath();
+    if (!composeSourceMapsPath) {
+      throw new Error('react-native compose-source-maps.js scripts is not found');
+    }
+
+    const jsCompilerSourceMapFile = path.join(outputFolder, bundleName + ".hbc" + ".map");
+    if (!fs.existsSync(jsCompilerSourceMapFile)) {
+      throw new Error('sourcemap file is not found');
+    }
+
+    return new Promise<void>((resolve, reject) => {
+      const composeSourceMapsArgs = [
+        sourcemapOutput,
+        jsCompilerSourceMapFile,
+        "-o",
+        sourcemapOutput,
+      ];
+
+      // https://github.com/facebook/react-native/blob/master/react.gradle#L211
+      // index.android.bundle.packager.map + index.android.bundle.compiler.map = index.android.bundle.map
+      const composeSourceMapsProcess = spawn(composeSourceMapsPath, composeSourceMapsArgs);
+      out.text(`${composeSourceMapsPath} ${composeSourceMapsArgs.join(" ")}`);
+
+      composeSourceMapsProcess.stdout.on("data", (data: Buffer) => {
+        out.text(data.toString().trim());
+      });
+
+      composeSourceMapsProcess.stderr.on("data", (data: Buffer) => {
+          console.error(data.toString().trim());
+      });
+
+      composeSourceMapsProcess.on("close", (exitCode: number) => {
+        if (exitCode) {
+          reject(
+              new Error(`"compose-source-maps" command exited with code ${exitCode}.`)
+          );
+        }
+
+        // Delete the HBC sourceMap, otherwise it will be included in 'code-push' bundle as well
+        fs.unlink(jsCompilerSourceMapFile, (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          }
+
+          resolve(null as void);
+        });
+      });
+    });
   });
 }
 
@@ -461,6 +513,15 @@ function getHermesCommand(): string {
     return hermesEngine;
   }
   return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
+}
+
+function getComposeSourceMapsPath(): string {
+  // detect if compose-source-maps.js script exists
+  const composeSourceMapsPath = path.join("node_modules", "react-native", "scripts", "compose-source-maps.js");
+  if (fs.existsSync(composeSourceMapsPath)) {
+      return composeSourceMapsPath;
+  }
+  return null;
 }
 
 function getCliPath(): string {
