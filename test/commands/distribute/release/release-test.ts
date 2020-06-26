@@ -472,7 +472,7 @@ describe("release command", () => {
       );
     });
 
-    it("should fail during get release when HTTP status isn't 200", async () => {
+    it("should fail during get release when HTTP status isn't 2xx", async () => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
 

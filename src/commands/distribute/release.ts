@@ -469,7 +469,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
           "x-api-token": accessToken,
         },
       });
-      if (response.status < 200 || response.status > 300) {
+      if (response.status < 200 || response.status >= 300) {
         throw failure(ErrorCodes.Exception, `failed to get release id with HTTP status: ${response.status} - ${response.statusText}`);
       }
       return await response.json();
