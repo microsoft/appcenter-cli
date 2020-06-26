@@ -454,6 +454,37 @@ describe("release command", () => {
     });
   });
 
+  context("get release failed", () => {
+    beforeEach(() => {
+      expectedRequestsScope = setupSuccessfulUploadChunkResponse(
+        setupSuccessfulUploadFinishedResponse(
+          setupSuccessfulPatchUploadFinishedResponse(
+            setupSuccessfulGetDistributionGroupUsersResponse(
+              setupSuccessfulPostUploadResponse(
+                setupSuccessfulSetUploadMetadataResponse(setupFailPatchUploadFinishedResponse(Nock(fakeHost)))
+              )
+            )
+          )
+        )
+      );
+      skippedRequestsScope = setupSuccessfulGetUploadResponse(
+        setupSuccessfulCreateReleaseResponse(setupSuccessfulAddGroupResponse(Nock(fakeHost)))
+      );
+    });
+
+    it("should fail during get release when HTTP status isn't 200", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+
+      // Act
+      const command = prepareTestCommand(["-f", releaseFilePath, "-r", releaseNotes, "-g", fakeDistributionGroupName, "--mandatory"]);
+      const result = (await expect(command.execute()).to.eventually.be.rejected) as CommandFailedResult;
+
+      // Assert
+      testFailure(result, "failed to get release id with HTTP status:", expectedRequestsScope, skippedRequestsScope);
+    });
+  });
+
   describe("when release upload fails", () => {
     beforeEach(() => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
@@ -681,7 +712,7 @@ describe("release command", () => {
 
   function testFailure(result: CommandFailedResult, errorMessage: string, executionScope: Nock.Scope, skippedScope?: Nock.Scope) {
     expect(result.succeeded).to.eql(false, "Command should fail");
-    expect(result.errorMessage).to.eql(errorMessage);
+    expect(result.errorMessage).to.contain(errorMessage);
     if (skippedScope) {
       expect(skippedScope.isDone()).to.eql(false, "Skipped scope should not be completed");
     }
@@ -815,6 +846,18 @@ describe("release command", () => {
         uploadSpy(requestBody);
         return {
           upload_status: "uploadFinished",
+          release_url: fakeReleaseUrl,
+        };
+      });
+  }
+
+  function setupFailPatchUploadFinishedResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope
+      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/uploads/releases/${fakeReleaseUploadingId}`)
+      .reply(500, (uri: any, requestBody: any) => {
+        patchSymbolSpy(requestBody);
+        return {
+          upload_status: "error",
           release_url: fakeReleaseUrl,
         };
       });
