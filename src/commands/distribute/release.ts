@@ -435,7 +435,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const timerId = setInterval(async () => {
-        const response = await this.loadReleaseId(app, uploadId);
+        let response;
+        try {
+          response = await this.loadReleaseId(app, uploadId);
+        } catch (error) {
+          clearInterval(timerId);
+          reject(new Error(`Loading release id failed with error: ${error.errorMessage}`));
+        }
         const releaseId = response.release_distinct_id;
         debug(`Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
@@ -463,6 +469,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
           "x-api-token": accessToken,
         },
       });
+      if (response.status < 200 || response.status >= 300) {
+        throw failure(ErrorCodes.Exception, `failed to get release id with HTTP status: ${response.status} - ${response.statusText}`);
+      }
       return await response.json();
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to get release id for upload id: ${uploadId}, error: ${JSON.stringify(error)}`);
