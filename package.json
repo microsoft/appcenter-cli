@@ -7,7 +7,7 @@
     "appcenter",
     "azure"
   ],
-  "homepage": "https://github.com/Microsoft/appcenter-cli#readme",
+  "homepage": "https://github.com/microsoft/appcenter-cli#readme",
   "engine": {
     "node": ">=10.0.0"
   },
@@ -34,12 +34,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/appcenter-cli.git"
+    "url": "git+https://github.com/microsoft/appcenter-cli.git"
   },
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/appcenter-cli/issues"
+    "url": "https://github.com/microsoft/appcenter-cli/issues"
   },
   "files": [
     "package-lock.json",

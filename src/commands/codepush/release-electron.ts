@@ -31,7 +31,7 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
   @hasArg
   public config: string;
 
-  @help('Path to the app\'s entry Javascript file. If omitted, "index.<platform>.js" and then "index.js" will be used (if they exist)')
+  @help('Path to the app\'s entry JavaScript file. If omitted, "index.<platform>.js" and then "index.js" will be used (if they exist)')
   @shortName("e")
   @longName("entry-file")
   @hasArg
