@@ -171,7 +171,6 @@ describe("distribute groups update command", () => {
 
   function setupDistributionGroupUpdateResponse(nockScope: Nock.Scope, options: { name?: string; is_public?: boolean }) {
     return nockScope
-      .log(console.log)
       .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`, options)
       .reply(200, {
         id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
