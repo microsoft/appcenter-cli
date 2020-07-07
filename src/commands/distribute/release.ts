@@ -17,7 +17,7 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, Profile } from "../../util/profile";
-import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-api";
+import { getFileUploadLink, getPatchUploadLink } from "./lib/ac-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import {
   ACFile,
