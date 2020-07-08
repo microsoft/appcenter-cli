@@ -67,8 +67,15 @@ then please check out [this tutorial](https://docs.npmjs.com/getting-started/fix
 
 After installing node and cloning the repo, do:
 
-1.  `npm install`
-2.  `npm run build`
+1. Build appcenter-file-upload-client-node
+- `cd appcenter-file-upload-client-node`
+- `npm install`
+- `npm run build`
+- `cd ..`
+
+2. Build the cli
+-  `npm install`
+-  `npm run build`
 
 To run the test suite, do:
 
