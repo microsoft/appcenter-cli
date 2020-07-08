@@ -17,7 +17,6 @@ import {
 import fetch from "node-fetch";
 import { MimeTypes } from "./ac-fus-mime-types";
 import { AbortController } from "abort-controller";
-import { ACFile } from "./model/ACFile";
 import { ACHttpError } from "./model/ACHttpError";
 
 export class ACFusNodeUploader implements ACFusUploader {
