@@ -15,15 +15,6 @@ jobs:
     displayName: 'Install Node.js'
 
   - script: |
-      cd appcenter-file-upload-client-node
-      npm install
-      npm install -g eslint
-      npm run build
-      npm run test
-      cd ..
-    displayName: 'Build and test appcenter-file-upload-client-node'
-
-  - script: |
       npm ci
       npm run build
     displayName: 'Install and build'
