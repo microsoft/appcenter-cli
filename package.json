@@ -44,7 +44,8 @@
   "files": [
     "package-lock.json",
     "bin",
-    "dist"
+    "dist",
+    "appcenter-file-upload-client-node/out"
   ],
   "devDependencies": {
     "@types/uuid": "^8.0.0",
