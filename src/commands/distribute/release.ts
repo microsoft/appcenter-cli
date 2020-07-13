@@ -19,6 +19,7 @@ import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, Profile } from "../../util/profile";
 import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
+import { getTokenFromEnvironmentVar } from "../../util/profile/environment-vars";
 import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import {
   McFusMessageLevel,
@@ -479,13 +480,15 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async getToken(profile: Profile): Promise<string> {
-    let accessToken = "";
-    if (this.token && this.token.length > 0) {
-      accessToken = this.token;
+    if (this.token?.length > 0) {
+      return this.token;
     } else if (profile) {
-      accessToken = await profile.accessToken;
+      const accessToken = await profile.accessToken;
+      if (accessToken?.length > 0) {
+        return accessToken;
+      }
     }
-    return accessToken;
+    return getTokenFromEnvironmentVar();
   }
 
   private async getEndpoint(profile: Profile): Promise<string> {
