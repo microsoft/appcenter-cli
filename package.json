@@ -17,7 +17,8 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build-ac-fus": "cd appcenter-file-upload-client-node && npm i && npm run build",
+    "preinstall": "cd appcenter-file-upload-client-node && npm i",
+    "build-ac-fus": "cd appcenter-file-upload-client-node && npm run build",
     "build": "npm run build-ac-fus && npm run lint && gulp build:raw",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
@@ -46,7 +47,9 @@
     "package-lock.json",
     "bin",
     "dist",
-    "appcenter-file-upload-client-node/out"
+    "appcenter-file-upload-client-node/out",
+    "appcenter-file-upload-client-node/package.json",
+    "appcenter-file-upload-client-node/package-lock.json"
   ],
   "devDependencies": {
     "@types/uuid": "^8.0.0",
