@@ -32,12 +32,14 @@ interface XCBuildConfiguration {
 
 export async function getReactNativeProjectAppVersion(
   versionSearchParams: VersionSearchParams,
-  projectRoot?: string
+  projectName?: string
 ): Promise<string> {
-  projectRoot = projectRoot || process.cwd();
-  // eslint-disable-next-line security/detect-non-literal-require
-  const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
-  const projectName: string = projectPackageJson.name;
+  if (!projectName) {
+    const projectRoot = process.cwd();
+    // eslint-disable-next-line security/detect-non-literal-require
+    const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
+    projectName = projectPackageJson.name;
+  }
 
   const fileExists = (file: string): boolean => {
     try {

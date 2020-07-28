@@ -105,6 +105,11 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @hasArg
   public extraHermesFlags: string | string[];
 
+  @help("Override the name of the project instead of using the ne from package.json")
+  @longName("project-name")
+  @hasArg
+  public projectName: string;
+
   private os: string;
 
   private platform: string;
@@ -184,7 +189,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
         gradleFile: this.gradleFile,
         buildConfigurationName: this.buildConfigurationName,
       } as VersionSearchParams;
-      this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
+      this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams, this.projectName);
     }
 
     if (typeof this.extraBundlerOptions === "string") {
