@@ -105,7 +105,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @hasArg
   public extraHermesFlags: string | string[];
 
-  @help("Override the name of the project instead of using the ne from package.json")
+  @help("Override the name of the project instead of using the name from package.json")
   @longName("project-name")
   @hasArg
   public projectName: string;
