@@ -17,7 +17,13 @@ jobs:
   - script: |
       npm ci
       npm run build
-    displayName: 'Install and build'
+    displayName: 'Install and build CLI'
+
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'Install and build appcenter-file-upload-client-node'
+    workingDirectory: appcenter-file-upload-client-node
 
   - task: ComponentGovernanceComponentDetection@0
     displayName: Component Governance (PR)
@@ -40,7 +46,7 @@ jobs:
 
   - script: |
       npm run test:ci || [ -f './test-results.xml' ]
-    displayName: 'Run tests (with JUnit output)'
+    displayName: 'Run CLI tests (with JUnit output)'
 
   - task: PublishTestResults@2
     inputs:
@@ -48,8 +54,22 @@ jobs:
       testResultsFiles: 'test-results.xml'
       searchFolder: '$(Build.SourcesDirectory)'
       failTaskOnFailedTests: true
-      testRunTitle: 'Verify unit test result'
-    displayName: 'Verify unit test result'
+      testRunTitle: 'Verify CLI unit test result'
+    displayName: 'Verify CLI unit test result'
+
+  - script: |
+      npm run test:ci || [ -f './test-results.xml' ]
+    displayName: 'Run appcenter-file-upload-client-node tests'
+    workingDirectory: appcenter-file-upload-client-node
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'test-results.xml'
+      searchFolder: '$(Build.SourcesDirectory)/appcenter-file-upload-client-node'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Verify appcenter-file-upload-client-node unit test result'
+    displayName: 'Verify appcenter-file-upload-client-node unit test result'
 
   - task: AzureKeyVault@1
     inputs:
