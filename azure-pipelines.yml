@@ -48,7 +48,7 @@ jobs:
       testResultsFiles: 'test-results.xml'
       searchFolder: '$(Build.SourcesDirectory)'
       failTaskOnFailedTests: true
-      testRunTitle: 'Verify CLI unit test result'
+      testRunTitle: 'CLI unit tests'
     displayName: 'Verify CLI unit test result'
 
   - script: |
@@ -62,7 +62,7 @@ jobs:
       testResultsFiles: 'test-results.xml'
       searchFolder: '$(Build.SourcesDirectory)/appcenter-file-upload-client-node'
       failTaskOnFailedTests: true
-      testRunTitle: 'Verify appcenter-file-upload-client-node unit test result'
+      testRunTitle: 'appcenter-file-upload-client-node unit tests'
     displayName: 'Verify appcenter-file-upload-client-node unit test result'
 
   - task: AzureKeyVault@1
@@ -88,7 +88,7 @@ jobs:
       testResultsFiles: 'testresult.xml'
       searchFolder: '$(Build.SourcesDirectory)/test/functional'
       failTaskOnFailedTests: true
-      testRunTitle: 'Verify functional test result'
+      testRunTitle: 'Functional tests'
     displayName: 'Verify functional test result'
 
   - script: |
