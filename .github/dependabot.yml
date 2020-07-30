@@ -6,9 +6,9 @@ updates:
     directory: "/"
     # Check the npm registry for updates every weekday
     schedule:
-      interval: "daily"
+      interval: "weekly"
   # Enable version updates for npm on the inner appcenter-file-upload-client-node package
   - package-ecosystem: "npm"
     directory: "/appcenter-file-upload-client-node"
     schedule:
-      interval: "daily"
+      interval: "weekly"
