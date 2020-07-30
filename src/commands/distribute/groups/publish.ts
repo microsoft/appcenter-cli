@@ -59,6 +59,12 @@ export default class PublishToGroupCommand extends AppCommand {
     if (!isNil(this.releaseNotesFile)) {
       releaseArgs.push("--release-notes-file", this.releaseNotesFile);
     }
+    if (!isNil(this.environmentName)) {
+      releaseArgs.push("--env", this.environmentName);
+    }
+    if (!isNil(this.token)) {
+      releaseArgs.push("--token", this.token);
+    }
 
     const releaseCommandArgs: CommandArgs = {
       args: releaseArgs,

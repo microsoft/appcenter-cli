@@ -18,6 +18,7 @@ describe("distribute groups publish command", () => {
   const fakeReleaseNotesFile = "/fake/release_notes";
   const buildVersion = "123";
   const buildNumber = "1234";
+  const environment = "local";
   const fakeCommandPath = "fake/distribute/groups/publish.ts";
   const originalReleaseBinaryCommandPrototype = Object.getPrototypeOf(ReleaseBinaryCommand);
 
@@ -50,10 +51,31 @@ describe("distribute groups publish command", () => {
     Nock.enableNetConnect();
   });
 
-  it("passes all non-common parameters to distribute release", async () => {
-    const command = new PublishToGroupCommand(
-      getCommandArgs(["-b", buildVersion, "-n", buildNumber, "-r", releaseNotes, "-R", fakeReleaseNotesFile])
-    );
+  it("passes all appropriate parameters to distribute release", async () => {
+    const command = new PublishToGroupCommand({
+      args: [
+        "-a",
+        fakeAppIdentifier,
+        "-f",
+        fakeFilePath,
+        "-g",
+        fakeGroupName,
+        "-b",
+        buildVersion,
+        "-n",
+        buildNumber,
+        "-r",
+        releaseNotes,
+        "-R",
+        fakeReleaseNotesFile,
+        "--token",
+        fakeToken,
+        "--env",
+        environment,
+      ],
+      command: ["distribute", "groups", "publish"],
+      commandPath: fakeCommandPath,
+    });
     await command.execute();
 
     // Make sure it created a ReleaseBinaryCommand and ran it
@@ -70,6 +92,8 @@ describe("distribute groups publish command", () => {
     expect(releaseCommand.storeName).to.be.undefined;
     expect(releaseCommand.releaseNotes).equals(releaseNotes);
     expect(releaseCommand.releaseNotesFile).equals(fakeReleaseNotesFile);
+    expect(releaseCommand.token).equals(fakeToken);
+    expect(releaseCommand.environmentName).equals(environment);
   });
 
   it("returns the return value of 'distribute release'", async () => {
