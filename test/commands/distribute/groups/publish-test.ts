@@ -72,6 +72,7 @@ describe("distribute groups publish command", () => {
         fakeToken,
         "--env",
         environment,
+        "--disable-telemetry",
       ],
       command: ["distribute", "groups", "publish"],
       commandPath: fakeCommandPath,
@@ -94,6 +95,7 @@ describe("distribute groups publish command", () => {
     expect(releaseCommand.releaseNotesFile).equals(fakeReleaseNotesFile);
     expect(releaseCommand.token).equals(fakeToken);
     expect(releaseCommand.environmentName).equals(environment);
+    expect(releaseCommand.disableTelemetry).to.be.true;
   });
 
   it("returns the return value of 'distribute release'", async () => {

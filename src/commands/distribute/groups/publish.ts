@@ -65,6 +65,11 @@ export default class PublishToGroupCommand extends AppCommand {
     if (!isNil(this.token)) {
       releaseArgs.push("--token", this.token);
     }
+    if (this.disableTelemetry) {
+      releaseArgs.push("--disable-telemetry");
+    }
+    // --help and --version end the command execution before it even gets here
+    // --debug, --format and --quiet set global variables which remain for the command newly created below
 
     const releaseCommandArgs: CommandArgs = {
       args: releaseArgs,
