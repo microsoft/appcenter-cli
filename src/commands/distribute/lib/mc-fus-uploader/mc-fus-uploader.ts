@@ -1,25 +1,65 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import {
   IUploadData,
   IUploadStatus,
-  ACFusUploadState,
+  McFusUploadState,
   IProgress,
   IUploadStats,
-  ACFusMessageLevel,
-  ACFusUploader,
+  McFusMessageLevel,
+  McFusUploader,
   IRequiredSettings,
   IEventSettings,
   IInitializeSettings,
   IOptionalSettings,
   IOnResumeStartParams,
+  McFusFile,
   LogProperties,
-  ACFusFile,
-} from "./ac-fus-uploader-types";
+} from "./mc-fus-uploader-types";
+import * as fs from "fs";
 import fetch from "node-fetch";
-import { MimeTypes } from "./ac-fus-mime-types";
+import { MimeTypes } from "./mc-fus-mime-types";
+import * as Path from "path";
 import { AbortController } from "abort-controller";
-import { ACHttpError } from "./model/ACHttpError";
 
-export class ACFusNodeUploader implements ACFusUploader {
+export class McFile implements McFusFile {
+  private path: string;
+
+  public constructor(path: string) {
+    this.path = path;
+  }
+
+  get size(): number {
+    const stats = fs.statSync(this.path);
+    return stats["size"];
+  }
+
+  get name(): string {
+    return Path.basename(this.path);
+  }
+
+  slice(start: number, end: number): Buffer {
+    const data = Buffer.alloc(end - start);
+    const fd = fs.openSync(this.path, "r");
+    fs.readSync(fd, data, 0, data.length, start);
+    return data;
+  }
+}
+
+class HttpError extends Error {
+  readonly status: number;
+  readonly statusText: string;
+
+  constructor(status: number, statusText: string) {
+    super(statusText);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.status = status;
+    this.statusText = statusText;
+  }
+}
+
+export class McFusNodeUploader implements McFusUploader {
   private ambiguousProgress: number = 0;
   private progressUpdateRate: number = 0;
   private maxNumberOfConcurrentUploads: number = 10;
@@ -65,7 +105,7 @@ export class ACFusNodeUploader implements ACFusUploader {
       failureCount: 0,
     },
     startTime: new Date(),
-    state: ACFusUploadState.New,
+    state: McFusUploadState.New,
     transferQueueRate: [],
   };
 
@@ -73,8 +113,8 @@ export class ACFusNodeUploader implements ACFusUploader {
     onProgressChanged: (progress: IProgress) => {},
     onCompleted: (uploadStats: IUploadStats) => {},
     onResumeRestart: (onResumeStartParams: IOnResumeStartParams) => {},
-    onMessage: (message: string, properties: LogProperties, messageLevel: ACFusMessageLevel) => {},
-    onStateChanged: (state: ACFusUploadState) => {},
+    onMessage: (message: string, properties: LogProperties, messageLevel: McFusMessageLevel) => {},
+    onStateChanged: (state: McFusUploadState) => {},
   };
 
   constructor(args: IInitializeSettings) {
@@ -123,7 +163,7 @@ export class ACFusNodeUploader implements ACFusUploader {
   private completeUpload() {
     // Only raise the completed event if we've not done it before, this can happen
     // due to a race condition on status checks calling finishUpload simultaneously
-    if (this.uploadStatus.state === ACFusUploadState.Completed) {
+    if (this.uploadStatus.state === McFusUploadState.Completed) {
       return;
     }
 
@@ -137,7 +177,7 @@ export class ACFusNodeUploader implements ACFusUploader {
       averageSpeedInMbps: rate,
     };
 
-    this.setState(ACFusUploadState.Completed);
+    this.setState(McFusUploadState.Completed);
     const completeMessage =
       "UploadCompleted: " +
       " total time: " +
@@ -163,28 +203,27 @@ export class ACFusNodeUploader implements ACFusUploader {
 
     // if there something in the queue, don't re-add a chunk. This
     // can result in more than one thread uploading the same chunk
-    const status = this.uploadStatus;
     this.uploadStatus.chunkQueue = this.uploadStatus.chunkQueue.concat(
       chunks.filter(function (chunk) {
-        return status.chunkQueue.indexOf(chunk) < 0;
+        return this.uploadStatus.chunkQueue.indexOf(chunk) < 0;
       })
     );
   }
 
-  private error(errorMessage: string, properties: LogProperties = {}, errorCode?: ACFusUploadState) {
-    errorCode = errorCode || ACFusUploadState.FatalError;
+  private error(errorMessage: string, properties: LogProperties = {}, errorCode?: McFusUploadState) {
+    errorCode = errorCode || McFusUploadState.FatalError;
     this.setState(errorCode);
     properties.VerboseMessage = "Error Code: " + errorCode + " - " + errorMessage;
-    this.log(errorMessage, properties, ACFusMessageLevel.Error);
+    this.log(errorMessage, properties, McFusMessageLevel.Error);
   }
 
   private finishUpload() {
     // Only verify the upload once at a time.
-    if (this.uploadStatus.state === ACFusUploadState.Verifying || this.uploadStatus.state === ACFusUploadState.Completed) {
+    if (this.uploadStatus.state === McFusUploadState.Verifying || this.uploadStatus.state === McFusUploadState.Completed) {
       return;
     }
 
-    this.setState(ACFusUploadState.Verifying);
+    this.setState(McFusUploadState.Verifying);
     this.log("Verifying upload on server.");
     const self = this;
     this.sendRequest({
@@ -197,19 +236,19 @@ export class ACFusNodeUploader implements ACFusUploader {
         encodeURIComponent(self.uploadData.callbackUrl),
       error: function (err: Error) {
         self.log("Finalize upload failed. Trying to autorecover... " + err.message);
-        self.setState(ACFusUploadState.Uploading);
+        self.setState(McFusUploadState.Uploading);
         self.startUpload();
       },
       success: function (response: any) {
         // it's possible that the health check called complete before this method did.
         // Log the current status and proceed with response verification.
-        if (self.uploadStatus.state !== ACFusUploadState.Verifying) {
+        if (self.uploadStatus.state !== McFusUploadState.Verifying) {
           self.log("Verifying: Upload status has changed, current status: " + self.uploadStatus.state);
         }
 
         //if no error then execute callback
         if (response.error === false && response.state === "Done") {
-          self.log("UploadFinalized. ACFus reported the upload as completed. Status message: " + response.message, {
+          self.log("UploadFinalized. McFus reported the upload as completed. Status message: " + response.message, {
             location: response.location,
           });
 
@@ -225,7 +264,7 @@ export class ACFusNodeUploader implements ACFusUploader {
             self.uploadStatus.blocksCompleted = self.uploadData.totalBlocks - response.missing_chunks.length;
 
             self.enqueueChunks(response.missing_chunks);
-            self.setState(ACFusUploadState.Uploading);
+            self.setState(McFusUploadState.Uploading);
 
             self.log("Finalizing found missing " + response.missing_chunks.length + " chunks. Requeuing chunks.", {
               ChunksMissing: response.missing_chunks,
@@ -273,7 +312,7 @@ export class ACFusNodeUploader implements ACFusUploader {
   }
 
   private startUpload() {
-    this.setState(ACFusUploadState.Uploading);
+    this.setState(McFusUploadState.Uploading);
 
     // Failing shows progress
     this.eventHandlers.onProgressChanged({
@@ -313,7 +352,7 @@ export class ACFusNodeUploader implements ACFusUploader {
 
     // After all checks have completed finally proceed
     // to initialize all the upload required fields.
-    this.setState(ACFusUploadState.New);
+    this.setState(McFusUploadState.New);
 
     // Initialize all retry flags for the new upload.
     this.uploadStatus.autoRetryCount = 3;
@@ -340,7 +379,7 @@ export class ACFusNodeUploader implements ACFusUploader {
         "?file_name=" +
         encodeURIComponent(this.uploadData.file!.name) +
         "&file_size=" +
-        encodeURIComponent(this.uploadData.fileSize.toString()) +
+        encodeURIComponent(this.uploadData.fileSize) +
         "&location=" +
         location;
       this.log("Callback was supplied. Invoking callback on: " + callbackUrl);
@@ -383,9 +422,9 @@ export class ACFusNodeUploader implements ACFusUploader {
 
   private isUploadInProgress(): boolean {
     return (
-      this.uploadStatus.state === ACFusUploadState.Initialized ||
-      this.uploadStatus.state === ACFusUploadState.Uploading ||
-      this.uploadStatus.state === ACFusUploadState.Verifying
+      this.uploadStatus.state === McFusUploadState.Initialized ||
+      this.uploadStatus.state === McFusUploadState.Uploading ||
+      this.uploadStatus.state === McFusUploadState.Verifying
     );
   }
 
@@ -393,8 +432,8 @@ export class ACFusNodeUploader implements ACFusUploader {
     return chunk && chunk.length > 0;
   }
 
-  private log(message: string, properties: LogProperties = {}, level: ACFusMessageLevel = ACFusMessageLevel.Information) {
-    properties.VerboseMessage = "ac-fus-uploader - " + (properties.VerboseMessage ? properties.VerboseMessage : message);
+  private log(message: string, properties: LogProperties = {}, level: McFusMessageLevel = McFusMessageLevel.Information) {
+    properties.VerboseMessage = "mc-fus-uploader - " + (properties.VerboseMessage ? properties.VerboseMessage : message);
     properties = this.getLoggingProperties(properties);
     this.eventHandlers.onMessage(message, properties, level);
   }
@@ -439,7 +478,7 @@ export class ACFusNodeUploader implements ACFusUploader {
 
   private sendRequest(requestOptions: any) {
     // Check if the caller specifies a fully qualified url
-    // or if it needs the ACFus base domain to be appended.
+    // or if it needs the McFus base domain to be appended.
     let requestUrl;
     if (requestOptions.useBaseDomain === false) {
       requestUrl = requestOptions.url;
@@ -447,7 +486,7 @@ export class ACFusNodeUploader implements ACFusUploader {
       requestUrl = this.uploadData.uploadDomain + "/" + requestOptions.url;
     }
 
-    // All the call requires auth then we add the ACFus token
+    // All the call requires auth then we add the McFus token
     if (requestOptions.useAuthentication && requestOptions.useAuthentication === true) {
       if (requestUrl.indexOf("?") > 0) {
         requestUrl += "&";
@@ -479,10 +518,10 @@ export class ACFusNodeUploader implements ACFusUploader {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new ACHttpError(response.status, response.statusText);
+          throw new HttpError(response.status, response.statusText);
         }
         return response.json().catch((error) => {
-          throw new ACHttpError(response.status, error);
+          throw new HttpError(response.status, error);
         });
       })
       .then((json) => {
@@ -523,17 +562,17 @@ export class ACFusNodeUploader implements ACFusUploader {
         "?file_name=" +
         encodeURIComponent(self.uploadData.file!.name) +
         "&file_size=" +
-        encodeURIComponent(self.uploadData.fileSize.toString()) +
+        encodeURIComponent(self.uploadData.fileSize) +
         mimeTypeParam,
       error: function (err: Error) {
-        if (err instanceof ACHttpError) {
+        if (err instanceof HttpError) {
           Object.assign(logProperties, {
             StatusCode: err.status,
             StatusText: err.statusText,
           });
           self.error("The asset cannot be uploaded. Failed to set metadata.", logProperties);
         } else {
-          self.error("Upload Failed. No network detected. Please try again." + err, {}, ACFusUploadState.Error);
+          self.error("Upload Failed. No network detected. Please try again." + err, {}, McFusUploadState.Error);
         }
       },
       success: function (response: any) {
@@ -575,7 +614,7 @@ export class ACFusNodeUploader implements ACFusUploader {
 
         // Handle the restart/resume/recovery scenario
         if (response.resume_restart) {
-          self.setState(ACFusUploadState.ResumeOrRestart);
+          self.setState(McFusUploadState.ResumeOrRestart);
           const remainingChunksToUpload = response.chunk_list.length;
           self.log("Chunks remaining to upload: " + remainingChunksToUpload);
 
@@ -590,7 +629,7 @@ export class ACFusNodeUploader implements ACFusUploader {
     });
   }
 
-  private setState(state: ACFusUploadState) {
+  private setState(state: McFusUploadState) {
     this.uploadStatus.state = state;
     this.log("Setting state: " + state);
     this.eventHandlers.onStateChanged(state);
@@ -604,12 +643,12 @@ export class ACFusNodeUploader implements ACFusUploader {
     }
 
     if (this.uploadStatus.chunksFailedCount > this.uploadStatus.maxErrorCount) {
-      if (this.uploadStatus.state === ACFusUploadState.Uploading) {
+      if (this.uploadStatus.state === McFusUploadState.Uploading) {
         // Treat client disconnect errors as non-fatal errors as a service health indicator.
         if (this.uploadStatus.connected) {
           this.error("Upload Failed. Encountered too many errors while uploading. Please try again.");
         } else {
-          this.error("Upload Failed. No network detected. Please try again.", {}, ACFusUploadState.Error);
+          this.error("Upload Failed. No network detected. Please try again.", {}, McFusUploadState.Error);
         }
       }
       // Cancel any single threaded operations.
@@ -630,7 +669,7 @@ export class ACFusNodeUploader implements ACFusUploader {
     const chunk = this.uploadData.file!.slice(start, end);
 
     // Don't request if chunk is empty or in the wrong state
-    if (!this.isValidChunk(chunk) || this.uploadStatus.state !== ACFusUploadState.Uploading) {
+    if (!this.isValidChunk(chunk) || this.uploadStatus.state !== McFusUploadState.Uploading) {
       return;
     }
 
@@ -687,7 +726,7 @@ export class ACFusNodeUploader implements ACFusUploader {
   private uploadChunkErrorHandler(error: Error, chunkNumber: number) {
     ++this.uploadStatus.chunksFailedCount;
     this.uploadStatus.chunkQueue.push(chunkNumber);
-    if (error instanceof ACHttpError) {
+    if (error instanceof HttpError) {
       this.log("ChunkFailed: " + chunkNumber + ".", {
         StatusCode: error.status,
         StatusText: error.statusText,
@@ -706,21 +745,21 @@ export class ACFusNodeUploader implements ACFusUploader {
     }
   }
 
-  public start(file: ACFusFile) {
+  public start(file: McFusFile) {
     if (!file || file.size <= 0) {
-      this.error("A file must be specified and must not be empty.", {}, ACFusUploadState.Error);
+      this.error("A file must be specified and must not be empty.", {}, McFusUploadState.Error);
       return;
     }
 
     if (this.isUploadInProgress()) {
       // Non fatal error. Introducing a warning level is an API breaking change in portal. error() changes state.
-      this.log("Cannot start an upload that is already in progress.", undefined, ACFusMessageLevel.Error);
+      this.log("Cannot start an upload that is already in progress.", undefined, McFusMessageLevel.Error);
       return;
     }
 
     this.uploadData.file = file;
     this.uploadData.fileSize = file.size;
-    this.setState(ACFusUploadState.Initialized);
+    this.setState(McFusUploadState.Initialized);
     this.setMetadata();
   }
 
@@ -734,7 +773,7 @@ export class ACFusNodeUploader implements ACFusUploader {
       url: self.uploadBaseUrls.CancelUpload + encodeURIComponent(self.uploadData.assetId),
       success: function (response: any) {
         self.log(response.message);
-        self.setState(ACFusUploadState.Cancelled);
+        self.setState(McFusUploadState.Cancelled);
 
         self.abortSingleThreadedUploads();
       },
