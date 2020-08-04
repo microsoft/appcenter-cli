@@ -17,9 +17,7 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "preinstall": "cd appcenter-file-upload-client-node && npm i",
-    "build-ac-fus": "cd appcenter-file-upload-client-node && npm run build",
-    "build": "npm run build-ac-fus && npm run lint && gulp build:raw",
+    "build": "npm run lint && gulp build:raw",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s --timeout 4000",
@@ -46,10 +44,7 @@
   "files": [
     "package-lock.json",
     "bin",
-    "dist",
-    "appcenter-file-upload-client-node/out",
-    "appcenter-file-upload-client-node/package.json",
-    "appcenter-file-upload-client-node/package-lock.json"
+    "dist"
   ],
   "devDependencies": {
     "@types/uuid": "^8.0.0",

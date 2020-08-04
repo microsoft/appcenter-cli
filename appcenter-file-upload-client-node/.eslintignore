@@ -1,8 +1,0 @@
-node_modules
-
-# compiled files
-out
-build
-
-# db migration files
-db

@@ -17,20 +17,19 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, Profile } from "../../util/profile";
-import { getFileUploadLink, getPatchUploadLink } from "./lib/ac-fus-api";
+import { getFileUploadLink, getPatchUploadLink } from "./lib/mc-fus-uploader/mc-fus-api";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import { getTokenFromEnvironmentVar } from "../../util/profile/environment-vars";
+import { McFile, McFusNodeUploader } from "./lib/mc-fus-uploader/mc-fus-uploader";
 import {
-  ACFile,
-  ACFusNodeUploader,
-  ACFusMessageLevel,
-  ACFusUploader,
-  ACFusUploadState,
+  McFusMessageLevel,
+  McFusUploader,
+  McFusUploadState,
   IProgress,
   LogProperties,
   IUploadStats,
   IInitializeSettings,
-} from "../../../appcenter-file-upload-client-node";
+} from "./lib/mc-fus-uploader/mc-fus-uploader-types";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
@@ -89,7 +88,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
-  private acFusUploader?: ACFusUploader;
+  private mcFusUploader?: McFusUploader;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
@@ -262,7 +261,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       }
     }
     if (!_.isNil(this.filePath)) {
-      const binary = new ACFile(this.filePath);
+      const binary = new McFile(this.filePath);
       if (!binary || binary.size <= 0) {
         throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
       }
@@ -389,14 +388,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
         onProgressChanged: (progress: IProgress) => {
           debug("onProgressChanged: " + progress.percentCompleted);
         },
-        onMessage: (message: string, properties: LogProperties, level: ACFusMessageLevel) => {
+        onMessage: (message: string, properties: LogProperties, level: McFusMessageLevel) => {
           debug(`onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
-          if (level === ACFusMessageLevel.Error) {
-            this.acFusUploader.cancel();
+          if (level === McFusMessageLevel.Error) {
+            this.mcFusUploader.cancel();
             reject(new Error(`Uploading file error: ${message}`));
           }
         },
-        onStateChanged: (status: ACFusUploadState): void => {
+        onStateChanged: (status: McFusUploadState): void => {
           debug(`onStateChanged: ${status.toString()}`);
         },
         onCompleted: (uploadStats: IUploadStats) => {
@@ -404,9 +403,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
           resolve();
         },
       };
-      this.acFusUploader = new ACFusNodeUploader(uploadSettings);
-      const appFile = new ACFile(this.filePath);
-      this.acFusUploader.start(appFile);
+      this.mcFusUploader = new McFusNodeUploader(uploadSettings);
+      const appFile = new McFile(this.filePath);
+      this.mcFusUploader.start(appFile);
     });
   }
 
