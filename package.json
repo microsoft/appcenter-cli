@@ -58,7 +58,7 @@
     "@types/lodash": "4.14.158",
     "@types/minimist": "1.2.0",
     "@types/mkdirp": "1.0.1",
-    "@types/mocha": "8.0.0",
+    "@types/mocha": "8.0.1",
     "@types/mock-require": "2.0.0",
     "@types/node": "10.*",
     "@types/node-fetch": "^2.5.7",
