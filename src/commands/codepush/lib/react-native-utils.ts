@@ -441,9 +441,9 @@ function getHermesOSBin(): string {
 function getHermesOSExe(): string {
   switch (process.platform) {
     case "win32":
-      return "hermes.exe";
+      return "hermesc.exe";
     default:
-      return "hermes";
+      return "hermesc";
   }
 }
 
