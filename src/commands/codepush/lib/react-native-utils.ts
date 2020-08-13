@@ -439,11 +439,12 @@ function getHermesOSBin(): string {
 }
 
 function getHermesOSExe(): string {
+  const hermesExecutableName = isLowVersion(getReactNativeVersion(), "0.63.0") ? "hermes" : "hermesc";
   switch (process.platform) {
     case "win32":
-      return "hermes.exe";
+      return hermesExecutableName + ".exe";
     default:
-      return isLowVersion(getReactNativeVersion(), "0.63.0") ? "hermes" : "hermesc";
+      return hermesExecutableName;
   }
 }
 
