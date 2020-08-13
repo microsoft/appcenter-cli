@@ -16,7 +16,7 @@ import {
   getHermesEnabled,
   isValidOS,
   isValidPlatform,
-  isReactNativeProject,
+  getReactNativeVersion,
 } from "./lib/react-native-utils";
 import * as chalk from "chalk";
 
@@ -110,7 +110,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   private platform: string;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
-    if (!isReactNativeProject()) {
+    if (!getReactNativeVersion()) {
       return failure(ErrorCodes.InvalidParameter, "The project in the CWD is not a React Native project.");
     }
 

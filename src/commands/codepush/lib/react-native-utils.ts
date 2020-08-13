@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as xml2js from "xml2js";
 import { out, isDebug } from "../../../util/interaction";
-import { isValidVersion } from "./validation-utils";
+import { isValidVersion, isLowVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
 import * as chalk from "chalk";
 
@@ -439,11 +439,12 @@ function getHermesOSBin(): string {
 }
 
 function getHermesOSExe(): string {
+  const hermesExecutableName = isLowVersion(getReactNativeVersion(), "0.63.0") ? "hermes" : "hermesc";
   switch (process.platform) {
     case "win32":
-      return "hermes.exe";
+      return hermesExecutableName + ".exe";
     default:
-      return "hermes";
+      return hermesExecutableName;
   }
 }
 
@@ -486,7 +487,7 @@ export function isValidPlatform(platform: string): boolean {
   return platform.toLowerCase() === "react-native";
 }
 
-export function isReactNativeProject(): boolean {
+export function getReactNativeVersion(): string {
   try {
     // eslint-disable-next-line security/detect-non-literal-require
     const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
