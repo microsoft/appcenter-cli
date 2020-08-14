@@ -30,7 +30,7 @@ import {
   LogProperties,
   IUploadStats,
   IInitializeSettings,
-} from "../../../appcenter-file-upload-client-node";
+} from "appcenter-file-upload-client-node";
 import { environments } from "../../util/profile/environments";
 import fetch from "node-fetch";
 
