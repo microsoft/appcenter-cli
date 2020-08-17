@@ -17,7 +17,6 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "preinstall": "cd appcenter-file-upload-client-node && npm i",
     "build-ac-fus": "cd appcenter-file-upload-client-node && npm run build",
     "build": "npm run build-ac-fus && npm run lint && gulp build:raw",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
