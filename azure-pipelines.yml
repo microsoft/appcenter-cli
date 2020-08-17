@@ -52,6 +52,12 @@ jobs:
     displayName: 'Verify CLI unit test result'
 
   - script: |
+      npm ci
+      npm run build
+    displayName: 'Install and build appcenter-file-upload-client-node'
+    workingDirectory: appcenter-file-upload-client-node
+
+  - script: |
       npm run test:ci || [ -f './test-results.xml' ]
     displayName: 'Run appcenter-file-upload-client-node tests'
     workingDirectory: appcenter-file-upload-client-node
