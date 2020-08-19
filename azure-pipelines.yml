@@ -58,12 +58,6 @@ jobs:
     workingDirectory: appcenter-file-upload-client-node
 
   - script: |
-      npm pack
-      npm install -g appcenter-cli*.tgz
-    displayName: 'Package appcenter-file-upload-client-node'
-    workingDirectory: appcenter-file-upload-client-node
-
-  - script: |
       npm run test:ci || [ -f './test-results.xml' ]
     displayName: 'Run appcenter-file-upload-client-node tests'
     workingDirectory: appcenter-file-upload-client-node
@@ -76,6 +70,11 @@ jobs:
       failTaskOnFailedTests: true
       testRunTitle: 'appcenter-file-upload-client-node unit tests'
     displayName: 'Verify appcenter-file-upload-client-node unit test result'
+
+  - script: |
+      npm pack
+      npm install -g appcenter-cli*.tgz
+    displayName: 'Package appcenter-cli'
 
   - task: AzureKeyVault@1
     inputs:
