@@ -103,6 +103,7 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
+    "appcenter-file-upload-client-node": "1.0.0",
     "appcenter-file-upload-client": "0.0.24",
     "azure-storage": "2.10.3",
     "bplist": "0.0.4",

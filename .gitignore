@@ -28,6 +28,10 @@ tools
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
+# Lib
+appcenter-file-upload-client-node/node_modules
+appcenter-file-upload-client-node/out
+
 # Users Environment Variables
 .lock-wscript
 

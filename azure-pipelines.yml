@@ -40,7 +40,7 @@ jobs:
 
   - script: |
       npm run test:ci || [ -f './test-results.xml' ]
-    displayName: 'Run tests (with JUnit output)'
+    displayName: 'Run CLI tests (with JUnit output)'
 
   - task: PublishTestResults@2
     inputs:
@@ -48,8 +48,33 @@ jobs:
       testResultsFiles: 'test-results.xml'
       searchFolder: '$(Build.SourcesDirectory)'
       failTaskOnFailedTests: true
-      testRunTitle: 'Unit tests'
-    displayName: 'Verify unit test result'
+      testRunTitle: 'CLI unit tests'
+    displayName: 'Verify CLI unit test result'
+
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'Install and build appcenter-file-upload-client-node'
+    workingDirectory: appcenter-file-upload-client-node
+
+  - script: |
+      npm run test:ci || [ -f './test-results.xml' ]
+    displayName: 'Run appcenter-file-upload-client-node tests'
+    workingDirectory: appcenter-file-upload-client-node
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'test-results.xml'
+      searchFolder: '$(Build.SourcesDirectory)/appcenter-file-upload-client-node'
+      failTaskOnFailedTests: true
+      testRunTitle: 'appcenter-file-upload-client-node unit tests'
+    displayName: 'Verify appcenter-file-upload-client-node unit test result'
+
+  - script: |
+      npm pack
+      npm install -g appcenter-cli*.tgz
+    displayName: 'Package appcenter-cli'
 
   - task: AzureKeyVault@1
     inputs:
@@ -62,7 +87,7 @@ jobs:
       filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
       arguments: '-Token $(ac-cli-account-api-token)'
       pwsh: true
-    displayName: 'Functional tests'
+    displayName: 'Run functional tests'
 
   - script: |
       [ -f './test/functional/testresult.xml' ]
@@ -74,7 +99,7 @@ jobs:
       testResultsFiles: 'testresult.xml'
       searchFolder: '$(Build.SourcesDirectory)/test/functional'
       failTaskOnFailedTests: true
-      testRunTitle: 'Verify functional test result'
+      testRunTitle: 'Functional tests'
     displayName: 'Verify functional test result'
 
   - script: |
