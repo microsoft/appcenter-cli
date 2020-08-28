@@ -17,7 +17,7 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build": "npm run lint && gulp build:raw",
+    "build": "npm run lint && npm run compile",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s --timeout 4000",
@@ -28,6 +28,7 @@
     "autorest": "npm run autorest:clean && node scripts/autorest.js",
     "autorest:gen": "node --max-old-space-size=16384 node_modules/autorest/dist/app.js --debug swagger/readme.md",
     "clean": "gulp clean",
+    "compile": "gulp build:raw",
     "prepublishOnly": "npm run lint && gulp prepublish",
     "download-swagger": "gulp download-swagger",
     "prettier": "prettier --write \"**/*.+(js|ts)\""
