@@ -117,6 +117,7 @@ There are a bunch of scripts in package.json file. Here's what they are and what
 | `npm run clean`      | Cleans up any compilation output                                                       |
 | `npm run autorest`   | Regenerate the HTTP client libraries. Downloads required tools as part of this process |
 | `npm run lint`       | Runs the linter over the codebase                                                      |
+| `npm run compile`    | Compiles the typescript into javasctipy, creates `dist` directory                      |
 
 There will be more over time.
 
@@ -136,6 +137,15 @@ The gulpfile.js file contains the following targets that can be called manually 
 | `copy-assets`           |              | Copies .txt files from src to dist (category descriptions)              |
 | `copy-generated-client` |              | Copies the generated HTTP client code to dist                           |
 | `prepublish`            | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm         |
+
+## Debugger
+
+Debugging configurations are stored in launch.json file. Here're what they are and what they do:
+
+| Target                              | What it does                                                                     |
+| ------------------------------------| -------------------------------------------------------------------------------- |
+| `Launch with sourcemaps`            | Build sourcemaps, attach a debugger when testing an App Center CLI command       |
+| `Launch without building sourcemaps`| Attach a debugger when testing an App Center CLI command                         |
 
 ## Touring the codebase
 
