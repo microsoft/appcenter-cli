@@ -119,7 +119,7 @@ describe("ACFusUploader", () => {
         onStateChangedMock.verify((callback) => callback(ACFusUploadState.New), TypeMoq.Times.once());
         onStateChangedMock.verify((callback) => callback(ACFusUploadState.Initialized), TypeMoq.Times.once());
         setTimeout(() => {
-            assert.strictEqual(setMetadata.isDone(), true);
+          assert.strictEqual(setMetadata.isDone(), true);
         }, 100);
       });
 
