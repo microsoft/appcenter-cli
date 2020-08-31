@@ -126,7 +126,7 @@
     "ms-rest": "2.5.4",
     "node-fetch": "^2.6.0",
     "omelette": "0.4.12",
-    "opener": "1.5.1",
+    "opener": "1.5.2",
     "p-limit": "3.0.2",
     "plist": "3.0.1",
     "properties": "1.2.1",
