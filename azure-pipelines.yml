@@ -71,10 +71,10 @@ jobs:
       testRunTitle: 'appcenter-file-upload-client-node unit tests'
     displayName: 'Verify appcenter-file-upload-client-node unit test result'
 
-  - script: |
-      npm pack
-      npm install -g appcenter-cli*.tgz
-    displayName: 'Package appcenter-cli'
+  # - script: |
+  #     npm pack
+  #     npm install -g appcenter-cli*.tgz
+  #   displayName: 'Package appcenter-cli'
 
   - task: AzureKeyVault@1
     inputs:
