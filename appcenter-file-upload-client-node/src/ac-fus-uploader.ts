@@ -18,6 +18,7 @@ import fetch from "node-fetch";
 import { MimeTypes } from "./ac-fus-mime-types";
 import { AbortController } from "abort-controller";
 import { ACHttpError } from "./model/ACHttpError";
+import * as crypto from "crypto";
 
 export class ACFusNodeUploader implements ACFusUploader {
   private ambiguousProgress: number = 0;
@@ -651,6 +652,13 @@ export class ACFusNodeUploader implements ACFusUploader {
     return properties;
   }
 
+  private addMd5ToUrl(url: String, chunk: Buffer) {
+    const md5Crypto = crypto.createHash("md5");
+    const md5Hash = encodeURIComponent(md5Crypto.update(chunk).digest("base64"));
+    const result = url + `&md5=${md5Hash}`;
+    return result;
+  }
+
   private uploadChunk(chunk: Buffer, chunkNumber: number) {
     this.uploadStatus.inflightSet.add(chunkNumber);
     this.log("Starting upload for chunk: " + chunkNumber);
@@ -659,7 +667,10 @@ export class ACFusNodeUploader implements ACFusUploader {
       type: "POST",
       useAuthentication: true,
       chunk: chunk,
-      url: self.uploadBaseUrls.UploadChunk + encodeURIComponent(self.uploadData.assetId) + "?block_number=" + chunkNumber,
+      url: self.addMd5ToUrl(
+        self.uploadBaseUrls.UploadChunk + encodeURIComponent(self.uploadData.assetId) + "?block_number=" + chunkNumber,
+        chunk
+      ),
       error: function (err: Error) {
         self.uploadStatus.inflightSet.delete(chunkNumber);
         self.uploadChunkErrorHandler(err, chunkNumber);
