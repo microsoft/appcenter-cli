@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import * as ProxyAgent from "proxy-agent";
 
-export function fetchWithOptions(url: string, options: any = {}) {
+export function resolveProxySettings(options: any = {}) {
   const instanceOptions = {
     ...options
   };
@@ -13,5 +13,9 @@ export function fetchWithOptions(url: string, options: any = {}) {
   if (!options.agent && proxyServer) {
     instanceOptions.agent = ProxyAgent(proxyServer);
   }
-  return fetch(url, instanceOptions);
+  return instanceOptions;
+}
+
+export function fetchWithOptions(url: string, options: any = {}) {
+  return fetch(url, resolveProxySettings(options));
 }
