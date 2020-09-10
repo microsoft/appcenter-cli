@@ -14,10 +14,10 @@ import {
   LogProperties,
   ACFusFile,
 } from "./ac-fus-uploader-types";
-import fetch from "node-fetch";
 import { MimeTypes } from "./ac-fus-mime-types";
 import { AbortController } from "abort-controller";
 import { ACHttpError } from "./model/ACHttpError";
+import { fetchWithOptions } from "./ac-fus-util";
 
 export class ACFusNodeUploader implements ACFusUploader {
   private ambiguousProgress: number = 0;
@@ -469,7 +469,7 @@ export class ACFusNodeUploader implements ACFusUploader {
       body = requestOptions.chunk;
     }
     const self = this;
-    fetch(requestUrl, {
+    fetchWithOptions(requestUrl, {
       method: requestOptions.type,
       headers: {
         "X-Correlation-ID": self.uploadData.correlationId,

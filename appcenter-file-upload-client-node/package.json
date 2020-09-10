@@ -1,6 +1,6 @@
 {
   "name": "appcenter-file-upload-client-node",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "File Uploader Client for Node",
   "homepage": "https://github.com/microsoft/appcenter-cli",
   "author": "Microsoft",
@@ -23,13 +23,13 @@
     "@types/mocha": "8.0.3",
     "@types/node": "10.x",
     "@types/uuid": "7.0.3",
-    "@typescript-eslint/eslint-plugin": "3.10.1",
+    "@typescript-eslint/eslint-plugin": "4.0.0",
     "@typescript-eslint/parser": "3.10.1",
-    "eslint": "7.7.0",
+    "eslint": "7.8.1",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-security": "1.4.0",
-    "mocha": "8.1.2",
+    "mocha": "8.1.3",
     "mocha-junit-reporter": "2.0.0",
     "nock": "13.0.4",
     "prettier": "2.1.1",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "abort-controller": "3.0.0",
-    "node-fetch": "2.6.0"
+    "node-fetch": "2.6.0",
+    "proxy-agent": "3.1.1"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "appcenter-cli",
-  "version": "2.6.7",
+  "version": "2.7.0",
   "description": "Command line tool for Visual Studio App Center",
   "keywords": [
     "microsoft",
@@ -17,7 +17,7 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build": "npm run lint && gulp build:raw",
+    "build": "npm run lint && npm run compile",
     "lint": "eslint \"bin/**/*.js\" \"src/**/*.ts\" \"scripts/**/*.js\" \"test/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s --timeout 4000",
@@ -28,6 +28,7 @@
     "autorest": "npm run autorest:clean && node scripts/autorest.js",
     "autorest:gen": "node --max-old-space-size=16384 node_modules/autorest/dist/app.js --debug swagger/readme.md",
     "clean": "gulp clean",
+    "compile": "gulp build:raw",
     "prepublishOnly": "npm run lint && gulp prepublish",
     "download-swagger": "gulp download-swagger",
     "prettier": "prettier --write \"**/*.+(js|ts)\""
@@ -53,7 +54,7 @@
     "@types/debug": "4.1.5",
     "@types/from2": "2.3.0",
     "@types/glob": "7.1.3",
-    "@types/inquirer": "7.3.0",
+    "@types/inquirer": "7.3.1",
     "@types/jsonwebtoken": "8.5.0",
     "@types/lodash": "4.14.159",
     "@types/minimist": "1.2.0",
@@ -78,7 +79,7 @@
     "@types/xml2js": "0.4.5",
     "@types/xmldom": "0.1.30",
     "@types/yazl": "2.4.2",
-    "@typescript-eslint/eslint-plugin": "3.9.0",
+    "@typescript-eslint/eslint-plugin": "4.0.0",
     "@typescript-eslint/parser": "3.9.0",
     "autorest": "2.0.4413",
     "chai": "4.2.0",
@@ -91,7 +92,7 @@
     "gulp-clean": "0.4.0",
     "gulp-sourcemaps": "2.6.5",
     "gulp-typescript": "5.0.1",
-    "mocha": "8.1.1",
+    "mocha": "8.1.3",
     "mocha-junit-reporter": "2.0.0",
     "mock-require": "3.0.3",
     "nock": "13.0.4",
@@ -99,11 +100,11 @@
     "sinon": "9.0.3",
     "ts-node": "8.10.2",
     "typemoq": "^2.1.0",
-    "typescript": "3.9.7"
+    "typescript": "4.0.2"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "appcenter-file-upload-client-node": "1.1.0",
+    "appcenter-file-upload-client-node": "1.1.1",
     "appcenter-file-upload-client": "0.0.24",
     "azure-storage": "2.10.3",
     "bplist": "0.0.4",
@@ -126,7 +127,7 @@
     "ms-rest": "2.5.4",
     "node-fetch": "^2.6.0",
     "omelette": "0.4.12",
-    "opener": "1.5.1",
+    "opener": "1.5.2",
     "p-limit": "3.0.2",
     "plist": "3.0.1",
     "properties": "1.2.1",
