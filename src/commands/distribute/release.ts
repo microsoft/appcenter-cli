@@ -30,9 +30,9 @@ import {
   LogProperties,
   IUploadStats,
   IInitializeSettings,
+  fetchWithOptions,
 } from "appcenter-file-upload-client-node";
 import { environments } from "../../util/profile/environments";
-import fetch from "node-fetch";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -363,7 +363,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const accessToken = await this.getToken(profile);
     const url = getFileUploadLink(endpoint, app.ownerName, app.appName);
     const body = JSON.stringify({ build_version: this.buildVersion, build_number: this.buildNumber });
-    const response = await fetch(url, {
+    const response = await fetchWithOptions(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -416,7 +416,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const endpoint = await this.getEndpoint(profile);
     const accessToken = await this.getToken(profile);
     const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
-    const response = await fetch(url, {
+    const response = await fetchWithOptions(url, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -464,7 +464,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const endpoint = await this.getEndpoint(profile);
       const accessToken = await this.getToken(profile);
       const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
-      const response = await fetch(url, {
+      const response = await fetchWithOptions(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
