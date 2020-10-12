@@ -7,8 +7,10 @@ updates:
     # Check the npm registry for updates every weekday
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 20
   # Enable version updates for npm on the inner appcenter-file-upload-client-node package
   - package-ecosystem: "npm"
     directory: "/appcenter-file-upload-client-node"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 20
