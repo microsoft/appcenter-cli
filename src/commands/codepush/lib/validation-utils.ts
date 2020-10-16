@@ -1,3 +1,4 @@
+import * as semver from "semver";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { DefaultApp } from "../../../util/profile";
 
