@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as xml2js from "xml2js";
+import * as semver from "semver";
 import { out, isDebug } from "../../../util/interaction";
-import { isValidVersion, isLowVersion } from "./validation-utils";
+import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
 import * as chalk from "chalk";
 
@@ -439,7 +440,7 @@ function getHermesOSBin(): string {
 }
 
 function getHermesOSExe(): string {
-  const hermesExecutableName = isLowVersion(getReactNativeVersion(), "0.63.0") ? "hermes" : "hermesc";
+  const hermesExecutableName = semver.compare(semver.coerce(getReactNativeVersion()).version, "0.63.0") === -1 ? "hermes" : "hermesc";
   switch (process.platform) {
     case "win32":
       return hermesExecutableName + ".exe";

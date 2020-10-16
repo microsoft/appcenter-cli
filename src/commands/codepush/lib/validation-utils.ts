@@ -1,4 +1,3 @@
-import * as semver from "semver";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { DefaultApp } from "../../../util/profile";
 
@@ -18,10 +17,6 @@ export function isValidRange(semverRange: string): boolean {
 
 export function isValidRollout(rollout: number): boolean {
   return rollout && rollout > 0 && rollout <= 100;
-}
-
-export function isLowVersion(v1: string, v2: string): boolean {
-  return semver.compare(semver.coerce(v1).version, v2) === -1;
 }
 
 export async function isValidDeployment(client: AppCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
