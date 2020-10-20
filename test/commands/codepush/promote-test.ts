@@ -5,7 +5,7 @@ import { expect } from "chai";
 import * as Nock from "nock";
 import * as Sinon from "sinon";
 
-describe.only("codepush promote", function () {
+describe("codepush promote", function () {
   let sandbox: Sinon.SinonSandbox;
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
