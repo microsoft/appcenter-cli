@@ -1,9 +1,14 @@
+import * as fs from "fs";
 import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as Nock from "nock";
 import CodePushReleaseReactCommand from "../../../src/commands/codepush/release-react";
 import { CommandArgs } from "../../../src/util/commandline/command";
-import * as fs from "fs";
+import * as mkdirp from "mkdirp";
+import * as ReactNativeTools from "../../../src/commands/codepush/lib/react-native-utils";
+import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
+import { CommandResult } from "../../../src/util/commandline";
+import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
 
 describe.only("CodePush release-react command", function () {
   const app = "bogus/app";
@@ -12,6 +17,7 @@ describe.only("CodePush release-react command", function () {
 
   beforeEach(() => {
     sandbox = Sinon.createSandbox();
+    sandbox.stub(updateContentsTasks, "sign");
   });
 
   afterEach(() => {
@@ -27,10 +33,10 @@ describe.only("CodePush release-react command", function () {
       "--sourcemap-output-dir", "fake/sourcemap/output",
       "--sourcemap-output", "sourceMapOutput.txt",
       "--build-configuration-name", "Release",
-      //"--plist-file-prefix", "",
-      //"--plist-file", "",
+      "--plist-file-prefix", "",
+      "--plist-file", "",
       "--gradle-file", "bogusApp/app.gradle",
-      "--entry-file","entry.js",
+      "--entry-file", "entry.js",
       "--development",
       "--bundle-name", "bundle",
       "--rollout", "100",
@@ -39,13 +45,14 @@ describe.only("CodePush release-react command", function () {
       "--mandatory",
       "--disabled",
       "--description", "app description",
-      "--deployment-name", ,
-      "--app", app
+      "--deployment-name", deployment,
+      "--app", app,
+      "--token", "c1o3d3e7",
     ],
     command: ["codepush", "release-react"],
     commandPath: "fake/path",
   };
-  it("succeed if all parameters are passed", async function () {
+  it.only("succeed if all parameters are passed", async function () {
     // Arrange
     const command = new CodePushReleaseReactCommand(goldenPathArgs);
     const readFileSyncStub = sandbox.stub(fs, "readFileSync");
@@ -60,16 +67,25 @@ describe.only("CodePush release-react command", function () {
         }
       }
     `);
-    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).query(true).reply(200, {});
-    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).query(true).reply(200, {
-      os: "Android",
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os: "iOS",
       platform: "react-native",
     });
+    sandbox.stub(mkdirp, "sync");
+
+    sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+    sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+    sandbox.stub(fileUtils, "removeReactTmpDir");
+    sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+    sandbox.stub(command, <any>"release").resolves(<CommandResult>{ succeeded: true });
+
     // Act
     const result = await command.execute();
     // Assert
     expect(result.succeeded).to.be.true;
   });
+
   it("npm package should have name defined check", function () {});
   context("react-native dependency", function () {
     it("in dependencies", function () {

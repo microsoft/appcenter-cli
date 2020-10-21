@@ -7,7 +7,7 @@ import * as Sinon from "sinon";
 
 describe("codepush rollback", function () {
   let sandbox: Sinon.SinonSandbox;
-  let outProgressSpy: Sinon.SinonSpy<[title: string, action: Promise<unknown>], Promise<unknown>>;
+  let outProgressSpy: Sinon.SinonSpy<[string, Promise<unknown>], Promise<unknown>>;
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const args: CommandArgs = {
