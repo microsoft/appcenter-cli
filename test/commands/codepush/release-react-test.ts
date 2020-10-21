@@ -200,7 +200,29 @@ describe.only("CodePush release-react command", function () {
       expect(result.succeeded).to.be.true;
     });
   });
-  it("when incorrect deployment name specifed, the error is pretty formatted", function () {});
+  it.skip("shows user friendly error when incorrect deployment specified", async function () {
+    // Arrange
+    const command = new CodePushReleaseReactCommand(goldenPathArgs);
+    sandbox.stub(fs, "readFileSync").returns(`
+    {
+      "name": "RnCodepushAndroid",
+      "version": "0.0.1",
+      "dependencies": {
+        "react": "16.13.1",
+        "react-native": "0.63.3",
+        "react-native-code-push": "6.3.0"
+      }
+    }
+    `);
+
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(404, {});
+
+    // Act
+    const result = (await command.execute()) as CommandFailedResult;
+    // Assert
+    expect(result.succeeded).to.be.false;
+    expect(result.errorMessage).to.be.equal(`Deployment "${deployment}" does not exist.`);
+  });
   context("when no output dir parameter specified, then temporarily directory is created", function () {
     it("CodePush directory is created within, so that it was compatible with SDK", function () {});
     it("temporary directory is get removed once command finishes", function () {});
