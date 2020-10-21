@@ -91,7 +91,7 @@ describe("codepush promote", function () {
     expect((result as any).errorMessage).contains("Invalid binary version(s) for a release.");
   });
 
-  it("made warning on promote api call 409 status code", async function () {
+  it("makes warning on promote api call 409 status code", async function () {
     // Arrange
     const args: CommandArgs = { ...goldenPathArgs, args: [...goldenPathArgs.args, "--disable-duplicate-release-error"] };
     const promoteCommand = new CodePushPromoteCommand(args);
@@ -108,7 +108,7 @@ describe("codepush promote", function () {
     expect(consoleWarnSpy.calledOnce).to.be.true;
   });
 
-  it("made error on promote api call other errors handling", async function () {
+  it("executes error on promote api call other errors handling", async function () {
     // Arrange
     const promoteCommand = new CodePushPromoteCommand(goldenPathArgs);
     const errorMessage = "Some error message";
