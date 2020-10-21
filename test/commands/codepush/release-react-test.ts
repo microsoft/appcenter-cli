@@ -7,7 +7,7 @@ import { CommandArgs } from "../../../src/util/commandline/command";
 import * as mkdirp from "mkdirp";
 import * as ReactNativeTools from "../../../src/commands/codepush/lib/react-native-utils";
 import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
-import { CommandResult } from "../../../src/util/commandline";
+import { CommandFailedResult, CommandResult } from "../../../src/util/commandline";
 import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
 
 describe.only("CodePush release-react command", function () {
@@ -108,25 +108,97 @@ describe.only("CodePush release-react command", function () {
   });
 
   context("react-native dependency", function () {
-    it("in dependencies", function () {
+    it("throws error if no react native in dependencies and devDependencies", async function () {
       // Arrange
-      // const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
-      // nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);
-      // const args: CommandArgs = getCommandArgsForReleaseCommand(
-      //   ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
-      //   fakeParamsForRequests
-      // );
-      // // Act
-      // const testRelaseSkeleton = new CodePushReleaseCommand(args);
-      // const result = await testRelaseSkeleton.execute();
-      // // Assert
-      // console.dir(util.inspect(result));
-      // expect(result.succeeded).to.be.true;
-      // const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
-      // expect(lastFolderForSignPath).to.eql("CodePush", "Last folder in path should be 'CodePush'");
-      // nockedApiGatewayRequests.done();
+      const command = new CodePushReleaseReactCommand(goldenPathArgs);
+      sandbox.stub(fs, "readFileSync").returns(`
+        {
+          "name": "RnCodepushAndroid",
+          "version": "0.0.1",
+          "dependencies": {
+            "react": "16.13.1",
+            "react-native-code-push": "6.3.0"
+          }
+        }
+      `);
+
+      // Act
+      const result = (await command.execute()) as CommandFailedResult;
+
+      // Assert
+      expect(result.succeeded).to.be.false;
+      expect(result.errorMessage).to.equal("The project in the CWD is not a React Native project.");
     });
-    it("in dev dependencies", function () {});
+
+    it("finishes to end if react-native specified in dependencies ", async function () {
+      // Arrange
+      const command = new CodePushReleaseReactCommand(goldenPathArgs);
+      sandbox.stub(fs, "readFileSync").returns(`
+    {
+      "name": "RnCodepushAndroid",
+      "version": "0.0.1",
+      "dependencies": {
+        "react": "16.13.1",
+        "react-native": "0.63.3",
+        "react-native-code-push": "6.3.0"
+      }
+    }
+    `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os: "iOS",
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+      // Act
+      const result = await command.execute();
+      // Assert
+      expect(result.succeeded).to.be.true;
+    });
+
+    it("finishes to end if react-native specified in devDependencies ", async function () {
+      // Arrange
+      const command = new CodePushReleaseReactCommand(goldenPathArgs);
+      sandbox.stub(fs, "readFileSync").returns(`
+    {
+      "name": "RnCodepushAndroid",
+      "version": "0.0.1",
+      "dependencies": {
+        "react": "16.13.1",
+        "react-native-code-push": "6.3.0"
+      },
+      "devDependencies": {
+        "react-native": "0.63.3"
+      }
+    }
+    `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os: "iOS",
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+      // Act
+      const result = await command.execute();
+      // Assert
+      expect(result.succeeded).to.be.true;
+    });
   });
   it("when incorrect deployment name specifed, the error is pretty formatted", function () {});
   context("when no output dir parameter specified, then temporarily directory is created", function () {
