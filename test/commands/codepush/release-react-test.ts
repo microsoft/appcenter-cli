@@ -1,6 +1,22 @@
+import { expect } from "chai";
+import * as Sinon from "sinon";
+import * as Nock from "nock";
+import CodePushReleaseReactCommand from "../../../src/commands/codepush/release-react";
 import { CommandArgs } from "../../../src/util/commandline/command";
+import * as fs from "fs";
 
 describe.only("CodePush release-react command", function () {
+  const app = "bogus/app";
+  const deployment = "bogus-deployment";
+  let sandbox: Sinon.SinonSandbox;
+
+  beforeEach(() => {
+    sandbox = Sinon.createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
   const goldenPathArgs: CommandArgs = {
     // prettier-ignore
     args: [
@@ -23,16 +39,36 @@ describe.only("CodePush release-react command", function () {
       "--mandatory",
       "--disabled",
       "--description", "app description",
-      "--deployment-name", "bogus-deployment",
-      "--app", "bogus/app"
+      "--deployment-name", ,
+      "--app", app
     ],
     command: ["codepush", "release-react"],
     commandPath: "fake/path",
   };
-  it("succeed if all parameters are passed", function () {
+  it("succeed if all parameters are passed", async function () {
     // Arrange
+    const command = new CodePushReleaseReactCommand(goldenPathArgs);
+    const readFileSyncStub = sandbox.stub(fs, "readFileSync");
+    readFileSyncStub.returns(`
+      {
+        "name": "RnCodepushAndroid",
+        "version": "0.0.1",
+        "dependencies": {
+          "react": "16.13.1",
+          "react-native": "0.63.3",
+          "react-native-code-push": "6.3.0"
+        }
+      }
+    `);
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).query(true).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).query(true).reply(200, {
+      os: "Android",
+      platform: "react-native",
+    });
     // Act
+    const result = await command.execute();
     // Assert
+    expect(result.succeeded).to.be.true;
   });
   it("npm package should have name defined check", function () {});
   context("react-native dependency", function () {

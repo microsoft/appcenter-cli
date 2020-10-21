@@ -489,8 +489,8 @@ export function isValidPlatform(platform: string): boolean {
 
 export function getReactNativeVersion(): string {
   try {
-    // eslint-disable-next-line security/detect-non-literal-require
-    const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
+    const packageJsonFilename = path.join(process.cwd(), "package.json");
+    const projectPackageJson: any = JSON.parse(fs.readFileSync(packageJsonFilename, "utf-8"));
     const projectName: string = projectPackageJson.name;
     if (!projectName) {
       throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
