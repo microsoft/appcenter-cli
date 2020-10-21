@@ -86,7 +86,27 @@ describe.only("CodePush release-react command", function () {
     expect(result.succeeded).to.be.true;
   });
 
-  it("npm package should have name defined check", function () {});
+  it.skip("npm package should have name defined check", async function () {
+    // Arrange
+    const command = new CodePushReleaseReactCommand(goldenPathArgs);
+    sandbox.stub(fs, "readFileSync").returns(`
+        {
+          "version": "0.0.1",
+          "dependencies": {
+            "react": "16.13.1",
+            "react-native": "0.63.3",
+            "react-native-code-push": "6.3.0"
+          }
+        }
+      `);
+
+    // Act
+    const result = command.execute();
+
+    // Assert
+    return expect(result).to.eventually.be.rejectedWith('The "package.json" file in the CWD does not have the "name" field set.');
+  });
+
   context("react-native dependency", function () {
     it("in dependencies", function () {
       // Arrange
