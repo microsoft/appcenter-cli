@@ -52,21 +52,21 @@ describe.only("CodePush release-react command", function () {
     command: ["codepush", "release-react"],
     commandPath: "fake/path",
   };
-  it.only("succeed if all parameters are passed", async function () {
+  it("succeed if all parameters are passed", async function () {
     // Arrange
     const command = new CodePushReleaseReactCommand(goldenPathArgs);
-    const readFileSyncStub = sandbox.stub(fs, "readFileSync");
-    readFileSyncStub.returns(`
-      {
-        "name": "RnCodepushAndroid",
-        "version": "0.0.1",
-        "dependencies": {
-          "react": "16.13.1",
-          "react-native": "0.63.3",
-          "react-native-code-push": "6.3.0"
-        }
+    sandbox.stub(fs, "readFileSync").returns(`
+    {
+      "name": "RnCodepushAndroid",
+      "version": "0.0.1",
+      "dependencies": {
+        "react": "16.13.1",
+        "react-native": "0.63.3",
+        "react-native-code-push": "6.3.0"
       }
-    `);
+    }
+  `);
+
     Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
     Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
       os: "iOS",
@@ -78,7 +78,7 @@ describe.only("CodePush release-react command", function () {
     sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
     sandbox.stub(fileUtils, "removeReactTmpDir");
     sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
-    sandbox.stub(command, <any>"release").resolves(<CommandResult>{ succeeded: true });
+    sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
 
     // Act
     const result = await command.execute();
