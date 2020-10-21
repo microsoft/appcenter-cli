@@ -65,7 +65,7 @@ describe.only("CodePush release-react command", function () {
         "react-native-code-push": "6.3.0"
       }
     }
-  `);
+    `);
 
     Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
     Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
