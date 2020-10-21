@@ -175,25 +175,4 @@ describe("CodePush release command", () => {
       });
     });
   });
-  describe.only("when React Native version is being checked", function () {
-    it("throws error if package.json doesn't exist", async function () {
-      // Arrange
-      // const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
-      // nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);
-      // const args: CommandArgs = getCommandArgsForReleaseCommand(
-      //   ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
-      //   fakeParamsForRequests
-      // );
-      // // Act
-      // const testRelaseSkeleton = new CodePushReleaseCommand(args);
-      // const result = await testRelaseSkeleton.execute();
-      // // Assert
-      // console.dir(util.inspect(result));
-      // expect(result.succeeded).to.be.true;
-      // const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
-      // expect(lastFolderForSignPath).to.eql("CodePush", "Last folder in path should be 'CodePush'");
-      // nockedApiGatewayRequests.done();
-    });
-    it("throws error if package.json file in the CWD does not have the 'name' field set.", function () {});
-  });
 });
