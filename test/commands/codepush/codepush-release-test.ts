@@ -17,7 +17,7 @@ import {
 } from "./utils";
 import { CommandArgs } from "../../../src/util/commandline";
 
-describe("CodePush release tests", () => {
+describe("CodePush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
   const releaseFileName = "releaseBinaryFile";
   const releaseFileContent = "Hello World!";
@@ -109,6 +109,7 @@ describe("CodePush release tests", () => {
     stubbedSign.restore();
   });
 
+  //TODO revisit this suite
   describe("CodePush signed release", () => {
     describe("CodePush path generation", () => {
       it("CodePush path generation for React-Native with private key", async () => {
@@ -173,5 +174,26 @@ describe("CodePush release tests", () => {
         nockedApiGatewayRequests.done();
       });
     });
+  });
+  describe.only("when React Native version is being checked", function () {
+    it("throws error if package.json doesn't exist", async function () {
+      // Arrange
+      // const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      // nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);
+      // const args: CommandArgs = getCommandArgsForReleaseCommand(
+      //   ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
+      //   fakeParamsForRequests
+      // );
+      // // Act
+      // const testRelaseSkeleton = new CodePushReleaseCommand(args);
+      // const result = await testRelaseSkeleton.execute();
+      // // Assert
+      // console.dir(util.inspect(result));
+      // expect(result.succeeded).to.be.true;
+      // const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
+      // expect(lastFolderForSignPath).to.eql("CodePush", "Last folder in path should be 'CodePush'");
+      // nockedApiGatewayRequests.done();
+    });
+    it("throws error if package.json file in the CWD does not have the 'name' field set.", function () {});
   });
 });
