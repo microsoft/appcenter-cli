@@ -1,5 +1,39 @@
+import { CommandArgs } from "../../../src/util/commandline/command";
+
 describe.only("CodePush release-react command", function () {
-  it("golden path all arguments test", function () {});
+  const goldenPathArgs: CommandArgs = {
+    // prettier-ignore
+    args: [
+      "--extra-hermes-flag", "bogusGermes",
+      "--extra-bundler-option", "bogusRnBundle",
+      "--target-binary-version", "1.0.0",
+      "--output-dir", "fake/out/dir",
+      "--sourcemap-output-dir", "fake/sourcemap/output",
+      "--sourcemap-output", "sourceMapOutput.txt",
+      "--build-configuration-name", "Release",
+      //"--plist-file-prefix", "",
+      //"--plist-file", "",
+      "--gradle-file", "bogusApp/app.gradle",
+      "--entry-file","entry.js",
+      "--development",
+      "--bundle-name", "bundle",
+      "--rollout", "100",
+      "--disable-duplicate-release-error",
+      "--private-key-path", "fake/private-key-path",
+      "--mandatory",
+      "--disabled",
+      "--description", "app description",
+      "--deployment-name", "bogus-deployment",
+      "--app", "bogus/app"
+    ],
+    command: ["codepush", "release-react"],
+    commandPath: "fake/path",
+  };
+  it("succeed if all parameters are passed", function () {
+    // Arrange
+    // Act
+    // Assert
+  });
   it("npm package should have name defined check", function () {});
   context("react-native dependency", function () {
     it("in dependencies", function () {
