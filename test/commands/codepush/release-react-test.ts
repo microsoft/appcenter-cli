@@ -321,7 +321,43 @@ describe.only("CodePush release-react command", function () {
     });
   });
 
-  it("only android, ios and windows OSes are allowed (check the API response)", function () {});
+  ["Android", "iOS", "Windows"].forEach((os: string) => {
+    it(`only android, ios and windows OSes are allowed (check the API response) - check ${os}`, async function () {
+      // Arrange
+      const command = new CodePushReleaseReactCommand(goldenPathArgs);
+      sandbox.stub(fs, "readFileSync").returns(`
+                      {
+                        "name": "RnCodepushAndroid",
+                        "version": "0.0.1",
+                        "dependencies": {
+                          "react": "16.13.1",
+                          "react-native": "0.63.3",
+                          "react-native-code-push": "6.3.0"
+                        }
+                      }
+                    `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(ReactNativeTools, "getHermesEnabled").resolves(false);
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+      // Act
+      const result = await command.execute();
+
+      // Assert
+      expect(result.succeeded).to.be.true;
+    });
+  });
+
   it("only react-native platform is allowed ", function () {});
   context("bundle name if not provided defaults", function () {
     it("ios", function () {});
