@@ -358,7 +358,32 @@ describe.only("CodePush release-react command", function () {
     });
   });
 
-  it("only react-native platform is allowed ", function () {});
+  it("throws an error if non react-native platform specified", async function () {
+    // Arrange
+    const command = new CodePushReleaseReactCommand(goldenPathArgs);
+    sandbox.stub(fs, "readFileSync").returns(`
+    {
+      "name": "RnCodepushAndroid",
+      "version": "0.0.1",
+      "dependencies": {
+        "react": "16.13.1",
+        "react-native": "0.63.3",
+        "react-native-code-push": "6.3.0"
+      }
+    }
+    `);
+
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os: "iOS",
+      platform: "objective-c",
+    });
+
+    // Act
+    const result = await command.execute();
+    // Assert
+    expect(result.succeeded).to.be.false;
+  });
   context("bundle name if not provided defaults", function () {
     it("ios", function () {});
     it("another platform", function () {});
