@@ -237,7 +237,7 @@ describe.only("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ],
+          ]
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -284,7 +284,7 @@ describe.only("CodePush release-react command", function () {
                   "--deployment-name", deployment,
                   "--app", app,
                   "--token", "c1o3d3e7",
-                ],
+                ]
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -395,7 +395,7 @@ describe.only("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ],
+          ]
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -440,7 +440,7 @@ describe.only("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ],
+          ]
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -488,7 +488,7 @@ describe.only("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ],
+          ]
         };
         const command = new CodePushReleaseReactCommand(args);
         sandbox.stub(fs, "readFileSync").returns(`
@@ -533,7 +533,7 @@ describe.only("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ],
+          ]
         };
         const command = new CodePushReleaseReactCommand(args);
         sandbox.stub(fs, "readFileSync").returns(`
@@ -579,7 +579,7 @@ describe.only("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ],
+          ]
         };
         const command = new CodePushReleaseReactCommand(args);
         sandbox.stub(fs, "readFileSync").returns(`
@@ -625,7 +625,7 @@ describe.only("CodePush release-react command", function () {
             "--app", app,
             "--token", "c1o3d3e7",
             "--entry-file", entryFile
-          ],
+          ]
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -656,7 +656,55 @@ describe.only("CodePush release-react command", function () {
       expect(result.succeeded).to.be.false;
     });
   });
-  it("if sourcemapOutput not specified it but there is outputDir or sourcemapdir, then it guessing for some value", function () {});
+  it("composes sourcemapOutput when --sourcemap-output parameter is not provided", async function () {
+    const os = "Android";
+    const bundleName = "bogus.bundle";
+    const sourcemapOutputDir = "/fake/dir";
+    // Arrange
+    const args = {
+      ...goldenPathArgs,
+      // prettier-ignore
+      args: [
+        "--sourcemap-output-dir", sourcemapOutputDir,
+        "--bundle-name", bundleName,
+        "--target-binary-version", "1.0.0",
+        "--deployment-name", deployment,
+        "--app", app,
+        "--token", "c1o3d3e7",
+      ]
+    };
+    const command = new CodePushReleaseReactCommand(args);
+    sandbox.stub(fs, "readFileSync").returns(`
+      {
+        "name": "RnCodepushAndroid",
+        "version": "0.0.1",
+        "dependencies": {
+          "react": "16.13.1",
+          "react-native": "0.63.3",
+          "react-native-code-push": "6.3.0"
+        }
+      }
+    `);
+
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os,
+      platform: "react-native",
+    });
+    sandbox.stub(mkdirp, "sync");
+    sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+    sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+    sandbox.stub(fileUtils, "removeReactTmpDir");
+    const rnBundleStub = sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+    sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+    sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
+
+    // Act
+    await command.execute();
+
+    // Assert
+    expect(rnBundleStub.getCalls()[0].args[5]).to.be.equal(path.join(sourcemapOutputDir, `${bundleName}.map`));
+  });
   context("targetBinaryVersion", function () {
     it("if specified should be in valid range", function () {});
     it("if not specified, then set to fallback", function () {});
