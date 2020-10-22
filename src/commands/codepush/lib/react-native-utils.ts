@@ -321,7 +321,6 @@ export function runReactNativeBundleCommand(
     });
 
     reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
-      console.error(data.toString().trim());
       reject(new Error(`"react-native bundle" command failed: ${data.toString().trim()}`));
     });
 
