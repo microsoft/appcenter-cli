@@ -1,7 +1,9 @@
 import * as fs from "fs";
+import * as path from "path";
 import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as Nock from "nock";
+import * as pfs from "../../../src/util/misc/promisfied-fs";
 import CodePushReleaseReactCommand from "../../../src/commands/codepush/release-react";
 import { CommandArgs } from "../../../src/util/commandline/command";
 import * as mkdirp from "mkdirp";
@@ -224,9 +226,101 @@ describe.only("CodePush release-react command", function () {
     expect(result.errorMessage).to.be.equal(`Deployment "${deployment}" does not exist.`);
   });
   context("when no output dir parameter specified, then temporarily directory is created", function () {
-    it("CodePush directory is created within, so that it was compatible with SDK", function () {});
-    it("temporary directory is get removed once command finishes", function () {});
+    it("creates CodePush directory, so that it was compatible with SDK", async function () {
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+            "--target-binary-version", "1.0.0",
+            "--bundle-name", "bundle",
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+          ],
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os: "Android",
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      const mkTempDirStub = sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      sandbox.assert.calledWithExactly(mkTempDirStub, "code-push");
+    });
+
+    it("temporary directory is get removed once command finishes", async function () {
+      // Arrange
+      const fakePath = "fake/path/code-push";
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+                  "--target-binary-version", "1.0.0",
+                  "--bundle-name", "bundle",
+                  "--deployment-name", deployment,
+                  "--app", app,
+                  "--token", "c1o3d3e7",
+                ],
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+                {
+                  "name": "RnCodepushAndroid",
+                  "version": "0.0.1",
+                  "dependencies": {
+                    "react": "16.13.1",
+                    "react-native": "0.63.3",
+                    "react-native-code-push": "6.3.0"
+                  }
+                }
+              `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os: "Android",
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      sandbox.stub(pfs, "mkTempDir").resolves(fakePath);
+      const rmDirSpy = sandbox.spy(pfs, "rmDir");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      sandbox.assert.calledOnceWithExactly(rmDirSpy, path.join(fakePath, "CodePush"));
+    });
   });
+
   it("only android, ios and windows OSes are allowed (check the API response)", function () {});
   it("only react-native platform is allowed ", function () {});
   context("bundle name if not provided defaults", function () {
