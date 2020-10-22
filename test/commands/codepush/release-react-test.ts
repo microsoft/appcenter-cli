@@ -13,6 +13,7 @@ import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
 import { CommandFailedResult, CommandResult } from "../../../src/util/commandline";
 import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
 import rimraf = require("rimraf");
+const g2js = require("gradle-to-js/lib/parser");
 
 describe.only("CodePush release-react command", function () {
   const app = "bogus/app";
@@ -842,8 +843,98 @@ describe.only("CodePush release-react command", function () {
     Sinon.assert.calledOnceWithExactly(syncStub, `${osLib.tmpdir()}/react-*`);
   });
   context("hermes", function () {
-    it("does work only for android", function () {});
-    it("hermes enabled only when specified in the app gradle file", function () {});
+    it("skipped for non-android platforms", async function () {
+      const os = "ios";
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ]
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+        {
+          "name": "RnCodepushAndroid",
+          "version": "0.0.1",
+          "dependencies": {
+            "react": "16.13.1",
+            "react-native": "0.63.3",
+            "react-native-code-push": "6.3.0"
+          }
+        }
+      `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      const runHermesEmitBinaryCommandStub = sandbox.stub(ReactNativeTools, "runHermesEmitBinaryCommand");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      expect(runHermesEmitBinaryCommandStub.notCalled).is.true;
+    });
+    it("hermes enabled only when specified in the app gradle file", async function () {
+      const os = "Android";
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+            "--target-binary-version", "1.0.0",
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+          ]
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(fs, "lstatSync").returns({ isDirectory: () => false } as any);
+      sandbox.stub(g2js, "parseFile").resolves({ "project.ext.react": ["enableHermes: true"] });
+      const runHermesEmitBinaryCommandStub = sandbox.stub(ReactNativeTools, "runHermesEmitBinaryCommand");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
+    });
     context("RN versions", function () {
       it("works for starting with caret", function () {});
       it("works for custom (like 'mobiletechvn/react-native#v0.63.2.fix-shadow-node')", function () {});
