@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as osLib from "os";
 import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as Nock from "nock";
@@ -11,6 +12,7 @@ import * as ReactNativeTools from "../../../src/commands/codepush/lib/react-nati
 import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
 import { CommandFailedResult, CommandResult } from "../../../src/util/commandline";
 import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
+import rimraf = require("rimraf");
 
 describe.only("CodePush release-react command", function () {
   const app = "bogus/app";
@@ -784,6 +786,9 @@ describe.only("CodePush release-react command", function () {
       sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
       sandbox.stub(fileUtils, "removeReactTmpDir");
       const fallback = sandbox.stub(ReactNativeTools, "getReactNativeProjectAppVersion");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
 
       // Act
       await command.execute();
@@ -792,7 +797,50 @@ describe.only("CodePush release-react command", function () {
       Sinon.assert.called(fallback);
     });
   });
-  it("reactTmpDir is removed", function () {});
+  it("removes temporary RN directory", async function () {
+    const os = "Android";
+    // Arrange
+    const args = {
+      ...goldenPathArgs,
+      // prettier-ignore
+      args: [
+        "--target-binary-version", "1.0.0",
+        "--deployment-name", deployment,
+        "--app", app,
+        "--token", "c1o3d3e7",
+      ]
+    };
+    const command = new CodePushReleaseReactCommand(args);
+    sandbox.stub(fs, "readFileSync").returns(`
+      {
+        "name": "RnCodepushAndroid",
+        "version": "0.0.1",
+        "dependencies": {
+          "react": "16.13.1",
+          "react-native": "0.63.3",
+          "react-native-code-push": "6.3.0"
+        }
+      }
+    `);
+
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os,
+      platform: "react-native",
+    });
+    sandbox.stub(mkdirp, "sync");
+    sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+    sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+    sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+    sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
+    const syncStub = sandbox.stub(rimraf, "sync");
+
+    // Act
+    await command.execute();
+
+    // Assert
+    Sinon.assert.calledOnceWithExactly(syncStub, `${osLib.tmpdir()}/react-*`);
+  });
   context("hermes", function () {
     it("does work only for android", function () {});
     it("hermes enabled only when specified in the app gradle file", function () {});
