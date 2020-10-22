@@ -477,11 +477,184 @@ describe.only("CodePush release-react command", function () {
   });
   context("entry file", function () {
     context("if not specified", function () {
-      it("then defaults to index.os.js", function () {});
-      it("and fallback to index.js", function () {});
-      it("error thrown if nothing found", function () {});
+      it("then defaults to index.{os}.js", async function () {
+        const os = "Android";
+        // Arrange
+        const args = {
+          ...goldenPathArgs,
+          // prettier-ignore
+          args: [
+            "--target-binary-version", "1.0.0",
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+          ],
+        };
+        const command = new CodePushReleaseReactCommand(args);
+        sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "react-native",
+        });
+        sandbox.stub(mkdirp, "sync");
+        sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+        sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+        sandbox.stub(fileUtils, "removeReactTmpDir");
+        const rnBundleStub = sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+        sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+        sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
+
+        // Act
+        await command.execute();
+
+        // Assert
+        expect(rnBundleStub.getCalls()[0].args[2]).to.be.equal(`index.${os.toLowerCase()}.js`);
+      });
+      it("and fallback to index.js", async function () {
+        const os = "Android";
+        // Arrange
+        const args = {
+          ...goldenPathArgs,
+          // prettier-ignore
+          args: [
+            "--target-binary-version", "1.0.0",
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+          ],
+        };
+        const command = new CodePushReleaseReactCommand(args);
+        sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "react-native",
+        });
+        sandbox.stub(mkdirp, "sync");
+        const firstAttemptEntryFileName = `index.${os.toLowerCase()}.js`;
+        sandbox.replace(fileUtils, "fileDoesNotExistOrIsDirectory", (path) => path === firstAttemptEntryFileName);
+        sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+        sandbox.stub(fileUtils, "removeReactTmpDir");
+        const rnBundleStub = sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+        sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+        sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
+
+        // Act
+        await command.execute();
+
+        // Assert
+        expect(rnBundleStub.getCalls()[0].args[2]).to.be.equal("index.js");
+      });
+      it("fails command if no file found", async function () {
+        const os = "Android";
+        // Arrange
+        const args = {
+          ...goldenPathArgs,
+          // prettier-ignore
+          args: [
+            "--target-binary-version", "1.0.0",
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+          ],
+        };
+        const command = new CodePushReleaseReactCommand(args);
+        sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "react-native",
+        });
+        sandbox.stub(mkdirp, "sync");
+        const firstAttemptEntryFileName = `index.${os.toLowerCase()}.js`;
+        const secondAttemptEntryFileName = "index.js";
+        sandbox.replace(fileUtils, "fileDoesNotExistOrIsDirectory", (path) => {
+          return path === firstAttemptEntryFileName || path === secondAttemptEntryFileName;
+        });
+
+        // Act
+        const result = await command.execute();
+
+        // Assert
+        expect(result.succeeded).to.be.false;
+      });
     });
-    it("if specified error thrown if not found", function () {});
+    it("fails the command if entry file specified is not found", async function () {
+      // Arrange
+      const entryFile = "bogusEntryFile";
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+            "--target-binary-version", "1.0.0",
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+            "--entry-file", entryFile
+          ],
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os: "Android",
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      const fileNotExistStub = sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(true);
+
+      // Act
+      const result = await command.execute();
+
+      // Assert
+      expect(fileNotExistStub.calledWithExactly(entryFile)).to.be.true;
+      expect(result.succeeded).to.be.false;
+    });
   });
   it("if sourcemapOutput not specified it but there is outputDir or sourcemapdir, then it guessing for some value", function () {});
   context("targetBinaryVersion", function () {
