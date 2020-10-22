@@ -706,8 +706,91 @@ describe.only("CodePush release-react command", function () {
     expect(rnBundleStub.getCalls()[0].args[5]).to.be.equal(path.join(sourcemapOutputDir, `${bundleName}.map`));
   });
   context("targetBinaryVersion", function () {
-    it("if specified should be in valid range", function () {});
-    it("if not specified, then set to fallback", function () {});
+    it("fails if targetBinaryVersion is not in valid range", async function () {
+      const os = "Android";
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+          "--target-binary-version", "invalid-range",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ]
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+        {
+          "name": "RnCodepushAndroid",
+          "version": "0.0.1",
+          "dependencies": {
+            "react": "16.13.1",
+            "react-native": "0.63.3",
+            "react-native-code-push": "6.3.0"
+          }
+        }
+      `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+
+      // Act
+      const result = (await command.execute()) as CommandFailedResult;
+
+      // Assert
+      expect(result.errorMessage).to.be.equal("Invalid binary version(s) for a release.");
+      expect(result.succeeded).to.be.false;
+    });
+    it("sets targetBinaryVersion from project settings if not specified", async function () {
+      const os = "Android";
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ]
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+        {
+          "name": "RnCodepushAndroid",
+          "version": "0.0.1",
+          "dependencies": {
+            "react": "16.13.1",
+            "react-native": "0.63.3",
+            "react-native-code-push": "6.3.0"
+          }
+        }
+      `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      const fallback = sandbox.stub(ReactNativeTools, "getReactNativeProjectAppVersion");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      Sinon.assert.called(fallback);
+    });
   });
   it("reactTmpDir is removed", function () {});
   context("hermes", function () {
