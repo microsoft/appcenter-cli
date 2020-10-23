@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as osLib from "os";
+import * as cp from "child_process";
+import * as events from "events";
 import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as Nock from "nock";
@@ -936,8 +938,75 @@ describe.only("CodePush release-react command", function () {
       expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
     });
     context("RN versions", function () {
-      it("works for starting with caret", function () {});
-      it("works for custom (like 'mobiletechvn/react-native#v0.63.2.fix-shadow-node')", function () {});
+      [
+        { version: "^0.63.3", desc: "versions starting with caret" },
+        { version: "mobiletechvn/react-native#v0.63.2.fix-shadow-node", desc: "custom versions" },
+      ].forEach((testCase) => {
+        it(`works for ${testCase.desc} like (${testCase.version})`, async function () {
+          const os = "Android";
+          // Arrange
+          const args = {
+            ...goldenPathArgs,
+            // prettier-ignore
+            args: [
+                "--target-binary-version", "1.0.0",
+                "--deployment-name", deployment,
+                "--app", app,
+                "--token", "c1o3d3e7",
+              ]
+          };
+          const command = new CodePushReleaseReactCommand(args);
+          sandbox.stub(fs, "readFileSync").returns(`
+              {
+                "name": "RnCodepushAndroid",
+                "version": "0.0.1",
+                "dependencies": {
+                  "react": "16.13.1",
+                  "react-native": "^0.63.3",
+                  "react-native-code-push": "6.3.0"
+                }
+              }
+            `);
+
+          Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+          Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+            os,
+            platform: "react-native",
+          });
+          sandbox.stub(mkdirp, "sync");
+          sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+          sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+          sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+          sandbox.stub(fileUtils, "removeReactTmpDir");
+          sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+          sandbox.stub(fs, "lstatSync").returns({ isDirectory: () => false } as any);
+          sandbox.stub(g2js, "parseFile").resolves({ "project.ext.react": ["enableHermes: true"] });
+          const childProcessStub = new events.EventEmitter() as any;
+          childProcessStub.stdout = {
+            on: () => {},
+          };
+          childProcessStub.stderr = {
+            on: () => {},
+          };
+          sandbox
+            .stub(cp, "spawn")
+            .onFirstCall()
+            .callsFake(() => {
+              setTimeout(() => {
+                childProcessStub.emit("close");
+              }, 500);
+              return childProcessStub as any;
+            });
+          sandbox.stub(fs, "copyFile").yields(null);
+          sandbox.stub(fs, "unlink").yields(null);
+
+          // Act
+          const result = await command.execute();
+
+          // Assert
+          expect(result.succeeded).to.be.true;
+        });
+      });
     });
   });
 });
