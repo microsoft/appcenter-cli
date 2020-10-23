@@ -17,7 +17,7 @@ import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-
 import rimraf = require("rimraf");
 const g2js = require("gradle-to-js/lib/parser");
 
-describe.only("CodePush release-react command", function () {
+describe("CodePush release-react command", function () {
   const app = "bogus/app";
   const deployment = "bogus-deployment";
   let sandbox: Sinon.SinonSandbox;
@@ -834,6 +834,7 @@ describe.only("CodePush release-react command", function () {
     sandbox.stub(mkdirp, "sync");
     sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
     sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+    sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
     sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
     sandbox.stub(pfs, "mkTempDir").resolves("fake/path/code-push");
     const syncStub = sandbox.stub(rimraf, "sync");
@@ -994,7 +995,7 @@ describe.only("CodePush release-react command", function () {
             .callsFake(() => {
               setTimeout(() => {
                 childProcessStub.emit("close");
-              }, 500);
+              }, 10);
               return childProcessStub as any;
             });
           sandbox.stub(fs, "copyFile").yields(null);
