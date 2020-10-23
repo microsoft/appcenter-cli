@@ -93,7 +93,7 @@ describe("CodePush release-react command", function () {
     expect(result.succeeded).to.be.true;
   });
 
-  it.skip("npm package should have name defined check", async function () {
+  it("npm package should have name defined check", async function () {
     // Arrange
     const command = new CodePushReleaseReactCommand(goldenPathArgs);
     sandbox.stub(fs, "readFileSync").returns(`

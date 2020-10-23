@@ -486,21 +486,24 @@ export function isValidPlatform(platform: string): boolean {
 }
 
 export function getReactNativeVersion(): string {
+  let packageJsonFilename;
+  let projectPackageJson;
   try {
-    const packageJsonFilename = path.join(process.cwd(), "package.json");
-    const projectPackageJson: any = JSON.parse(fs.readFileSync(packageJsonFilename, "utf-8"));
-    const projectName: string = projectPackageJson.name;
-    if (!projectName) {
-      throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
-    }
-
-    return (
-      projectPackageJson.dependencies["react-native"] ||
-      (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
-    );
+    packageJsonFilename = path.join(process.cwd(), "package.json");
+    projectPackageJson = JSON.parse(fs.readFileSync(packageJsonFilename, "utf-8"));
   } catch (error) {
     throw new Error(
       `Unable to find or read "package.json" in the CWD. The "release-react" command must be executed in a React Native project folder.`
     );
   }
+
+  const projectName: string = projectPackageJson.name;
+  if (!projectName) {
+    throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
+  }
+
+  return (
+    projectPackageJson.dependencies["react-native"] ||
+    (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
+  );
 }
