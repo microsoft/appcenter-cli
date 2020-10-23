@@ -207,7 +207,7 @@ describe("CodePush release-react command", function () {
       expect(result.succeeded).to.be.true;
     });
   });
-  it.skip("shows user friendly error when incorrect deployment specified", async function () {
+  it("shows user friendly error when incorrect deployment specified", async function () {
     // Arrange
     const command = new CodePushReleaseReactCommand(goldenPathArgs);
     sandbox.stub(fs, "readFileSync").returns(`
