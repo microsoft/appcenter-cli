@@ -995,7 +995,7 @@ describe("CodePush release-react command", function () {
             .callsFake(() => {
               setTimeout(() => {
                 childProcessStub.emit("close");
-              }, 10);
+              });
               return childProcessStub as any;
             });
           sandbox.stub(fs, "copyFile").yields(null);
