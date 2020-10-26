@@ -242,7 +242,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -289,7 +289,7 @@ describe("CodePush release-react command", function () {
                   "--deployment-name", deployment,
                   "--app", app,
                   "--token", "c1o3d3e7",
-                ]
+                ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -400,7 +400,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -445,7 +445,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -493,7 +493,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
         };
         const command = new CodePushReleaseReactCommand(args);
         sandbox.stub(fs, "readFileSync").returns(`
@@ -538,7 +538,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
         };
         const command = new CodePushReleaseReactCommand(args);
         sandbox.stub(fs, "readFileSync").returns(`
@@ -584,7 +584,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
         };
         const command = new CodePushReleaseReactCommand(args);
         sandbox.stub(fs, "readFileSync").returns(`
@@ -630,7 +630,7 @@ describe("CodePush release-react command", function () {
             "--app", app,
             "--token", "c1o3d3e7",
             "--entry-file", entryFile
-          ]
+          ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -676,7 +676,7 @@ describe("CodePush release-react command", function () {
         "--deployment-name", deployment,
         "--app", app,
         "--token", "c1o3d3e7",
-      ]
+      ],
     };
     const command = new CodePushReleaseReactCommand(args);
     sandbox.stub(fs, "readFileSync").returns(`
@@ -722,7 +722,7 @@ describe("CodePush release-react command", function () {
           "--deployment-name", deployment,
           "--app", app,
           "--token", "c1o3d3e7",
-        ]
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -764,7 +764,7 @@ describe("CodePush release-react command", function () {
           "--deployment-name", deployment,
           "--app", app,
           "--token", "c1o3d3e7",
-        ]
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -811,7 +811,7 @@ describe("CodePush release-react command", function () {
         "--deployment-name", deployment,
         "--app", app,
         "--token", "c1o3d3e7",
-      ]
+      ],
     };
     const command = new CodePushReleaseReactCommand(args);
     sandbox.stub(fs, "readFileSync").returns(`
@@ -857,7 +857,7 @@ describe("CodePush release-react command", function () {
           "--deployment-name", deployment,
           "--app", app,
           "--token", "c1o3d3e7",
-        ]
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -902,7 +902,7 @@ describe("CodePush release-react command", function () {
             "--deployment-name", deployment,
             "--app", app,
             "--token", "c1o3d3e7",
-          ]
+          ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -954,7 +954,7 @@ describe("CodePush release-react command", function () {
                 "--deployment-name", deployment,
                 "--app", app,
                 "--token", "c1o3d3e7",
-              ]
+              ],
           };
           const command = new CodePushReleaseReactCommand(args);
           sandbox.stub(fs, "readFileSync").returns(`
