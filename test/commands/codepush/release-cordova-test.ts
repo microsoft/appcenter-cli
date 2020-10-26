@@ -367,7 +367,27 @@ describe.only("Codepush release-cordova command", function () {
       expect(result.succeeded).to.be.true;
       expect((command as any).updateContentsPath).to.match(new RegExp(iosPath));
     });
-    it("returns cordova 7 compatible path for Android", function () {});
+    it("returns cordova 7 compatible path for Android", async function () {
+      // Arrange
+      const os = "Android";
+      const iosPath = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www");
+      const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "cordova",
+      });
+      sandbox.stub(cp, "execSync");
+      const existsStub = sandbox.stub(fs, "existsSync");
+      existsStub.returns(true);
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+      // Act
+      const result = await command.execute();
+      // Assert
+      expect(result.succeeded).to.be.true;
+      expect((command as any).updateContentsPath).to.match(new RegExp(iosPath));
+    });
     it("returns pre cordova 7 path for Android (if no newer found)", function () {});
   });
 });
