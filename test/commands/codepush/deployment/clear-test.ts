@@ -1,7 +1,7 @@
 import * as Nock from "nock";
 import * as Sinon from "sinon";
 import CodePushClearDeploymentCommand from "../../../../src/commands/codepush/deployment/clear";
-import { CommandArgs, ErrorCodes } from "../../../../src/util/commandline";
+import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { expect } from "chai";
 import { out, prompt } from "../../../../src/util/interaction";
 
@@ -34,7 +34,7 @@ describe("CodePush deployment clear tests", () => {
 
     // Assert
     expect(outTextSpy.calledWithExactly("Clearing release history was cancelled")).to.be.true;
-    expect((result as any).succeeded).to.be.true;
+    expect(result.succeeded).to.be.true;
   });
 
   it("should clear the deployment history", async function () {
@@ -49,7 +49,7 @@ describe("CodePush deployment clear tests", () => {
 
     // Assert
     expect(outTextSpy.calledWith(Sinon.match(/^Successfully cleared the deployment .+ app.$/))).to.be.true;
-    expect((result as any).succeeded).to.be.true;
+    expect(result.succeeded).to.be.true;
   });
 
   it("should output error when it fails with 404", async function () {
@@ -62,8 +62,8 @@ describe("CodePush deployment clear tests", () => {
     const result = await clearCommand.execute();
 
     // Assert
-    expect((result as any).errorCode).to.be.equal(ErrorCodes.NotFound);
-    expect((result as any).errorMessage).contains("does not exist");
+    expect((result as CommandFailedResult).errorCode).to.be.equal(ErrorCodes.NotFound);
+    expect((result as CommandFailedResult).errorMessage).contains("does not exist");
   });
 
   it("should output error when it fails with another error", async function () {
@@ -80,7 +80,7 @@ describe("CodePush deployment clear tests", () => {
     const result = await clearCommand.execute();
 
     // Assert
-    expect((result as any).errorCode).to.be.equal(ErrorCodes.Exception);
-    expect((result as any).errorMessage).to.be.equal(errorMessage);
+    expect((result as CommandFailedResult).errorCode).to.be.equal(ErrorCodes.Exception);
+    expect((result as CommandFailedResult).errorMessage).to.be.equal(errorMessage);
   });
 });
