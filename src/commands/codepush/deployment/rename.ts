@@ -48,10 +48,10 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to rename deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `The deployemnt ${this.currentDeploymentName} for app ${this.identifier} does not exist.`;
+        const appNotFoundErrorMsg = `The deployment ${this.currentDeploymentName} for app ${this.identifier} does not exist.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
-      } else if ((error.statusCode = 409)) {
-        const alreadyExistErrorMsg = `The deployment with name ${this.newDeploymentName} already exist.`;
+      } else if (error.statusCode === 409) {
+        const alreadyExistErrorMsg = `The deployment with name ${this.newDeploymentName} already exists.`;
         return failure(ErrorCodes.Exception, alreadyExistErrorMsg);
       } else {
         return failure(ErrorCodes.Exception, error.response.body);
