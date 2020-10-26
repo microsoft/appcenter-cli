@@ -2,7 +2,7 @@ import * as Sinon from "sinon";
 import * as Nock from "nock";
 import CodePushReleaseCordovaCommand from "../../../src/commands/codepush/release-cordova";
 import { CommandArgs } from "../../../src/util/commandline/command";
-import { CommandResult } from "../../../src/util/commandline/command-result";
+import { CommandFailedResult, CommandResult } from "../../../src/util/commandline/command-result";
 import { expect } from "chai";
 import * as which from "which";
 import * as cp from "child_process";
@@ -55,12 +55,22 @@ describe.only("Codepush release-cordova command", function () {
 
     // Act
     const result = await command.execute();
-    console.log(result);
     // Assert
     expect(result.succeeded).to.be.true;
     expect(execSyncStub.calledOnceWith(`cordova build --release ${os.toLowerCase()} --verbose`, Sinon.match.any)).true;
   });
-  it("returns graceful error when deployment doesn't exists", function () {});
+
+  it("returns graceful error when deployment doesn't exists", async function () {
+    // Arrange
+    const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(404, {});
+
+    // Act
+    const result = (await command.execute()) as CommandFailedResult;
+    // Assert
+    expect(result.succeeded).to.be.false;
+    expect(result.errorMessage).to.equal(`Deployment "${deployment}" does not exist.`);
+  });
   context("allowed OSes", function () {
     ["iOS", "Android"].forEach((os) => it(`only iOS and Android allowed, check ${os}`, function () {}));
   });
