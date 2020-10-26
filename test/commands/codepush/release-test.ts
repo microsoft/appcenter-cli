@@ -1,7 +1,6 @@
 import * as Nock from "nock";
 import * as Temp from "temp";
 import * as Sinon from "sinon";
-import * as util from "util";
 import { expect } from "chai";
 import CodePushReleaseCommand from "../../../src/commands/codepush/release";
 import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
@@ -17,10 +16,11 @@ import {
 } from "./utils";
 import { CommandArgs } from "../../../src/util/commandline";
 
-describe("CodePush release command", () => {
+describe.only("CodePush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
   const releaseFileName = "releaseBinaryFile";
   const releaseFileContent = "Hello World!";
+  const appDescription = "app description";
 
   const fakeParamsForRequests: FakeParamsForRequests = getFakeParamsForRequest();
 
@@ -73,23 +73,127 @@ describe("CodePush release command", () => {
         state: "Done",
       });
 
+    nockCreateRelease({ mandatory: false, disabled: false });
+
+    stubbedSign = Sinon.stub(updateContentsTasks, "sign");
+  });
+
+  afterEach(() => {
+    Nock.cleanAll();
+    stubbedSign.restore();
+  });
+
+  it("succeed if all parameters are passed", async function () {
+    // Arrange
+    const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+    const command = getCommand(
+      // prettier-ignore
+      [
+        "--update-contents-path", releaseFilePath,
+        "--target-binary-version", fakeParamsForRequests.appVersion,
+        "--deployment-name", "Staging",
+        "--description", "app description",
+        "--disabled",
+        "--mandatory",
+        "--private-key-path", "fake/private-key-path",
+        "--disable-duplicate-release-error",
+        "--rollout", "100",
+        "--app", `${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}`,
+        "--token", fakeParamsForRequests.token,
+      ]
+    );
+
+    nockPlatformRequest("Cordova", fakeParamsForRequests, nockedApiGatewayRequests);
+    nockCreateRelease({ mandatory: true, disabled: true });
+
+    // Act
+    const result = await command.execute();
+
+    // Assert
+    expect(result.succeeded).to.be.true;
+  });
+  context("--update-contents-path validation", function () {
+    it("should fail if --update-contents-path is not binary or zip", async function () {});
+  });
+  context("--target-binary-version validation", function () {
+    it("should fail if --target-binary-version is not valid", async function () {});
+  });
+  context("--rollout validation", function () {
+    it("should fail if --rollout is not valid", async function () {});
+  });
+  context("--target-binary-version correction", function () {
+    it("should correct value if not fulfilled", async function () {});
+  });
+  context("edge cases after uploading release", function () {
+    describe("when 409 error is returned after uploading the bundle", function () {
+      it("should fail if --disable-duplicate-release-error is set to false", async function () {});
+      it("should succeed if --disable-duplicate-release-error is set to true", async function () {});
+    });
+    it("should fail if 503 error is returned", async function () {});
+    it("should remove temporary zip bundle at the end", async function () {});
+  });
+  context("signed release", () => {
+    describe("path generation should correctly work", () => {
+      [
+        { platform: "React-Native", lastFolderForSignPathCheck: true },
+        { platform: "Cordova", lastFolderForSignPathCheck: false },
+        { platform: "Electron", lastFolderForSignPathCheck: false },
+      ].forEach((testCase) => {
+        it(`for ${testCase.platform} with private key`, async () => {
+          // Arrange
+          const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+          nockPlatformRequest(testCase.platform, fakeParamsForRequests, nockedApiGatewayRequests);
+
+          const args: CommandArgs = getCommandArgsForReleaseCommand(
+            ["-c", releaseFilePath, "-k", "fakePrivateKey.pem", "--description", appDescription],
+            fakeParamsForRequests
+          );
+
+          // Act
+          const testRelaseSkeleton = new CodePushReleaseCommand(args);
+          const result = await testRelaseSkeleton.execute();
+
+          // Assert
+          expect(result.succeeded).to.be.true;
+          const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
+          expect(lastFolderForSignPath === "CodePush").to.eql(
+            testCase.lastFolderForSignPathCheck,
+            `Last folder in path should ${!testCase.lastFolderForSignPathCheck ? "not" : ""} be 'CodePush'`
+          );
+          nockedApiGatewayRequests.done();
+        });
+      });
+    });
+  });
+
+  function getCommand(args: string[]): CodePushReleaseCommand {
+    return new CodePushReleaseCommand({
+      // prettier-ignore
+      args,
+      command: ["codepush", "release"],
+      commandPath: "fake/path",
+    });
+  }
+
+  function nockCreateRelease(options: { mandatory: boolean; disabled: boolean }) {
     nockedApiGatewayRequests
       .post(
         `/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging/releases`,
         {
           release_upload: releaseUploadResponse,
-          target_binary_version: "1.0",
-          mandatory: false,
-          disabled: false,
+          target_binary_version: fakeParamsForRequests.appVersion,
+          mandatory: options.mandatory,
+          disabled: options.disabled,
+          description: appDescription,
           rollout: 100,
         }
       )
       .reply(201, {
-        target_binary_range: "1.0",
+        target_binary_range: fakeParamsForRequests.appVersion,
         blob_url: "storagePackage.blobUrl",
         description: "storagePackage.description",
         is_disabled: "storagePackage.isDisabled",
-        is_mandatory: false,
+        is_mandatory: options.mandatory,
         label: "storagePackage.label",
         original_deployment: "storagePackage.originalDeployment",
         original_label: "storagePackage.originalLabel",
@@ -100,101 +204,5 @@ describe("CodePush release command", () => {
         size: 512,
         upload_time: "uploadTime",
       });
-
-    stubbedSign = Sinon.stub(updateContentsTasks, "sign");
-  });
-
-  afterEach(() => {
-    Nock.cleanAll();
-    stubbedSign.restore();
-  });
-
-  it("succeed if all parameters are passed", function () {});
-  describe("--update-contents-path validation", function () {
-    it("should fail if --update-contents-path is not binary or zip", function () {});
-  });
-  describe("--target-binary-version validation", function () {
-    it("should fail if --target-binary-version is not valid", function () {});
-  });
-  describe("--rollout validation", function () {
-    it("should fail if --rollout is not valid", function () {});
-  });
-  describe("--target-binary-version correction", function () {
-    it("should correct value if not fulfilled", function () {});
-  });
-  describe("edge cases after uploading release", function () {
-    describe("when 409 error is returned after uploading the bundle", function () {
-      it("should fail if --disable-duplicate-release-error is set to false", function () {});
-      it("should succeed if --disable-duplicate-release-error is set to true", function () {});
-    });
-    it("should fail if 503 error is returned", function () {});
-    it("should remove temporary zip bundle at the end", function () {});
-  });
-
-  //TODO revisit this suite
-  describe("CodePush signed release", () => {
-    describe("CodePush path generation", () => {
-      it("CodePush path generation for React-Native with private key", async () => {
-        // Arrange
-        const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
-        nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);
-
-        const args: CommandArgs = getCommandArgsForReleaseCommand(
-          ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
-          fakeParamsForRequests
-        );
-
-        // Act
-        const testRelaseSkeleton = new CodePushReleaseCommand(args);
-        const result = await testRelaseSkeleton.execute();
-
-        // Assert
-        console.dir(util.inspect(result));
-        expect(result.succeeded).to.be.true;
-        const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
-        expect(lastFolderForSignPath).to.eql("CodePush", "Last folder in path should be 'CodePush'");
-        nockedApiGatewayRequests.done();
-      });
-
-      it("CodePush path generation for Cordova with private key", async () => {
-        // Arrange
-        const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
-        nockPlatformRequest("Cordova", fakeParamsForRequests, nockedApiGatewayRequests);
-        const args: CommandArgs = getCommandArgsForReleaseCommand(
-          ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
-          fakeParamsForRequests
-        );
-
-        // Act
-        const testRelaseSkeleton = new CodePushReleaseCommand(args);
-        const result = await testRelaseSkeleton.execute();
-
-        // Assert
-        expect(result.succeeded).to.be.true;
-        const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
-        expect(lastFolderForSignPath).to.not.eql("CodePush", "Last folder in path shouldn't be 'CodePush'");
-        nockedApiGatewayRequests.done();
-      });
-
-      it("CodePush path generation for Electron with private key", async () => {
-        // Arrange
-        const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
-        nockPlatformRequest("Electron", fakeParamsForRequests, nockedApiGatewayRequests);
-        const args: CommandArgs = getCommandArgsForReleaseCommand(
-          ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
-          fakeParamsForRequests
-        );
-
-        // Act
-        const testRelaseSkeleton = new CodePushReleaseCommand(args);
-        const result = await testRelaseSkeleton.execute();
-
-        // Assert
-        expect(result.succeeded).to.be.true;
-        const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
-        expect(lastFolderForSignPath).to.not.eql("CodePush", "LastFolder in path shouldn't be 'CodePush'");
-        nockedApiGatewayRequests.done();
-      });
-    });
-  });
+  }
 });

@@ -63,7 +63,7 @@ export function getCommandArgsForReleaseCommand(additionalArgs: string[], fakeCo
     "-d",
     "Staging",
     "-t",
-    "1.0",
+    fakeConsts.appVersion,
     "--token",
     fakeConsts.token,
   ].concat(additionalArgs);
