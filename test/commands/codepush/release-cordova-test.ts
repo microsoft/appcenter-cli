@@ -13,6 +13,7 @@ describe.only("Codepush release-cordova command", function () {
   const app = "bogus/app";
   const deployment = "bogus-deployment";
   let sandbox: Sinon.SinonSandbox;
+  let whichSyncStub: Sinon.SinonStub;
 
   const goldenPathArgs: CommandArgs = {
     // prettier-ignore
@@ -36,7 +37,7 @@ describe.only("Codepush release-cordova command", function () {
 
   beforeEach(() => {
     sandbox = Sinon.createSandbox();
-    sandbox.stub(which, "sync").withArgs("cordova").returns("path/to/cordova");
+    whichSyncStub = sandbox.stub(which, "sync").withArgs("cordova").returns("path/to/cordova");
   });
 
   afterEach(() => {
@@ -285,8 +286,43 @@ describe.only("Codepush release-cordova command", function () {
       });
     });
     context("executable", function () {
-      it("tries to use cordova first", function () {});
-      it("tries to use phonegap if no cordova found", function () {});
+      it("tries to use cordova first", async function () {
+        // Arrange
+        const os = "iOS";
+        const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "cordova",
+        });
+        const execSyncStub = sandbox.stub(cp, "execSync");
+        sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+        // Act
+        const result = await command.execute();
+        // Assert
+        expect(result.succeeded).to.be.true;
+        expect(execSyncStub.getCalls()[0].args[0].startsWith("cordova")).to.be.true;
+      });
+      it("tries to use phonegap if no cordova found", async function () {
+        // Arrange
+        const os = "iOS";
+        const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "cordova",
+        });
+        const execSyncStub = sandbox.stub(cp, "execSync");
+        sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+        whichSyncStub.withArgs("cordova").throws();
+
+        // Act
+        const result = await command.execute();
+        // Assert
+        expect(result.succeeded).to.be.true;
+        expect(execSyncStub.getCalls()[0].args[0].startsWith("phonegap")).to.be.true;
+      });
       it("fails the command if both cordova and phonegap are not installed", function () {});
     });
   });
