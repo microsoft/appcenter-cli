@@ -14,7 +14,8 @@ import {
   releaseUploadResponse,
   setMetadataResponse,
 } from "./utils";
-import { CommandArgs } from "../../../src/util/commandline";
+import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
+import { CommandArgs, CommandFailedResult } from "../../../src/util/commandline";
 
 describe.only("CodePush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
@@ -26,6 +27,7 @@ describe.only("CodePush release command", () => {
 
   let nockedApiGatewayRequests: Nock.Scope;
   let nockedFileUploadServiceRequests: Nock.Scope;
+  let sandbox: Sinon.SinonSandbox;
   let stubbedSign: Sinon.SinonStub;
 
   beforeEach(() => {
@@ -75,20 +77,21 @@ describe.only("CodePush release command", () => {
 
     nockCreateRelease({ mandatory: false, disabled: false });
 
-    stubbedSign = Sinon.stub(updateContentsTasks, "sign");
+    sandbox = Sinon.createSandbox();
+    stubbedSign = sandbox.stub(updateContentsTasks, "sign");
   });
 
   afterEach(() => {
     Nock.cleanAll();
-    stubbedSign.restore();
+    sandbox.restore();
   });
 
   it("succeed if all parameters are passed", async function () {
     // Arrange
     const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
-    const command = getCommand(
+    const goldenArgs = {
       // prettier-ignore
-      [
+      args: [
         "--update-contents-path", releaseFilePath,
         "--target-binary-version", fakeParamsForRequests.appVersion,
         "--deployment-name", "Staging",
@@ -100,20 +103,48 @@ describe.only("CodePush release command", () => {
         "--rollout", "100",
         "--app", `${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}`,
         "--token", fakeParamsForRequests.token,
-      ]
-    );
+      ],
+      command: ["codepush", "release"],
+      commandPath: "fake/path",
+    };
 
     nockPlatformRequest("Cordova", fakeParamsForRequests, nockedApiGatewayRequests);
     nockCreateRelease({ mandatory: true, disabled: true });
 
     // Act
+    const command = new CodePushReleaseCommand(goldenArgs);
     const result = await command.execute();
 
     // Assert
     expect(result.succeeded).to.be.true;
   });
   context("--update-contents-path validation", function () {
-    it("should fail if --update-contents-path is not binary or zip", async function () {});
+    it("should fail if --update-contents-path is not binary or zip", async function () {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const args: CommandArgs = getCommandArgsForReleaseCommand(
+        // prettier-ignore
+        [
+          "-c", releaseFilePath,
+          "-k", "fakePrivateKey.pem",
+          "--description", appDescription,
+          "-t", fakeParamsForRequests.appVersion,
+        ],
+        fakeParamsForRequests
+      );
+
+      sandbox.stub(fileUtils, "isBinaryOrZip").returns(true);
+
+      // Act
+      const command = new CodePushReleaseCommand(args);
+      const result = (await command.execute()) as CommandFailedResult;
+
+      // Assert
+      expect(result.succeeded).to.be.false;
+      expect(result.errorMessage).to.eql(
+        "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle)."
+      );
+    });
   });
   context("--target-binary-version validation", function () {
     it("should fail if --target-binary-version is not valid", async function () {});
@@ -145,7 +176,13 @@ describe.only("CodePush release command", () => {
           nockPlatformRequest(testCase.platform, fakeParamsForRequests, nockedApiGatewayRequests);
 
           const args: CommandArgs = getCommandArgsForReleaseCommand(
-            ["-c", releaseFilePath, "-k", "fakePrivateKey.pem", "--description", appDescription],
+            // prettier-ignore
+            [
+              "-c", releaseFilePath,
+              "-k", "fakePrivateKey.pem",
+              "--description", appDescription,
+              "-t", fakeParamsForRequests.appVersion,
+            ],
             fakeParamsForRequests
           );
 
@@ -165,15 +202,6 @@ describe.only("CodePush release command", () => {
       });
     });
   });
-
-  function getCommand(args: string[]): CodePushReleaseCommand {
-    return new CodePushReleaseCommand({
-      // prettier-ignore
-      args,
-      command: ["codepush", "release"],
-      commandPath: "fake/path",
-    });
-  }
 
   function nockCreateRelease(options: { mandatory: boolean; disabled: boolean }) {
     nockedApiGatewayRequests
