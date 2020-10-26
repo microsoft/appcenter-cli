@@ -16,6 +16,7 @@ import {
 } from "./utils";
 import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
 import { CommandArgs, CommandFailedResult } from "../../../src/util/commandline";
+import chalk = require("chalk");
 
 describe.only("CodePush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
@@ -147,10 +148,65 @@ describe.only("CodePush release command", () => {
     });
   });
   context("--target-binary-version validation", function () {
-    it("should fail if --target-binary-version is not valid", async function () {});
+    it("should fail if --target-binary-version is not valid", async function () {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const args: CommandArgs = getCommandArgsForReleaseCommand(
+        // prettier-ignore
+        [
+          "-c", releaseFilePath,
+          "-k", "fakePrivateKey.pem",
+          "--description", appDescription,
+          "-t", "invalid"
+        ],
+        fakeParamsForRequests
+      );
+
+      // Act
+      const command = new CodePushReleaseCommand(args);
+      const result = (await command.execute()) as CommandFailedResult;
+
+      // Assert
+      expect(result.succeeded).to.be.false;
+      expect(result.errorMessage).to.eql("Invalid binary version(s) for a release.");
+    });
   });
   context("--rollout validation", function () {
-    it("should fail if --rollout is not valid", async function () {});
+    describe("should fail when --rollout is", async function () {
+      [
+        { value: "somestring", desc: "string value" },
+        { value: "1.234", desc: "a decimal value" },
+        // negative integers are treated by option parser as command parameter so there's no point to validate it here
+        // { value: "-1", desc: "an integer value beyong 0..100 range" },
+        { value: "101", desc: "an integer value beyong 0..100 range" },
+      ].forEach((testCase) => {
+        it(`${testCase.desc} e.g. ${testCase.value}`, async function () {
+          // Arrange
+          const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+          // prettier-ignore
+          const args: CommandArgs = getCommandArgsForReleaseCommand(
+          [
+            "-c", releaseFilePath,
+            "-k", "fakePrivateKey.pem",
+            "--description", appDescription,
+            "-t", fakeParamsForRequests.appVersion,
+            "--rollout", testCase.value
+          ],
+            fakeParamsForRequests
+          );
+
+          // Act
+          const command = new CodePushReleaseCommand(args);
+          const result = (await command.execute()) as CommandFailedResult;
+
+          // Assert
+          expect(result.succeeded).to.be.false;
+          expect(result.errorMessage).to.eql(
+            `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`
+          );
+        });
+      });
+    });
   });
   context("--target-binary-version correction", function () {
     it("should correct value if not fulfilled", async function () {});
