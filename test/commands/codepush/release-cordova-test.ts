@@ -8,6 +8,7 @@ import * as which from "which";
 import * as cp from "child_process";
 import * as fs from "fs";
 import * as validationUtils from "../../../src/commands/codepush/lib/validation-utils";
+import * as path from "path";
 
 describe.only("Codepush release-cordova command", function () {
   const app = "bogus/app";
@@ -347,7 +348,25 @@ describe.only("Codepush release-cordova command", function () {
     });
   });
   context("cordova output folder", function () {
-    it("returns correct for iOS", function () {});
+    it("returns correct for iOS", async function () {
+      // Arrange
+      const os = "iOS";
+      const iosPath = path.join("platforms", os.toLowerCase(), "www");
+      const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "cordova",
+      });
+      sandbox.stub(cp, "execSync");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+      // Act
+      const result = await command.execute();
+      // Assert
+      expect(result.succeeded).to.be.true;
+      expect((command as any).updateContentsPath).to.match(new RegExp(iosPath));
+    });
     it("returns cordova 7 compatible path for Android", function () {});
     it("returns pre cordova 7 path for Android (if no newer found)", function () {});
   });
