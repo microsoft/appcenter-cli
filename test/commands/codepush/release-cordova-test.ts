@@ -323,7 +323,27 @@ describe.only("Codepush release-cordova command", function () {
         expect(result.succeeded).to.be.true;
         expect(execSyncStub.getCalls()[0].args[0].startsWith("phonegap")).to.be.true;
       });
-      it("fails the command if both cordova and phonegap are not installed", function () {});
+      it("fails the command if both cordova and phonegap are not installed", async function () {
+        // Arrange
+        const os = "iOS";
+        const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "cordova",
+        });
+        sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+        whichSyncStub.withArgs("cordova").throws();
+        whichSyncStub.withArgs("phonegap").throws();
+
+        // Act
+        const result = (await command.execute()) as CommandFailedResult;
+        // Assert
+        expect(result.succeeded).to.be.false;
+        expect(result.errorMessage).match(
+          /Unable to .* project\. Please ensure that either the Cordova or PhoneGap CLI is installed\./
+        );
+      });
     });
   });
   context("cordova output folder", function () {
