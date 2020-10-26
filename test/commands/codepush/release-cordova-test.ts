@@ -223,7 +223,36 @@ describe.only("Codepush release-cordova command", function () {
         expect(execSyncStub.calledOnceWith(`cordova prepare ${os.toLowerCase()} --verbose`, Sinon.match.any)).true;
       });
       context("when --build specified", function () {
-        it('returns "build --release" for release build type', function () {});
+        it('returns "build --release" for release build type', async function () {
+          // Arrange
+          const os = "iOS";
+          // prettier-ignore
+          const args: CommandArgs = {
+          ...goldenPathArgs,
+          args: [
+            "--deployment-name", deployment,
+            "--app", app,
+            "--token", "c1o3d3e7",
+            "--target-binary-version", "1.0.0",
+            "--build",
+            "--is-release-build-type",
+          ],
+        };
+          const command = new CodePushReleaseCordovaCommand(args);
+          Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+          Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+            os,
+            platform: "cordova",
+          });
+          const execSyncStub = sandbox.stub(cp, "execSync");
+          sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+          // Act
+          const result = await command.execute();
+          // Assert
+          expect(result.succeeded).to.be.true;
+          expect(execSyncStub.calledOnceWith(`cordova build --release ${os.toLowerCase()} --verbose`, Sinon.match.any)).true;
+        });
         it('return "build" otherwise', async function () {
           // Arrange
           const os = "iOS";
