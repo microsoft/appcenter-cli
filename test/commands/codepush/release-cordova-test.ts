@@ -109,7 +109,21 @@ describe.only("Codepush release-cordova command", function () {
       expect(result.errorMessage).to.equal('Platform must be either "ios" or "android".');
     });
   });
-  it("fails the command if non cordova platform is returned for the app", function () {});
+  it("fails the command if non cordova platform is returned for the app", async function () {
+    // Arrange
+    const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os: "iOS",
+      platform: "React-Native",
+    });
+
+    // Act
+    const result = (await command.execute()) as CommandFailedResult;
+    // Assert
+    expect(result.succeeded).to.be.false;
+    expect(result.errorMessage).to.equal('Platform must be "Cordova".');
+  });
   it("reads the binary version from config.xml if not provided for the command", function () {});
   it("fails the command when semver incompatible binary version specified", function () {});
   context("cli Command", function () {
