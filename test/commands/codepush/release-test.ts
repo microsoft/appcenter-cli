@@ -109,6 +109,28 @@ describe("CodePush release command", () => {
     stubbedSign.restore();
   });
 
+  it("succeed if all parameters are passed", function () {});
+  describe("--update-contents-path validation", function () {
+    it("should fail if --update-contents-path is not binary or zip", function () {});
+  });
+  describe("--target-binary-version validation", function () {
+    it("should fail if --target-binary-version is not valid", function () {});
+  });
+  describe("--rollout validation", function () {
+    it("should fail if --rollout is not valid", function () {});
+  });
+  describe("--target-binary-version correction", function () {
+    it("should correct value if not fulfilled", function () {});
+  });
+  describe("edge cases after uploading release", function () {
+    describe("when 409 error is returned after uploading the bundle", function () {
+      it("should fail if --disable-duplicate-release-error is set to false", function () {});
+      it("should succeed if --disable-duplicate-release-error is set to true", function () {});
+    });
+    it("should fail if 503 error is returned", function () {});
+    it("should remove temporary zip bundle at the end", function () {});
+  });
+
   //TODO revisit this suite
   describe("CodePush signed release", () => {
     describe("CodePush path generation", () => {
