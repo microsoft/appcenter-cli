@@ -6,6 +6,7 @@ import { CommandFailedResult, CommandResult } from "../../../src/util/commandlin
 import { expect } from "chai";
 import * as which from "which";
 import * as cp from "child_process";
+import * as fs from "fs";
 
 describe.only("Codepush release-cordova command", function () {
   const app = "bogus/app";
@@ -72,7 +73,41 @@ describe.only("Codepush release-cordova command", function () {
     expect(result.errorMessage).to.equal(`Deployment "${deployment}" does not exist.`);
   });
   context("allowed OSes", function () {
-    ["iOS", "Android"].forEach((os) => it(`only iOS and Android allowed, check ${os}`, function () {}));
+    ["iOS", "Android"].forEach((os) =>
+      it(`only iOS and Android allowed, check ${os}`, async function () {
+        // Arrange
+        const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+        Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+          os,
+          platform: "cordova",
+        });
+        sandbox.stub(cp, "execSync");
+        sandbox.stub(fs, "existsSync").returns(true);
+        sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+        // Act
+        const result = await command.execute();
+        // Assert
+        expect(result.succeeded).to.be.true;
+      })
+    );
+    it(`only iOS and Android allowed, check Windows`, async function () {
+      // Arrange
+      const os = "Windows";
+      const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "cordova",
+      });
+
+      // Act
+      const result = (await command.execute()) as CommandFailedResult;
+      // Assert
+      expect(result.succeeded).to.be.false;
+      expect(result.errorMessage).to.equal('Platform must be either "ios" or "android".');
+    });
   });
   it("fails the command if non cordova platform is returned for the app", function () {});
   it("reads the binary version from config.xml if not provided for the command", function () {});
