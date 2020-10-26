@@ -17,7 +17,7 @@ import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-
 import rimraf = require("rimraf");
 const g2js = require("gradle-to-js/lib/parser");
 
-describe("CodePush release-react command", function () {
+describe("codepush release-react command", function () {
   const app = "bogus/app";
   const deployment = "bogus-deployment";
   let sandbox: Sinon.SinonSandbox;

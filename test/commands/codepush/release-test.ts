@@ -18,7 +18,7 @@ import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
 import { CommandArgs, CommandFailedResult } from "../../../src/util/commandline";
 import chalk = require("chalk");
 
-describe.only("CodePush release command", () => {
+describe.only("codepush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
   const releaseFileName = "releaseBinaryFile";
   const releaseFileContent = "Hello World!";
