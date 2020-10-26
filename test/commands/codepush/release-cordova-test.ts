@@ -124,7 +124,37 @@ describe.only("Codepush release-cordova command", function () {
     expect(result.succeeded).to.be.false;
     expect(result.errorMessage).to.equal('Platform must be "Cordova".');
   });
-  it("reads the binary version from config.xml if not provided for the command", function () {});
+  it("reads the binary version from config.xml if not provided for the command", async function () {
+    // Arrange
+    const os = "iOS";
+    // prettier-ignore
+    const args: CommandArgs = {
+      ...goldenPathArgs,
+      args: [
+        "--deployment-name", deployment,
+        "--app", app,
+        "--token", "c1o3d3e7",
+      ],
+    };
+    const command = new CodePushReleaseCordovaCommand(args);
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os,
+      platform: "cordova",
+    });
+    sandbox.stub(cp, "execSync");
+    sandbox.stub(fs, "readFileSync").withArgs(Sinon.match(/.*\/config.xml/), Sinon.match.any).returns(`
+        <?xml version="1.0" encoding="utf-8"?>
+        <widget id="com.example.test" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+        </widget>
+      `);
+    sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+    // Act
+    const result = await command.execute();
+    // Assert
+    expect(result.succeeded).to.be.true;
+  });
   it("fails the command when semver incompatible binary version specified", function () {});
   context("cli Command", function () {
     context("command args", function () {
