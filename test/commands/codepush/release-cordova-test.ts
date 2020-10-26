@@ -166,7 +166,32 @@ describe.only("Codepush release-cordova command", function () {
     expect(result.succeeded).to.be.true;
     expect(validSpy.calledOnceWith(version)).to.be.true;
   });
-  it("fails the command when semver incompatible binary version specified", function () {});
+  it("fails the command when semver incompatible binary version specified", async function () {
+    // Arrange
+    const os = "iOS";
+    // prettier-ignore
+    const args: CommandArgs = {
+      ...goldenPathArgs,
+      args: [
+        "--deployment-name", deployment,
+        "--app", app,
+        "--token", "c1o3d3e7",
+        "--target-binary-version", "invalidVersion",
+      ],
+    };
+    const command = new CodePushReleaseCordovaCommand(args);
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os,
+      platform: "cordova",
+    });
+
+    // Act
+    const result = (await command.execute()) as CommandFailedResult;
+    // Assert
+    expect(result.succeeded).to.be.false;
+    expect(result.errorMessage).to.equal("Invalid binary version(s) for a release.");
+  });
   context("cli Command", function () {
     context("command args", function () {
       it('defaults to "prepare"', function () {});
