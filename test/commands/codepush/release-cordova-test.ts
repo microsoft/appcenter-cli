@@ -1,5 +1,65 @@
-describe("Codepush release-cordova command", function () {
-  it("pass when all arguments provided", function () {});
+import * as Sinon from "sinon";
+import * as Nock from "nock";
+import CodePushReleaseCordovaCommand from "../../../src/commands/codepush/release-cordova";
+import { CommandArgs } from "../../../src/util/commandline/command";
+import { CommandResult } from "../../../src/util/commandline/command-result";
+import { expect } from "chai";
+import * as which from "which";
+import * as cp from "child_process";
+
+describe.only("Codepush release-cordova command", function () {
+  const app = "bogus/app";
+  const deployment = "bogus-deployment";
+  let sandbox: Sinon.SinonSandbox;
+
+  const goldenPathArgs: CommandArgs = {
+    // prettier-ignore
+    args: [
+      "--target-binary-version", "1.0.0",
+      "--is-release-build-type",
+      "--build",
+      "--rollout", "100",
+      "--disable-duplicate-release-error",
+      "--private-key-path", "fake/private-key-path",
+      "--mandatory",
+      "--disabled",
+      "--description", "app description",
+      "--deployment-name", deployment,
+      "--app", app,
+      "--token", "c1o3d3e7",
+    ],
+    command: ["codepush", "release-cordova"],
+    commandPath: "fake/path",
+  };
+
+  beforeEach(() => {
+    sandbox = Sinon.createSandbox();
+    sandbox.stub(which, "sync").withArgs("cordova").returns("path/to/cordova");
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it("pass when all arguments are provided", async function () {
+    // Arrange
+    const os = "iOS";
+    const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+    Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+      os,
+      platform: "cordova",
+    });
+    const execSyncStub = sandbox.stub(cp, "execSync");
+    sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+    // Act
+    const result = await command.execute();
+    console.log(result);
+    // Assert
+    expect(result.succeeded).to.be.true;
+    expect(execSyncStub.calledOnceWith(`cordova build --release ${os.toLowerCase()} --verbose`, Sinon.match.any)).true;
+  });
   it("returns graceful error when deployment doesn't exists", function () {});
   context("allowed OSes", function () {
     ["iOS", "Android"].forEach((os) => it(`only iOS and Android allowed, check ${os}`, function () {}));
