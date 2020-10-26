@@ -370,7 +370,7 @@ describe.only("Codepush release-cordova command", function () {
     it("returns cordova 7 compatible path for Android", async function () {
       // Arrange
       const os = "Android";
-      const iosPath = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www");
+      const androidPath = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www");
       const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
@@ -386,8 +386,30 @@ describe.only("Codepush release-cordova command", function () {
       const result = await command.execute();
       // Assert
       expect(result.succeeded).to.be.true;
-      expect((command as any).updateContentsPath).to.match(new RegExp(iosPath));
+      expect((command as any).updateContentsPath).to.match(new RegExp(androidPath));
     });
-    it("returns pre cordova 7 path for Android (if no newer found)", function () {});
+    it("returns pre cordova 7 path for Android (if no newer found)", async function () {
+      // Arrange
+      const os = "Android";
+      const androidPathCordova7 = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www");
+      const androidPath = path.join("platforms", os.toLowerCase(), "assets", "www");
+      const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "cordova",
+      });
+      sandbox.stub(cp, "execSync");
+      const existsStub = sandbox.stub(fs, "existsSync");
+      existsStub.returns(true);
+      existsStub.withArgs(Sinon.match(new RegExp(androidPathCordova7))).returns(false);
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+
+      // Act
+      const result = await command.execute();
+      // Assert
+      expect(result.succeeded).to.be.true;
+      expect((command as any).updateContentsPath).to.match(new RegExp(androidPath));
+    });
   });
 });
