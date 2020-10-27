@@ -17,6 +17,7 @@ import {
 import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
 import { CommandArgs, CommandFailedResult } from "../../../src/util/commandline";
 import chalk = require("chalk");
+import * as apis from "../../../src/util/apis";
 
 describe.only("codepush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
@@ -258,7 +259,7 @@ describe.only("codepush release command", () => {
         expect(result.succeeded).to.be.true;
       });
     });
-    it("should fail if 503 error is returned", async function () {
+    it.only("should fail if 503 error is returned", async function () {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
       // prettier-ignore
@@ -275,6 +276,8 @@ describe.only("codepush release command", () => {
 
       // Act
       const command = new CodePushReleaseCommand(args);
+      const stub = sandbox.stub(apis, "createAppCenterClient");
+      stub.callsFake();
       const result = await command.execute();
 
       // Assert
@@ -339,21 +342,23 @@ describe.only("codepush release command", () => {
       }
     );
 
-    nockedCreateReleaseInterceptor.reply(options.statusCode, {
-      target_binary_range: fakeParamsForRequests.appVersion,
-      blob_url: "storagePackage.blobUrl",
-      description: "storagePackage.description",
-      is_disabled: "storagePackage.isDisabled",
-      is_mandatory: options.mandatory,
-      label: "storagePackage.label",
-      original_deployment: "storagePackage.originalDeployment",
-      original_label: "storagePackage.originalLabel",
-      package_hash: "storagePackage.packageHash",
-      released_by: "userEmail",
-      release_method: "releaseMethod",
-      rollout: 100,
-      size: 512,
-      upload_time: "uploadTime",
-    });
+    nockedCreateReleaseInterceptor
+      .reply(options.statusCode, {
+        target_binary_range: fakeParamsForRequests.appVersion,
+        blob_url: "storagePackage.blobUrl",
+        description: "storagePackage.description",
+        is_disabled: "storagePackage.isDisabled",
+        is_mandatory: options.mandatory,
+        label: "storagePackage.label",
+        original_deployment: "storagePackage.originalDeployment",
+        original_label: "storagePackage.originalLabel",
+        package_hash: "storagePackage.packageHash",
+        released_by: "userEmail",
+        release_method: "releaseMethod",
+        rollout: 100,
+        size: 512,
+        upload_time: "uploadTime",
+      })
+      .persist();
   }
 });
