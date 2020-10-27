@@ -10,7 +10,7 @@ import * as fs from "fs";
 import * as validationUtils from "../../../src/commands/codepush/lib/validation-utils";
 import * as path from "path";
 
-describe("Codepush release-cordova command", function () {
+describe("codepush release-cordova command", function () {
   const app = "bogus/app";
   const deployment = "bogus-deployment";
   let sandbox: Sinon.SinonSandbox;
