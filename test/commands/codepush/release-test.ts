@@ -17,7 +17,7 @@ import {
 import * as fileUtils from "../../../src/commands/codepush/lib/file-utils";
 import { CommandArgs, CommandFailedResult } from "../../../src/util/commandline";
 import chalk = require("chalk");
-import * as apis from "../../../src/util/apis";
+import * as pfs from "../../../src/util/misc/promisfied-fs";
 
 describe.only("codepush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
@@ -259,7 +259,8 @@ describe.only("codepush release command", () => {
         expect(result.succeeded).to.be.true;
       });
     });
-    it.only("should fail if 503 error is returned", async function () {
+
+    it("should fail if 403 error is returned", async function () {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
       // prettier-ignore
@@ -272,18 +273,50 @@ describe.only("codepush release command", () => {
         fakeParamsForRequests
       );
 
-      nockCreateRelease({ mandatory: false, disabled: false, statusCode: 503 });
+      nockCreateRelease({ mandatory: false, disabled: false, statusCode: 403 });
 
       // Act
       const command = new CodePushReleaseCommand(args);
-      const stub = sandbox.stub(apis, "createAppCenterClient");
-      stub.callsFake();
+
       const result = await command.execute();
 
       // Assert
       expect(result.succeeded).to.be.false;
     });
-    it("should remove temporary zip bundle at the end", async function () {});
+
+    it("should remove temporary zip bundle at the end", async function () {
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const goldenArgs = {
+        // prettier-ignore
+        args: [
+          "--update-contents-path", releaseFilePath,
+          "--target-binary-version", fakeParamsForRequests.appVersion,
+          "--deployment-name", "Staging",
+          "--description", "app description",
+          "--disabled",
+          "--mandatory",
+          "--private-key-path", "fake/private-key-path",
+          "--disable-duplicate-release-error",
+          "--rollout", "100",
+          "--app", `${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}`,
+          "--token", fakeParamsForRequests.token,
+        ],
+        command: ["codepush", "release"],
+        commandPath: "fake/path",
+      };
+
+      nockPlatformRequest("Cordova", fakeParamsForRequests, nockedApiGatewayRequests);
+      nockCreateRelease({ mandatory: true, disabled: true, statusCode: 201 });
+
+      const rmDirSpy = sandbox.spy(pfs, "rmDir");
+
+      // Act
+      const command = new CodePushReleaseCommand(goldenArgs);
+      await command.execute();
+
+      // Assert
+      expect(rmDirSpy.calledOnce).to.be.true;
+    });
   });
   context("signed release", () => {
     describe("path generation should correctly work", () => {
