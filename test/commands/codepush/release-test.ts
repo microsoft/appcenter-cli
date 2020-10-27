@@ -19,7 +19,7 @@ import { CommandArgs, CommandFailedResult } from "../../../src/util/commandline"
 import chalk = require("chalk");
 import * as pfs from "../../../src/util/misc/promisfied-fs";
 
-describe.only("codepush release command", () => {
+describe("codepush release command", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
   const releaseFileName = "releaseBinaryFile";
   const releaseFileContent = "Hello World!";
