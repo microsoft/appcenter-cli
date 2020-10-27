@@ -149,7 +149,7 @@ describe("codepush release-cordova command", function () {
     sandbox.stub(cp, "execSync");
     const originalReadFileSync = fs.readFileSync;
     sandbox.stub(fs, "readFileSync").callsFake(function (path: fs.PathLike) {
-      if (typeof path === "string" && /.*\/config.xml/.test(path)) {
+      if (typeof path === "string" && /.*config.xml/.test(path)) {
         return `
           <?xml version="v${version}" encoding="utf-8"?>
           <widget id="com.example.test" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
@@ -351,7 +351,7 @@ describe("codepush release-cordova command", function () {
     it("returns correct for iOS", async function () {
       // Arrange
       const os = "iOS";
-      const iosPath = path.join("platforms", os.toLowerCase(), "www");
+      const iosPath = path.join("platforms", os.toLowerCase(), "www").replace(/\\/g, "\\\\");
       const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
@@ -370,7 +370,7 @@ describe("codepush release-cordova command", function () {
     it("returns cordova 7 compatible path for Android", async function () {
       // Arrange
       const os = "Android";
-      const androidPath = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www");
+      const androidPath = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www").replace(/\\/g, "\\\\");
       const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
@@ -391,8 +391,10 @@ describe("codepush release-cordova command", function () {
     it("returns pre cordova 7 path for Android (if no newer found)", async function () {
       // Arrange
       const os = "Android";
-      const androidPathCordova7 = path.join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www");
-      const androidPath = path.join("platforms", os.toLowerCase(), "assets", "www");
+      const androidPathCordova7 = path
+        .join("platforms", os.toLowerCase(), "app", "src", "main", "assets", "www")
+        .replace(/\\/g, "\\\\");
+      const androidPath = path.join("platforms", os.toLowerCase(), "assets", "www").replace(/\\/g, "\\\\");
       const command = new CodePushReleaseCordovaCommand(goldenPathArgs);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
