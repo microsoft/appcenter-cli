@@ -3,7 +3,7 @@ import CodePushAddCommand from "../../../../src/commands/codepush/deployment/add
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { expect } from "chai";
 
-describe("CodePush deployment add tests", () => {
+describe("codepush deployment add tests", () => {
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const args: CommandArgs = {

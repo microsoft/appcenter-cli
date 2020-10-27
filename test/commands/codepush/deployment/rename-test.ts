@@ -3,7 +3,7 @@ import CodePushRenameDeploymentCommand from "../../../../src/commands/codepush/d
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { expect } from "chai";
 
-describe("CodePush deployment rename tests", () => {
+describe("codepush deployment rename tests", () => {
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const goldenPathArgs: CommandArgs = {
