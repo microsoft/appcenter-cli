@@ -9,6 +9,7 @@ import * as cp from "child_process";
 import * as fs from "fs";
 import * as validationUtils from "../../../src/commands/codepush/lib/validation-utils";
 import * as path from "path";
+import { getFakeParamsForRequest } from "./utils";
 
 describe("codepush release-cordova command", function () {
   const app = "bogus/app";
@@ -30,7 +31,7 @@ describe("codepush release-cordova command", function () {
       "--description", "app description",
       "--deployment-name", deployment,
       "--app", app,
-      "--token", "c1o3d3e7",
+      "--token", getFakeParamsForRequest().token
     ],
     command: ["codepush", "release-cordova"],
     commandPath: "fake/path",

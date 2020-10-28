@@ -2,12 +2,13 @@ import * as Nock from "nock";
 import CodePushAddCommand from "../../../../src/commands/codepush/deployment/add";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { expect } from "chai";
+import { getFakeParamsForRequest } from "../utils";
 
 describe("codepush deployment add tests", () => {
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const args: CommandArgs = {
-    args: ["--app", app, deployment],
+    args: ["--app", app, deployment, "--token", getFakeParamsForRequest().token],
     command: ["codepush", "deployment", "add"],
     commandPath: "fake/path",
   };

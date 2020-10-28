@@ -4,6 +4,7 @@ import { CommandArgs, ErrorCodes } from "../../../src/util/commandline";
 import { out, prompt } from "../../../src/util/interaction";
 import * as Nock from "nock";
 import * as Sinon from "sinon";
+import { getFakeParamsForRequest } from "./utils";
 
 describe("codepush rollback", function () {
   let sandbox: Sinon.SinonSandbox;
@@ -11,7 +12,7 @@ describe("codepush rollback", function () {
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const args: CommandArgs = {
-    args: ["--app", app, "--target-release", "bogusRelease", deployment],
+    args: ["--app", app, "--target-release", "bogusRelease", deployment, "--token", getFakeParamsForRequest().token],
     command: ["codepush", "rollback"],
     commandPath: "fake/path",
   };

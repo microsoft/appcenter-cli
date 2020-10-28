@@ -2,12 +2,13 @@ import * as Nock from "nock";
 import CodePushRenameDeploymentCommand from "../../../../src/commands/codepush/deployment/rename";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { expect } from "chai";
+import { getFakeParamsForRequest } from "../utils";
 
 describe("codepush deployment rename tests", () => {
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const goldenPathArgs: CommandArgs = {
-    args: ["--app", app, deployment, "newDeploymentName"],
+    args: ["--app", app, deployment, "newDeploymentName", "--token", getFakeParamsForRequest().token],
     command: ["codepush", "deployment", "rename"],
     commandPath: "fake/path",
   };

@@ -4,13 +4,14 @@ import CodePushRemoveDeploymentCommand from "../../../../src/commands/codepush/d
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { expect } from "chai";
 import { out, prompt } from "../../../../src/util/interaction";
+import { getFakeParamsForRequest } from "../utils";
 
 describe("codepush deployment remove tests", () => {
   let sandbox: Sinon.SinonSandbox;
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const args: CommandArgs = {
-    args: ["--app", app, deployment],
+    args: ["--app", app, deployment, "--token", getFakeParamsForRequest().token],
     command: ["codepush", "deployment", "remove"],
     commandPath: "fake/path",
   };

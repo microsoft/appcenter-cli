@@ -4,6 +4,7 @@ import { out } from "../../../src/util/interaction";
 import { expect } from "chai";
 import * as Nock from "nock";
 import * as Sinon from "sinon";
+import { getFakeParamsForRequest } from "./utils";
 
 describe("codepush promote", function () {
   let sandbox: Sinon.SinonSandbox;
@@ -12,7 +13,7 @@ describe("codepush promote", function () {
   const sourceDeploymentName = "Staging";
 
   const goldenPathArgs: CommandArgs = {
-    args: ["--rollout", "50", "--app", app, "--s", "Staging", "--d", deployment],
+    args: ["--rollout", "50", "--app", app, "--s", "Staging", "--d", deployment, "--token", getFakeParamsForRequest().token],
     command: ["codepush", "promote"],
     commandPath: "fake/path",
   };
@@ -42,7 +43,7 @@ describe("codepush promote", function () {
   it("promote works successfully when label is provided", async function () {
     // Arrange
     const label = "TestLabel";
-    const args: CommandArgs = { ...goldenPathArgs, args: [...goldenPathArgs.args, "--l", label] };
+    const args: CommandArgs = { ...goldenPathArgs, args: [...goldenPathArgs.args, "--l", label, "--token", getFakeParamsForRequest().token] };
     const outTextSpy = sandbox.spy(out, "text");
     const promoteCommand = new CodePushPromoteCommand(args);
     Nock("https://api.appcenter.ms/")
@@ -61,7 +62,7 @@ describe("codepush promote", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: ["--rollout", "200", "--app", app, "--s", sourceDeploymentName, "--d", deployment],
+      args: ["--rollout", "200", "--app", app, "--s", sourceDeploymentName, "--d", deployment, "--token", getFakeParamsForRequest().token],
     };
     const promoteCommand = new CodePushPromoteCommand(args);
 
@@ -77,7 +78,7 @@ describe("codepush promote", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: ["--t", "200.2.g.1", "--app", app, "--s", sourceDeploymentName, "--d", deployment],
+      args: ["--t", "200.2.g.1", "--app", app, "--s", sourceDeploymentName, "--d", deployment, "--token", getFakeParamsForRequest().token],
     };
     const promoteCommand = new CodePushPromoteCommand(args);
 
@@ -91,7 +92,7 @@ describe("codepush promote", function () {
 
   it("makes warning on promote api call 409 status code", async function () {
     // Arrange
-    const args: CommandArgs = { ...goldenPathArgs, args: [...goldenPathArgs.args, "--disable-duplicate-release-error"] };
+    const args: CommandArgs = { ...goldenPathArgs, args: [...goldenPathArgs.args, "--disable-duplicate-release-error", "--token", getFakeParamsForRequest().token] };
     const promoteCommand = new CodePushPromoteCommand(args);
     const consoleWarnSpy = sandbox.spy(console, "warn");
     Nock("https://api.appcenter.ms/")

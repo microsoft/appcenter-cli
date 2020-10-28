@@ -3,6 +3,7 @@ import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as Nock from "nock";
 import PatchCommand from "../../../src/commands/codepush/patch";
+import { getFakeParamsForRequest } from "./utils";
 
 describe("codepush patch", function () {
   let sandbox: Sinon.SinonSandbox;
@@ -11,8 +12,7 @@ describe("codepush patch", function () {
   const releaseLabel = "v1";
 
   const goldenPathArgs: CommandArgs = {
-    //appcenter codepush patch [-r|--rollout <arg>] [-d|--description <arg>] [-t|--target-binary-version <arg>] [-x|--disabled] [-m|--mandatory] [-l|--existing-release-label <arg>] [-a|--app <arg>] <deployment-name>
-    args: ["--rollout", "50", "--existing-release-label", releaseLabel, "--app", app, deployment],
+    args: ["--rollout", "50", "--existing-release-label", releaseLabel, "--app", app, deployment, "--token", getFakeParamsForRequest().token],
     command: ["codepush", "patch"],
     commandPath: "fake/path",
   };
@@ -43,7 +43,7 @@ describe("codepush patch", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: ["--app", app, deployment],
+      args: ["--app", app, deployment, "--token", getFakeParamsForRequest().token],
     };
     const patchCommand = new PatchCommand(args);
 
@@ -59,7 +59,7 @@ describe("codepush patch", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: ["--app", app, deployment],
+      args: ["--app", app, deployment, "--token", getFakeParamsForRequest().token],
     };
     const patchCommand = new PatchCommand(args);
 
@@ -75,7 +75,7 @@ describe("codepush patch", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: ["--rollout", "200", "--app", app, deployment],
+      args: ["--rollout", "200", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
     };
     const patchCommand = new PatchCommand(args);
 
@@ -91,7 +91,7 @@ describe("codepush patch", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: ["--t", "200.2.g.1", "--app", app, deployment],
+      args: ["--t", "200.2.g.1", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
     };
     const patchCommand = new PatchCommand(args);
 
@@ -124,7 +124,7 @@ describe("codepush patch", function () {
       // Arrange
       const args: CommandArgs = {
         ...goldenPathArgs,
-        args: ["--rollout", "50", "--app", app, deployment],
+        args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
 
@@ -139,7 +139,7 @@ describe("codepush patch", function () {
       // Arrange
       const args: CommandArgs = {
         ...goldenPathArgs,
-        args: ["--rollout", "50", "--app", app, deployment],
+        args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(400, "errorMessage");
@@ -155,7 +155,7 @@ describe("codepush patch", function () {
       // Arrange
       const args: CommandArgs = {
         ...goldenPathArgs,
-        args: ["--rollout", "50", "--app", app, deployment],
+        args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(400, "errorMessage");
@@ -171,7 +171,7 @@ describe("codepush patch", function () {
       // Arrange
       const args: CommandArgs = {
         ...goldenPathArgs,
-        args: ["--rollout", "50", "--app", app, deployment],
+        args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(401, "errorMessage");
@@ -187,7 +187,7 @@ describe("codepush patch", function () {
       // Arrange
       const args: CommandArgs = {
         ...goldenPathArgs,
-        args: ["--rollout", "50", "--app", app, deployment],
+        args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
       Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(200, []);
