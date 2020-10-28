@@ -11,9 +11,7 @@ const xcode = require("xcode");
 const plist = require("plist");
 const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
-const childProcess = require("child_process");
-
-export const spawn = childProcess.spawn;
+import * as childProcess from "child_process";
 
 export interface VersionSearchParams {
   os: string; // ios or android
@@ -313,7 +311,7 @@ export function runReactNativeBundleCommand(
   }
 
   out.text(chalk.cyan('Running "react-native bundle" command:\n'));
-  const reactNativeBundleProcess = spawn("node", reactNativeBundleArgs);
+  const reactNativeBundleProcess = childProcess.spawn("node", reactNativeBundleArgs);
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
@@ -366,7 +364,7 @@ export function runHermesEmitBinaryCommand(
 
   out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
   const hermesCommand = getHermesCommand();
-  const hermesProcess = spawn(hermesCommand, hermesArgs);
+  const hermesProcess = childProcess.spawn(hermesCommand, hermesArgs);
   out.text(`${hermesCommand} ${hermesArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
@@ -490,21 +488,24 @@ export function isValidPlatform(platform: string): boolean {
 }
 
 export function getReactNativeVersion(): string {
+  let packageJsonFilename;
+  let projectPackageJson;
   try {
-    // eslint-disable-next-line security/detect-non-literal-require
-    const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
-    const projectName: string = projectPackageJson.name;
-    if (!projectName) {
-      throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
-    }
-
-    return (
-      projectPackageJson.dependencies["react-native"] ||
-      (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
-    );
+    packageJsonFilename = path.join(process.cwd(), "package.json");
+    projectPackageJson = JSON.parse(fs.readFileSync(packageJsonFilename, "utf-8"));
   } catch (error) {
     throw new Error(
       `Unable to find or read "package.json" in the CWD. The "release-react" command must be executed in a React Native project folder.`
     );
   }
+
+  const projectName: string = projectPackageJson.name;
+  if (!projectName) {
+    throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
+  }
+
+  return (
+    projectPackageJson.dependencies["react-native"] ||
+    (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
+  );
 }

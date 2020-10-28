@@ -21,11 +21,19 @@ export function isValidRollout(rollout: number): boolean {
 }
 
 export async function isValidDeployment(client: AppCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
-  const httpRequest = await clientRequest<models.CodePushRelease>((cb) =>
-    client.codePushDeployments.get(deploymentName, app.ownerName, app.appName, cb)
-  );
-
-  return httpRequest.response.statusCode === 200 ? Promise.resolve(true) : Promise.resolve(false);
+  let httpRequest;
+  try {
+    httpRequest = await clientRequest<models.CodePushRelease>((cb) =>
+      client.codePushDeployments.get(deploymentName, app.ownerName, app.appName, cb)
+    );
+  } catch (error) {
+    if (error?.response?.statusCode === 404) {
+      // 404 is correct status code for this case
+      return false;
+    }
+    throw error;
+  }
+  return httpRequest.response.statusCode === 200;
 }
 
 export function validateVersion(version: string): string {

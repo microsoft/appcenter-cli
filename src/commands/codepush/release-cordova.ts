@@ -10,8 +10,6 @@ import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectA
 import * as childProcess from "child_process";
 import * as chalk from "chalk";
 
-export const execSync = childProcess.execSync;
-
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 
 @help("Release a Cordova update to an app deployment")
@@ -83,7 +81,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
     out.text(chalk.cyan(`Running "${cordovaCLI} ${cordovaCommand}" command:\n`));
     try {
-      execSync([cordovaCLI, cordovaCommand, this.os, "--verbose"].join(" "), { stdio: "inherit" });
+      childProcess.execSync([cordovaCLI, cordovaCommand, this.os, "--verbose"].join(" "), { stdio: "inherit" });
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(

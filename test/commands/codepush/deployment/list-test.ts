@@ -12,7 +12,7 @@ import * as chalk from "chalk";
 // Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
 const stripAnsi = require("strip-ansi");
 
-describe("CodePush deployment list tests", () => {
+describe("codepush deployment list tests", () => {
   const fakeBlobUrl = "fakeURL";
   const fakeIsDisabled = false;
   const fakeIsMandatory = false;

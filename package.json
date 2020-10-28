@@ -22,6 +22,7 @@
     "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && mocha --require ts-node/register ./test/**/*-test.[tj]s --timeout 4000",
     "test:ci": "mocha --require ts-node/register --reporter mocha-junit-reporter ./test/**/*-test.[tj]s --timeout 4000",
+    "test:debugger": "mocha --inspect --require ts-node/register ./test/**/*-test.[tj]s --timeout 4000",
     "functional": "pwsh test/functional/Invoke-FunctionalTests.ps1 -Token $AC_API_TOKEN -Environment int",
     "watch-test": "mocha --require ts-node/register ./test/**/*-test.[tj]s --watch",
     "autorest:clean": "rimraf src/util/apis/generated",

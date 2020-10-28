@@ -57,15 +57,11 @@ export function createFile(folderPath: string, fileName: string, fileContent: st
 }
 
 export function getCommandArgsForReleaseCommand(additionalArgs: string[], fakeConsts: FakeParamsForRequests): CommandArgs {
+  // prettier-ignore
   const args: string[] = [
-    "-a",
-    `${fakeConsts.userName}/${fakeConsts.appName}`,
-    "-d",
-    "Staging",
-    "-t",
-    "1.0",
-    "--token",
-    fakeConsts.token,
+    "-a", `${fakeConsts.userName}/${fakeConsts.appName}`,
+    "-d", "Staging",
+    "--token", fakeConsts.token,
   ].concat(additionalArgs);
   return {
     args,
