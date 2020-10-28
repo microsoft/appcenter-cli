@@ -41,7 +41,7 @@ describe("codepush rollback", function () {
     // Arrange
     sandbox.stub(prompt, "confirm").resolves(true);
     const rollbackCommand = new CodePushRollbackCommand(args);
-    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments/${deployment}/rollback_release`).query(true).reply(200, {});
+    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments/${deployment}/rollback_release`).reply(200, {});
 
     // Act
     const result = await rollbackCommand.execute();
@@ -57,7 +57,6 @@ describe("codepush rollback", function () {
     const rollbackCommand = new CodePushRollbackCommand(args);
     Nock("https://api.appcenter.ms/")
       .post(`/v0.1/apps/${app}/deployments/${deployment}/rollback_release`)
-      .query(true)
       .reply(201, { success: true });
 
     // Act

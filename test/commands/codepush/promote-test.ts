@@ -30,7 +30,6 @@ describe("codepush promote", function () {
     const promoteCommand = new CodePushPromoteCommand(goldenPathArgs);
     Nock("https://api.appcenter.ms/")
       .post(`/v0.1/apps/${app}/deployments/${sourceDeploymentName}/promote_release/${deployment}`)
-      .query(true)
       .reply(200, { success: true });
 
     // Act
@@ -48,7 +47,6 @@ describe("codepush promote", function () {
     const promoteCommand = new CodePushPromoteCommand(args);
     Nock("https://api.appcenter.ms/")
       .post(`/v0.1/apps/${app}/deployments/${sourceDeploymentName}/promote_release/${deployment}`)
-      .query(true)
       .reply(200, { success: true });
 
     // Act
@@ -98,7 +96,6 @@ describe("codepush promote", function () {
     const consoleWarnSpy = sandbox.spy(console, "warn");
     Nock("https://api.appcenter.ms/")
       .post(`/v0.1/apps/${app}/deployments/${sourceDeploymentName}/promote_release/${deployment}`)
-      .query(true)
       .reply(409, { message: "Error" });
 
     // Act
@@ -114,7 +111,6 @@ describe("codepush promote", function () {
     const errorMessage = "Some error message";
     Nock("https://api.appcenter.ms/")
       .post(`/v0.1/apps/${app}/deployments/${sourceDeploymentName}/promote_release/${deployment}`)
-      .query(true)
       .reply(410, errorMessage);
 
     // Act

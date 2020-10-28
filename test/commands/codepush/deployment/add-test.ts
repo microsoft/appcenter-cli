@@ -15,7 +15,7 @@ describe("codepush deployment add tests", () => {
   it("should create the deployment", async function () {
     // Arrange
     const addCommand = new CodePushAddCommand(args);
-    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).query(true).reply(201, {});
+    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).reply(201, {});
 
     // Act
     const result = await addCommand.execute();
@@ -27,7 +27,7 @@ describe("codepush deployment add tests", () => {
   it("should output error when it fails with 404", async function () {
     // Arrange
     const addCommand = new CodePushAddCommand(args);
-    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).query(true).reply(404, {});
+    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).reply(404, {});
 
     // Act
     const result = await addCommand.execute();
@@ -40,7 +40,7 @@ describe("codepush deployment add tests", () => {
   it("should output error when it fails with 409", async function () {
     // Arrange
     const addCommand = new CodePushAddCommand(args);
-    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).query(true).reply(409, {});
+    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).reply(409, {});
 
     // Act
     const result = await addCommand.execute();
@@ -54,7 +54,7 @@ describe("codepush deployment add tests", () => {
     // Arrange
     const addCommand = new CodePushAddCommand(args);
     const errorMessage = "Some error message";
-    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).query(true).reply(405, errorMessage);
+    Nock("https://api.appcenter.ms/").post(`/v0.1/apps/${app}/deployments`).reply(405, errorMessage);
 
     // Act
     const result = await addCommand.execute();

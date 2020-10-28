@@ -30,7 +30,6 @@ describe("codepush patch", function () {
     const patchCommand = new PatchCommand(goldenPathArgs);
     Nock("https://api.appcenter.ms/")
       .patch(`/v0.1/apps/${app}/deployments/${deployment}/releases/${releaseLabel}`)
-      .query(true)
       .reply(204, { success: true });
 
     // Act
@@ -110,7 +109,6 @@ describe("codepush patch", function () {
     const errorMessage = "some error message";
     Nock("https://api.appcenter.ms/")
       .patch(`/v0.1/apps/${app}/deployments/${deployment}/releases/${releaseLabel}`)
-      .query(true)
       .reply(400, errorMessage);
 
     // Act
@@ -144,10 +142,7 @@ describe("codepush patch", function () {
         args: ["--rollout", "50", "--app", app, deployment],
       };
       const patchCommand = new PatchCommand(args);
-      Nock("https://api.appcenter.ms/")
-        .get(`/v0.1/apps/${app}/deployments/${deployment}/releases`)
-        .query(true)
-        .reply(400, "errorMessage");
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(400, "errorMessage");
 
       // Act
       const result = patchCommand.execute();
@@ -163,10 +158,7 @@ describe("codepush patch", function () {
         args: ["--rollout", "50", "--app", app, deployment],
       };
       const patchCommand = new PatchCommand(args);
-      Nock("https://api.appcenter.ms/")
-        .get(`/v0.1/apps/${app}/deployments/${deployment}/releases`)
-        .query(true)
-        .reply(400, "errorMessage");
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(400, "errorMessage");
 
       // Act
       const result = patchCommand.execute();
@@ -182,10 +174,7 @@ describe("codepush patch", function () {
         args: ["--rollout", "50", "--app", app, deployment],
       };
       const patchCommand = new PatchCommand(args);
-      Nock("https://api.appcenter.ms/")
-        .get(`/v0.1/apps/${app}/deployments/${deployment}/releases`)
-        .query(true)
-        .reply(401, "errorMessage");
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(401, "errorMessage");
 
       // Act
       const result = patchCommand.execute();
@@ -201,7 +190,7 @@ describe("codepush patch", function () {
         args: ["--rollout", "50", "--app", app, deployment],
       };
       const patchCommand = new PatchCommand(args);
-      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).query(true).reply(200, []);
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(200, []);
 
       // Act
       const result = patchCommand.execute();

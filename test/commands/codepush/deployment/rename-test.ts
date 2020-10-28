@@ -15,7 +15,7 @@ describe("codepush deployment rename tests", () => {
   it("should rename the deployment", async function () {
     // Arrange
     const renameCommand = new CodePushRenameDeploymentCommand(goldenPathArgs);
-    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).query(true).reply(204, {});
+    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).reply(204, {});
 
     // Act
     const result = await renameCommand.execute();
@@ -27,7 +27,7 @@ describe("codepush deployment rename tests", () => {
   it("should output error when it fails with 404", async function () {
     // Arrange
     const renameCommand = new CodePushRenameDeploymentCommand(goldenPathArgs);
-    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).query(true).reply(404, {});
+    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).reply(404, {});
 
     // Act
     const result = await renameCommand.execute();
@@ -40,7 +40,7 @@ describe("codepush deployment rename tests", () => {
   it("should output error when it fails with 409", async function () {
     // Arrange
     const renameCommand = new CodePushRenameDeploymentCommand(goldenPathArgs);
-    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).query(true).reply(409, {});
+    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).reply(409, {});
 
     // Act
     const result = await renameCommand.execute();
@@ -54,7 +54,7 @@ describe("codepush deployment rename tests", () => {
     // Arrange
     const renameCommand = new CodePushRenameDeploymentCommand(goldenPathArgs);
     const errorMessage = "Some error message";
-    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).query(true).reply(401, errorMessage);
+    Nock("https://api.appcenter.ms/").patch(`/v0.1/apps/${app}/deployments/${deployment}`).reply(401, errorMessage);
 
     // Act
     const result = await renameCommand.execute();

@@ -42,7 +42,7 @@ describe("codepush deployment clear tests", () => {
     const clearCommand = new CodePushClearDeploymentCommand(args);
     const outTextSpy = sandbox.spy(out, "text");
     sandbox.stub(prompt, "confirm").resolves(true);
-    Nock("https://api.appcenter.ms/").delete(`/v0.1/apps/${app}/deployments/${deployment}/releases`).query(true).reply(204, {});
+    Nock("https://api.appcenter.ms/").delete(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(204, {});
 
     // Act
     const result = await clearCommand.execute();
@@ -56,7 +56,7 @@ describe("codepush deployment clear tests", () => {
     // Arrange
     const clearCommand = new CodePushClearDeploymentCommand(args);
     sandbox.stub(prompt, "confirm").resolves(true);
-    Nock("https://api.appcenter.ms/").delete(`/v0.1/apps/${app}/deployments/${deployment}/releases`).query(true).reply(404, {});
+    Nock("https://api.appcenter.ms/").delete(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(404, {});
 
     // Act
     const result = await clearCommand.execute();
@@ -71,10 +71,7 @@ describe("codepush deployment clear tests", () => {
     const clearCommand = new CodePushClearDeploymentCommand(args);
     const errorMessage = "Some error message";
     sandbox.stub(prompt, "confirm").resolves(true);
-    Nock("https://api.appcenter.ms/")
-      .delete(`/v0.1/apps/${app}/deployments/${deployment}/releases`)
-      .query(true)
-      .reply(405, errorMessage);
+    Nock("https://api.appcenter.ms/").delete(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(405, errorMessage);
 
     // Act
     const result = await clearCommand.execute();
