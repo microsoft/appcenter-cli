@@ -6,7 +6,6 @@ import * as Nock from "nock";
 import * as Sinon from "sinon";
 
 describe("codepush promote", function () {
-  
   let sandbox: Sinon.SinonSandbox;
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";

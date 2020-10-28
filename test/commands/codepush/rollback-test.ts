@@ -6,7 +6,6 @@ import * as Nock from "nock";
 import * as Sinon from "sinon";
 
 describe("codepush rollback", function () {
-  
   let sandbox: Sinon.SinonSandbox;
   let outProgressSpy: Sinon.SinonSpy<[string, Promise<unknown>], Promise<unknown>>;
   const app = "bogus/NameApp";

@@ -5,7 +5,6 @@ import * as Nock from "nock";
 import PatchCommand from "../../../src/commands/codepush/patch";
 
 describe("codepush patch", function () {
-  
   let sandbox: Sinon.SinonSandbox;
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";

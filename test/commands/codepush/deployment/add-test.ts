@@ -4,7 +4,6 @@ import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/ut
 import { expect } from "chai";
 
 describe("codepush deployment add tests", () => {
-  
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const args: CommandArgs = {
