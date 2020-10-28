@@ -938,7 +938,7 @@ describe("codepush release-react command", function () {
       // Assert
       expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
     });
-    context.skip("RN versions", function () {
+    context("RN versions", function () {
       [
         { version: "^0.63.3", desc: "versions starting with caret" },
         { version: "mobiletechvn/react-native#v0.63.2.fix-shadow-node", desc: "custom versions" },
