@@ -45,7 +45,7 @@ describe("codepush promote", function () {
     const label = "TestLabel";
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: [...goldenPathArgs.args, "--l", label, "--token", getFakeParamsForRequest().token],
+      args: [...goldenPathArgs.args, "--l", label],
     };
     const outTextSpy = sandbox.spy(out, "text");
     const promoteCommand = new CodePushPromoteCommand(args);
@@ -119,7 +119,7 @@ describe("codepush promote", function () {
     // Arrange
     const args: CommandArgs = {
       ...goldenPathArgs,
-      args: [...goldenPathArgs.args, "--disable-duplicate-release-error", "--token", getFakeParamsForRequest().token],
+      args: [...goldenPathArgs.args, "--disable-duplicate-release-error"],
     };
     const promoteCommand = new CodePushPromoteCommand(args);
     const consoleWarnSpy = sandbox.spy(console, "warn");
