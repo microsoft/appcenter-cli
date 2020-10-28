@@ -20,10 +20,6 @@ export function isValidRollout(rollout: number): boolean {
   return rollout && rollout > 0 && rollout <= 100;
 }
 
-export function isLowVersion(v1: string, v2: string): boolean {
-  return semver.compare(v1, v2) === -1 ? true : false;
-}
-
 export async function isValidDeployment(client: AppCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
   const httpRequest = await clientRequest<models.CodePushRelease>((cb) =>
     client.codePushDeployments.get(deploymentName, app.ownerName, app.appName, cb)
