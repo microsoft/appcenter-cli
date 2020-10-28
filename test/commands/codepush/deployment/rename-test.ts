@@ -4,6 +4,7 @@ import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/ut
 import { expect } from "chai";
 
 describe("codepush deployment rename tests", () => {
+
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
   const goldenPathArgs: CommandArgs = {

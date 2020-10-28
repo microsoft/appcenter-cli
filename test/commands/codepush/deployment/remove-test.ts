@@ -6,6 +6,7 @@ import { expect } from "chai";
 import { out, prompt } from "../../../../src/util/interaction";
 
 describe("codepush deployment remove tests", () => {
+  
   let sandbox: Sinon.SinonSandbox;
   const app = "bogus/NameApp";
   const deployment = "bogusDeployment";
