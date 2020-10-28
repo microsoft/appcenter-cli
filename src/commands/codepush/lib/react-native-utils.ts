@@ -2,8 +2,9 @@ import * as fs from "fs";
 import * as path from "path";
 import * as xml2js from "xml2js";
 import { out, isDebug } from "../../../util/interaction";
-import { isValidVersion, isLowVersion } from "./validation-utils";
+import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
+import { coerce, compare } from "semver";
 import * as chalk from "chalk";
 
 const xcode = require("xcode");
@@ -437,7 +438,8 @@ function getHermesOSBin(): string {
 }
 
 function getHermesOSExe(): string {
-  const hermesExecutableName = isLowVersion(getReactNativeVersion(), "0.63.0") ? "hermes" : "hermesc";
+  const react63orAbove = compare(coerce(getReactNativeVersion()).version, "0.63.0") !== -1;
+  const hermesExecutableName = react63orAbove ? "hermesc" : "hermes";
   switch (process.platform) {
     case "win32":
       return hermesExecutableName + ".exe";
