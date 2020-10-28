@@ -12,7 +12,17 @@ describe("codepush patch", function () {
   const releaseLabel = "v1";
 
   const goldenPathArgs: CommandArgs = {
-    args: ["--rollout", "50", "--existing-release-label", releaseLabel, "--app", app, deployment, "--token", getFakeParamsForRequest().token],
+    args: [
+      "--rollout",
+      "50",
+      "--existing-release-label",
+      releaseLabel,
+      "--app",
+      app,
+      deployment,
+      "--token",
+      getFakeParamsForRequest().token,
+    ],
     command: ["codepush", "patch"],
     commandPath: "fake/path",
   };
