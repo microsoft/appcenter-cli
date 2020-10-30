@@ -1,6 +1,6 @@
 {
   "name": "appcenter-cli",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "description": "Command line tool for Visual Studio App Center",
   "keywords": [
     "microsoft",
