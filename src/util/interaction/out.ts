@@ -117,7 +117,7 @@ export function table(options: any, data: any[]): void {
     data.forEach((item) => cliTable.push(item));
     console.log(cliTable.toString());
   } else {
-    console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data, null, "  "));
   }
 }
 
