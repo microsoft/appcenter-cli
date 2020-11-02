@@ -25338,7 +25338,7 @@ export interface CodePushReleasePromote {
 }
 
 export interface CodePushReleaseMetric {
-  totalActive: number;
+  totalActive?: number;
   label: string;
   active: number;
   downloaded?: number;
