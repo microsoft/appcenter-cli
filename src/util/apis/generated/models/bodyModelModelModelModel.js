@@ -11,12 +11,23 @@
 'use strict';
 
 /**
- * Class representing a BodyModelModelModelModel.
+ * A request containing information pertaining to starting a symbol upload
+ * process
+ *
  */
 class BodyModelModelModelModel {
   /**
    * Create a BodyModelModelModelModel.
-   * @property {uuid} id Unique id of the release destination
+   * @property {string} symbolType The type of the symbol for the current
+   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
+   * 'AndroidProguard', 'UWP'
+   * @property {string} [clientCallback] The callback URL that the client can
+   * optionally provide to get status updates for the current symbol upload
+   * @property {string} [fileName] The file name for the symbol upload
+   * @property {string} [build] The build number. Optional for Apple. Required
+   * for Android.
+   * @property {string} [version] The version number. Optional for Apple.
+   * Required for Android.
    */
   constructor() {
   }
@@ -35,9 +46,37 @@ class BodyModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModel',
         modelProperties: {
-          id: {
+          symbolType: {
             required: true,
-            serializedName: 'id',
+            serializedName: 'symbol_type',
+            type: {
+              name: 'String'
+            }
+          },
+          clientCallback: {
+            required: false,
+            serializedName: 'client_callback',
+            type: {
+              name: 'String'
+            }
+          },
+          fileName: {
+            required: false,
+            serializedName: 'file_name',
+            type: {
+              name: 'String'
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'String'
+            }
+          },
+          version: {
+            required: false,
+            serializedName: 'version',
             type: {
               name: 'String'
             }

@@ -11,23 +11,13 @@
 'use strict';
 
 /**
- * A request containing information pertaining to starting a symbol upload
- * process
- *
+ * Class representing a BodyModelModel.
  */
 class BodyModelModel {
   /**
    * Create a BodyModelModel.
-   * @property {string} symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
-   * 'AndroidProguard', 'UWP'
-   * @property {string} [clientCallback] The callback URL that the client can
-   * optionally provide to get status updates for the current symbol upload
-   * @property {string} [fileName] The file name for the symbol upload
-   * @property {string} [build] The build number. Optional for Apple. Required
-   * for Android.
-   * @property {string} [version] The version number. Optional for Apple.
-   * Required for Android.
+   * @property {string} [buildVersion] User defined build version
+   * @property {string} [buildNumber] User defined build number
    */
   constructor() {
   }
@@ -46,37 +36,16 @@ class BodyModelModel {
         name: 'Composite',
         className: 'BodyModelModel',
         modelProperties: {
-          symbolType: {
-            required: true,
-            serializedName: 'symbol_type',
+          buildVersion: {
+            required: false,
+            serializedName: 'build_version',
             type: {
               name: 'String'
             }
           },
-          clientCallback: {
+          buildNumber: {
             required: false,
-            serializedName: 'client_callback',
-            type: {
-              name: 'String'
-            }
-          },
-          fileName: {
-            required: false,
-            serializedName: 'file_name',
-            type: {
-              name: 'String'
-            }
-          },
-          build: {
-            required: false,
-            serializedName: 'build',
-            type: {
-              name: 'String'
-            }
-          },
-          version: {
-            required: false,
-            serializedName: 'version',
+            serializedName: 'build_number',
             type: {
               name: 'String'
             }

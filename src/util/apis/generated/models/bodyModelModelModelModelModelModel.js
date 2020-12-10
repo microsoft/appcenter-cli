@@ -11,23 +11,12 @@
 'use strict';
 
 /**
- * A request containing information for updating details of a release
- *
+ * Class representing a BodyModelModelModelModelModelModel.
  */
 class BodyModelModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModelModel.
-   * @property {boolean} [enabled] Toggle this release to be enable
-   * distribute/download or not.
-   * @property {string} [releaseNotes] Release notes for this release.
-   * @property {object} [build] Contains metadata about the build that produced
-   * the release being uploaded
-   * @property {string} [build.branchName] The branch name of the build
-   * producing the release
-   * @property {string} [build.commitHash] The commit hash of the build
-   * producing the release
-   * @property {string} [build.commitMessage] The commit message of the build
-   * producing the release
+   * @property {uuid} id Unique id of the release destination
    */
   constructor() {
   }
@@ -46,26 +35,11 @@ class BodyModelModelModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModelModelModel',
         modelProperties: {
-          enabled: {
-            required: false,
-            serializedName: 'enabled',
-            type: {
-              name: 'Boolean'
-            }
-          },
-          releaseNotes: {
-            required: false,
-            serializedName: 'release_notes',
+          id: {
+            required: true,
+            serializedName: 'id',
             type: {
               name: 'String'
-            }
-          },
-          build: {
-            required: false,
-            serializedName: 'build',
-            type: {
-              name: 'Composite',
-              className: 'BodyBuild'
             }
           }
         }

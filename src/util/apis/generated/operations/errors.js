@@ -1429,9 +1429,9 @@ function _groupOperatingSystemCounts(errorGroupId, ownerName, appName, options, 
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 2000)
+      if (top > 1000)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 1000');
       }
       if (top < 0)
       {
@@ -1585,9 +1585,9 @@ function _groupModelCounts(errorGroupId, ownerName, appName, options, callback) 
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 2000)
+      if (top > 1000)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 1000');
       }
       if (top < 0)
       {
@@ -2578,9 +2578,9 @@ function _listForGroup(errorGroupId, start, ownerName, appName, options, callbac
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 2000)
+      if (top > 1000)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 1000');
       }
       if (top < 0)
       {
@@ -3607,9 +3607,9 @@ function _groupList(start, ownerName, appName, options, callback) {
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 2000)
+      if (top > 1000)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 1000');
       }
       if (top < 0)
       {
@@ -3933,7 +3933,7 @@ function _countsPerDay(start, ownerName, appName, options, callback) {
  * pagination.
  *
  * @param {string} [options.filter] A filter as specified in
- * https://github.com/microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+ * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
  *
  * @param {string} [options.inlinecount] Controls whether or not to include a
  * count of all the items across all pages. Possible values include:
@@ -3990,9 +3990,9 @@ function _availableVersionsMethod(start, ownerName, appName, options, callback) 
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 2000)
+      if (top > 1000)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 1000');
       }
       if (top < 0)
       {
@@ -4198,9 +4198,9 @@ function _appBuildsList(version, start, ownerName, appName, options, callback) {
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 2000)
+      if (top > 1000)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 1000');
       }
       if (top < 0)
       {
@@ -6905,7 +6905,7 @@ class Errors {
    * pagination.
    *
    * @param {string} [options.filter] A filter as specified in
-   * https://github.com/microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+   * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
    *
    * @param {string} [options.inlinecount] Controls whether or not to include a
    * count of all the items across all pages. Possible values include:
@@ -6960,7 +6960,7 @@ class Errors {
    * pagination.
    *
    * @param {string} [options.filter] A filter as specified in
-   * https://github.com/microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+   * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
    *
    * @param {string} [options.inlinecount] Controls whether or not to include a
    * count of all the items across all pages. Possible values include:

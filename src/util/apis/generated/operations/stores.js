@@ -202,7 +202,7 @@ function _patch(storeName, ownerName, appName, serviceConnectionId, options, cal
   }
   let body;
   if (serviceConnectionId !== null && serviceConnectionId !== undefined) {
-    body = new client.models['BodyModelModelModelModelModelModelModelModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModelModel']();
     body.serviceConnectionId = serviceConnectionId;
   }
 
@@ -232,7 +232,7 @@ function _patch(storeName, ownerName, appName, serviceConnectionId, options, cal
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -427,7 +427,7 @@ function _deleteMethod(storeName, ownerName, appName, options, callback) {
  * @param {object} body The store request
  *
  * @param {string} [body.type] store Type. Possible values include:
- * 'googleplay', 'intune', 'apple'
+ * 'googleplay', 'apple'
  *
  * @param {string} [body.name] name of the store. In case of googleplay, and
  * Apple store this is fixed to Production.
@@ -538,7 +538,7 @@ function _create(body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1038,7 +1038,7 @@ class Stores {
    * @param {object} body The store request
    *
    * @param {string} [body.type] store Type. Possible values include:
-   * 'googleplay', 'intune', 'apple'
+   * 'googleplay', 'apple'
    *
    * @param {string} [body.name] name of the store. In case of googleplay, and
    * Apple store this is fixed to Production.
@@ -1111,7 +1111,7 @@ class Stores {
    * @param {object} body The store request
    *
    * @param {string} [body.type] store Type. Possible values include:
-   * 'googleplay', 'intune', 'apple'
+   * 'googleplay', 'apple'
    *
    * @param {string} [body.name] name of the store. In case of googleplay, and
    * Apple store this is fixed to Production.

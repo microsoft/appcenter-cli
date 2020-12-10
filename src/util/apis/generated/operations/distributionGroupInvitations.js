@@ -19,6 +19,9 @@ const WebResource = msRest.WebResource;
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -44,6 +47,15 @@ function _acceptAll(options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
+  // Validate
+  try {
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
 
   // Construct URL
   let baseUrl = this.client.baseUri;
@@ -63,7 +75,27 @@ function _acceptAll(options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -121,6 +153,9 @@ class DistributionGroupInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -149,6 +184,9 @@ class DistributionGroupInvitations {
    * user
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

@@ -11,54 +11,16 @@
 'use strict';
 
 /**
- * A request containing information for updating a release.
- *
+ * Class representing a BodyModelModelModelModelModelModelModel.
  */
 class BodyModelModelModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModelModelModel.
-   * @property {string} [distributionGroupName] OBSOLETE. Will be removed in
-   * future releases - use destinations instead. Name of a distribution group.
-   * The release will be associated with this distribution group. If the
-   * distribution group doesn't exist a 400 is returned. If both distribution
-   * group name and id are passed, the id is taking precedence.
-   * @property {string} [distributionGroupId] OBSOLETE. Will be removed in
-   * future releases - use destinations instead. Id of a distribution group.
-   * The release will be associated with this distribution group. If the
-   * distribution group doesn't exist a 400 is returned. If both distribution
-   * group name and id are passed, the id is taking precedence.
-   * @property {string} [destinationName] OBSOLETE. Will be removed in future
-   * releases - use destinations instead. Name of a destination. The release
-   * will be associated with this destination. If the destination doesn't exist
-   * a 400 is returned. If both distribution group name and id are passed, the
-   * id is taking precedence.
-   * @property {string} [destinationId] OBSOLETE. Will be removed in future
-   * releases - use destinations instead. Id of a destination. The release will
-   * be associated with this destination. If the destination doesn't exist a
-   * 400 is returned. If both destination name and id are passed, the id is
-   * taking precedence.
-   * @property {string} [destinationType] Not used anymore.
-   * @property {string} [releaseNotes] Release notes for this release.
-   * @property {boolean} [mandatoryUpdate] A boolean which determines whether
-   * this version should be a mandatory update or not.
-   * @property {array} [destinations] Distribute this release under the
-   * following list of destinations (store groups or distribution groups).
-   * @property {object} [build] Contains metadata about the build that produced
-   * the release being uploaded
-   * @property {string} [build.branchName] The branch name of the build
-   * producing the release
-   * @property {string} [build.commitHash] The commit hash of the build
-   * producing the release
-   * @property {string} [build.commitMessage] The commit message of the build
-   * producing the release
-   * @property {boolean} [notifyTesters] A boolean which determines whether to
-   * notify testers of a new release, default to true. Default value: true .
-   * @property {object} [metadata] An object containing all the release
-   * metadata.
-   * @property {string} [metadata.dsaSignature] dsa signature of the release
-   * for the sparkle feed.
-   * @property {string} [metadata.edSignature] edDSA signature of the release
-   * for the sparkle feed.
+   * @property {uuid} id Unique id of the release destination
+   * @property {boolean} [mandatoryUpdate] Flag to mark the release for the
+   * provided destinations as mandatory
+   * @property {boolean} [notifyTesters] Flag to enable or disable
+   * notifications to testers. Default value: true .
    */
   constructor() {
   }
@@ -77,44 +39,9 @@ class BodyModelModelModelModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModelModelModelModel',
         modelProperties: {
-          distributionGroupName: {
-            required: false,
-            serializedName: 'distribution_group_name',
-            type: {
-              name: 'String'
-            }
-          },
-          distributionGroupId: {
-            required: false,
-            serializedName: 'distribution_group_id',
-            type: {
-              name: 'String'
-            }
-          },
-          destinationName: {
-            required: false,
-            serializedName: 'destination_name',
-            type: {
-              name: 'String'
-            }
-          },
-          destinationId: {
-            required: false,
-            serializedName: 'destination_id',
-            type: {
-              name: 'String'
-            }
-          },
-          destinationType: {
-            required: false,
-            serializedName: 'destination_type',
-            type: {
-              name: 'String'
-            }
-          },
-          releaseNotes: {
-            required: false,
-            serializedName: 'release_notes',
+          id: {
+            required: true,
+            serializedName: 'id',
             type: {
               name: 'String'
             }
@@ -126,43 +53,12 @@ class BodyModelModelModelModelModelModelModel {
               name: 'Boolean'
             }
           },
-          destinations: {
-            required: false,
-            serializedName: 'destinations',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'BodyDestinationsItemElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'BodyDestinationsItem'
-                  }
-              }
-            }
-          },
-          build: {
-            required: false,
-            serializedName: 'build',
-            type: {
-              name: 'Composite',
-              className: 'BodyBuild'
-            }
-          },
           notifyTesters: {
             required: false,
             serializedName: 'notify_testers',
             defaultValue: true,
             type: {
               name: 'Boolean'
-            }
-          },
-          metadata: {
-            required: false,
-            serializedName: 'metadata',
-            type: {
-              name: 'Composite',
-              className: 'BodyMetadata'
             }
           }
         }

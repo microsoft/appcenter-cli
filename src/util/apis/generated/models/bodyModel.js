@@ -11,15 +11,13 @@
 'use strict';
 
 /**
- * A request containing information pertaining to completing a symbol upload
- * process
- *
+ * Class representing a BodyModel.
  */
 class BodyModel {
   /**
    * Create a BodyModel.
-   * @property {string} status The desired operation for the symbol upload.
-   * Possible values include: 'committed', 'aborted'
+   * @property {string} uploadStatus The new status of the release upload.
+   * Possible values include: 'uploadFinished', 'uploadCanceled'
    */
   constructor() {
   }
@@ -38,9 +36,9 @@ class BodyModel {
         name: 'Composite',
         className: 'BodyModel',
         modelProperties: {
-          status: {
+          uploadStatus: {
             required: true,
-            serializedName: 'status',
+            serializedName: 'upload_status',
             type: {
               name: 'String'
             }

@@ -74,7 +74,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
   }
   let body;
   if (status !== null && status !== undefined) {
-    body = new client.models['BodyModelModelModelModelModelModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModelModelModel']();
     body.status = status;
   }
 
@@ -104,7 +104,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -236,7 +236,7 @@ function _create(ownerName, appName, options, callback) {
   }
   let body;
   if ((releaseId !== null && releaseId !== undefined) || (buildVersion !== null && buildVersion !== undefined) || (buildNumber !== null && buildNumber !== undefined)) {
-    body = new client.models['BodyModelModelModelModelModelModelModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModel']();
     body.releaseId = releaseId;
     body.buildVersion = buildVersion;
     body.buildNumber = buildNumber;
@@ -267,7 +267,7 @@ function _create(ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }

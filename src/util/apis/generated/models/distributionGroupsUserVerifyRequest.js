@@ -42,10 +42,9 @@ class DistributionGroupsUserVerifyRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupsUserVerifyRequestDistributionGroupIdsItemElementType',
+                  serializedName: 'UuidElementType',
                   type: {
-                    name: 'Composite',
-                    className: 'DistributionGroupsUserVerifyRequestDistributionGroupIdsItem'
+                    name: 'String'
                   }
               }
             }

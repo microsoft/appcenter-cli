@@ -11,38 +11,19 @@
 'use strict';
 
 /**
- * ExternalStoreRequest
+ * A request containing information pertaining to begin a release upload
+ * process
  *
  */
 class BodyModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModelModelModelModelModelModelModel.
-   * @property {string} [type] store Type. Possible values include:
-   * 'googleplay', 'intune', 'apple'
-   * @property {string} [name] name of the store. In case of googleplay, and
-   * Apple store this is fixed to Production.
-   * @property {string} [track] track of the store. Can be production, alpha &
-   * beta for googleplay. Can be production, testflight-internal &
-   * testflight-external for Apple Store. Possible values include:
-   * 'production', 'alpha', 'beta', 'testflight-internal',
-   * 'testflight-external'
-   * @property {object} [intuneDetails]
-   * @property {object} [intuneDetails.secretJson]
-   * @property {string} [intuneDetails.secretJson.idToken] the id token of user
-   * @property {string} [intuneDetails.secretJson.refreshToken] the refresh
-   * token for user
-   * @property {string} [intuneDetails.secretJson.refreshTokenExpiry] the
-   * expiry of refresh token
-   * @property {object} [intuneDetails.targetAudience]
-   * @property {string} [intuneDetails.targetAudience.name] display name for
-   * the target audience/group
-   * @property {object} [intuneDetails.appCategory]
-   * @property {string} [intuneDetails.appCategory.name] display name for the
-   * app category
-   * @property {string} [intuneDetails.tenantId] tenant id of the intune store
-   * @property {string} [serviceConnectionId] Id for the shared service
-   * connection. In case of Apple AppStore, this connection will be used to
-   * create and connect to the Apple AppStore in Mobile Center.
+   * @property {number} [releaseId] Optional value for explicitly specifying
+   * the ID of existing release.
+   * @property {string} [buildVersion] The build version of the uploaded
+   * binary, used for macOS, Windows and Custom app support.
+   * @property {string} [buildNumber] The build number of the uploaded binary,
+   * used with build_version for macOS app support.
    */
   constructor() {
   }
@@ -61,38 +42,23 @@ class BodyModelModelModelModelModelModelModelModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModelModelModelModelModelModelModelModel',
         modelProperties: {
-          type: {
+          releaseId: {
             required: false,
-            serializedName: 'type',
+            serializedName: 'release_id',
+            type: {
+              name: 'Number'
+            }
+          },
+          buildVersion: {
+            required: false,
+            serializedName: 'build_version',
             type: {
               name: 'String'
             }
           },
-          name: {
+          buildNumber: {
             required: false,
-            serializedName: 'name',
-            type: {
-              name: 'String'
-            }
-          },
-          track: {
-            required: false,
-            serializedName: 'track',
-            type: {
-              name: 'String'
-            }
-          },
-          intuneDetails: {
-            required: false,
-            serializedName: 'intune_details',
-            type: {
-              name: 'Composite',
-              className: 'BodyIntuneDetails'
-            }
-          },
-          serviceConnectionId: {
-            required: false,
-            serializedName: 'service_connection_id',
+            serializedName: 'build_number',
             type: {
               name: 'String'
             }

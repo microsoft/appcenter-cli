@@ -435,6 +435,552 @@ function _getLatestPrivateRelease(appSecret, options, callback) {
 }
 
 /**
+ * Get the current status of the release upload.
+ *
+ * @param {uuid} uploadId The ID of the release upload
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _getReleaseUploadStatus(uploadId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (uploadId === null || uploadId === undefined || typeof uploadId.valueOf() !== 'string' || !msRest.isValidUuid(uploadId)) {
+      throw new Error('uploadId cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/uploads/releases/{upload_id}';
+  requestUrl = requestUrl.replace('{upload_id}', encodeURIComponent(uploadId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['GetReleaseUploadStatusOKResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['GetReleaseUploadStatusBadRequestResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['GetReleaseUploadStatusNotFoundResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Update the current status of the release upload.
+ *
+ * @param {uuid} uploadId The ID of the release upload
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {string} uploadStatus The new status of the release upload. Possible
+ * values include: 'uploadFinished', 'uploadCanceled'
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {boolean} [options.extract] A flag that indicates to extract release
+ * or not, true by default
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _updateReleaseUploadStatus(uploadId, ownerName, appName, uploadStatus, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let extract = (options && options.extract !== undefined) ? options.extract : undefined;
+  // Validate
+  try {
+    if (uploadId === null || uploadId === undefined || typeof uploadId.valueOf() !== 'string' || !msRest.isValidUuid(uploadId)) {
+      throw new Error('uploadId cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (extract !== null && extract !== undefined && typeof extract !== 'boolean') {
+      throw new Error('extract must be of type boolean.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (uploadStatus === null || uploadStatus === undefined || typeof uploadStatus.valueOf() !== 'string') {
+      throw new Error('uploadStatus cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let body;
+  if (uploadStatus !== null && uploadStatus !== undefined) {
+    body = new client.models['BodyModel']();
+    body.uploadStatus = uploadStatus;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/uploads/releases/{upload_id}';
+  requestUrl = requestUrl.replace('{upload_id}', encodeURIComponent(uploadId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  let queryParameters = [];
+  if (extract !== null && extract !== undefined) {
+    queryParameters.push('extract=' + encodeURIComponent(extract.toString()));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'PATCH';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['BodyModel']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['UpdateReleaseUploadStatusOKResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['UpdateReleaseUploadStatusBadRequestResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['UpdateReleaseUploadStatusNotFoundResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Initiate a new release upload. This API is part of multi-step upload
+ * process.
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {string} [options.buildVersion] User defined build version
+ *
+ * @param {string} [options.buildNumber] User defined build number
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _createReleaseUpload(ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let buildVersion = (options && options.buildVersion !== undefined) ? options.buildVersion : undefined;
+  let buildNumber = (options && options.buildNumber !== undefined) ? options.buildNumber : undefined;
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (buildVersion !== null && buildVersion !== undefined && typeof buildVersion.valueOf() !== 'string') {
+      throw new Error('buildVersion must be of type string.');
+    }
+    if (buildNumber !== null && buildNumber !== undefined && typeof buildNumber.valueOf() !== 'string') {
+      throw new Error('buildNumber must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let body;
+  if ((buildVersion !== null && buildVersion !== undefined) || (buildNumber !== null && buildNumber !== undefined)) {
+    body = new client.models['BodyModelModel']();
+    body.buildVersion = buildVersion;
+    body.buildNumber = buildNumber;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/uploads/releases';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['BodyModelModel']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 201) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['CreateReleaseUploadCreatedResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['CreateReleaseUploadBadRequestResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['CreateReleaseUploadNotFoundResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
  * Delete the given tester from the all releases
  *
  * @param {string} testerId The id of the tester
@@ -927,7 +1473,7 @@ function _addTesters(releaseId, ownerName, appName, email, options, callback) {
   }
   let body;
   if ((mandatoryUpdate !== null && mandatoryUpdate !== undefined) || (email !== null && email !== undefined) || (notifyTesters !== null && notifyTesters !== undefined)) {
-    body = new client.models['BodyModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModel']();
     body.mandatoryUpdate = mandatoryUpdate;
     body.email = email;
     body.notifyTesters = notifyTesters;
@@ -959,7 +1505,7 @@ function _addTesters(releaseId, ownerName, appName, email, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1247,7 +1793,7 @@ function _addStore(releaseId, ownerName, appName, id, options, callback) {
   }
   let body;
   if (id !== null && id !== undefined) {
-    body = new client.models['BodyModelModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModelModel']();
     body.id = id;
   }
 
@@ -1277,7 +1823,7 @@ function _addStore(releaseId, ownerName, appName, id, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1739,7 +2285,7 @@ function _addDistributionGroup(releaseId, ownerName, appName, id, options, callb
   }
   let body;
   if ((id !== null && id !== undefined) || (mandatoryUpdate !== null && mandatoryUpdate !== undefined) || (notifyTesters !== null && notifyTesters !== undefined)) {
-    body = new client.models['BodyModelModelModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModelModelModel']();
     body.id = id;
     body.mandatoryUpdate = mandatoryUpdate;
     body.notifyTesters = notifyTesters;
@@ -1771,7 +2317,7 @@ function _addDistributionGroup(releaseId, ownerName, appName, id, options, callb
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2125,7 +2671,7 @@ function _updateDetails(releaseId, ownerName, appName, options, callback) {
   }
   let body;
   if ((enabled !== null && enabled !== undefined) || (releaseNotes !== null && releaseNotes !== undefined) || (build !== null && build !== undefined)) {
-    body = new client.models['BodyModelModelModelModelModelModel']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModel']();
     body.enabled = enabled;
     body.releaseNotes = releaseNotes;
     body.build = build;
@@ -2157,7 +2703,7 @@ function _updateDetails(releaseId, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2398,7 +2944,7 @@ function _update(releaseId, body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -3533,6 +4079,9 @@ class ReleasesOperations {
     this._listTesterApps = _listTesterApps;
     this._getLatestByHash = _getLatestByHash;
     this._getLatestPrivateRelease = _getLatestPrivateRelease;
+    this._getReleaseUploadStatus = _getReleaseUploadStatus;
+    this._updateReleaseUploadStatus = _updateReleaseUploadStatus;
+    this._createReleaseUpload = _createReleaseUpload;
     this._deleteTesterFromDestinations = _deleteTesterFromDestinations;
     this._putDistributionTester = _putDistributionTester;
     this._deleteDistributionTester = _deleteDistributionTester;
@@ -3822,6 +4371,291 @@ class ReleasesOperations {
       });
     } else {
       return self._getLatestPrivateRelease(appSecret, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Get the current status of the release upload.
+   *
+   * @param {uuid} uploadId The ID of the release upload
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  getReleaseUploadStatusWithHttpOperationResponse(uploadId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._getReleaseUploadStatus(uploadId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Get the current status of the release upload.
+   *
+   * @param {uuid} uploadId The ID of the release upload
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  getReleaseUploadStatus(uploadId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._getReleaseUploadStatus(uploadId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._getReleaseUploadStatus(uploadId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Update the current status of the release upload.
+   *
+   * @param {uuid} uploadId The ID of the release upload
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {string} uploadStatus The new status of the release upload. Possible
+   * values include: 'uploadFinished', 'uploadCanceled'
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.extract] A flag that indicates to extract release
+   * or not, true by default
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  updateReleaseUploadStatusWithHttpOperationResponse(uploadId, ownerName, appName, uploadStatus, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._updateReleaseUploadStatus(uploadId, ownerName, appName, uploadStatus, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Update the current status of the release upload.
+   *
+   * @param {uuid} uploadId The ID of the release upload
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {string} uploadStatus The new status of the release upload. Possible
+   * values include: 'uploadFinished', 'uploadCanceled'
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.extract] A flag that indicates to extract release
+   * or not, true by default
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  updateReleaseUploadStatus(uploadId, ownerName, appName, uploadStatus, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._updateReleaseUploadStatus(uploadId, ownerName, appName, uploadStatus, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._updateReleaseUploadStatus(uploadId, ownerName, appName, uploadStatus, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Initiate a new release upload. This API is part of multi-step upload
+   * process.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.buildVersion] User defined build version
+   *
+   * @param {string} [options.buildNumber] User defined build number
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  createReleaseUploadWithHttpOperationResponse(ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._createReleaseUpload(ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Initiate a new release upload. This API is part of multi-step upload
+   * process.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.buildVersion] User defined build version
+   *
+   * @param {string} [options.buildNumber] User defined build number
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  createReleaseUpload(ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._createReleaseUpload(ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._createReleaseUpload(ownerName, appName, options, optionalCallback);
     }
   }
 

@@ -14,9 +14,9 @@
  * ExternalStoreRequest
  *
  */
-class ExternalStoreRequest {
+class BodyModelModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
-   * Create a ExternalStoreRequest.
+   * Create a BodyModelModelModelModelModelModelModelModelModelModelModelModelModel.
    * @property {string} [type] store Type. Possible values include:
    * 'googleplay', 'apple'
    * @property {string} [name] name of the store. In case of googleplay, and
@@ -48,18 +48,18 @@ class ExternalStoreRequest {
   }
 
   /**
-   * Defines the metadata of ExternalStoreRequest
+   * Defines the metadata of BodyModelModelModelModelModelModelModelModelModelModelModelModelModel
    *
-   * @returns {object} metadata of ExternalStoreRequest
+   * @returns {object} metadata of BodyModelModelModelModelModelModelModelModelModelModelModelModelModel
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'ExternalStoreRequest',
+      serializedName: 'body',
       type: {
         name: 'Composite',
-        className: 'ExternalStoreRequest',
+        className: 'BodyModelModelModelModelModelModelModelModelModelModelModelModelModel',
         modelProperties: {
           type: {
             required: false,
@@ -87,7 +87,7 @@ class ExternalStoreRequest {
             serializedName: 'intune_details',
             type: {
               name: 'Composite',
-              className: 'ExternalStoreRequestIntuneDetails'
+              className: 'BodyIntuneDetails'
             }
           },
           serviceConnectionId: {
@@ -103,4 +103,4 @@ class ExternalStoreRequest {
   }
 }
 
-module.exports = ExternalStoreRequest;
+module.exports = BodyModelModelModelModelModelModelModelModelModelModelModelModelModel;

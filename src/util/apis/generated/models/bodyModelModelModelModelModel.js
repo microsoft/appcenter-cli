@@ -16,9 +16,9 @@
 class BodyModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModel.
-   * @property {uuid} id Unique id of the release destination
    * @property {boolean} [mandatoryUpdate] Flag to mark the release for the
    * provided destinations as mandatory
+   * @property {string} email Tester's email address
    * @property {boolean} [notifyTesters] Flag to enable or disable
    * notifications to testers. Default value: true .
    */
@@ -39,18 +39,18 @@ class BodyModelModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModelModel',
         modelProperties: {
-          id: {
-            required: true,
-            serializedName: 'id',
-            type: {
-              name: 'String'
-            }
-          },
           mandatoryUpdate: {
             required: false,
             serializedName: 'mandatory_update',
             type: {
               name: 'Boolean'
+            }
+          },
+          email: {
+            required: true,
+            serializedName: 'email',
+            type: {
+              name: 'String'
             }
           },
           notifyTesters: {

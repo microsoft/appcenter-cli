@@ -11,21 +11,12 @@
 'use strict';
 
 /**
- * Apple Mapping Request Type
- *
+ * Class representing a BodyModelModelModelModelModelModelModelModelModelModelModelModel.
  */
 class BodyModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModelModelModelModelModelModelModelModel.
-   * @property {string} serviceConnectionId Id for the shared service
-   * connection. In case of Apple AppStore, this connection will be used to
-   * create and connect to the Apple AppStore in Mobile Center.
-   * @property {string} [appleId] ID of the apple application in apple store,
-   * takes precedence over bundle_identifier when both are provided
-   * @property {string} [bundleIdentifier] Bundle Identifier of the apple
-   * package
-   * @property {string} teamIdentifier ID of the Team associated with the app
-   * in apple store
+   * @property {string} serviceConnectionId Service connection id to updated.
    */
   constructor() {
   }
@@ -47,27 +38,6 @@ class BodyModelModelModelModelModelModelModelModelModelModelModelModel {
           serviceConnectionId: {
             required: true,
             serializedName: 'service_connection_id',
-            type: {
-              name: 'String'
-            }
-          },
-          appleId: {
-            required: false,
-            serializedName: 'apple_id',
-            type: {
-              name: 'String'
-            }
-          },
-          bundleIdentifier: {
-            required: false,
-            serializedName: 'bundle_identifier',
-            type: {
-              name: 'String'
-            }
-          },
-          teamIdentifier: {
-            required: true,
-            serializedName: 'team_identifier',
             type: {
               name: 'String'
             }

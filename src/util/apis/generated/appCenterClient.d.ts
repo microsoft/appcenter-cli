@@ -81,12 +81,10 @@ export default class AppCenterClient extends ServiceClient {
   codePushDeploymentReleases: operations.CodePushDeploymentReleases;
   codePushDeployments: operations.CodePushDeployments;
   codePushDeploymentMetrics: operations.CodePushDeploymentMetrics;
-  data: operations.Data;
   crashGroupsOperations: operations.CrashGroupsOperations;
   commits: operations.Commits;
   bugTracker: operations.BugTracker;
   branchConfigurations: operations.BranchConfigurations;
-  identity: operations.Identity;
   appleMapping: operations.AppleMapping;
   appApiTokens: operations.AppApiTokens;
   analytics: operations.Analytics;

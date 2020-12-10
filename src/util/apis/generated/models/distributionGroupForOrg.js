@@ -11,11 +11,11 @@
 'use strict';
 
 /**
- * Class representing a DistributionGroupModelModel.
+ * Class representing a DistributionGroupForOrg.
  */
-class DistributionGroupModelModel {
+class DistributionGroupForOrg {
   /**
-   * Create a DistributionGroupModelModel.
+   * Create a DistributionGroupForOrg.
    * @property {string} [name] The name of the distribution group
    * @property {boolean} [isPublic] Whether the distribution group is public
    */
@@ -23,18 +23,18 @@ class DistributionGroupModelModel {
   }
 
   /**
-   * Defines the metadata of DistributionGroupModelModel
+   * Defines the metadata of DistributionGroupForOrg
    *
-   * @returns {object} metadata of DistributionGroupModelModel
+   * @returns {object} metadata of DistributionGroupForOrg
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'distribution_group',
+      serializedName: 'distribution_group_for_org',
       type: {
         name: 'Composite',
-        className: 'DistributionGroupModelModel',
+        className: 'DistributionGroupForOrg',
         modelProperties: {
           name: {
             required: false,
@@ -56,4 +56,4 @@ class DistributionGroupModelModel {
   }
 }
 
-module.exports = DistributionGroupModelModel;
+module.exports = DistributionGroupForOrg;

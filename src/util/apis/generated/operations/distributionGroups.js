@@ -1460,11 +1460,11 @@ function _patchForOrg(orgName, distributionGroupName, options, callback) {
   } catch (error) {
     return callback(error);
   }
-  let distributionGroup;
+  let distributionGroupForOrg;
   if ((name !== null && name !== undefined) || (isPublic !== null && isPublic !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupModel']();
-    distributionGroup.name = name;
-    distributionGroup.isPublic = isPublic;
+    distributionGroupForOrg = new client.models['DistributionGroupForOrg']();
+    distributionGroupForOrg.name = name;
+    distributionGroupForOrg.isPublic = isPublic;
   }
 
   // Construct URL
@@ -1491,14 +1491,14 @@ function _patchForOrg(orgName, distributionGroupName, options, callback) {
   let requestContent = null;
   let requestModel = null;
   try {
-    if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupModel']().mapper();
-      requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
+    if (distributionGroupForOrg !== null && distributionGroupForOrg !== undefined) {
+      let requestModelMapper = new client.models['DistributionGroupForOrg']().mapper();
+      requestModel = client.serialize(requestModelMapper, distributionGroupForOrg, 'distributionGroupForOrg');
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
     let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-        `payload - ${JSON.stringify(distributionGroup, null, 2)}.`);
+        `payload - ${JSON.stringify(distributionGroupForOrg, null, 2)}.`);
     return callback(serializationError);
   }
   httpRequest.body = requestContent;
@@ -1724,7 +1724,7 @@ function _createForOrg(orgName, name, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (displayName !== null && displayName !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupModelModel']();
+    distributionGroup = new client.models['DistributionGroupModel']();
     distributionGroup.name = name;
     distributionGroup.displayName = displayName;
   }
@@ -1753,7 +1753,7 @@ function _createForOrg(orgName, name, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupModelModel']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2816,7 +2816,7 @@ function _update(ownerName, appName, distributionGroupName, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (isPublic !== null && isPublic !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupModel']();
+    distributionGroup = new client.models['DistributionGroupModelModel']();
     distributionGroup.name = name;
     distributionGroup.isPublic = isPublic;
   }
@@ -2847,7 +2847,7 @@ function _update(ownerName, appName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupModel']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }
@@ -3226,7 +3226,7 @@ function _create(ownerName, appName, name, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (displayName !== null && displayName !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupModelModel']();
+    distributionGroup = new client.models['DistributionGroupModel']();
     distributionGroup.name = name;
     distributionGroup.displayName = displayName;
   }
@@ -3256,7 +3256,7 @@ function _create(ownerName, appName, name, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupModelModel']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }

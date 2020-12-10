@@ -94,12 +94,10 @@ class AppCenterClient extends ServiceClient {
     this.codePushDeploymentReleases = new operations.CodePushDeploymentReleases(this);
     this.codePushDeployments = new operations.CodePushDeployments(this);
     this.codePushDeploymentMetrics = new operations.CodePushDeploymentMetrics(this);
-    this.data = new operations.Data(this);
     this.crashGroupsOperations = new operations.CrashGroupsOperations(this);
     this.commits = new operations.Commits(this);
     this.bugTracker = new operations.BugTracker(this);
     this.branchConfigurations = new operations.BranchConfigurations(this);
-    this.identity = new operations.Identity(this);
     this.appleMapping = new operations.AppleMapping(this);
     this.appApiTokens = new operations.AppApiTokens(this);
     this.analytics = new operations.Analytics(this);

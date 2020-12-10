@@ -21,6 +21,9 @@ const WebResource = msRest.WebResource;
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -46,10 +49,14 @@ function _reject(invitationToken, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (invitationToken === null || invitationToken === undefined || typeof invitationToken.valueOf() !== 'string') {
       throw new Error('invitationToken cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -74,7 +81,27 @@ function _reject(invitationToken, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -123,6 +150,9 @@ function _reject(invitationToken, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -148,10 +178,14 @@ function _accept(invitationToken, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (invitationToken === null || invitationToken === undefined || typeof invitationToken.valueOf() !== 'string') {
       throw new Error('invitationToken cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -176,7 +210,27 @@ function _accept(invitationToken, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -228,6 +282,9 @@ function _accept(invitationToken, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {string} [options.role] The role of the user to be added. Possible
+ * values include: 'admin', 'collaborator', 'member'
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -253,6 +310,7 @@ function _createByEmail(ownerName, appName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -264,8 +322,16 @@ function _createByEmail(ownerName, appName, userEmail, options, callback) {
     if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
       throw new Error('userEmail cannot be null or undefined and it must be of type string.');
     }
+    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
+      throw new Error('role must be of type string.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  let role1;
+  if (role !== null && role !== undefined) {
+    role1 = new client.models['Role']();
+    role1.role = role;
   }
 
   // Construct URL
@@ -289,7 +355,21 @@ function _createByEmail(ownerName, appName, userEmail, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (role1 !== null && role1 !== undefined) {
+      let requestModelMapper = new client.models['Role']().mapper();
+      requestModel = client.serialize(requestModelMapper, role1, 'role1');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(role1, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -876,6 +956,9 @@ class AppInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -906,6 +989,9 @@ class AppInvitations {
    * the user
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -959,6 +1045,9 @@ class AppInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -989,6 +1078,9 @@ class AppInvitations {
    * the user
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1045,6 +1137,9 @@ class AppInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {string} [options.role] The role of the user to be added. Possible
+   * values include: 'admin', 'collaborator', 'member'
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1078,6 +1173,9 @@ class AppInvitations {
    * @param {string} userEmail The email of the user to invite
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The role of the user to be added. Possible
+   * values include: 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

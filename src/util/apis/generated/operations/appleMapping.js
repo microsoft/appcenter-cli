@@ -504,7 +504,7 @@ function _create(body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }

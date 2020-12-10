@@ -426,7 +426,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
   }
   let body;
   if (status !== null && status !== undefined) {
-    body = new client.models['BodyModel']();
+    body = new client.models['BodyModelModelModel']();
     body.status = status;
   }
 
@@ -456,7 +456,7 @@ function _complete(symbolUploadId, ownerName, appName, status, options, callback
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1055,7 +1055,7 @@ function _create(body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['BodyModelModel']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }

@@ -11,15 +11,23 @@
 'use strict';
 
 /**
- * A request containing information pertaining to complete a release upload
- * process
+ * A request containing information for updating details of a release
  *
  */
 class BodyModelModelModelModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModelModelModelModel.
-   * @property {string} status The desired operation for the upload. Possible
-   * values include: 'committed', 'aborted'
+   * @property {boolean} [enabled] Toggle this release to be enable
+   * distribute/download or not.
+   * @property {string} [releaseNotes] Release notes for this release.
+   * @property {object} [build] Contains metadata about the build that produced
+   * the release being uploaded
+   * @property {string} [build.branchName] The branch name of the build
+   * producing the release
+   * @property {string} [build.commitHash] The commit hash of the build
+   * producing the release
+   * @property {string} [build.commitMessage] The commit message of the build
+   * producing the release
    */
   constructor() {
   }
@@ -38,11 +46,26 @@ class BodyModelModelModelModelModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModelModelModelModelModel',
         modelProperties: {
-          status: {
-            required: true,
-            serializedName: 'status',
+          enabled: {
+            required: false,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          releaseNotes: {
+            required: false,
+            serializedName: 'release_notes',
             type: {
               name: 'String'
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'Composite',
+              className: 'BodyBuild'
             }
           }
         }

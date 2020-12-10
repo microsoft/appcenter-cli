@@ -11,12 +11,15 @@
 'use strict';
 
 /**
- * Class representing a BodyModelModelModelModelModelModelModelModelModelModel.
+ * A request containing information pertaining to complete a release upload
+ * process
+ *
  */
 class BodyModelModelModelModelModelModelModelModelModelModel {
   /**
    * Create a BodyModelModelModelModelModelModelModelModelModelModel.
-   * @property {string} serviceConnectionId Service connection id to updated.
+   * @property {string} status The desired operation for the upload. Possible
+   * values include: 'committed', 'aborted'
    */
   constructor() {
   }
@@ -35,9 +38,9 @@ class BodyModelModelModelModelModelModelModelModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModelModelModelModelModelModelModelModel',
         modelProperties: {
-          serviceConnectionId: {
+          status: {
             required: true,
-            serializedName: 'service_connection_id',
+            serializedName: 'status',
             type: {
               name: 'String'
             }

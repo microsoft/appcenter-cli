@@ -21,6 +21,9 @@ const WebResource = msRest.WebResource;
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -46,10 +49,14 @@ function _reject(invitationToken, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (invitationToken === null || invitationToken === undefined || typeof invitationToken.valueOf() !== 'string') {
       throw new Error('invitationToken cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -74,7 +81,27 @@ function _reject(invitationToken, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -123,6 +150,9 @@ function _reject(invitationToken, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -148,10 +178,14 @@ function _accept(invitationToken, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (invitationToken === null || invitationToken === undefined || typeof invitationToken.valueOf() !== 'string') {
       throw new Error('invitationToken cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -176,7 +210,27 @@ function _accept(invitationToken, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -227,6 +281,9 @@ function _accept(invitationToken, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -252,6 +309,7 @@ function _unnamedMethod(orgName, email, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -259,6 +317,9 @@ function _unnamedMethod(orgName, email, options, callback) {
     }
     if (email === null || email === undefined || typeof email.valueOf() !== 'string') {
       throw new Error('email cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -284,7 +345,27 @@ function _unnamedMethod(orgName, email, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -1009,6 +1090,9 @@ class OrgInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1039,6 +1123,9 @@ class OrgInvitations {
    * the user
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1092,6 +1179,9 @@ class OrgInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1122,6 +1212,9 @@ class OrgInvitations {
    * the user
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1177,6 +1270,9 @@ class OrgInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1209,6 +1305,9 @@ class OrgInvitations {
    * reset mail to.
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

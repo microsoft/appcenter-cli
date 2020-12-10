@@ -11,16 +11,15 @@
 'use strict';
 
 /**
- * Class representing a BodyModelModelModel.
+ * A request containing information pertaining to completing a symbol upload
+ * process
+ *
  */
 class BodyModelModelModel {
   /**
    * Create a BodyModelModelModel.
-   * @property {boolean} [mandatoryUpdate] Flag to mark the release for the
-   * provided destinations as mandatory
-   * @property {string} email Tester's email address
-   * @property {boolean} [notifyTesters] Flag to enable or disable
-   * notifications to testers. Default value: true .
+   * @property {string} status The desired operation for the symbol upload.
+   * Possible values include: 'committed', 'aborted'
    */
   constructor() {
   }
@@ -39,26 +38,11 @@ class BodyModelModelModel {
         name: 'Composite',
         className: 'BodyModelModelModel',
         modelProperties: {
-          mandatoryUpdate: {
-            required: false,
-            serializedName: 'mandatory_update',
-            type: {
-              name: 'Boolean'
-            }
-          },
-          email: {
+          status: {
             required: true,
-            serializedName: 'email',
+            serializedName: 'status',
             type: {
               name: 'String'
-            }
-          },
-          notifyTesters: {
-            required: false,
-            serializedName: 'notify_testers',
-            defaultValue: true,
-            type: {
-              name: 'Boolean'
             }
           }
         }

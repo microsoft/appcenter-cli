@@ -719,6 +719,9 @@ function _updateUserPermissions(ownerName, appName, userEmail, permissions, opti
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -746,6 +749,7 @@ function _transferToOrg(ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -753,6 +757,9 @@ function _transferToOrg(ownerName, appName, options, callback) {
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -778,7 +785,27 @@ function _transferToOrg(ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -848,6 +875,9 @@ function _transferToOrg(ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.emptyBody] allow empty body for custom http-client
+ * lib
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -875,6 +905,7 @@ function _transferOwnership(ownerName, appName, destinationOwnerName, options, c
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let emptyBody = (options && options.emptyBody !== undefined) ? options.emptyBody : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -882,6 +913,9 @@ function _transferOwnership(ownerName, appName, destinationOwnerName, options, c
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (emptyBody !== null && emptyBody !== undefined && typeof emptyBody !== 'object') {
+      throw new Error('emptyBody must be of type object.');
     }
     if (destinationOwnerName === null || destinationOwnerName === undefined || typeof destinationOwnerName.valueOf() !== 'string') {
       throw new Error('destinationOwnerName cannot be null or undefined and it must be of type string.');
@@ -911,7 +945,27 @@ function _transferOwnership(ownerName, appName, destinationOwnerName, options, c
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (emptyBody !== null && emptyBody !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'empty_body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, emptyBody, 'emptyBody');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(emptyBody, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -2701,6 +2755,9 @@ class AppsOperations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -2732,6 +2789,9 @@ class AppsOperations {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2791,6 +2851,9 @@ class AppsOperations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -2825,6 +2888,9 @@ class AppsOperations {
    * organization) to which the app is being transferred
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.emptyBody] allow empty body for custom http-client
+   * lib
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
