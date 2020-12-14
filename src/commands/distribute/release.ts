@@ -104,7 +104,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     this.validateParametersWithPrerequisites(storeInformation);
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
-    const releaseId = await this.uploadFile(createdReleaseUpload, client, app);
+    const releaseId = await this.uploadFile(createdReleaseUpload, app);
     await this.uploadReleaseNotes(releaseNotesString, client, app, releaseId);
     await this.distributeToGroup(client, app, releaseId);
     await this.distributeToStore(storeInformation, client, app, releaseId);
@@ -112,7 +112,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return success();
   }
 
-  private async uploadFile(releaseUploadParams: any, client: AppCenterClient, app: DefaultApp): Promise<any> {
+  private async uploadFile(releaseUploadParams: any, app: DefaultApp): Promise<any> {
     const uploadId = releaseUploadParams.id;
     const assetId = releaseUploadParams.package_asset_id;
     const urlEncodedToken = releaseUploadParams.url_encoded_token;
@@ -121,14 +121,18 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       await out.progress("Uploading release binary...", this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain));
       await out.progress("Finishing the upload...", this.patchUpload(app, uploadId));
+      setTimeout(function () {
+        throw failure(ErrorCodes.Exception, "simulate an error");
+      }, 500);
       return await out.progress("Checking the uploaded file...", this.loadReleaseIdUntilSuccess(app, uploadId));
     } catch (error) {
       try {
         out.text("Release upload failed");
-        await this.abortReleaseUpload(client, app, uploadId);
+        await out.progress("Aborting release upload...", this.cancelUpload(app, uploadId));
         out.text("Release upload was aborted");
-      } catch (abortError) {
+      } catch (err) {
         debug("Failed to abort release upload");
+        out.text(err);
       }
       throw failure(ErrorCodes.Exception, error.message);
     }
@@ -434,6 +438,28 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
+  private async cancelUpload(app: DefaultApp, uploadId: string): Promise<void> {
+    out.text("Canceling the upload");
+    const profile = getUser();
+    const endpoint = await this.getEndpoint(profile);
+    const accessToken = await this.getToken(profile);
+    const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
+    const response = await fetchWithOptions(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-token": accessToken,
+      },
+      body: '{"upload_status":"uploadCanceled"}',
+    });
+    if (!response.ok) {
+      throw failure(ErrorCodes.Exception, `Failed to cancel release upload. HTTP Status:${response.status} - ${response.statusText}`);
+    }
+    const json = await response.json(); // todo: remove out.text if no response body
+    const { upload_status, message } = json;
+    out.text(`response: ${JSON.stringify(json)}, upload_status: ${upload_status}, message: ${message}`);
+  }
+
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const timerId = setInterval(async () => {
@@ -497,22 +523,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
       return environments(this.environmentName).endpoint;
     } else {
       return profile.endpoint;
-    }
-  }
-
-  private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
-    let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
-    try {
-      abortReleaseUploadRequestResponse = await out.progress(
-        "Aborting release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) =>
-          client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "aborted", cb)
-        )
-      );
-    } catch (error) {
-      throw new Error(
-        `HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`
-      );
     }
   }
 
