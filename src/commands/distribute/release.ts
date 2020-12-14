@@ -123,14 +123,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       await out.progress("Finishing the upload...", this.patchUpload(app, uploadId));
       return await out.progress("Checking the uploaded file...", this.loadReleaseIdUntilSuccess(app, uploadId));
     } catch (error) {
-      try {
-        out.text("Release upload failed");
-        await out.progress("Aborting release upload...", this.cancelUpload(app, uploadId));
-        out.text("Release upload was aborted");
-      } catch (err) {
-        debug("Failed to abort release upload");
-        out.text(err);
-      }
+      out.text("Release upload failed");
       throw failure(ErrorCodes.Exception, error.message);
     }
   }
@@ -432,25 +425,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const { upload_status, message } = json;
     if (upload_status !== "uploadFinished") {
       throw failure(ErrorCodes.Exception, `Failed to patch release upload: ${message}`);
-    }
-  }
-
-  private async cancelUpload(app: DefaultApp, uploadId: string): Promise<void> {
-    out.text("Canceling the upload");
-    const profile = getUser();
-    const endpoint = await this.getEndpoint(profile);
-    const accessToken = await this.getToken(profile);
-    const url = getPatchUploadLink(endpoint, app.ownerName, app.appName, uploadId);
-    const response = await fetchWithOptions(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-token": accessToken,
-      },
-      body: '{"upload_status":"uploadCanceled"}',
-    });
-    if (!response.ok) {
-      throw failure(ErrorCodes.Exception, `Failed to cancel release upload. HTTP Status:${response.status} - ${response.statusText}`);
     }
   }
 
