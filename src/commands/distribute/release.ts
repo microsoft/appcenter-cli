@@ -121,9 +121,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       await out.progress("Uploading release binary...", this.uploadFileToUri(assetId, urlEncodedToken, uploadDomain));
       await out.progress("Finishing the upload...", this.patchUpload(app, uploadId));
-      setTimeout(function () {
-        throw failure(ErrorCodes.Exception, "simulate an error");
-      }, 500);
       return await out.progress("Checking the uploaded file...", this.loadReleaseIdUntilSuccess(app, uploadId));
     } catch (error) {
       try {
@@ -455,9 +452,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (!response.ok) {
       throw failure(ErrorCodes.Exception, `Failed to cancel release upload. HTTP Status:${response.status} - ${response.statusText}`);
     }
-    const json = await response.json(); // todo: remove out.text if no response body
-    const { upload_status, message } = json;
-    out.text(`response: ${JSON.stringify(json)}, upload_status: ${upload_status}, message: ${message}`);
   }
 
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
