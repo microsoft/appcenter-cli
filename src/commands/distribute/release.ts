@@ -104,7 +104,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     this.validateParametersWithPrerequisites(storeInformation);
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
-    const releaseId = await this.uploadFile(createdReleaseUpload, client, app);
+    const releaseId = await this.uploadFile(createdReleaseUpload, app);
     await this.uploadReleaseNotes(releaseNotesString, client, app, releaseId);
     await this.distributeToGroup(client, app, releaseId);
     await this.distributeToStore(storeInformation, client, app, releaseId);
@@ -112,7 +112,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return success();
   }
 
-  private async uploadFile(releaseUploadParams: any, client: AppCenterClient, app: DefaultApp): Promise<any> {
+  private async uploadFile(releaseUploadParams: any, app: DefaultApp): Promise<any> {
     const uploadId = releaseUploadParams.id;
     const assetId = releaseUploadParams.package_asset_id;
     const urlEncodedToken = releaseUploadParams.url_encoded_token;
@@ -123,13 +123,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       await out.progress("Finishing the upload...", this.patchUpload(app, uploadId));
       return await out.progress("Checking the uploaded file...", this.loadReleaseIdUntilSuccess(app, uploadId));
     } catch (error) {
-      try {
-        out.text("Release upload failed");
-        await this.abortReleaseUpload(client, app, uploadId);
-        out.text("Release upload was aborted");
-      } catch (abortError) {
-        debug("Failed to abort release upload");
-      }
+      out.text("Release upload failed");
       throw failure(ErrorCodes.Exception, error.message);
     }
   }
@@ -497,22 +491,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
       return environments(this.environmentName).endpoint;
     } else {
       return profile.endpoint;
-    }
-  }
-
-  private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
-    let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
-    try {
-      abortReleaseUploadRequestResponse = await out.progress(
-        "Aborting release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) =>
-          client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "aborted", cb)
-        )
-      );
-    } catch (error) {
-      throw new Error(
-        `HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`
-      );
     }
   }
 
