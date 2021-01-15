@@ -13,10 +13,12 @@ import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { scriptName } from "../../../util/misc";
+import { promiseMap } from "../../../util/misc/promise-map";
 import { formatDate } from "./lib/date-helper";
 import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
+const PROMISE_CONCURRENCY = 30;
 
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
@@ -73,24 +75,24 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     return tableTitles.map((title) => chalk.cyan(title));
   }
 
-  private async generateTableInfoRows(deployments: models.Deployment[], client: AppCenterClient): Promise<string[][]> {
-    return await Promise.all(
-      deployments.map(
-        async (deployment: models.Deployment): Promise<string[]> => {
-          let metadataString: string = "";
-          let metricsString: string = "";
+  private async generateTableInfoRows(deployments: models.Deployment[], client: AppCenterClient) {
+    return await promiseMap(
+      deployments,
+      async (deployment) => {
+        let metadataString: string = "";
+        let metricsString: string = "";
 
-          if (deployment.latestRelease) {
-            metadataString = this.generateMetadataString(deployment.latestRelease);
-            metricsString = await this.getMetricsString(deployment, client);
-          } else {
-            metadataString = chalk.magenta("No updates released");
-            metricsString = chalk.magenta("No installs recorded");
-          }
-
-          return [deployment.name, metadataString, metricsString];
+        if (deployment.latestRelease) {
+          metadataString = this.generateMetadataString(deployment.latestRelease);
+          metricsString = await this.getMetricsString(deployment, client);
+        } else {
+          metadataString = chalk.magenta("No updates released");
+          metricsString = chalk.magenta("No installs recorded");
         }
-      )
+
+        return [deployment.name, metadataString, metricsString];
+      },
+      PROMISE_CONCURRENCY
     );
   }
 
