@@ -91,7 +91,7 @@
     "eslint-plugin-security": "1.4.0",
     "gulp": "4.0.2",
     "gulp-clean": "0.4.0",
-    "gulp-sourcemaps": "2.6.5",
+    "gulp-sourcemaps": "3.0.0",
     "gulp-typescript": "5.0.1",
     "mocha": "8.2.1",
     "mocha-junit-reporter": "2.0.0",
