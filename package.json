@@ -140,7 +140,7 @@
     "semver": "7.3.4",
     "split2": "3.2.2",
     "strip-ansi": "6.0.0",
-    "temp": "0.9.1",
+    "temp": "0.9.4",
     "through2": "4.0.2",
     "unzipper": "0.10.11",
     "update-notifier": "5.0.1",
