@@ -43,7 +43,6 @@ describe("release command", () => {
   let uploadSpy: Sinon.SinonSpy;
   let postSymbolSpy: Sinon.SinonSpy;
   let patchSymbolSpy: Sinon.SinonSpy;
-  let abortSymbolSpy: Sinon.SinonSpy;
   let distributeSpy: Sinon.SinonSpy;
 
   let expectedRequestsScope: Nock.Scope;
@@ -58,7 +57,6 @@ describe("release command", () => {
     uploadSpy = Sinon.spy();
     postSymbolSpy = Sinon.spy();
     patchSymbolSpy = Sinon.spy();
-    abortSymbolSpy = Sinon.spy();
     distributeSpy = Sinon.spy();
   });
   context("Successful requests", () => {
@@ -72,7 +70,6 @@ describe("release command", () => {
           )
         )
       );
-      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
     describe("when all network requests are successful (group)", () => {
@@ -82,7 +79,6 @@ describe("release command", () => {
             setupSuccessfulCreateReleaseResponse(setupSuccsessFulGetDistributionGroupResponse(expectedRequestsScope))
           )
         );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
       it("uploads release with release notes text", async () => {
@@ -94,7 +90,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
 
       it("uploads release with release notes file", async () => {
@@ -107,7 +103,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
 
@@ -116,7 +112,6 @@ describe("release command", () => {
         expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(
           setupSuccessfulCreateReleaseResponse(setupSuccessfulAddStoreResponse(expectedRequestsScope), false)
         );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
       it("uploads release with release notes text", async () => {
@@ -127,7 +122,7 @@ describe("release command", () => {
         const command = prepareTestCommand(["-f", releaseFilePath, "-r", releaseNotes, "-s", fakeStoreName]);
         const result = await command.execute();
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
 
       it("uploads release with release notes file", async () => {
@@ -140,14 +135,13 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
 
     describe("when all network requests are successful (no release notes)", () => {
       beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(setupSuccessfulAddStoreResponse(Nock(fakeHost)));
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
       it("uploads release with neither release notes nor file to Google Play Store", async () => {
         // Arrange
@@ -158,7 +152,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
   });
@@ -188,7 +182,6 @@ describe("release command", () => {
             )
           )
         );
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
       it("should return success for zip file", async () => {
@@ -200,7 +193,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
         Sinon.assert.calledWith(postSymbolSpy, Sinon.match({ build_version: buildVersion }));
       });
 
@@ -213,7 +206,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
         Sinon.assert.calledWith(postSymbolSpy, Sinon.match({ build_version: buildVersion }));
       });
 
@@ -235,7 +228,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
         Sinon.assert.calledWith(postSymbolSpy, Sinon.match({ build_version: buildVersion, build_number: buildNumber }));
       });
 
@@ -257,7 +250,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
         Sinon.assert.calledWith(postSymbolSpy, Sinon.match({ build_version: buildVersion, build_number: buildNumber }));
       });
     });
@@ -351,7 +344,6 @@ describe("release command", () => {
           )
         )
       );
-      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
     describe("when notifying testers by default", () => {
@@ -364,7 +356,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
 
@@ -386,7 +378,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
 
@@ -404,7 +396,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
   });
@@ -428,7 +420,6 @@ describe("release command", () => {
           )
         )
       );
-      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
     describe("when distributing with mandatory flag set to true", () => {
@@ -449,7 +440,7 @@ describe("release command", () => {
         const result = await command.execute();
 
         // Assert
-        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        testCommandSuccess(result, expectedRequestsScope);
       });
     });
   });
@@ -488,7 +479,7 @@ describe("release command", () => {
   describe("when release upload fails", () => {
     beforeEach(() => {
       expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
-        setupFailedUploadChunkResponse(setupSuccessfulAbortUploadResponse(setupSuccessfulSetUploadMetadataResponse(Nock(fakeHost))))
+        setupFailedUploadChunkResponse(setupSuccessfulSetUploadMetadataResponse(Nock(fakeHost)))
       );
       skippedRequestsScope = setupSuccessfulCreateReleaseResponse(
         setupSuccessfulPatchUploadFinishedResponse(
@@ -499,7 +490,7 @@ describe("release command", () => {
       );
     });
 
-    it("attempts to abort the upload", async () => {
+    it("should fail and does not try to set release notes for the release", async () => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
       const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
@@ -704,9 +695,8 @@ describe("release command", () => {
     return finalPath;
   }
 
-  function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {
+  function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope) {
     expect(result.succeeded).to.eql(true, "Command should be successfully completed");
-    expect(abortScope.isDone()).to.eql(false, "Upload should not be aborted");
     executionScope.done(); // All normal API calls are executed
   }
 
@@ -860,17 +850,6 @@ describe("release command", () => {
           upload_status: "error",
           release_url: fakeReleaseUrl,
         };
-      });
-  }
-
-  function setupSuccessfulAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope
-      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/release_uploads/${fakeReleaseUploadingId}`, {
-        status: "aborted",
-      })
-      .reply(200, (uri: any, requestBody: any) => {
-        abortSymbolSpy(requestBody);
-        return {};
       });
   }
 
