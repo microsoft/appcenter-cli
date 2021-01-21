@@ -54,6 +54,12 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @longName("plist-file")
   public plistFile: string;
 
+  @help("Path to the project.pbxproj file")
+  @shortName("px")
+  @longName("project-file")
+  @hasArg
+  public projectFile: string;
+
   @help("Prefix to append to the file name when attempting to find your app's Info.plist file (iOS only)")
   @longName("plist-file-prefix")
   @hasArg
@@ -183,6 +189,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
         plistFilePrefix: this.plistFilePrefix,
         gradleFile: this.gradleFile,
         buildConfigurationName: this.buildConfigurationName,
+        projectFile: this.projectFile,
       } as VersionSearchParams;
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
