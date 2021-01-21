@@ -14,9 +14,11 @@ import {
 } from "../../../util/commandline";
 import { formatIsJson, out } from "../../../util/interaction";
 import { scriptName } from "../../../util/misc";
+import { promiseMap } from "../../../util/misc/promise-map";
 import { formatDate } from "./lib/date-helper";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
+const PROMISE_CONCURRENCY = 30;
 
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
@@ -73,34 +75,35 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     return tableTitles.map((title) => chalk.cyan(title));
   }
 
-  private async generateInfo(deployments: models.Deployment[], client: AppCenterClient): Promise<(models.Deployment | string[])[]> {
-    return await Promise.all(
-      deployments.map(
-        async (deployment: models.Deployment): Promise<models.Deployment | string[]> => {
-          if (formatIsJson()) {
-            const metricsJSON: models.CodePushReleaseMetric = await this.generateMetricsJSON(deployment, client);
+  private async generateInfo(deployments: models.Deployment[], client: AppCenterClient) {
+    return await promiseMap(
+      deployments,
+      async (deployment) => {
+        if (formatIsJson()) {
+          const metricsJSON: models.CodePushReleaseMetric = await this.generateMetricsJSON(deployment, client);
 
-            if (metricsJSON) {
-              deployment.latestRelease.metrics = metricsJSON;
-            }
-
-            return deployment;
+          if (metricsJSON) {
+            deployment.latestRelease.metrics = metricsJSON;
           }
 
-          let metadataString: string = "";
-          let metricsString: string = "";
-
-          if (deployment.latestRelease) {
-            metadataString = this.generateMetadataString(deployment.latestRelease);
-            metricsString = await this.getMetricsString(deployment, client);
-          } else {
-            metadataString = chalk.magenta("No updates released");
-            metricsString = chalk.magenta("No installs recorded");
-          }
-
-          return [deployment.name, metadataString, metricsString];
+          return deployment;
         }
-      )
+
+        let metadataString: string = "";
+        let metricsString: string = "";
+
+        if (deployment.latestRelease) {
+          metadataString = this.generateMetadataString(deployment.latestRelease);
+          metricsString = await this.getMetricsString(deployment, client);
+        } else {
+          metadataString = chalk.magenta("No updates released");
+          metricsString = chalk.magenta("No installs recorded");
+
+        }
+
+        return [deployment.name, metadataString, metricsString];
+      },
+      PROMISE_CONCURRENCY
     );
   }
 
