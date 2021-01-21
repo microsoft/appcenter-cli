@@ -114,7 +114,7 @@
     "cli-table3": "0.6.0",
     "date-fns": "2.16.1",
     "debug": "4.3.1",
-    "fast-xml-parser": "3.17.4",
+    "fast-xml-parser": "3.17.6",
     "from2": "2.3.0",
     "glob": "7.1.6",
     "gradle-to-js": "2.0.0",
