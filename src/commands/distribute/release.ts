@@ -373,7 +373,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private uploadFileToUri(assetId: string, urlEncodedToken: string, uploadDomain: string): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       debug("Uploading the release binary");
       const uploadSettings: IInitializeSettings = {
         assetId: assetId,
