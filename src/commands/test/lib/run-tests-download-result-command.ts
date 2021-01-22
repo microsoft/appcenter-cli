@@ -13,7 +13,7 @@ export abstract class RunTestsDownloadResultCommand extends RunTestsCommand {
   @hasArg
   testOutputDir: string;
 
-  protected abstract async mergeTestArtifacts(): Promise<void>;
+  protected abstract mergeTestArtifacts(): Promise<void>;
 
   protected async afterCompletion(
     client: AppCenterClient,
