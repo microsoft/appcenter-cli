@@ -11,23 +11,23 @@ function getAutoCompleteObject() {
 
 export function executeAutoComplete() {
   const autoCompleteObject = getAutoCompleteObject();
-  autoCompleteObject.on("complete", function (
-    fragment: string,
-    data: { before: string; fragment: number; line: string; reply: (answer: any) => void }
-  ) {
-    const line = data.line;
-    const reply = data.reply;
-    const argsLine = line.substring(appName.length);
-    const args = argsLine.match(/\S+/g) || [];
-    const lineEndsWithWhitespaceChar = /\s{1}/.test(last(line));
-    const autocompleteTree = JSON.parse(
-      Fs.readFileSync(Path.join(__dirname, "..", "..", "autocomplete-tree.json"), "utf8")
-    ) as IAutocompleteTree;
-    const expandedAutoCompleteTree = getAutoCompleteTreeWithExpandedHelp(autocompleteTree);
-    const getReply = getReplyHandler(lineEndsWithWhitespaceChar);
+  autoCompleteObject.on(
+    "complete",
+    function (fragment: string, data: { before: string; fragment: number; line: string; reply: (answer: any) => void }) {
+      const line = data.line;
+      const reply = data.reply;
+      const argsLine = line.substring(appName.length);
+      const args = argsLine.match(/\S+/g) || [];
+      const lineEndsWithWhitespaceChar = /\s{1}/.test(last(line));
+      const autocompleteTree = JSON.parse(
+        Fs.readFileSync(Path.join(__dirname, "..", "..", "autocomplete-tree.json"), "utf8")
+      ) as IAutocompleteTree;
+      const expandedAutoCompleteTree = getAutoCompleteTreeWithExpandedHelp(autocompleteTree);
+      const getReply = getReplyHandler(lineEndsWithWhitespaceChar);
 
-    reply(getReply(args, expandedAutoCompleteTree));
-  });
+      reply(getReply(args, expandedAutoCompleteTree));
+    }
+  );
 
   autoCompleteObject.init();
 }
