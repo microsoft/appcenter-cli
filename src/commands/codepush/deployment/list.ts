@@ -98,7 +98,6 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
         } else {
           metadataString = chalk.magenta("No updates released");
           metricsString = chalk.magenta("No installs recorded");
-
         }
 
         return [deployment.name, metadataString, metricsString];
