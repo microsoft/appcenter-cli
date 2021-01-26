@@ -55,7 +55,6 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   public plistFile: string;
 
   @help("Path to the project.pbxproj file")
-  @shortName("px")
   @longName("project-file")
   @hasArg
   public projectFile: string;
