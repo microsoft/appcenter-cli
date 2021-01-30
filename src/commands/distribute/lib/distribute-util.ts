@@ -96,3 +96,19 @@ export async function addGroupToRelease(options: AddGroupToReleaseOptions): Prom
     throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
   }
 }
+
+export function parseDistributionGroups(groups: string): string[] {
+  debug(`Parsing group string: ${groups}`);
+  return groups.split(",").map((group) => {
+    return group.trim();
+  });
+}
+
+export function printGroups(groups: string): string {
+  return groups
+    .split(",")
+    .map((group) => {
+      return group.trim();
+    })
+    .join(", ");
+}
