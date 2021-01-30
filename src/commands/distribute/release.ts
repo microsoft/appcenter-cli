@@ -325,7 +325,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async getDistributionGroupUsersNumber(client: AppCenterClient): Promise<number | null> {
     let userCount = 0;
     const groups = parseDistributionGroups(this.distributionGroup);
-    for (const group in groups) {
+    for (const group of groups) {
       let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
       try {
         distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
