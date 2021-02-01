@@ -143,7 +143,7 @@
     "temp": "0.9.4",
     "through2": "4.0.2",
     "unzipper": "0.10.11",
-    "update-notifier": "5.0.1",
+    "update-notifier": "5.1.0",
     "uuid": "7.0.3",
     "webpack-cli": "3.3.12",
     "which": "2.0.2",
