@@ -292,7 +292,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let distributionGroupUsersNumber: Promise<number | null>;
     let storeInformation: Promise<models.ExternalStoreResponse | null>;
     if (!_.isNil(this.distributionGroup)) {
-      debug(`Distro group: ${this.distributionGroup}`);
       // get number of users in distribution group(s) (and check each distribution group existence)
       // return null if request has failed because of any reason except non-existing group name.
       distributionGroupUsersNumber = this.getDistributionGroupUsersNumber(client);
