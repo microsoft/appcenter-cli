@@ -147,7 +147,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
       debug("Distributing the release to group(s)");
       const groups = parseDistributionGroups(this.distributionGroup);
       for (const group of groups) {
-        debug(`Distributing to group: ${group}`);
         const distributionGroupResponse = await getDistributionGroup({
           client,
           releaseId,
