@@ -88,7 +88,11 @@ export class UITestPreparer {
       case 12:
         return `The dSym file contains more than one dwarf${tryAgain}`;
       case 13:
-        return `Test chunking failed${tryAgain}`;
+        return (
+          `Test chunking failed.` +
+          `Please try to delete dlls which are not necessary from the path provided in the --build-dir argument.` +
+          `If this error happens again, please contact support.`
+        );
       case 14:
         return `Upload negotiation failed${tryAgain}`;
       case 15:
