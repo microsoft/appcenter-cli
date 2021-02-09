@@ -98,7 +98,6 @@ export async function addGroupToRelease(options: AddGroupToReleaseOptions): Prom
 }
 
 export function parseDistributionGroups(groups: string): string[] {
-  debug(`Parsing group string: ${groups}`);
   return groups.split(",").map((group) => {
     return group.trim();
   });
