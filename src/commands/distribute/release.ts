@@ -18,7 +18,7 @@ import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp, getUser, Profile } from "../../util/profile";
 import { getFileUploadLink, getPatchUploadLink } from "./lib/ac-fus-api";
-import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
+import { getDistributionGroup, addGroupToRelease, parseDistributionGroups, printGroups } from "./lib/distribute-util";
 import { getTokenFromEnvironmentVar } from "../../util/profile/environment-vars";
 import {
   ACFile,
@@ -57,7 +57,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public buildNumber: string;
 
-  @help("Distribution group name")
+  @help("Distribution group name(s)")
   @shortName("g")
   @longName("group")
   @hasArg
@@ -106,7 +106,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
     const releaseId = await this.uploadFile(createdReleaseUpload, app);
     await this.uploadReleaseNotes(releaseNotesString, client, app, releaseId);
-    await this.distributeToGroup(client, app, releaseId);
+    await this.distributeToGroups(client, app, releaseId);
     await this.distributeToStore(storeInformation, client, app, releaseId);
     await this.checkReleaseOnThePortal(distributionGroupUsersCount, client, app, releaseId);
     return success();
@@ -142,26 +142,29 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async distributeToGroup(client: AppCenterClient, app: DefaultApp, releaseId: number) {
+  private async distributeToGroups(client: AppCenterClient, app: DefaultApp, releaseId: number) {
     if (!_.isNil(this.distributionGroup)) {
-      debug("Distributing the release to a group");
-      const distributionGroupResponse = await getDistributionGroup({
-        client,
-        releaseId,
-        app: this.app,
-        destination: this.distributionGroup,
-        destinationType: "group",
-      });
-      await addGroupToRelease({
-        client,
-        releaseId,
-        distributionGroup: distributionGroupResponse,
-        app: this.app,
-        destination: this.distributionGroup,
-        destinationType: "group",
-        mandatory: this.mandatory,
-        silent: this.silent,
-      });
+      debug("Distributing the release to group(s)");
+      const groups = parseDistributionGroups(this.distributionGroup);
+      for (const group of groups) {
+        const distributionGroupResponse = await getDistributionGroup({
+          client,
+          releaseId,
+          app: this.app,
+          destination: group,
+          destinationType: "group",
+        });
+        await addGroupToRelease({
+          client,
+          releaseId,
+          distributionGroup: distributionGroupResponse,
+          app: this.app,
+          destination: group,
+          destinationType: "group",
+          mandatory: this.mandatory,
+          silent: this.silent,
+        });
+      }
     }
   }
 
@@ -178,7 +181,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
       } catch (error) {
         if (!_.isNil(this.distributionGroup)) {
           out.text(
-            `Release was successfully distributed to group '${this.distributionGroup}' but could not be published to store '${this.storeName}'.`
+            `Release was successfully distributed to group(s) '${printGroups(
+              this.distributionGroup
+            )}' but could not be published to store '${this.storeName}'.`
           );
         }
         throw error;
@@ -200,13 +205,20 @@ export default class ReleaseBinaryCommand extends AppCommand {
         const storeComment = !_.isNil(this.storeName) ? ` and to store '${this.storeName}'` : "";
         if (_.isNull(distributionGroupUsersCount)) {
           out.text(
-            (rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}${storeComment}`,
+            (rd) =>
+              `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${printGroups(
+                this.distributionGroup
+              )}${storeComment}`,
             releaseDetails
           );
         } else {
           out.text(
             (rd) =>
-              `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}${storeComment}`,
+              `Release ${rd.shortVersion} (${
+                rd.version
+              }) was successfully released to ${distributionGroupUsersCount} testers in ${printGroups(
+                this.distributionGroup
+              )}${storeComment}`,
             releaseDetails
           );
         }
@@ -280,7 +292,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let distributionGroupUsersNumber: Promise<number | null>;
     let storeInformation: Promise<models.ExternalStoreResponse | null>;
     if (!_.isNil(this.distributionGroup)) {
-      // get number of distribution group users (and check distribution group existence)
+      // get number of users in distribution group(s) (and check each distribution group existence)
       // return null if request has failed because of any reason except non-existing group name.
       distributionGroupUsersNumber = this.getDistributionGroupUsersNumber(client);
     }
@@ -309,25 +321,30 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async getDistributionGroupUsersNumber(client: AppCenterClient): Promise<number | null> {
-    let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
-    try {
-      distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
-        client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, this.distributionGroup, cb)
-      );
-      const statusCode = distributionGroupUsersRequestResponse.response.statusCode;
-      if (statusCode >= 400) {
-        throw statusCode;
+    let userCount = 0;
+    const groups = parseDistributionGroups(this.distributionGroup);
+    for (const group of groups) {
+      let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
+      try {
+        distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
+          client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, group, cb)
+        );
+        const statusCode = distributionGroupUsersRequestResponse.response.statusCode;
+        if (statusCode >= 400) {
+          throw statusCode;
+        }
+      } catch (error) {
+        if (error === 404) {
+          throw failure(ErrorCodes.InvalidParameter, `distribution group ${group} was not found`);
+        } else {
+          debug(`Failed to get users of distribution group ${group}, returning null - ${inspect(error)}`);
+          return null;
+        }
       }
-    } catch (error) {
-      if (error === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} was not found`);
-      } else {
-        debug(`Failed to get users of distribution group ${this.distributionGroup}, returning null - ${inspect(error)}`);
-        return null;
-      }
+      userCount += distributionGroupUsersRequestResponse.result.length;
     }
 
-    return distributionGroupUsersRequestResponse.result.length;
+    return userCount;
   }
 
   private async getStoreDetails(client: AppCenterClient): Promise<models.ExternalStoreResponse | null> {
