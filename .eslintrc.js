@@ -43,7 +43,7 @@ module.exports = {
     "no-new-wrappers": "error",
     "no-octal": "error",
     "no-octal-escape": "error",
-    "no-redeclare": "error",
+    "no-redeclare": "off",
     "no-restricted-properties": [
       2,
       {
@@ -91,6 +91,7 @@ module.exports = {
       files: ["test/**/*"],
       rules: {
         "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-redeclare": "error",
       },
     },
   ],
