@@ -8,7 +8,7 @@ const runner = commandRunner(path.join(__dirname, "commands"));
 runner(process.argv.slice(2)).then((result: CommandResult) => {
   if (failed(result)) {
     if (formatIsJson()) {
-      console.log(`${chalk.red("Error:")} ${JSON.stringify(result)}`);
+      console.log(`${chalk.red(JSON.stringify(result))}`);
     } else {
       console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
     }
