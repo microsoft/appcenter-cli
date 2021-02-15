@@ -562,16 +562,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const statusCode = response.statusCode;
       if (statusCode >= 400) {
         debug(`Got error response: ${inspect(response)}`);
-        throw statusCode;
+        throw result;
       }
       return result;
     } catch (error) {
-      if (error === 400) {
-        throw failure(ErrorCodes.Exception, "failed to set the release notes");
-      } else {
-        debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `failed to set release notes for release ${releaseId}`);
-      }
+      debug(`Failed to set the release notes - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, error.message);
     }
   }
 
