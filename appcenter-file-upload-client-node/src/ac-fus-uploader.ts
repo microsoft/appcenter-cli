@@ -328,7 +328,7 @@ export class ACFusNodeUploader implements ACFusUploader {
     this.uploadData.urlEncodedToken = settings.urlEncodedToken;
     this.uploadData.tenant = settings.tenant;
 
-    this.log("Upload created");
+    this.log("Upload created", { assetId: this.uploadData.assetId });
   }
 
   private invokeCallback(location: string) {
