@@ -18,7 +18,7 @@ export function getCordovaProjectAppVersion(projectRoot?: string): Promise<strin
     }
 
     xml2js.parseString(configString, (err: Error, parsedConfig: any) => {
-      if (err) {
+      if (err || !parsedConfig || !parsedConfig.widget) {
         reject(new Error(`Unable to parse "config.xml" in the CWD. Ensure that the contents of "config.xml" is valid XML.`));
       }
 
