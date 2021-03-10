@@ -69,7 +69,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public storeName: string;
 
-  @help("Release notes text (markdown supported, 5000 characters max)")
+  @help("Release notes text")
   @shortName("r")
   @longName("release-notes")
   @hasArg
