@@ -75,7 +75,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public releaseNotes: string;
 
-  @help("Path to release notes file")
+  @help("Path to release notes file (markdown supported, 5000 characters max)")
   @shortName("R")
   @longName("release-notes-file")
   @hasArg
