@@ -19,6 +19,7 @@ export interface VersionSearchParams {
   plistFilePrefix: string;
   gradleFile: string;
   buildConfigurationName: string;
+  projectName: string;
 }
 
 interface XCBuildConfiguration {
@@ -36,7 +37,11 @@ export async function getReactNativeProjectAppVersion(
   projectRoot = projectRoot || process.cwd();
   // eslint-disable-next-line security/detect-non-literal-require
   const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
-  const projectName: string = projectPackageJson.name;
+  const packageJsonProjectName: string = projectPackageJson.name;
+  const projectName =
+    versionSearchParams.projectName && versionSearchParams.projectName.length
+      ? versionSearchParams.projectName
+      : packageJsonProjectName;
 
   const fileExists = (file: string): boolean => {
     try {
