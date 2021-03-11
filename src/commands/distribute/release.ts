@@ -57,7 +57,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public buildNumber: string;
 
-  @help("Distribution group name(s)")
+  @help("Comma-separated distribution group names")
   @shortName("g")
   @longName("group")
   @hasArg
@@ -69,13 +69,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public storeName: string;
 
-  @help("Release notes text")
+  @help("Release notes text (5000 characters max)")
   @shortName("r")
   @longName("release-notes")
   @hasArg
   public releaseNotes: string;
 
-  @help("Path to release notes file")
+  @help("Path to release notes file (markdown supported, 5000 characters max)")
   @shortName("R")
   @longName("release-notes-file")
   @hasArg
