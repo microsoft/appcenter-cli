@@ -211,7 +211,13 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
       if (this.os === "android") {
         const isHermesEnabled = await getHermesEnabled(this.gradleFile);
         if (isHermesEnabled) {
-          await runHermesEmitBinaryCommand(this.bundleName, this.updateContentsPath, this.sourcemapOutput, this.extraHermesFlags);
+          await runHermesEmitBinaryCommand(
+            this.bundleName,
+            this.updateContentsPath,
+            this.sourcemapOutput,
+            this.extraHermesFlags,
+            this.gradleFile
+          );
         }
       }
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
