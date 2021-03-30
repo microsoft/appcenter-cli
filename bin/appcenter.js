@@ -3,7 +3,7 @@
 const util = require("util");
 
 // Verify user has minimum required version of node installed
-const minMajorVersion = 10;
+const minMajorVersion = 12;
 const minMinorVersion = 0;
 
 function getCurrentVersion() {
