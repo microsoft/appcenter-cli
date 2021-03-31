@@ -47,7 +47,12 @@ function runCli() {
   runner(args).then(function (result) {
     if (commandLine.failed(result)) {
       const chalk = require("chalk");
-      console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
+      const ioOptions = require("../dist/util/interaction/io-options");
+      if (ioOptions.formatIsJson()) {
+        console.log(`${chalk.red(JSON.stringify(result))}`);
+      } else {
+        console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
+      }
       process.exit(result.errorCode);
     }
   });
