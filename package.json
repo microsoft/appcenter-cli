@@ -9,7 +9,7 @@
   ],
   "homepage": "https://github.com/microsoft/appcenter-cli#readme",
   "engine": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   },
   "main": "dist/index.js",
   "bin": {
@@ -62,7 +62,7 @@
     "@types/mkdirp": "1.0.1",
     "@types/mocha": "8.2.1",
     "@types/mock-require": "2.0.0",
-    "@types/node": "10.*",
+    "@types/node": "12.*",
     "@types/node-fetch": "2.5.8",
     "@types/opener": "1.4.0",
     "@types/pumpify": "1.4.1",
@@ -130,7 +130,7 @@
     "omelette": "0.4.15",
     "opener": "1.5.2",
     "p-limit": "3.1.0",
-    "plist": "3.0.1",
+    "plist": "3.0.2",
     "properties": "1.2.1",
     "pumpify": "2.0.1",
     "qs": "6.9.6",
