@@ -14,7 +14,6 @@ export function resolveProxySettings(options: any = {}) {
     console.warn("Proxy address in environment variable does not start with either 'http://' or 'https://'. CLI might not work correctly.");
   }
   if (!options.agent && proxyServer) {
-    console.log(`Using proxy server: ${proxyServer}`);
     instanceOptions.agent = ProxyAgent(proxyServer);
   }
   return instanceOptions;
