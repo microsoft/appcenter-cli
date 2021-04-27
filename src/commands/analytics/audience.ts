@@ -108,7 +108,7 @@ export default class AudienceCommand extends AppCommand {
     if (this.activeUsers && appBuild) {
       promises.push(this.loadActiveUsersStatistics(statistics, client, app, startDate, endDate, appVersion, appBuild));
     } else if (this.activeUsers){
-      debug('Please provide app version to get active users statistics.');
+      out.text('Please provide app version to get active users statistics.');
     }
 
     await out.progress("Loading statistics...", Promise.all(promises));
