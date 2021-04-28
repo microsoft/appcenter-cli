@@ -18,7 +18,7 @@ import { promiseMap } from "../../../util/misc/promise-map";
 import { formatDate } from "./lib/date-helper";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
-const PROMISE_CONCURRENCY = 20;
+const PROMISE_CONCURRENCY = 30;
 
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
