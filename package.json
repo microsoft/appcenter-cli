@@ -63,7 +63,7 @@
     "@types/mocha": "8.2.2",
     "@types/mock-require": "2.0.0",
     "@types/node": "12.*",
-    "@types/node-fetch": "2.5.9",
+    "@types/node-fetch": "2.5.10",
     "@types/opener": "1.4.0",
     "@types/pumpify": "1.4.1",
     "@types/qs": "6.9.6",
