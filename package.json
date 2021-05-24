@@ -71,7 +71,7 @@
     "@types/rimraf": "3.0.0",
     "@types/semver": "7.3.6",
     "@types/sinon": "9.0.11",
-    "@types/split2": "2.1.6",
+    "@types/split2": "3.2.0",
     "@types/temp": "0.8.34",
     "@types/through2": "2.0.36",
     "@types/unzipper": "0.10.3",
