@@ -17,6 +17,7 @@ describe("distribute stores publish command", () => {
   const releaseNotes = "Fake release";
   const fakeReleaseNotesFile = "/fake/release_notes";
   const fakeCommandPath = "fake/distribute/groups/publish.ts";
+  const environment = "local";
 
   let sandbox: Sinon.SinonSandbox;
   let createReleaseStub: Sinon.SinonStub;
@@ -46,8 +47,8 @@ describe("distribute stores publish command", () => {
     Nock.enableNetConnect();
   });
 
-  it("passes all non-common parameters to distribute release", async () => {
-    const command = new PublishToStoreCommand(getCommandArgs(["-r", releaseNotes, "-R", fakeReleaseNotesFile]));
+  it("passes all appropriate parameters to distribute release", async () => {
+    const command = new PublishToStoreCommand(getCommandArgs(["-r", releaseNotes, "-R", fakeReleaseNotesFile, "--disable-telemetry"]));
     await command.execute();
 
     // Make sure it created a ReleaseBinaryCommand and ran it
@@ -62,6 +63,9 @@ describe("distribute stores publish command", () => {
     expect(releaseCommand.storeName).equals(fakeStoreName);
     expect(releaseCommand.releaseNotes).equals(releaseNotes);
     expect(releaseCommand.releaseNotesFile).equals(fakeReleaseNotesFile);
+    expect(releaseCommand.token).equals(fakeToken);
+    expect(releaseCommand.environmentName).equals(environment);
+    expect(releaseCommand.disableTelemetry).to.be.true;
   });
 
   it("returns the return value of 'distribute release'", async () => {
@@ -83,7 +87,7 @@ describe("distribute stores publish command", () => {
       "--token",
       fakeToken,
       "--env",
-      "local",
+      environment,
     ].concat(additionalArgs);
     return {
       args,

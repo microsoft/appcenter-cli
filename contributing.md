@@ -6,7 +6,7 @@ local CI configurations).
 
 ## Technologies Used
 
-App Center cli is written using Node.js version 10 and [Typescript](http://typescriptlang.org).
+App Center cli is written using Node.js version 12 and [TypeScript](http://typescriptlang.org).
 Wrappers over the App Center HTTP API are generated using the [AutoRest](https://github.com/Azure/autorest) code generator.
 And the usual plethora of npm modules.
 
@@ -18,10 +18,10 @@ is used to record and playback mock http traffic.
 
 ### Prerequisites
 
-Install the latest version of Node 10 from [here](https://nodejs.org). If you are on a Mac, we recommend
+Install the latest version of Node 12 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
-Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
+Also have a working git installation. The code is available from this [repo](https://github.com/microsoft/appcenter-cli).
 
 ### Optional Tools
 
@@ -37,9 +37,9 @@ works well.
 Make sure you have selected the correct version of node from `nvm` - you
 can check this by running `nvm ls` from a terminal for example.
 
-#### Typescript compiler
+#### TypeScript compiler
 
-The typescript compilation can be run via the `npm run build` command.
+The TypeScript compilation can be run via the `npm run build` command.
 
 #### gulp
 
@@ -116,7 +116,8 @@ There are a bunch of scripts in package.json file. Here's what they are and what
 | `npm run watch-test` | Runs a watcher on the test file that will rerun tests automatically on save            |
 | `npm run clean`      | Cleans up any compilation output                                                       |
 | `npm run autorest`   | Regenerate the HTTP client libraries. Downloads required tools as part of this process |
-| `npm run lint`       | Run the linter over the codebase                                                       |
+| `npm run lint`       | Runs the linter over the codebase                                                      |
+| `npm run compile`    | Compiles the typescript into javasctipy, creates `dist` directory                      |
 
 There will be more over time.
 
@@ -124,24 +125,33 @@ There will be more over time.
 
 The gulpfile.js file contains the following targets that can be called manually if you desire
 
-| Target                  | npm script   | What it does                                                           |
-| ----------------------- | ------------ | ---------------------------------------------------------------------- |
-| `default`               |              | Runs the `build` task                                                  |
-| `build:raw`             | `build`      | Runs the build (build-ts, copy-assets, copy-generated-clients)         |
-| `build-sourcemaps`      |              | Create sourcemap files for the compiled typescript to aid in debugging |
-| `build-ts-sourcemaps`   |              | Run Typescript compiler to output sourcemap files                      |
-| `build-ts`              |              | Runs typesscript compiler, using settings in tsconfig.json             |
-| `clean`                 | `clean`      | Deletes the dist folder                                                |
-| `clean-sourcemaps`      |              | Delete generated source map files from dist directory                  |
-| `copy-assets`           |              | Copies .txt files from src to dist (category descriptions)             |
-| `copy-generated-client` |              | Copies the generated HTTP client code to dist                          |
-| `prepublish`            | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm        |
+| Target                  | npm script   | What it does                                                            |
+| ----------------------- | ------------ | ----------------------------------------------------------------------- |
+| `default`               |              | Runs the `build` task                                                   |
+| `build:raw`             | `build`      | Runs the build (build-ts, copy-assets, copy-generated-clients)          |
+| `build-sourcemaps`      |              | Creates sourcemap files for the compiled TypeScript to aid in debugging |
+| `build-ts-sourcemaps`   |              | Runs TypeScript compiler to output sourcemap files                      |
+| `build-ts`              |              | Runs TypeScript compiler using settings in tsconfig.json                |
+| `clean`                 | `clean`      | Deletes the dist folder                                                 |
+| `clean-sourcemaps`      |              | Deletes generated source map files from dist directory                  |
+| `copy-assets`           |              | Copies .txt files from src to dist (category descriptions)              |
+| `copy-generated-client` |              | Copies the generated HTTP client code to dist                           |
+| `prepublish`            | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm         |
+
+## Debugger
+
+Debugging configurations are stored in launch.json file. Here're what they are and what they do:
+
+| Target                              | What it does                                                                     |
+| ------------------------------------| -------------------------------------------------------------------------------- |
+| `Launch with sourcemaps`            | Build sourcemaps, attach a debugger when testing an App Center CLI command       |
+| `Launch without building sourcemaps`| Attach a debugger when testing an App Center CLI command                         |
 
 ## Touring the codebase
 
 ### General design principles
 
-Use promises for async operations. Use `async`/`await` in Typescript for handling typical promises.
+Use promises for async operations. Use `async`/`await` in TypeScript for handling typical promises.
 
 If you've got a bunch of related code, export the library as a whole in a single import using an `index.ts` file.
 For example, the `profile` library includes files `environment.ts` and `profile.ts`, but users of the module
@@ -218,7 +228,7 @@ Support files for build and packaging.
 #### test
 
 Test code lives here. For new tests create a subdirectory structure corresponding to the `src` folder. Test code will be
-automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using Typescript for
+automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using TypeScript for
 you tests to keep things consistent across the entire codebase.
 
 #### test/functional

@@ -4,15 +4,14 @@ import * as xml2js from "xml2js";
 import { out, isDebug } from "../../../util/interaction";
 import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
+import { coerce, compare } from "semver";
 import * as chalk from "chalk";
 
 const xcode = require("xcode");
 const plist = require("plist");
 const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
-const childProcess = require("child_process");
-
-export const spawn = childProcess.spawn;
+import * as childProcess from "child_process";
 
 export interface VersionSearchParams {
   os: string; // ios or android
@@ -312,7 +311,7 @@ export function runReactNativeBundleCommand(
   }
 
   out.text(chalk.cyan('Running "react-native bundle" command:\n'));
-  const reactNativeBundleProcess = spawn("node", reactNativeBundleArgs);
+  const reactNativeBundleProcess = childProcess.spawn("node", reactNativeBundleArgs);
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
@@ -365,7 +364,7 @@ export function runHermesEmitBinaryCommand(
 
   out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
   const hermesCommand = getHermesCommand();
-  const hermesProcess = spawn(hermesCommand, hermesArgs);
+  const hermesProcess = childProcess.spawn(hermesCommand, hermesArgs);
   out.text(`${hermesCommand} ${hermesArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
@@ -420,7 +419,7 @@ export function runHermesEmitBinaryCommand(
       // https://github.com/facebook/react-native/blob/master/react.gradle#L211
       // https://github.com/facebook/react-native/blob/master/scripts/react-native-xcode.sh#L178
       // packager.sourcemap.map + hbc.sourcemap.map = sourcemap.map
-      const composeSourceMapsProcess = spawn(composeSourceMapsPath, composeSourceMapsArgs);
+      const composeSourceMapsProcess = childProcess.spawn(composeSourceMapsPath, composeSourceMapsArgs);
       out.text(`${composeSourceMapsPath} ${composeSourceMapsArgs.join(" ")}`);
 
       composeSourceMapsProcess.stdout.on("data", (data: Buffer) => {
@@ -469,11 +468,11 @@ export function getHermesEnabled(gradleFile: string): boolean {
       throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
     })
     .then((buildGradle: any) => {
-      return Array.from(buildGradle["project.ext.react"]).includes("enableHermes: true");
+      return Array.from(buildGradle["project.ext.react"] || []).includes("enableHermes: true");
     });
 }
 
-export function getiOSHermesEnabled(podFile: string): Promise<boolean> {
+export function getiOSHermesEnabled(podFile: string): boolean {
   let podPath = path.join("ios", "Podfile");
   if (podFile) {
     podPath = podFile;
@@ -482,14 +481,12 @@ export function getiOSHermesEnabled(podFile: string): Promise<boolean> {
     throw new Error(`Unable to find Podfile file "${podPath}".`);
   }
 
-  return new Promise((resolve, reject) => {
-    try {
-      const podFileContents = fs.readFileSync(podPath).toString();
-      resolve(/:hermes_enabled(\s+|\n+)?=>(\s+|\n+)?true/.test(podFileContents));
-    } catch (error) {
-      reject(error);
-    }
-  });
+  try {
+    const podFileContents = fs.readFileSync(podPath).toString();
+    return /:hermes_enabled(\s+|\n+)?=>(\s+|\n+)?true/.test(podFileContents);
+  } catch (error) {
+    throw error;
+  }
 }
 
 function getHermesOSBin(): string {
@@ -507,11 +504,13 @@ function getHermesOSBin(): string {
 }
 
 function getHermesOSExe(): string {
+  const react63orAbove = compare(coerce(getReactNativeVersion()).version, "0.63.0") !== -1;
+  const hermesExecutableName = react63orAbove ? "hermesc" : "hermes";
   switch (process.platform) {
     case "win32":
-      return "hermes.exe";
+      return hermesExecutableName + ".exe";
     default:
-      return "hermesc";
+      return hermesExecutableName;
   }
 }
 
@@ -563,22 +562,25 @@ export function isValidPlatform(platform: string): boolean {
   return platform.toLowerCase() === "react-native";
 }
 
-export function isReactNativeProject(): boolean {
+export function getReactNativeVersion(): string {
+  let packageJsonFilename;
+  let projectPackageJson;
   try {
-    // eslint-disable-next-line security/detect-non-literal-require
-    const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
-    const projectName: string = projectPackageJson.name;
-    if (!projectName) {
-      throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
-    }
-
-    return (
-      projectPackageJson.dependencies["react-native"] ||
-      (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
-    );
+    packageJsonFilename = path.join(process.cwd(), "package.json");
+    projectPackageJson = JSON.parse(fs.readFileSync(packageJsonFilename, "utf-8"));
   } catch (error) {
     throw new Error(
       `Unable to find or read "package.json" in the CWD. The "release-react" command must be executed in a React Native project folder.`
     );
   }
+
+  const projectName: string = projectPackageJson.name;
+  if (!projectName) {
+    throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
+  }
+
+  return (
+    projectPackageJson.dependencies["react-native"] ||
+    (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
+  );
 }

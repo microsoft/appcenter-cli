@@ -17,7 +17,7 @@ import {
   getiOSHermesEnabled,
   isValidOS,
   isValidPlatform,
-  isReactNativeProject,
+  getReactNativeVersion,
 } from "./lib/react-native-utils";
 import * as chalk from "chalk";
 
@@ -37,7 +37,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @longName("development")
   public development: boolean;
 
-  @help('Path to the app\'s entry Javascript file. If omitted, "index.<platform>.js" and then "index.js" will be used (if they exist)')
+  @help('Path to the app\'s entry JavaScript file. If omitted, "index.<platform>.js" and then "index.js" will be used (if they exist)')
   @shortName("e")
   @longName("entry-file")
   @hasArg
@@ -116,7 +116,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   private platform: string;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
-    if (!isReactNativeProject()) {
+    if (!getReactNativeVersion()) {
       return failure(ErrorCodes.InvalidParameter, "The project in the CWD is not a React Native project.");
     }
 

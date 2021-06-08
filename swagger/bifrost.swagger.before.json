@@ -30149,7 +30149,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "A filter as specified in https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.",
+            "description": "A filter as specified in https://github.com/microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.",
             "required": false,
             "type": "string",
             "format": "string",

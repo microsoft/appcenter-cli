@@ -1,4 +1,5 @@
 import * as path from "path";
+import * as fs from "fs";
 import { out } from "../../../util/interaction";
 import * as chalk from "chalk";
 
@@ -101,21 +102,24 @@ export function isValidPlatform(platform: string): boolean {
 }
 
 export function isElectronProject(): boolean {
+  let packageJsonFilename;
+  let projectPackageJson;
   try {
-    // eslint-disable-next-line security/detect-non-literal-require
-    const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
-    const projectName: string = projectPackageJson.name;
-    if (!projectName) {
-      throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
-    }
-
-    return (
-      projectPackageJson.dependencies["electron"] ||
-      (projectPackageJson.devDependencies && projectPackageJson.devDependencies["electron"])
-    );
+    packageJsonFilename = path.join(process.cwd(), "package.json");
+    projectPackageJson = JSON.parse(fs.readFileSync(packageJsonFilename, "utf-8"));
   } catch (error) {
     throw new Error(
       `Unable to find or read "package.json" in the CWD. The "release-electron" command must be executed in a Electron project folder.`
     );
   }
+
+  const projectName: string = projectPackageJson.name;
+  if (!projectName) {
+    throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
+  }
+
+  return (
+    projectPackageJson.dependencies["electron"] ||
+    (projectPackageJson.devDependencies && projectPackageJson.devDependencies["electron"])
+  );
 }

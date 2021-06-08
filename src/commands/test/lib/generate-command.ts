@@ -38,7 +38,7 @@ export abstract class GenerateCommand extends Command {
   protected abstract templatePathAndroid: string;
   protected abstract templatePathiOS: string;
 
-  protected abstract async processTemplate(): Promise<void>;
+  protected abstract processTemplate(): Promise<void>;
 
   protected isIOS(): boolean {
     return this.platform.toLowerCase() === "ios";

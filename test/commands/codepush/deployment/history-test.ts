@@ -11,7 +11,7 @@ import * as testData from "./history-test-data";
 // Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
 const stripAnsi = require("strip-ansi");
 
-describe("CodePush deployment history", () => {
+describe("codepush deployment history", () => {
   describe("deployment history unit tests", () => {
     it("generateReleaseAdditionalInfoString", () => {
       // Arrange

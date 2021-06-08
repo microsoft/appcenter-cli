@@ -30,7 +30,7 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
             cb(err, null, null, null);
           }
         }),
-        new Promise((resolve, reject) =>
+        new Promise<void>((resolve, reject) =>
           setTimeout(() => {
             // TODO: Investigate if there's a way to explicitly cancel the outstanding call.
             resolve();

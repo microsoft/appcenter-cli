@@ -25179,6 +25179,7 @@ export interface DeploymentLatestReleaseDiffPackageMapValue {
 }
 
 export interface DeploymentLatestRelease {
+  metrics: CodePushReleaseMetric;
   targetBinaryRange?: string;
   description?: string;
   isDisabled?: boolean;
@@ -25337,6 +25338,7 @@ export interface CodePushReleasePromote {
 }
 
 export interface CodePushReleaseMetric {
+  totalActive?: number;
   label: string;
   active: number;
   downloaded?: number;

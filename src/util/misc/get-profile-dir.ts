@@ -45,20 +45,10 @@ function copyDirSync(srcPath: string, destPath: string): void {
   files
     .map((f: string): [string, string] => [path.join(srcPath, f), path.join(destPath, f)])
     .filter(([src, dest]) => isFileSync(src))
-    .forEach(([src, dest]) => copyFileSync(src, dest));
+    .forEach(([src, dest]) => fs.copyFileSync(src, dest));
 }
 
 function isFileSync(file: string): boolean {
   const stats = fs.statSync(file);
   return stats.isFile();
-}
-
-//
-// fs.copyFileSync is only in very new version of node 8, so implement
-// it locally as compat shim
-//
-function copyFileSync(srcPath: string, destPath: string): void {
-  debug(`Copying file ${srcPath} to ${destPath}`);
-  const contents = fs.readFileSync(srcPath);
-  fs.writeFileSync(destPath, contents);
 }

@@ -1,15 +1,15 @@
-export interface McFusUploader {
-  start(file: McFusFile): void;
+export interface ACFusUploader {
+  start(file: ACFusFile): void;
   cancel(): void;
 }
 
-export enum McFusMessageLevel {
+export enum ACFusMessageLevel {
   Information = 0,
   Verbose = 1,
   Error = 2,
 }
 
-export enum McFusUploadState {
+export enum ACFusUploadState {
   New = 0,
   Initialized = 10,
   Uploading = 20,
@@ -33,8 +33,8 @@ export interface IEventSettings {
   onProgressChanged(progress: IProgress): void;
   onCompleted(uploadStats: IUploadStats): void;
   onResumeRestart?(OnResumeStartParams: IOnResumeStartParams): void;
-  onMessage(message: string, properties: LogProperties, messageLevel: McFusMessageLevel): void;
-  onStateChanged(state: McFusUploadState): void;
+  onMessage(message: string, properties: LogProperties, messageLevel: ACFusMessageLevel): void;
+  onStateChanged(state: ACFusUploadState): void;
 }
 
 export interface IOptionalSettings {
@@ -60,11 +60,11 @@ export interface IUploadStatus {
   connected: boolean;
   endTime: Date;
   inflightSet: Set<number>;
-  abortController: AbortController;
+  abortController: any;
   maxErrorCount: number;
   serviceCallback: IServiceCallback;
   startTime: Date;
-  state: McFusUploadState;
+  state: ACFusUploadState;
   transferQueueRate: number[];
 }
 
@@ -88,7 +88,7 @@ export interface IUploadData {
   correlationId: string;
   correlationVector: string;
   chunkSize: number;
-  file?: McFusFile;
+  file?: ACFusFile;
   fileSize?: number;
   logToConsole: boolean;
   tenant: string;
@@ -105,7 +105,7 @@ export interface IUploadStats {
 
 export type LogProperties = { [key: string]: string | string[] | number | boolean | undefined };
 
-export interface McFusFile {
+export interface ACFusFile {
   readonly name: string;
   readonly size: number;
   slice(start: number, end: number): Buffer;

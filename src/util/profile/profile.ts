@@ -56,7 +56,14 @@ class ProfileImpl implements Profile {
   }
 
   get accessToken(): Promise<string> {
-    const getter = tokenStore.get(this.userName).catch((err: Error) => tokenStore.get(this.userName, true));
+    const getter = tokenStore.get(this.userName).catch((err: Error) => {
+      debug(`Can't get token from tokenStore: ${err.message}`);
+      if (!err.message.includes("could not be found")) {
+        throw err;
+      }
+      debug(`Fallback to the old name in the keychain.`);
+      return tokenStore.get(this.userName, true);
+    });
 
     return getter
       .then((entry) => entry.accessToken.token)

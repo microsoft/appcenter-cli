@@ -75,7 +75,7 @@ describe("Tokens Create", () => {
     const fakeId = "00000000-0000-0000-0000-000000000000";
     const createUserTokenUrl = `/v0.1/api_tokens`;
 
-    nockScope.post(createUserTokenUrl, {}).reply(201, {
+    nockScope.post(createUserTokenUrl).reply(201, {
       id: fakeId,
       description: fakeDescription,
       api_token: "token",
