@@ -145,7 +145,7 @@
     "unzipper": "0.10.11",
     "update-notifier": "5.1.0",
     "uuid": "7.0.3",
-    "webpack-cli": "3.3.12",
+    "webpack-cli": "4.7.2",
     "which": "2.0.2",
     "wordwrap": "1.0.0",
     "xcode": "3.0.1",
