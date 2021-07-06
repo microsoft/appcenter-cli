@@ -109,7 +109,7 @@ export async function getReactNativeProjectAppVersion(
 
           if (!resolvedPbxprojFile.endsWith(pbxprojFileName)) {
             // Specify path to pbxproj file if the provided file path is an Xcode project file.
-            resolvedPbxprojFile = path.join(resolvedPbxprojFile, pbxprojFileName)
+            resolvedPbxprojFile = path.join(resolvedPbxprojFile, pbxprojFileName);
           }
           if (!fileExists(resolvedPbxprojFile)) {
             throw new Error("The specified pbx project file doesn't exist. Please check that the provided path is correct.");
