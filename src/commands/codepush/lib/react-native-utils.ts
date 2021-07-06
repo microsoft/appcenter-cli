@@ -101,17 +101,22 @@ export async function getReactNativeProjectAppVersion(
           );
         }
 
+        const pbxprojFileName = "project.pbxproj";
         let resolvedPbxprojFile: string = versionSearchParams.projectFile;
         if (resolvedPbxprojFile) {
           // If a plist file path is explicitly provided, then we don't
           // need to attempt to "resolve" it within the well-known locations.
+
+          if (!resolvedPbxprojFile.endsWith(pbxprojFileName)) {
+            // Specify path to pbxproj file if the provided file path is an Xcode project file.
+            resolvedPbxprojFile = path.join(resolvedPbxprojFile, pbxprojFileName)
+          }
           if (!fileExists(resolvedPbxprojFile)) {
             throw new Error("The specified pbx project file doesn't exist. Please check that the provided path is correct.");
           }
         } else {
           const iOSDirectory = "ios";
           const xcodeprojDirectory = `${projectName}.xcodeproj`;
-          const pbxprojFileName = "project.pbxproj";
           const pbxprojKnownLocations = [
             path.join(iOSDirectory, xcodeprojDirectory, pbxprojFileName),
             path.join(iOSDirectory, pbxprojFileName),
