@@ -19,6 +19,7 @@ export interface VersionSearchParams {
   plistFilePrefix: string;
   gradleFile: string;
   buildConfigurationName: string;
+  projectFile: string;
 }
 
 interface XCBuildConfiguration {
@@ -100,20 +101,34 @@ export async function getReactNativeProjectAppVersion(
           );
         }
 
-        const iOSDirectory = "ios";
-        const xcodeprojDirectory = `${projectName}.xcodeproj`;
         const pbxprojFileName = "project.pbxproj";
-        const pbxprojKnownLocations = [
-          path.join(iOSDirectory, xcodeprojDirectory, pbxprojFileName),
-          path.join(iOSDirectory, pbxprojFileName),
-        ];
-        const resolvedPbxprojFile = pbxprojKnownLocations.find(fileExists);
-        if (!resolvedPbxprojFile) {
-          throw new Error(
-            `Unable to find either of the following pbxproj files in order to infer your app's binary version: "${pbxprojKnownLocations.join(
-              '", "'
-            )}".`
-          );
+        let resolvedPbxprojFile: string = versionSearchParams.projectFile;
+        if (resolvedPbxprojFile) {
+          // If a plist file path is explicitly provided, then we don't
+          // need to attempt to "resolve" it within the well-known locations.
+          if (!resolvedPbxprojFile.endsWith(pbxprojFileName)) {
+            // Specify path to pbxproj file if the provided file path is an Xcode project file.
+            resolvedPbxprojFile = path.join(resolvedPbxprojFile, pbxprojFileName);
+          }
+          if (!fileExists(resolvedPbxprojFile)) {
+            throw new Error("The specified pbx project file doesn't exist. Please check that the provided path is correct.");
+          }
+        } else {
+          const iOSDirectory = "ios";
+          const xcodeprojDirectory = `${projectName}.xcodeproj`;
+          const pbxprojKnownLocations = [
+            path.join(iOSDirectory, xcodeprojDirectory, pbxprojFileName),
+            path.join(iOSDirectory, pbxprojFileName),
+          ];
+          resolvedPbxprojFile = pbxprojKnownLocations.find(fileExists);
+
+          if (!resolvedPbxprojFile) {
+            throw new Error(
+              `Unable to find either of the following pbxproj files in order to infer your app's binary version: "${pbxprojKnownLocations.join(
+                '", "'
+              )}".`
+            );
+          }
         }
 
         const xcodeProj = xcode.project(resolvedPbxprojFile).parseSync();
