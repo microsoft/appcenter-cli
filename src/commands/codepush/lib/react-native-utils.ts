@@ -505,7 +505,7 @@ export function getReactNativeVersion(): string {
   }
 
   return (
-    projectPackageJson.dependencies["react-native"] ||
+    (projectPackageJson.dependencies && projectPackageJson.dependencies["react-native"]) ||
     (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
   );
 }
