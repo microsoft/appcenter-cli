@@ -106,7 +106,6 @@ export async function getReactNativeProjectAppVersion(
         if (resolvedPbxprojFile) {
           // If a plist file path is explicitly provided, then we don't
           // need to attempt to "resolve" it within the well-known locations.
-
           if (!resolvedPbxprojFile.endsWith(pbxprojFileName)) {
             // Specify path to pbxproj file if the provided file path is an Xcode project file.
             resolvedPbxprojFile = path.join(resolvedPbxprojFile, pbxprojFileName);
