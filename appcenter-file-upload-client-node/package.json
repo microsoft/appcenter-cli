@@ -20,7 +20,7 @@
   },
   "main": "out/index.js",
   "devDependencies": {
-    "@types/mocha": "8.2.2",
+    "@types/mocha": "8.2.3",
     "@types/node": "12.x",
     "@types/uuid": "7.0.3",
     "@typescript-eslint/eslint-plugin": "4.0.0",
