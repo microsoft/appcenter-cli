@@ -49,7 +49,7 @@ export class UITestPreparer {
 
     const command = await this.getPrepareCommand();
     debug(`Executing command ${command}`);
-    const exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
+    const exitCode = await process.execWithArgsAndAwait(command.file, command.args, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
       const message = this.convertErrorCode(exitCode);
@@ -145,52 +145,56 @@ export class UITestPreparer {
     }
   }
 
-  private async getPrepareCommand(): Promise<string> {
-    let command = "";
-    if (os.platform() !== "win32") {
-      command += `mono `;
+  private async getPrepareCommand(): Promise<{ file: string; args: string[] }> {
+    let file = "";
+    const args: string[] = [];
+    const executable = await this.getTestCloudExecutablePath();
+    if (os.platform() === "win32") {
+      file = executable;
+    } else {
+      file = "mono";
+      args.push(executable);
     }
 
-    const testCloudBinary = await this.getTestCloudExecutablePath();
-    command += `${testCloudBinary} prepare "${this.appPath}"`;
+    args.push("prepare", `"${this.appPath}"`);
 
     if (this.storeFile) {
-      command += ` keystore "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
+      args.push("keystore", `"${this.storeFile}"`, `"${this.storePassword}"`, `"${this.keyAlias}"`, `"${this.keyPassword}"`);
     }
 
-    command += ` --assembly-dir "${this.buildDir}" --artifacts-dir "${this.artifactsDir}"`;
+    args.push("--assembly-dir", `"${this.buildDir}"`, "--artifacts-dir", `"${this.artifactsDir}"`);
 
     if (this.signInfo) {
-      command += ` --sign-info "${this.signInfo}"`;
+      args.push("--sign-info", `"${this.signInfo}"`);
     }
 
     if (this.fixture) {
       this.fixture.forEach((item) => {
-        command += ` --fixture "${item}"`;
+        args.push("--fixture", `"${item}"`);
       });
     }
 
     if (this.includeCategory) {
       this.includeCategory.forEach((category) => {
-        command += ` --include "${category}"`;
+        args.push("--include", `"${category}"`);
       });
     }
 
     if (this.excludeCategory) {
       this.excludeCategory.forEach((category) => {
-        command += ` --exclude "${category}"`;
+        args.push("--exclude", `"${category}"`);
       });
     }
 
     if (this.testChunk) {
-      command += ` --test-chunk`;
+      args.push("--test-chunk");
     }
 
     if (this.fixtureChunk) {
-      command += ` --fixture-chunk`;
+      args.push("--fixture-chunk");
     }
 
-    return command;
+    return { file: file, args: args };
   }
 
   private async getTestCloudExecutablePath(): Promise<string> {
