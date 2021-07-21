@@ -30,7 +30,7 @@ export function execAndWait(command: string, onStdOut?: (text: string) => void, 
   });
 }
 
-export function execWithArgsAndAwait(
+export function execWithArgsAndWait(
   file: string,
   args: string[],
   onStdOut?: (text: string) => void,
