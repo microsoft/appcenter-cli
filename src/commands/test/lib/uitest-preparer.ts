@@ -48,7 +48,7 @@ export class UITestPreparer {
     this.validateArguments();
 
     const command = await this.getPrepareCommand();
-    debug(`Executing command ${command}`);
+    debug(`Executing "test-cloud.exe prepare" command`);
     const exitCode = await process.execWithArgsAndAwait(command.file, command.args, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
