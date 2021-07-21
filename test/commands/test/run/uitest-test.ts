@@ -7,8 +7,13 @@ let testCloudCommand = "";
 
 // Mocking process-helper
 MockRequire("../../../../src/util/misc/process-helper", {
-  execAndWait: async (command: string, onStdOut?: (text: string) => void, onStdErr?: (text: string) => void): Promise<number> => {
-    testCloudCommand = command;
+  execWithArgsAndWait: async (
+    file: string,
+    args: string[],
+    onStdOut?: (text: string) => void,
+    onStdErr?: (text: string) => void
+  ): Promise<number> => {
+    testCloudCommand = `${file} ${args.join(" ")}`;
     return 0;
   },
 });
