@@ -352,7 +352,7 @@ describe("codepush release-react command", function () {
       sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
       sandbox.stub(fileUtils, "removeReactTmpDir");
       sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
-      sandbox.stub(ReactNativeTools, "getHermesEnabled").resolves(false);
+      sandbox.stub(ReactNativeTools, "getAndroidHermesEnabled").resolves(false);
       sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
 
       // Act

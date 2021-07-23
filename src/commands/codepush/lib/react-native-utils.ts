@@ -464,7 +464,7 @@ export function runHermesEmitBinaryCommand(
   });
 }
 
-export function getHermesEnabled(gradleFile: string): boolean {
+export function getAndroidHermesEnabled(gradleFile: string): boolean {
   let buildGradlePath: string = path.join("android", "app");
   if (gradleFile) {
     buildGradlePath = gradleFile;
