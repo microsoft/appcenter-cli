@@ -352,7 +352,7 @@ describe("codepush release-react command", function () {
       sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
       sandbox.stub(fileUtils, "removeReactTmpDir");
       sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
-      sandbox.stub(ReactNativeTools, "getHermesEnabled").resolves(false);
+      sandbox.stub(ReactNativeTools, "getAndroidHermesEnabled").resolves(false);
       sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
 
       // Act
@@ -846,7 +846,7 @@ describe("codepush release-react command", function () {
     Sinon.assert.calledOnceWithExactly(syncStub, `${osLib.tmpdir()}/react-*`);
   });
   context("hermes", function () {
-    it("skipped for non-android platforms", async function () {
+    it("hermes enabled only when specified in the app podfile file", async function () {
       const os = "ios";
       // Arrange
       const args = {
@@ -865,8 +865,8 @@ describe("codepush release-react command", function () {
           "name": "RnCodepushAndroid",
           "version": "0.0.1",
           "dependencies": {
-            "react": "16.13.1",
-            "react-native": "0.63.3",
+            "react": "17.0.0",
+            "react-native": "0.64.0",
             "react-native-code-push": "6.3.0"
           }
         }
@@ -883,13 +883,14 @@ describe("codepush release-react command", function () {
       sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
       sandbox.stub(fileUtils, "removeReactTmpDir");
       sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      sandbox.stub(ReactNativeTools, "getiOSHermesEnabled").returns(true);
       const runHermesEmitBinaryCommandStub = sandbox.stub(ReactNativeTools, "runHermesEmitBinaryCommand");
 
       // Act
       await command.execute();
 
       // Assert
-      expect(runHermesEmitBinaryCommandStub.notCalled).is.true;
+      expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
     });
     it("hermes enabled only when specified in the app gradle file", async function () {
       const os = "Android";

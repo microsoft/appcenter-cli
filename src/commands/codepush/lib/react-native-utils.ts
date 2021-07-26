@@ -412,10 +412,59 @@ export function runHermesEmitBinaryCommand(
         });
       });
     });
+  }).then(() => {
+    if (!sourcemapOutput) {
+      // skip source map compose if source map is not enabled
+      return;
+    }
+
+    const composeSourceMapsPath = getComposeSourceMapsPath();
+    if (!composeSourceMapsPath) {
+      throw new Error("react-native compose-source-maps.js scripts is not found");
+    }
+
+    const jsCompilerSourceMapFile = path.join(outputFolder, bundleName + ".hbc" + ".map");
+    if (!fs.existsSync(jsCompilerSourceMapFile)) {
+      throw new Error(`sourcemap file ${jsCompilerSourceMapFile} is not found`);
+    }
+
+    return new Promise((resolve, reject) => {
+      const composeSourceMapsArgs = [sourcemapOutput, jsCompilerSourceMapFile, "-o", sourcemapOutput];
+
+      // https://github.com/facebook/react-native/blob/master/react.gradle#L211
+      // https://github.com/facebook/react-native/blob/master/scripts/react-native-xcode.sh#L178
+      // packager.sourcemap.map + hbc.sourcemap.map = sourcemap.map
+      const composeSourceMapsProcess = childProcess.spawn(composeSourceMapsPath, composeSourceMapsArgs);
+      out.text(`${composeSourceMapsPath} ${composeSourceMapsArgs.join(" ")}`);
+
+      composeSourceMapsProcess.stdout.on("data", (data: Buffer) => {
+        out.text(data.toString().trim());
+      });
+
+      composeSourceMapsProcess.stderr.on("data", (data: Buffer) => {
+        console.error(data.toString().trim());
+      });
+
+      composeSourceMapsProcess.on("close", (exitCode: number) => {
+        if (exitCode) {
+          reject(new Error(`"compose-source-maps" command exited with code ${exitCode}.`));
+        }
+
+        // Delete the HBC sourceMap, otherwise it will be included in 'code-push' bundle as well
+        fs.unlink(jsCompilerSourceMapFile, (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          }
+
+          resolve(null);
+        });
+      });
+    });
   });
 }
 
-export function getHermesEnabled(gradleFile: string): boolean {
+export function getAndroidHermesEnabled(gradleFile: string): boolean {
   let buildGradlePath: string = path.join("android", "app");
   if (gradleFile) {
     buildGradlePath = gradleFile;
@@ -436,6 +485,23 @@ export function getHermesEnabled(gradleFile: string): boolean {
     .then((buildGradle: any) => {
       return Array.from(buildGradle["project.ext.react"] || []).includes("enableHermes: true");
     });
+}
+
+export function getiOSHermesEnabled(podFile: string): boolean {
+  let podPath = path.join("ios", "Podfile");
+  if (podFile) {
+    podPath = podFile;
+  }
+  if (fileDoesNotExistOrIsDirectory(podPath)) {
+    throw new Error(`Unable to find Podfile file "${podPath}".`);
+  }
+
+  try {
+    const podFileContents = fs.readFileSync(podPath).toString();
+    return /:hermes_enabled(\s+|\n+)?=>(\s+|\n+)?true/.test(podFileContents);
+  } catch (error) {
+    throw error;
+  }
 }
 
 function getHermesOSBin(): string {
@@ -477,6 +543,15 @@ function getHermesCommand(): string {
     return hermesEngine;
   }
   return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
+}
+
+function getComposeSourceMapsPath(): string {
+  // detect if compose-source-maps.js script exists
+  const composeSourceMaps = path.join("node_modules", "react-native", "scripts", "compose-source-maps.js");
+  if (fs.existsSync(composeSourceMaps)) {
+    return composeSourceMaps;
+  }
+  return null;
 }
 
 function getCliPath(): string {

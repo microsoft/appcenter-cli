@@ -13,7 +13,8 @@ import {
   getReactNativeProjectAppVersion,
   runReactNativeBundleCommand,
   runHermesEmitBinaryCommand,
-  getHermesEnabled,
+  getAndroidHermesEnabled,
+  getiOSHermesEnabled,
   isValidOS,
   isValidPlatform,
   getReactNativeVersion,
@@ -47,6 +48,11 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @longName("gradle-file")
   @hasArg
   public gradleFile: string;
+
+  @help("Path to the cocopods config file (iOS only)")
+  @longName("pod-file")
+  @hasArg
+  public podFile: string;
 
   @help("Path to the plist file which specifies the binary version you want to target this release at (iOS only)")
   @shortName("p")
@@ -216,7 +222,13 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
       );
       // Check if we have to run hermes to compile JS to Byte Code if Hermes is enabled in build.gradle and we're releasing an Android build
       if (this.os === "android") {
-        const isHermesEnabled = await getHermesEnabled(this.gradleFile);
+        const isHermesEnabled = await getAndroidHermesEnabled(this.gradleFile);
+        if (isHermesEnabled) {
+          await runHermesEmitBinaryCommand(this.bundleName, this.updateContentsPath, this.sourcemapOutput, this.extraHermesFlags);
+        }
+      } else if (this.os === "ios") {
+        // Check if we have to run hermes to compile JS to Byte Code if Hermes is enabled in Podfile and we're releasing an iOS build
+        const isHermesEnabled = await getiOSHermesEnabled(this.podFile);
         if (isHermesEnabled) {
           await runHermesEmitBinaryCommand(this.bundleName, this.updateContentsPath, this.sourcemapOutput, this.extraHermesFlags);
         }
