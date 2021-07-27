@@ -139,7 +139,7 @@ export class UITestPreparer {
     if (this.storeFile || this.storePassword || this.keyAlias || this.keyPassword) {
       if (!(this.storeFile && this.storePassword && this.keyAlias && this.keyPassword)) {
         throw new Error(
-          "If keystore is used, all of the following arguments must be set: --store-file, --store-password, --key-alias, --key-password"
+          "If keystore is used, all of the following arguments must be set: --store-path, --store-password, --key-alias, --key-password"
         );
       }
     }
