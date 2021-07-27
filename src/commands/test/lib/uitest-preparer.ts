@@ -53,7 +53,7 @@ export class UITestPreparer {
 
     if (exitCode !== 0) {
       const message = this.convertErrorCode(exitCode);
-      throw new TestCloudError(`Cannot prepare UI Test artifacts using command: ${command}.${os.EOL}${os.EOL}${message}`, exitCode);
+      throw new TestCloudError(`Failed to prepare UI Test artifacts using command "test-cloud.exe prepare" with error message:${os.EOL}${message}`, exitCode);
     }
 
     return path.join(this.artifactsDir, "manifest.json");
@@ -156,33 +156,33 @@ export class UITestPreparer {
       args.push(executable);
     }
 
-    args.push("prepare", `"${this.appPath}"`);
+    args.push("prepare", this.appPath);
 
     if (this.storeFile) {
-      args.push("keystore", `"${this.storeFile}"`, `"${this.storePassword}"`, `"${this.keyAlias}"`, `"${this.keyPassword}"`);
+      args.push("keystore", this.storeFile, this.storePassword, this.keyAlias, this.keyPassword);
     }
 
-    args.push("--assembly-dir", `"${this.buildDir}"`, "--artifacts-dir", `"${this.artifactsDir}"`);
+    args.push("--assembly-dir", this.buildDir, "--artifacts-dir", this.artifactsDir);
 
     if (this.signInfo) {
-      args.push("--sign-info", `"${this.signInfo}"`);
+      args.push("--sign-info", this.signInfo);
     }
 
     if (this.fixture) {
       this.fixture.forEach((item) => {
-        args.push("--fixture", `"${item}"`);
+        args.push("--fixture", item);
       });
     }
 
     if (this.includeCategory) {
       this.includeCategory.forEach((category) => {
-        args.push("--include", `"${category}"`);
+        args.push("--include", category);
       });
     }
 
     if (this.excludeCategory) {
       this.excludeCategory.forEach((category) => {
-        args.push("--exclude", `"${category}"`);
+        args.push("--exclude", category);
       });
     }
 
