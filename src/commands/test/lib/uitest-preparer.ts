@@ -53,7 +53,10 @@ export class UITestPreparer {
 
     if (exitCode !== 0) {
       const message = this.convertErrorCode(exitCode);
-      throw new TestCloudError(`Failed to prepare UI Test artifacts using command "test-cloud.exe prepare" with error message:${os.EOL}${message}`, exitCode);
+      throw new TestCloudError(
+        `Failed to prepare UI Test artifacts using command "test-cloud.exe prepare" with error message:${os.EOL}${message}`,
+        exitCode
+      );
     }
 
     return path.join(this.artifactsDir, "manifest.json");
