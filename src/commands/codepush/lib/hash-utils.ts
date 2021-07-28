@@ -135,7 +135,7 @@ export function hashFile(filePath: string): Promise<string> {
 
 export function hashStream(readStream: stream.Readable): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    const hashStream = (crypto.createHash(HASH_ALGORITHM) as any) as stream.Transform;
+    const hashStream = crypto.createHash(HASH_ALGORITHM) as any as stream.Transform;
 
     readStream
       .on("error", (error: any): void => {

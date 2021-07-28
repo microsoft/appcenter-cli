@@ -29,7 +29,7 @@ export function telemetryFilter(
         resource.headers[commandNameHeaderName] = commandName;
       }
       const nextStream = next(resource, callback);
-      ((resource.pipeInput(input, nextStream) as any) as Readable).pipe(output);
+      (resource.pipeInput(input, nextStream) as any as Readable).pipe(output);
       input.resume();
     });
   };
