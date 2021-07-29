@@ -39,7 +39,7 @@ describe("codepush release-cordova command", function () {
 
   beforeEach(() => {
     sandbox = Sinon.createSandbox();
-    whichSyncStub = sandbox.stub(which, "sync").withArgs("cordova").returns("path/to/cordova");
+    whichSyncStub = sandbox.stub(which, "sync").withArgs("cordova", null).returns("path/to/cordova");
   });
 
   afterEach(() => {
