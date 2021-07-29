@@ -29,3 +29,37 @@ export function execAndWait(command: string, onStdOut?: (text: string) => void, 
     });
   });
 }
+
+export function execWithArgsAndWait(
+  file: string,
+  args: string[],
+  onStdOut?: (text: string) => void,
+  onStdErr?: (text: string) => void
+): Promise<number> {
+  return new Promise((resolve, reject) => {
+    if (!onStdOut) {
+      onStdOut = (text) => out.text(text);
+    }
+    if (!onStdErr) {
+      onStdErr = (text) => out.text(text);
+    }
+
+    const process = child_process.execFile(file, args);
+
+    process.on("exit", (exitCode: number) => {
+      resolve(exitCode);
+    });
+
+    process.on("error", (message: string) => {
+      reject(new Error(message));
+    });
+
+    process.stdout.on("data", (data) => {
+      onStdOut(data as string);
+    });
+
+    process.stderr.on("data", (data) => {
+      onStdErr(data as string);
+    });
+  });
+}
