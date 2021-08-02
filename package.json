@@ -78,7 +78,7 @@
     "@types/which": "2.0.1",
     "@types/wordwrap": "1.0.1",
     "@types/xml2js": "0.4.9",
-    "@types/xmldom": "0.1.30",
+    "@types/xmldom": "0.1.31",
     "@types/yazl": "2.4.2",
     "@typescript-eslint/eslint-plugin": "4.28.5",
     "@typescript-eslint/parser": "4.28.5",
