@@ -33,7 +33,7 @@
     "mocha-junit-reporter": "2.0.0",
     "nock": "13.1.1",
     "prettier": "2.3.2",
-    "ts-node": "9.1.1",
+    "ts-node": "10.2.0",
     "typemoq": "2.1.0",
     "typescript": "3.8.3",
     "uuid": "7.0.3"
