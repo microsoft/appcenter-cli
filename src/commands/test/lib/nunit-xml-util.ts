@@ -1,7 +1,7 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import { DOMParser } from "xmldom";
+import { DOMParser } from "@xmldom/xmldom";
 
 export class NUnitXmlUtil extends XmlUtil {
   async mergeXmlResults(pathToArchive: string): Promise<Document> {
