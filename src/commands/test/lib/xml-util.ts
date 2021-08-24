@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as unzipper from "unzipper";
-import { DOMParser } from "xmldom";
+import { DOMParser } from "@xmldom/xmldom";
 
 export abstract class XmlUtil {
   public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;

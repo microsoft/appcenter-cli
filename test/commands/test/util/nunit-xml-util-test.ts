@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { DOMParser, XMLSerializer } from "xmldom";
+import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 import * as parser from "fast-xml-parser";
 import * as path from "path";
 import * as fs from "fs";
