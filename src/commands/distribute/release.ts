@@ -384,7 +384,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     });
     const json = await response.json();
     if (!json.package_asset_id || (json.statusCode && json.statusCode !== 200)) {
-      throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}. ${json.message}`);
+      throw failure(ErrorCodes.Exception, `Failed to create release upload for ${this.filePath}. Backend response: ${json.message}`);
     }
     return json;
   }
