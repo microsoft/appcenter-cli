@@ -52,7 +52,7 @@
     "@types/uuid": "8.0.0",
     "@types/chai": "4.2.21",
     "@types/chai-as-promised": "7.1.4",
-    "@types/debug": "4.1.5",
+    "@types/debug": "4.1.7",
     "@types/from2": "2.3.1",
     "@types/glob": "7.1.4",
     "@types/inquirer": "7.3.3",
