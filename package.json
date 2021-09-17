@@ -58,7 +58,7 @@
     "@types/inquirer": "7.3.3",
     "@types/jsonwebtoken": "8.5.5",
     "@types/lodash": "4.14.173",
-    "@types/minimist": "1.2.1",
+    "@types/minimist": "1.2.2",
     "@types/mkdirp": "1.0.2",
     "@types/mocha": "9.0.0",
     "@types/mock-require": "2.0.0",
