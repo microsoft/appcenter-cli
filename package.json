@@ -55,7 +55,7 @@
     "@types/debug": "4.1.7",
     "@types/from2": "2.3.1",
     "@types/glob": "7.1.4",
-    "@types/inquirer": "7.3.3",
+    "@types/inquirer": "8.1.2",
     "@types/jsonwebtoken": "8.5.5",
     "@types/lodash": "4.14.173",
     "@types/minimist": "1.2.2",
