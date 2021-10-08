@@ -113,20 +113,20 @@ describe("Validating UITest template generation", () => {
 
     // Assert
     let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).contain("3.0.5");
+    expect(packageFileContent).contain("3.2.2");
 
     let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain("3.0.5");
+    expect(projectFileContent).contain("3.2.2");
 
     // Act
     await (command as any).processTemplate();
 
     // Assert
     packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).contain("3.0.5");
+    expect(packageFileContent).contain("3.2.2");
 
     projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain("3.0.5");
+    expect(projectFileContent).contain("3.2.2");
   });
 
   it("should recover original template files on failure", async () => {
