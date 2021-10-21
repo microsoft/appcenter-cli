@@ -241,11 +241,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (_.isNil(this.distributionGroup) && _.isNil(this.storeName)) {
       throw failure(ErrorCodes.InvalidParameter, "At least one of '--group' or '--store' must be specified");
     }
-    if (!_.isNil(this.distributionGroup)) {
-      if ([".aab"].includes(this.fileExtension)) {
-        throw failure(ErrorCodes.InvalidParameter, `Files of type '${this.fileExtension}' can not be distributed to groups`);
-      }
-    }
     if (!_.isNil(this.storeName)) {
       if (![".aab", ".apk", ".ipa"].includes(this.fileExtension)) {
         throw failure(ErrorCodes.InvalidParameter, `Files of type '${this.fileExtension}' can not be distributed to stores`);
