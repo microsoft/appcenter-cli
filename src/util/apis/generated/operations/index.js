@@ -42,7 +42,6 @@ exports.StoreNotifications = require('./storeNotifications');
 exports.Repositories = require('./repositories');
 exports.RepositoryConfigurations = require('./repositoryConfigurations');
 exports.Provisioning = require('./provisioning');
-exports.ReleaseUploads = require('./releaseUploads');
 exports.Push = require('./push');
 exports.FileAssets = require('./fileAssets');
 exports.ExportConfigurations = require('./exportConfigurations');

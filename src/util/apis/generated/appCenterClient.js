@@ -78,7 +78,6 @@ class AppCenterClient extends ServiceClient {
     this.repositories = new operations.Repositories(this);
     this.repositoryConfigurations = new operations.RepositoryConfigurations(this);
     this.provisioning = new operations.Provisioning(this);
-    this.releaseUploads = new operations.ReleaseUploads(this);
     this.push = new operations.Push(this);
     this.fileAssets = new operations.FileAssets(this);
     this.exportConfigurations = new operations.ExportConfigurations(this);
