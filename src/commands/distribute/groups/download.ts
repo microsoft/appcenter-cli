@@ -57,24 +57,10 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     // test that optional release id is a positive integer and optional file name is valid
     this.validateParameters();
 
-    let downloadUrl: string;
-    if (!_.isNil(this.releaseId)) {
-      // distribute.getReleaseForDistributionGroup doesn't support the specific release id now, using two parallel requests instead
-      const validateReleaseBelongsToReleaseGroup = this.verifyReleaseBelongsToDistributionGroup(
-        client,
-        app,
-        Number(this.releaseId),
-        this.distributionGroup
-      );
-      const releaseUrl = this.getReleaseUrl(client, app, this.releaseId);
-
-      // showing spinner while getting download url and verifying that the specified release was distributed to this distribution group
-      await out.progress("Getting release URL...", Promise.all([validateReleaseBelongsToReleaseGroup, releaseUrl]));
-      downloadUrl = await releaseUrl;
-    } else {
-      // using distribute.getReleaseForDistributionGroup for getting latest release
-      downloadUrl = await out.progress("Getting release URL...", this.getLastReleaseUrl(client, app, this.distributionGroup));
-    }
+    const downloadUrl: string = await out.progress(
+      "Getting release URL...",
+      this.getLastReleaseUrl(client, app, !_.isNil(this.releaseId) ? this.releaseId : "latest", this.distributionGroup)
+    );
 
     const directoryPath = await this.getDirectoryPath(this.directory);
     const filePath = this.getFileFullPath(this.fileName, directoryPath, downloadUrl);
@@ -98,66 +84,16 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private async verifyReleaseBelongsToDistributionGroup(
+  private async getLastReleaseUrl(
     client: AppCenterClient,
     app: DefaultApp,
-    releaseId: number,
+    releaseId: string,
     distributionGroup: string
-  ) {
-    debug("Verifying that release was distributed to the specified distribution group");
-    let releasesIds: number[];
-    try {
-      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) =>
-        client.releasesOperations.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb)
-      );
-      if (httpRequest.response.statusCode >= 400) {
-        throw httpRequest.response.statusCode;
-      } else {
-        releasesIds = httpRequest.result.map((details) => details.id);
-      }
-    } catch (error) {
-      if (error === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `distribution group ${distributionGroup} doesn't exist`);
-      } else {
-        debug(`Failed to get list of the releases for the distribution group - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, "failed to get the list of the releases for the distribution group");
-      }
-    }
-
-    if (releasesIds.indexOf(releaseId) === -1) {
-      throw failure(
-        ErrorCodes.InvalidParameter,
-        `release ${releaseId} was not distributed to distribution group ${distributionGroup}`
-      );
-    }
-  }
-
-  private async getReleaseUrl(client: AppCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
-    debug("Getting download URL for the specified release");
-    try {
-      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releasesOperations.getLatestByUser(releaseId, app.ownerName, app.appName, cb)
-      );
-      if (httpRequest.response.statusCode >= 400) {
-        throw httpRequest.response.statusCode;
-      } else {
-        return httpRequest.result.downloadUrl;
-      }
-    } catch (error) {
-      if (error === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `release ${releaseId} doesn't exist`);
-      } else {
-        debug(`Failed to get details for release ${releaseId} - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, "failed to get details of the release");
-      }
-    }
-  }
-
-  private async getLastReleaseUrl(client: AppCenterClient, app: DefaultApp, distributionGroup: string): Promise<string> {
+  ): Promise<string> {
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb)
+        client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, releaseId, cb)
       );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;
