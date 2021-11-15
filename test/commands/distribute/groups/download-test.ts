@@ -38,11 +38,7 @@ describe("distribute groups download command", () => {
     // Arrange
     const releaseFilePath = Temp.path({ prefix: "releaseFile", dir: tmpFolderPath });
     const executionScope = _.flow(setupGetLatestReleaseDetailsResponse, setupGetReleaseFileResponse)(Nock(fakeHost));
-    const skippedScope = _.flow(
-      setupGetReleasesForDistributionGroupResponse,
-      setupGetReleaseDetailsResponse,
-      setupGetReleaseFile2Response
-    )(Nock(fakeHost));
+    const skippedScope = _.flow(setupGetReleaseDetailsResponse, setupGetReleaseFile2Response)(Nock(fakeHost));
 
     // Act
     const command = new DownloadBinaryFromDistributionGroupCommand(
@@ -59,11 +55,7 @@ describe("distribute groups download command", () => {
   it("gets the specified release and checks that it was released to the distribution group", async () => {
     // Arrange
     const releaseFilePath = Temp.path({ prefix: "releaseFile", dir: tmpFolderPath });
-    const executionScope = _.flow(
-      setupGetReleasesForDistributionGroupResponse,
-      setupGetReleaseDetailsResponse,
-      setupGetReleaseFile2Response
-    )(Nock(fakeHost));
+    const executionScope = _.flow(setupGetReleaseDetailsResponse, setupGetReleaseFile2Response)(Nock(fakeHost));
     const skippedScope = _.flow(setupGetLatestReleaseDetailsResponse, setupGetReleaseFileResponse)(Nock(fakeHost));
 
     // Act
@@ -122,20 +114,10 @@ describe("distribute groups download command", () => {
     return nockScope.get(fakeDownloadUrl).reply(200, releaseFileContent);
   }
 
-  function setupGetReleasesForDistributionGroupResponse(nockScope: Nock.Scope) {
-    return nockScope
-      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}/releases`)
-      .reply(200, [
-        {
-          id: Number(fakeReleaseId),
-        },
-      ]);
-  }
-
   function setupGetReleaseDetailsResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(200, {
-      download_url: fakeHost + fakeDownloadUrl2,
-    });
+    return nockScope
+      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}/releases/${fakeReleaseId}`)
+      .reply(200, { download_url: fakeHost + fakeDownloadUrl2 });
   }
 
   function setupGetReleaseFile2Response(nockScope: Nock.Scope) {

@@ -59,7 +59,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
 
     const downloadUrl: string = await out.progress(
       "Getting release URL...",
-      this.getLastReleaseUrl(client, app, !_.isNil(this.releaseId) ? this.releaseId : "latest", this.distributionGroup)
+      this.getReleaseUrl(client, app, !_.isNil(this.releaseId) ? this.releaseId : "latest", this.distributionGroup)
     );
 
     const directoryPath = await this.getDirectoryPath(this.directory);
@@ -84,13 +84,13 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private async getLastReleaseUrl(
+  private async getReleaseUrl(
     client: AppCenterClient,
     app: DefaultApp,
     releaseId: string,
     distributionGroup: string
   ): Promise<string> {
-    debug("Getting download URL for the latest release of the specified distribution group");
+    debug(`Getting download URL for the ${releaseId} release of the specified distribution group`);
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
         client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, releaseId, cb)
@@ -107,8 +107,8 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
         case "not_found":
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${distributionGroup} doesn't exist`);
         default:
-          debug(`Failed to get details of the latest release for distribution group ${distributionGroup} - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, "failed to get details of the latest release for the distribution group");
+          debug(`Failed to get details of the ${releaseId} release for distribution group ${distributionGroup} - ${inspect(error)}`);
+          throw failure(ErrorCodes.Exception, `failed to get details of the ${releaseId} release for the distribution group`);
       }
     }
   }
