@@ -22,6 +22,7 @@ public class LaunchTest {
     public void setUp() throws MalformedURLException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
+        capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("deviceName", "iPhone 6");
         capabilities.setCapability("app", "/path/to/app.app");
