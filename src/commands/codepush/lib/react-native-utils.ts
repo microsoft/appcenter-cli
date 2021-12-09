@@ -498,7 +498,7 @@ export function getiOSHermesEnabled(podFile: string): boolean {
 
   try {
     const podFileContents = fs.readFileSync(podPath).toString();
-    return /:hermes_enabled(\s+|\n+)?=>(\s+|\n+)?true/.test(podFileContents);
+    return /(:hermes_enabled(\s+|\n+)?=>(\s+|\n+)?true|hermes_enabled:(\s+|\n+)?true)/.test(podFileContents);
   } catch (error) {
     throw error;
   }
