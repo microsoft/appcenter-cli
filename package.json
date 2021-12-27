@@ -73,7 +73,7 @@
     "@types/split2": "3.2.1",
     "@types/temp": "0.9.1",
     "@types/through2": "2.0.36",
-    "@types/unzipper": "0.10.4",
+    "@types/unzipper": "0.10.5",
     "@types/uuid": "8.0.0",
     "@types/which": "2.0.1",
     "@types/wordwrap": "1.0.1",
