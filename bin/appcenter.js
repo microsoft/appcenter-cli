@@ -49,9 +49,9 @@ function runCli() {
       const chalk = require("chalk");
       const ioOptions = require("../dist/util/interaction/io-options");
       if (ioOptions.formatIsJson()) {
-        console.log(`${chalk.red(JSON.stringify(result))}`);
+        console.error(`${chalk.red(JSON.stringify(result))}`);
       } else {
-        console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
+        console.error(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
       }
       process.exit(result.errorCode);
     }
