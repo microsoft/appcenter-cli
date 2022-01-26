@@ -1,6 +1,6 @@
 {
   "name": "appcenter-file-upload-client-node",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "File Uploader Client for Node",
   "homepage": "https://github.com/microsoft/appcenter-cli",
   "author": "Microsoft",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "abort-controller": "3.0.0",
-    "node-fetch": "2.6.1",
+    "node-fetch": "~2.6.7",
     "proxy-agent": "5.0.0"
   }
 }
