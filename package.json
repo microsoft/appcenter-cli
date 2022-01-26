@@ -99,7 +99,7 @@
     "nock": "13.2.1",
     "prettier": "2.4.1",
     "sinon": "11.1.2",
-    "ts-node": "9.1.1",
+    "ts-node": "10.4.0",
     "typemoq": "2.1.0",
     "typescript": "4.3.5"
   },
