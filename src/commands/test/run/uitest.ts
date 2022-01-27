@@ -1,6 +1,7 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { generateAbsolutePath } from "../../../util/misc/fs-helper";
 import * as path from "path";
+import { XMLSerializer } from "@xmldom/xmldom";
 import { NUnitXmlUtil } from "../lib/nunit-xml-util";
 import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { UITestPreparer } from "../lib/uitest-preparer";
@@ -155,6 +156,7 @@ export default class RunUITestsCommand extends RunTestsDownloadResultCommand {
       throw new Error(`Couldn't merge xml test results to ${this.mergeNUnitXml}`);
     }
 
-    return pfs.writeFile(path.join(reportPath, this.mergeNUnitXml), xml);
+    const strXml: string = new XMLSerializer().serializeToString(xml);
+    return pfs.writeFile(path.join(reportPath, this.mergeNUnitXml), strXml);
   }
 }
