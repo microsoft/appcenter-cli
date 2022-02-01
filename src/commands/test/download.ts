@@ -21,6 +21,7 @@ import { getUser } from "../../util/profile";
 import { Messages } from "./lib/help-messages";
 import { StateChecker } from "./lib/state-checker";
 import { buildErrorInfo } from "./lib/error-info-builder";
+import { XMLSerializer } from "@xmldom/xmldom";
 import { XmlUtil } from "./lib/xml-util";
 import { XmlUtilBuilder } from "./lib/xml-util-builder";
 import * as path from "path";
@@ -92,7 +93,8 @@ export default class DownloadTestsCommand extends AppCommand {
           return failure(ErrorCodes.Exception, "XML merging has ended with an error");
         }
         const xmlPath = path.join(outputDir, this.outputXmlName);
-        await pfs.writeFile(xmlPath, xml);
+        const strXml: string = new XMLSerializer().serializeToString(xml);
+        await pfs.writeFile(xmlPath, strXml);
 
         this.streamingOutput.text((command: AppCommand): string => {
           return `Merged test results to ${xmlPath}`;
