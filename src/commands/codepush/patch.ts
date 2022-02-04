@@ -77,7 +77,7 @@ export default class PatchCommand extends AppCommand {
     const app = this.app;
     let release: models.CodePushRelease;
 
-    if (!this.targetBinaryRange && !this.isDisabled && !this.isMandatory && !this.description && !this.rollout) {
+    if (!this.targetBinaryRange && this.isDisabled == null && this.isMandatory == null && !this.description && !this.rollout) {
       return failure(ErrorCodes.Exception, "At least one property must be specified to patch a release.");
     }
 
