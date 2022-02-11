@@ -114,7 +114,7 @@
     "cli-spinner": "0.2.10",
     "cli-table3": "0.6.1",
     "date-fns": "2.26.0",
-    "debug": "4.3.2",
+    "debug": "4.3.3",
     "fast-xml-parser": "3.21.1",
     "from2": "2.3.0",
     "glob": "7.2.0",
