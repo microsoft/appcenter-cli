@@ -12,6 +12,7 @@ import {
   hasArg,
   position,
   name,
+  defaultValue,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -20,6 +21,7 @@ import { isValidRollout, isValidRange } from "./lib/validation-utils";
 import { DefaultApp } from "../../util/profile";
 import { scriptName } from "../../util/misc";
 import * as chalk from "chalk";
+import _ = require("lodash");
 
 const debug = require("debug")("appcenter-cli:commands:codepush:patch");
 
@@ -40,11 +42,13 @@ export default class PatchCommand extends AppCommand {
   @help("Specifies whether this release should be considered mandatory. (Putting -m flag means mandatory)")
   @shortName("m")
   @longName("mandatory")
+  @defaultValue(null)
   public isMandatory: boolean;
 
   @help("Specifies whether this release should be immediately downloadable. (Putting -x flag means disabled)")
   @shortName("x")
   @longName("disabled")
+  @defaultValue(null)
   public isDisabled: boolean;
 
   @help(
@@ -77,7 +81,7 @@ export default class PatchCommand extends AppCommand {
     const app = this.app;
     let release: models.CodePushRelease;
 
-    if (!this.targetBinaryRange && !this.isDisabled && !this.isMandatory && !this.description && !this.rollout) {
+    if (!this.targetBinaryRange && _.isNil(this.isDisabled) && _.isNil(this.isMandatory) && !this.description && !this.rollout) {
       return failure(ErrorCodes.Exception, "At least one property must be specified to patch a release.");
     }
 
@@ -95,13 +99,19 @@ export default class PatchCommand extends AppCommand {
 
     const patch: models.CodePushReleaseModification = {
       targetBinaryRange: this.targetBinaryRange,
-      isMandatory: this.isMandatory,
-      isDisabled: this.isDisabled,
       description: this.description,
     };
 
     if (this.rollout != null) {
       patch.rollout = rollout;
+    }
+
+    if (this.isDisabled != null) {
+      patch.isDisabled = this.isDisabled;
+    }
+
+    if (this.isMandatory != null) {
+      patch.isMandatory = this.isMandatory;
     }
 
     if (this.releaseLabel == null || this.releaseLabel === "") {
