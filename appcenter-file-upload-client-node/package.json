@@ -31,7 +31,7 @@
     "eslint-plugin-security": "1.4.0",
     "mocha": "9.2.0",
     "mocha-junit-reporter": "2.0.2",
-    "nock": "13.2.1",
+    "nock": "13.2.4",
     "prettier": "2.4.1",
     "ts-node": "9.1.1",
     "typemoq": "2.1.0",
