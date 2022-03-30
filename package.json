@@ -108,7 +108,7 @@
     "abort-controller": "3.0.0",
     "appcenter-file-upload-client": "0.0.24",
     "appcenter-file-upload-client-node": "^1.2.4",
-    "azure-storage": "2.10.6",
+    "azure-storage": "2.10.7",
     "bplist": "0.0.4",
     "chalk": "4.1.2",
     "cli-spinner": "0.2.10",
