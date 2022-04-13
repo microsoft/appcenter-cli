@@ -5,6 +5,8 @@ import com.microsoft.appcenter.appium.EnhancedIOSDriver;
 import org.junit.*;
 import org.junit.rules.TestWatcher;
 import io.appium.java_client.MobileElement;
+
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
@@ -24,7 +26,7 @@ public class LaunchTest {
 
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "iPhone 6");
+        capabilities.setCapability("deviceName", "iPhone 11 Pro");
         capabilities.setCapability("app", "/path/to/app.app");
 
         URL url = new URL("http://localhost:4723/wd/hub");
@@ -41,19 +43,19 @@ public class LaunchTest {
         driver.label("App has launched");
     }
 
-    //@Test
+    @Test
     public void tapRandomButtonsTest() {
         Random rand = new Random();
 
         for (int i=0; i<10; i++) {
-            List<MobileElement> buttons = driver.findElementsByClassName("UIAButton");
+            List<WebElement> buttons = driver.findElementsByClassName("UIAButton");
 
             if (buttons.size() == 0) {
                 return;
             }
 
             try {
-                MobileElement button = buttons.get(rand.nextInt(buttons.size()));
+                MobileElement button = (MobileElement) buttons.get(rand.nextInt(buttons.size()));
                 button.click();
             } catch (Exception ex) {
                 // Fail silently, this is probably due to the number of buttons on the page being reduced between
