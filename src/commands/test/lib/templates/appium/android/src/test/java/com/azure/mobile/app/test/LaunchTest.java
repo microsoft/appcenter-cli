@@ -5,6 +5,8 @@ import com.microsoft.appcenter.appium.EnhancedAndroidDriver;
 import org.junit.*;
 import org.junit.rules.TestWatcher;
 import io.appium.java_client.MobileElement;
+
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
@@ -45,14 +47,14 @@ public class LaunchTest {
         Random rand = new Random();
 
         for (int i=0; i<10; i++) {
-            List<MobileElement> buttons = driver.findElementsByClassName("android.widget.Button");
+            List<WebElement> buttons = driver.findElementsByClassName("android.widget.Button");
 
             if (buttons.size() == 0) {
                 return;
             }
 
             try {
-                MobileElement button = buttons.get(rand.nextInt(buttons.size()));
+                MobileElement button = (MobileElement) buttons.get(rand.nextInt(buttons.size()));
                 button.click();
             } catch (Exception ex) {
                 // Fail silently, this is probably due to the number of buttons on the page being reduced between
