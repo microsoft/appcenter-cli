@@ -11,7 +11,7 @@
     <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
-      <version>8.0.0</version>
+      <version>7.6.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -24,6 +24,12 @@
       <artifactId>appium-test-extension</artifactId>
       <version>1.6</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>5.3.18</version>
+    </dependency>
+  </dependencies>
 
   <profiles>
     <profile>
