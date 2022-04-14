@@ -43,7 +43,7 @@ public class LaunchTest {
         driver.label("App has launched");
     }
 
-    @Test
+    //@Test
     public void tapRandomButtonsTest() {
         Random rand = new Random();
 
