@@ -4,13 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <repositories>
-    <repository>
-      <id>jcenter</id>
-      <url>https://jcenter.bintray.com/</url>
-    </repository>
-  </repositories>
-
   <groupId>com.xamarin.samples.appium</groupId>
   <artifactId>LaunchTest</artifactId>
   <version>1.0</version>
@@ -18,7 +11,7 @@
     <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
-      <version>7.1.0</version>
+      <version>7.6.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -29,7 +22,7 @@
     <dependency>
       <groupId>com.microsoft.appcenter</groupId>
       <artifactId>appium-test-extension</artifactId>
-      <version>1.5</version>
+      <version>1.6</version>
     </dependency>
   </dependencies>
 
