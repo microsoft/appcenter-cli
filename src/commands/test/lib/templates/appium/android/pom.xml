@@ -24,8 +24,7 @@
       <artifactId>appium-test-extension</artifactId>
       <version>1.6</version>
     </dependency>
-  </dependencies>
-  <dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <version>5.3.18</version>
