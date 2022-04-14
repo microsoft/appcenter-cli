@@ -1,6 +1,6 @@
 {
   "name": "appcenter-cli",
-  "version": "2.10.9",
+  "version": "2.10.10",
   "description": "Command line tool for Visual Studio App Center",
   "keywords": [
     "microsoft",
@@ -98,7 +98,7 @@
     "mock-require": "3.0.3",
     "nock": "13.2.1",
     "prettier": "2.5.1",
-    "sinon": "11.1.2",
+    "sinon": "13.0.2",
     "ts-node": "9.1.1",
     "typemoq": "2.1.0",
     "typescript": "4.3.5"
