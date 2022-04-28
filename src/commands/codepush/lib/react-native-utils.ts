@@ -483,7 +483,7 @@ export function getAndroidHermesEnabled(gradleFile: string): boolean {
       throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
     })
     .then((buildGradle: any) => {
-      return Array.from(buildGradle["project.ext.react"] || []).some(line => /^enableHermes\s{0,}:\s{0,}true/.test(line));
+      return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
     });
 }
 
