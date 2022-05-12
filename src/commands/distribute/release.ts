@@ -442,24 +442,24 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      const timerId = setInterval(async () => {
+      const check = async () => {
         let response;
         try {
           response = await this.loadReleaseId(app, uploadId);
         } catch (error) {
-          clearInterval(timerId);
           reject(new Error(`Loading release id failed with error: ${error.errorMessage}`));
         }
         const releaseId = response.release_distinct_id;
         debug(`Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
-          clearInterval(timerId);
           resolve(Number(releaseId));
         } else if (response.upload_status === "error") {
-          clearInterval(timerId);
           reject(new Error(`Loading release id failed: ${response.error_details}`));
+        } else {
+          setTimeout(check, 2000);
         }
-      }, 2000);
+      };
+      check();
     });
   }
 
