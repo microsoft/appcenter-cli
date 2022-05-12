@@ -89,6 +89,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
+  @help("Timeout for waiting release id (in seconds)")
+  @shortName("t")
+  @longName("timeout")
+  @hasArg
+  public timeout: string;
+
   private acFusUploader?: ACFusUploader;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
@@ -268,6 +274,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
       }
     }
+    if (!_.isNil(this.timeout)) {
+      if (!(Number.parseInt(this.timeout, 10) >= 0)) {
+        throw failure(ErrorCodes.InvalidParameter, `--timeout must be in seconds`);
+      }
+    }
   }
 
   private validateParametersWithPrerequisites(storeInformation: models.ExternalStoreResponse): void {
@@ -441,6 +452,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
+    const t0 = Date.now();
+    const t1 = t0 + (Number.parseInt(this.timeout, 10) >= 0 ? Number.parseInt(this.timeout, 10) * 1000 : 0);
     return new Promise((resolve, reject) => {
       const check = async () => {
         let response;
@@ -455,6 +468,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
           resolve(Number(releaseId));
         } else if (response.upload_status === "error") {
           reject(new Error(`Loading release id failed: ${response.error_details}`));
+        } else if (t1 > t0 && Date.now() >= t1) {
+          reject(new Error(`Loading release id failed by timeout: ${this.timeout}`));
         } else {
           setTimeout(check, 2000);
         }
