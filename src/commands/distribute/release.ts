@@ -465,10 +465,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
         const releaseId = response.release_distinct_id;
         debug(`Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
+          debug(`Loading release id completed, total time: ${(Date.now() - t0) / 1000}`);
           resolve(Number(releaseId));
         } else if (response.upload_status === "error") {
+          debug(`Loading release id completed, total time: ${(Date.now() - t0) / 1000}`);
           reject(new Error(`Loading release id failed: ${response.error_details}`));
         } else if (t1 > t0 && Date.now() >= t1) {
+          debug(`Loading release id completed, total time: ${(Date.now() - t0) / 1000}`);
           reject(new Error(`Loading release id failed by timeout: ${this.timeout}`));
         } else {
           setTimeout(check, 2000);
