@@ -89,6 +89,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
+  @help("Timeout for waiting release id (in seconds)")
+  @shortName("t")
+  @longName("timeout")
+  @hasArg
+  public timeout: string;
+
   private acFusUploader?: ACFusUploader;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
@@ -268,6 +274,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.InvalidParameter, `File '${this.filePath}' does not exist.`);
       }
     }
+    if (!_.isNil(this.timeout)) {
+      if (!(Number.parseInt(this.timeout, 10) >= 0)) {
+        throw failure(ErrorCodes.InvalidParameter, `--timeout must be an unsigned int value`);
+      }
+    }
   }
 
   private validateParametersWithPrerequisites(storeInformation: models.ExternalStoreResponse): void {
@@ -441,25 +452,31 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async loadReleaseIdUntilSuccess(app: DefaultApp, uploadId: string): Promise<any> {
+    const t0 = Date.now();
+    const t1 = t0 + (_.isNil(this.timeout) ? 0 : Number.parseInt(this.timeout, 10) * 1000);
     return new Promise((resolve, reject) => {
-      const timerId = setInterval(async () => {
+      const check = async () => {
         let response;
         try {
           response = await this.loadReleaseId(app, uploadId);
         } catch (error) {
-          clearInterval(timerId);
           reject(new Error(`Loading release id failed with error: ${error.errorMessage}`));
         }
         const releaseId = response.release_distinct_id;
         debug(`Received release id is ${releaseId}`);
         if (response.upload_status === "readyToBePublished" && releaseId) {
-          clearInterval(timerId);
+          debug(`Loading release id completed, total time: ${(Date.now() - t0) / 1000}`);
           resolve(Number(releaseId));
         } else if (response.upload_status === "error") {
-          clearInterval(timerId);
+          debug(`Loading release id completed, total time: ${(Date.now() - t0) / 1000}`);
           reject(new Error(`Loading release id failed: ${response.error_details}`));
+        } else if (t1 > t0 && Date.now() >= t1) {
+          reject(new Error(`Loading release id failed by timeout: ${this.timeout}`));
+        } else {
+          setTimeout(check, 2000);
         }
-      }, 2000);
+      };
+      check();
     });
   }
 
