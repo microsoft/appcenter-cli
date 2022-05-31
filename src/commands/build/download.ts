@@ -46,7 +46,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   public buildId: string;
 
   @help(
-    `Type of download. '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}', and '${DownloadBuildStatusCommand.symbolsType}' are allowed values`
+    `Type of download. '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.bundleType}', '${DownloadBuildStatusCommand.logsType}', and '${DownloadBuildStatusCommand.symbolsType}' are allowed values`
   )
   @shortName("t")
   @longName("type")
