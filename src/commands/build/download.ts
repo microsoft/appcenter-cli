@@ -104,7 +104,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
           this.unpackAndWriteDirectory(zip, extension, buildInfo.sourceBranch, payloadZipEntry.name)
         );
       } else {
-        // IPA or AAB or APK 
+        // IPA or AAB or APK
         const payload = await out.progress("Extracting application package...", payloadZipEntry.async("nodebuffer"));
         outputPath = await out.progress("Writing application package...", this.writeFile(payload, extension, buildInfo.sourceBranch));
       }
