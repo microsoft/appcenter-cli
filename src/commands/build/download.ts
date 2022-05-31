@@ -27,9 +27,10 @@ const debug = require("debug")("appcenter-cli:commands:build:download");
 
 @help("Download the binary, logs or symbols for a completed build")
 export default class DownloadBuildStatusCommand extends AppCommand {
-  private static readonly applicationPackagesExtensions: string[] = [".apk", ".aar", ".ipa", ".xcarchive"];
+  private static readonly applicationPackagesExtensions: string[] = [".apk", ".aar", ".ipa", ".xcarchive", ".aab"];
 
   private static readonly buildType = "build";
+  private static readonly bundleType = "bundle";
   private static readonly logsType = "logs";
   private static readonly symbolsType = "symbols";
 
@@ -103,7 +104,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
           this.unpackAndWriteDirectory(zip, extension, buildInfo.sourceBranch, payloadZipEntry.name)
         );
       } else {
-        // IPA or APK
+        // IPA or AAB or APK 
         const payload = await out.progress("Extracting application package...", payloadZipEntry.async("nodebuffer"));
         outputPath = await out.progress("Writing application package...", this.writeFile(payload, extension, buildInfo.sourceBranch));
       }
@@ -149,12 +150,13 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     const lowerCaseType = type.toLowerCase();
     if (
       lowerCaseType !== DownloadBuildStatusCommand.buildType &&
+      lowerCaseType !== DownloadBuildStatusCommand.bundleType &&
       lowerCaseType !== DownloadBuildStatusCommand.logsType &&
       lowerCaseType !== DownloadBuildStatusCommand.symbolsType
     ) {
       throw failure(
         ErrorCodes.InvalidParameter,
-        `download type should be '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}' or '${DownloadBuildStatusCommand.symbolsType}'`
+        `download type should be '${DownloadBuildStatusCommand.bundleType}', ${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}' or '${DownloadBuildStatusCommand.symbolsType}'`
       );
     }
 
@@ -241,7 +243,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private getPayload(zip: JsZip): JsZip.JSZipObject {
-    // looking for apk, ipa or xcarchive
+    // looking for aab, apk, ipa or xcarchive
     return _.find(_.values(zip.files) as JsZip.JSZipObject[], (file) =>
       _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase())
     );
