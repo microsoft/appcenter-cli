@@ -11,7 +11,7 @@ The recommended Node.js version is 12 or higher.
 ## Installation
 
 ```
-npm install -g appcenter-cli
+npm install --location=global appcenter-cli
 ```
 
 Once installed, use the `appcenter` command. See below for the available commands.
