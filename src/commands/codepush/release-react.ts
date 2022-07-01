@@ -224,13 +224,25 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
       if (this.os === "android") {
         const isHermesEnabled = await getAndroidHermesEnabled(this.gradleFile);
         if (isHermesEnabled) {
-          await runHermesEmitBinaryCommand(this.bundleName, this.updateContentsPath, this.sourcemapOutput, this.extraHermesFlags);
+          await runHermesEmitBinaryCommand(
+            this.bundleName,
+            this.updateContentsPath,
+            this.sourcemapOutput,
+            this.extraHermesFlags,
+            this.gradleFile
+          );
         }
       } else if (this.os === "ios") {
         // Check if we have to run hermes to compile JS to Byte Code if Hermes is enabled in Podfile and we're releasing an iOS build
         const isHermesEnabled = await getiOSHermesEnabled(this.podFile);
         if (isHermesEnabled) {
-          await runHermesEmitBinaryCommand(this.bundleName, this.updateContentsPath, this.sourcemapOutput, this.extraHermesFlags);
+          await runHermesEmitBinaryCommand(
+            this.bundleName,
+            this.updateContentsPath,
+            this.sourcemapOutput,
+            this.extraHermesFlags,
+            this.gradleFile
+          );
         }
       }
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));

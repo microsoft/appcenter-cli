@@ -348,11 +348,12 @@ export function runReactNativeBundleCommand(
   });
 }
 
-export function runHermesEmitBinaryCommand(
+export async function runHermesEmitBinaryCommand(
   bundleName: string,
   outputFolder: string,
   sourcemapOutput: string,
-  extraHermesFlags: string[]
+  extraHermesFlags: string[],
+  gradleFile: string
 ): Promise<void> {
   const hermesArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
@@ -378,7 +379,7 @@ export function runHermesEmitBinaryCommand(
   }
 
   out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
-  const hermesCommand = getHermesCommand();
+  const hermesCommand = await getHermesCommand(gradleFile);
   const hermesProcess = childProcess.spawn(hermesCommand, hermesArgs);
   out.text(`${hermesCommand} ${hermesArgs.join(" ")}`);
 
@@ -464,7 +465,7 @@ export function runHermesEmitBinaryCommand(
   });
 }
 
-export function getAndroidHermesEnabled(gradleFile: string): boolean {
+function parseBuildGradleFile(gradleFile: string) {
   let buildGradlePath: string = path.join("android", "app");
   if (gradleFile) {
     buildGradlePath = gradleFile;
@@ -477,14 +478,28 @@ export function getAndroidHermesEnabled(gradleFile: string): boolean {
     throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
   }
 
-  return g2js
-    .parseFile(buildGradlePath)
-    .catch(() => {
-      throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
-    })
-    .then((buildGradle: any) => {
-      return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
-    });
+  return g2js.parseFile(buildGradlePath).catch(() => {
+    throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
+  });
+}
+
+async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
+  const buildGradle: any = await parseBuildGradleFile(gradleFile);
+  
+  const hermesCommandProperty: any = Array.from(buildGradle["project.ext.react"] || []).find((prop: string) =>
+    prop.trim().startsWith("hermesCommand:")
+  );
+  if (hermesCommandProperty) {
+    return hermesCommandProperty.replace("hermesCommand:", "").trim().slice(1, -1);
+  } else {
+    return "";
+  }
+}
+
+export function getAndroidHermesEnabled(gradleFile: string): boolean {
+  return parseBuildGradleFile(gradleFile).then((buildGradle: any) => {
+    return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
+  });
 }
 
 export function getiOSHermesEnabled(podFile: string): boolean {
@@ -529,7 +544,7 @@ function getHermesOSExe(): string {
   }
 }
 
-function getHermesCommand(): string {
+async function getHermesCommand(gradleFile: string): Promise<string> {
   const fileExists = (file: string): boolean => {
     try {
       return fs.statSync(file).isFile();
@@ -537,12 +552,18 @@ function getHermesCommand(): string {
       return false;
     }
   };
-  // assume if hermes-engine exists it should be used instead of hermesvm
-  const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), getHermesOSExe());
-  if (fileExists(hermesEngine)) {
-    return hermesEngine;
+
+  const gradleHermesCommand = await getHermesCommandFromGradle(gradleFile);
+  if (gradleHermesCommand) {
+    return path.join("android", "app", gradleHermesCommand.replace("%OS-BIN%", getHermesOSBin()));
+  } else {
+    // assume if hermes-engine exists it should be used instead of hermesvm
+    const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), getHermesOSExe());
+    if (fileExists(hermesEngine)) {
+      return hermesEngine;
+    }
+    return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
   }
-  return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
 }
 
 function getComposeSourceMapsPath(): string {
