@@ -1,7 +1,7 @@
 Describe "distribute release" {
 
   It "creates a release when mandatory flag is set to true" {
-    $appDisplayName = "TestDistributeRelease$((Get-Date).ToString("yyyy-MM-dd_HH.mm.ffffff"))"
+    $appDisplayName = "TestDistributeRelease$((Get-Date).ToString("d"))".replace('/','_')
     $appOs = "Custom"
     $appPlatform = "Custom"
     $createOutput = appcenter apps create --platform $appPlatform --os $appOs --display-name $appDisplayName --output json
