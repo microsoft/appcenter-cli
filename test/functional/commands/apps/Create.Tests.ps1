@@ -2,7 +2,7 @@ Describe "apps create" {
   It "creates a new app when all required parameters are provided with valid values" {
     # Arrange
     $previousNumberOfApps = (appcenter apps list --output json | ConvertFrom-Json).Count
-    $appDisplayName = "TestAppsCreate$((Get-Date).ToString("yyyy-MM-dd_HH.mm.ffffff"))"
+    $appDisplayName = "TestAppsCreate$((Get-Date).ToString("d"))".replace('/','_')
     $appOs = "Android"
     $appPlatform = "Java"
 
