@@ -537,6 +537,11 @@ function getHermesCommand(): string {
       return false;
     }
   };
+  // Hermes is bundled with react-native since 0.69
+  const bundledHermesEngine = path.join("node_modules", "react-native", "sdks", "hermesc", getHermesOSBin(), getHermesOSExe());
+  if (fileExists(bundledHermesEngine)) {
+    return bundledHermesEngine;
+  }
   // assume if hermes-engine exists it should be used instead of hermesvm
   const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), getHermesOSExe());
   if (fileExists(hermesEngine)) {
