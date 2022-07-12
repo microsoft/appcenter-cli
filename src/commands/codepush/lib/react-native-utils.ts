@@ -338,9 +338,9 @@ export function runReactNativeBundleCommand(
       console.error(data.toString().trim());
     });
 
-    reactNativeBundleProcess.on("close", (exitCode: number) => {
-      if (exitCode) {
-        reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
+    reactNativeBundleProcess.on("close", (exitCode: number, signal: string) => {
+      if (exitCode !== 0) {
+        reject(new Error(`"react-native bundle" command failed (exitCode=${exitCode}, signal=${signal}).`));
       }
 
       resolve(null as void);
@@ -391,9 +391,9 @@ export function runHermesEmitBinaryCommand(
       console.error(data.toString().trim());
     });
 
-    hermesProcess.on("close", (exitCode: number) => {
-      if (exitCode) {
-        reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+    hermesProcess.on("close", (exitCode: number, signal: string) => {
+      if (exitCode !== 0) {
+        reject(new Error(`"hermes" command failed (exitCode=${exitCode}, signal=${signal}).`));
       }
       // Copy HBC bundle to overwrite JS bundle
       const source = path.join(outputFolder, bundleName + ".hbc");
@@ -445,9 +445,9 @@ export function runHermesEmitBinaryCommand(
         console.error(data.toString().trim());
       });
 
-      composeSourceMapsProcess.on("close", (exitCode: number) => {
-        if (exitCode) {
-          reject(new Error(`"compose-source-maps" command exited with code ${exitCode}.`));
+      composeSourceMapsProcess.on("close", (exitCode: number, signal: string) => {
+        if (exitCode !== 0) {
+          reject(new Error(`"compose-source-maps" command failed (exitCode=${exitCode}, signal=${signal}).`));
         }
 
         // Delete the HBC sourceMap, otherwise it will be included in 'code-push' bundle as well
