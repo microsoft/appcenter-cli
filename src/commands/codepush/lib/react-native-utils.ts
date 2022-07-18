@@ -19,15 +19,8 @@ export interface VersionSearchParams {
   plistFilePrefix: string;
   gradleFile: string;
   buildConfigurationName: string;
+  xcodeTargetName: string;
   projectFile: string;
-}
-
-interface XCBuildConfiguration {
-  isa: string;
-  baseConfigurationReference: string;
-  baseConfigurationReference_comment: string;
-  buildSettings: Object;
-  name: string;
 }
 
 export async function getReactNativeProjectAppVersion(
@@ -132,15 +125,11 @@ export async function getReactNativeProjectAppVersion(
         }
 
         const xcodeProj = xcode.project(resolvedPbxprojFile).parseSync();
-        // If the build configuration name is not defined in the release-command, then "Release" build configuration is used by default.
-        const buildConfigurationName = versionSearchParams.buildConfigurationName;
-        const configsObj: XCBuildConfiguration = xcodeProj.getBuildConfigByName(buildConfigurationName);
-        if (Object.keys(configsObj).length === 0) {
-          throw new Error(`Unable to find the build configuration with "${buildConfigurationName}" name.`);
-        }
-
-        const marketingVersion = Object.values(configsObj).find((c) => c.buildSettings["MARKETING_VERSION"]).buildSettings
-          .MARKETING_VERSION;
+        const marketingVersion = xcodeProj.getBuildProperty(
+          "MARKETING_VERSION",
+          versionSearchParams.buildConfigurationName,
+          versionSearchParams.xcodeTargetName
+        );
         if (!isValidVersion(marketingVersion)) {
           throw new Error(
             `The "MARKETING_VERSION" key in the "${resolvedPbxprojFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`

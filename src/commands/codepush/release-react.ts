@@ -80,6 +80,12 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @defaultValue("Release")
   public buildConfigurationName: string;
 
+  @help("Name of target (PBXNativeTarget) which specifies the binary version you want to target this release at (iOS only)")
+  @shortName("xt")
+  @longName("xcode-target-name")
+  @hasArg
+  public xcodeTargetName: string;
+
   @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")
   @shortName("s")
   @longName("sourcemap-output")
@@ -195,6 +201,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
         plistFilePrefix: this.plistFilePrefix,
         gradleFile: this.gradleFile,
         buildConfigurationName: this.buildConfigurationName,
+        xcodeTargetName: this.xcodeTargetName,
         projectFile: this.xcodeProjectFile,
       } as VersionSearchParams;
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
