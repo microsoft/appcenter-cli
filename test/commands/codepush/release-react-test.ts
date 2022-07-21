@@ -1028,6 +1028,7 @@ describe("codepush release-react command", function () {
           sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
           sandbox.stub(fileUtils, "removeReactTmpDir");
           sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+          sandbox.stub(ReactNativeTools, "runHermesEmitBinaryCommand");
           sandbox.stub(fs, "lstatSync").returns({ isDirectory: () => false } as any);
           sandbox.stub(g2js, "parseFile").resolves({ "project.ext.react": ["enableHermes: true"] });
           const childProcessStub = new events.EventEmitter() as any;
