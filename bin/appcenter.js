@@ -36,12 +36,8 @@ function runCli() {
   const args = process.argv.slice(2);
 
   if (args.indexOf("--quiet") === -1) {
-    const updateNotifier = require("update-notifier");
     // eslint-disable-next-line security/detect-non-literal-require
-    const pkg = require(path.join(__dirname, "..", "package.json"));
-
-    const notifier = updateNotifier({ pkg });
-    notifier.notify();
+    showUpdateNotification(require(path.join(__dirname, "..", "package.json")));
   }
 
   runner(args).then(function (result) {
@@ -56,6 +52,11 @@ function runCli() {
       process.exit(result.errorCode);
     }
   });
+}
+
+async function showUpdateNotification(pkg) {
+  const { default: updateNotifier } = await import("update-notifier");
+  updateNotifier({ pkg }).notify();
 }
 
 if (ensureNodeVersion()) {
