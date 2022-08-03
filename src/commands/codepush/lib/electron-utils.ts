@@ -76,9 +76,9 @@ export function runWebPackBundleCommand(
       console.error(data.toString().trim());
     });
 
-    webpackProcess.on("close", (exitCode: number) => {
-      if (exitCode) {
-        reject(new Error(`"webpack bundle" command exited with code ${exitCode}.`));
+    webpackProcess.on("close", (exitCode: number, signal: string) => {
+      if (exitCode !== 0) {
+        reject(new Error(`"webpack bundle" command failed (exitCode=${exitCode}, signal=${signal}).`));
       }
 
       resolve(null as void);

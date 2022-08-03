@@ -338,9 +338,9 @@ export function runReactNativeBundleCommand(
       console.error(data.toString().trim());
     });
 
-    reactNativeBundleProcess.on("close", (exitCode: number) => {
-      if (exitCode) {
-        reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
+    reactNativeBundleProcess.on("close", (exitCode: number, signal: string) => {
+      if (exitCode !== 0) {
+        reject(new Error(`"react-native bundle" command failed (exitCode=${exitCode}, signal=${signal}).`));
       }
 
       resolve(null as void);
@@ -392,9 +392,9 @@ export async function runHermesEmitBinaryCommand(
       console.error(data.toString().trim());
     });
 
-    hermesProcess.on("close", (exitCode: number) => {
-      if (exitCode) {
-        reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+    hermesProcess.on("close", (exitCode: number, signal: string) => {
+      if (exitCode !== 0) {
+        reject(new Error(`"hermes" command failed (exitCode=${exitCode}, signal=${signal}).`));
       }
       // Copy HBC bundle to overwrite JS bundle
       const source = path.join(outputFolder, bundleName + ".hbc");
@@ -446,9 +446,9 @@ export async function runHermesEmitBinaryCommand(
         console.error(data.toString().trim());
       });
 
-      composeSourceMapsProcess.on("close", (exitCode: number) => {
-        if (exitCode) {
-          reject(new Error(`"compose-source-maps" command exited with code ${exitCode}.`));
+      composeSourceMapsProcess.on("close", (exitCode: number, signal: string) => {
+        if (exitCode !== 0) {
+          reject(new Error(`"compose-source-maps" command failed (exitCode=${exitCode}, signal=${signal}).`));
         }
 
         // Delete the HBC sourceMap, otherwise it will be included in 'code-push' bundle as well
@@ -551,7 +551,12 @@ async function getHermesCommand(gradleFile: string): Promise<string> {
       return false;
     }
   };
-
+  // Hermes is bundled with react-native since 0.69
+  const bundledHermesEngine = path.join("node_modules", "react-native", "sdks", "hermesc", getHermesOSBin(), getHermesOSExe());
+  if (fileExists(bundledHermesEngine)) {
+    return bundledHermesEngine;
+  }
+ 
   const gradleHermesCommand = await getHermesCommandFromGradle(gradleFile);
   if (gradleHermesCommand) {
     return path.join("android", "app", gradleHermesCommand.replace("%OS-BIN%", getHermesOSBin()));
