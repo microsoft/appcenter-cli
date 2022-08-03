@@ -36,12 +36,9 @@ function runCli() {
   const args = process.argv.slice(2);
 
   if (args.indexOf("--quiet") === -1) {
-    const updateNotifier = require("update-notifier");
     // eslint-disable-next-line security/detect-non-literal-require
     const pkg = require(path.join(__dirname, "..", "package.json"));
-
-    const notifier = updateNotifier({ pkg });
-    notifier.notify();
+    import("update-notifier").then(({ default: updateNotifier }) => updateNotifier({ pkg }).notify());
   }
 
   runner(args).then(function (result) {
