@@ -556,7 +556,7 @@ async function getHermesCommand(gradleFile: string): Promise<string> {
   if (fileExists(bundledHermesEngine)) {
     return bundledHermesEngine;
   }
- 
+
   const gradleHermesCommand = await getHermesCommandFromGradle(gradleFile);
   if (gradleHermesCommand) {
     return path.join("android", "app", gradleHermesCommand.replace("%OS-BIN%", getHermesOSBin()));
