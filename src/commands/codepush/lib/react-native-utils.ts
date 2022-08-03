@@ -485,7 +485,6 @@ function parseBuildGradleFile(gradleFile: string) {
 
 async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
   const buildGradle: any = await parseBuildGradleFile(gradleFile);
-  
   const hermesCommandProperty: any = Array.from(buildGradle["project.ext.react"] || []).find((prop: string) =>
     prop.trim().startsWith("hermesCommand:")
   );
