@@ -994,7 +994,7 @@ describe("codepush release-react command", function () {
         .onFirstCall()
         .callsFake(() => {
           setTimeout(() => {
-            childProcessStub.emit("close");
+            childProcessStub.emit("close", 0);
           });
           return childProcessStub as any;
         });
