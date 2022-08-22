@@ -113,7 +113,7 @@
     "chalk": "4.1.2",
     "cli-spinner": "0.2.10",
     "cli-table3": "0.6.2",
-    "date-fns": "2.29.1",
+    "date-fns": "2.29.2",
     "debug": "4.3.4",
     "es5-ext": "0.10.53",
     "fast-xml-parser": "3.21.1",
