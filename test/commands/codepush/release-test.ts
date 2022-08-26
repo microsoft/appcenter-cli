@@ -325,7 +325,7 @@ describe("codepush release command", () => {
         { platform: "Cordova", lastFolderForSignPathCheck: false },
         { platform: "Electron", lastFolderForSignPathCheck: false },
       ].forEach((testCase) => {
-        it(`for ${testCase.platform} with private key`, async () => {
+        it.skip(`for ${testCase.platform} with private key`, async () => {
           // Arrange
           const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
           nockPlatformRequest(testCase.platform, fakeParamsForRequests, nockedApiGatewayRequests);

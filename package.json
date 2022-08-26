@@ -1,5 +1,5 @@
 {
-  "name": "appcenter-cli",
+  "name": "@d4l/appcenter-cli",
   "version": "2.11.0",
   "description": "Command line tool for Visual Studio App Center",
   "keywords": [
@@ -13,7 +13,7 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "appcenter": "./bin/appcenter.js"
+    "appcenter": "bin/appcenter.js"
   },
   "preferGlobal": true,
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/appcenter-cli.git"
+    "url": "git+https://github.com/gesundheitscloud/appcenter-cli.git"
   },
   "author": "Microsoft",
   "license": "MIT",
