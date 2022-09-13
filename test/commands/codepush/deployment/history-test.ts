@@ -71,7 +71,7 @@ describe("codepush deployment history", () => {
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeNonExistentDeploymentName}/releases`)
         .reply((uri, requestBody) => {
           requestReleasesSpy();
-          return [400, {}];
+          return [404, `Deployment "${testData.fakeNonExistentDeploymentName}" does not exist.`];
         })
         .get(`/v0.1/apps/${testData.fakeNonExistentAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
         .reply((uri, requestBody) => {

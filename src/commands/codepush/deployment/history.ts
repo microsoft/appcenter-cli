@@ -79,16 +79,16 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       return success();
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
-      if (error.statusCode === 404) {
+      if (error.statusCode === 404 && error.response.body === `Deployment "${this.deploymentName}" does not exist.`) {
+        const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
+        return failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
+      } else if (error.statusCode === 404) {
         const appNotFoundErrorMsg = `The app ${
           this.identifier
         } does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold(
           `${scriptName} apps list`
         )} to see what apps you have access to.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
-      } else if (error.statusCode === 400) {
-        const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
-        return failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
       } else {
         return failure(ErrorCodes.Exception, error.response.body);
       }
