@@ -125,7 +125,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
 
   @help("Enable hermes and bypass automatic checks")
   @longName("use-hermes")
-  public useHermes: string | string[];
+  public useHermes: boolean;
 
   private os: string;
 
