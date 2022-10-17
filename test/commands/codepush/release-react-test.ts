@@ -237,12 +237,12 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-            "--target-binary-version", "1.0.0",
-            "--bundle-name", "bundle",
-            "--deployment-name", deployment,
-            "--app", app,
-            "--token", "c1o3d3e7",
-          ],
+          "--target-binary-version", "1.0.0",
+          "--bundle-name", "bundle",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -284,12 +284,12 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-                  "--target-binary-version", "1.0.0",
-                  "--bundle-name", "bundle",
-                  "--deployment-name", deployment,
-                  "--app", app,
-                  "--token", "c1o3d3e7",
-                ],
+          "--target-binary-version", "1.0.0",
+          "--bundle-name", "bundle",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -396,11 +396,11 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-            "--target-binary-version", "1.0.0",
-            "--deployment-name", deployment,
-            "--app", app,
-            "--token", "c1o3d3e7",
-          ],
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -441,11 +441,11 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-            "--target-binary-version", "1.0.0",
-            "--deployment-name", deployment,
-            "--app", app,
-            "--token", "c1o3d3e7",
-          ],
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -625,12 +625,12 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-            "--target-binary-version", "1.0.0",
-            "--deployment-name", deployment,
-            "--app", app,
-            "--token", "c1o3d3e7",
-            "--entry-file", entryFile
-          ],
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+          "--entry-file", entryFile
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -899,11 +899,11 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-            "--target-binary-version", "1.0.0",
-            "--deployment-name", deployment,
-            "--app", app,
-            "--token", "c1o3d3e7",
-          ],
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -937,6 +937,103 @@ describe("codepush release-react command", function () {
       await command.execute();
 
       // Assert
+      expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
+    });
+
+    it("bypass app podfile file check and enable hermes when use-hermes arguments is passed", async function () {
+      const os = "ios";
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+          "--use-hermes",
+        ],
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+        {
+          "name": "RnCodepushAndroid",
+          "version": "0.0.1",
+          "dependencies": {
+            "react": "17.0.0",
+            "react-native": "0.64.0",
+            "react-native-code-push": "6.3.0"
+          }
+        }
+      `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      const getiOSHermesEnabled = sandbox.stub(ReactNativeTools, "getiOSHermesEnabled");
+      const runHermesEmitBinaryCommandStub = sandbox.stub(ReactNativeTools, "runHermesEmitBinaryCommand");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      expect(getiOSHermesEnabled.notCalled).is.true;
+      expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
+    });
+    it("bypass app gradle file check and enable hermes when use-hermes arguments is passed", async function () {
+      const os = "Android";
+      // Arrange
+      const args = {
+        ...goldenPathArgs,
+        // prettier-ignore
+        args: [
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+          "--use-hermes",
+        ],
+      };
+      const command = new CodePushReleaseReactCommand(args);
+      sandbox.stub(fs, "readFileSync").returns(`
+          {
+            "name": "RnCodepushAndroid",
+            "version": "0.0.1",
+            "dependencies": {
+              "react": "16.13.1",
+              "react-native": "0.63.3",
+              "react-native-code-push": "6.3.0"
+            }
+          }
+        `);
+
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}`).reply(200, {});
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}`).reply(200, {
+        os,
+        platform: "react-native",
+      });
+      sandbox.stub(mkdirp, "sync");
+      sandbox.stub(fileUtils, "fileDoesNotExistOrIsDirectory").returns(false);
+      sandbox.stub(fileUtils, "createEmptyTmpReleaseFolder");
+      sandbox.stub(command, "release" as any).resolves(<CommandResult>{ succeeded: true });
+      sandbox.stub(fileUtils, "removeReactTmpDir");
+      sandbox.stub(ReactNativeTools, "runReactNativeBundleCommand");
+      const getAndroidHermesEnabled = sandbox.stub(ReactNativeTools, "getAndroidHermesEnabled");
+      const runHermesEmitBinaryCommandStub = sandbox.stub(ReactNativeTools, "runHermesEmitBinaryCommand");
+
+      // Act
+      await command.execute();
+
+      // Assert
+      expect(getAndroidHermesEnabled.notCalled).is.true;
       expect(runHermesEmitBinaryCommandStub.calledOnce).is.true;
     });
 
@@ -1016,11 +1113,11 @@ describe("codepush release-react command", function () {
         ...goldenPathArgs,
         // prettier-ignore
         args: [
-            "--target-binary-version", "1.0.0",
-            "--deployment-name", deployment,
-            "--app", app,
-            "--token", "c1o3d3e7",
-          ],
+          "--target-binary-version", "1.0.0",
+          "--deployment-name", deployment,
+          "--app", app,
+          "--token", "c1o3d3e7",
+        ],
       };
       const command = new CodePushReleaseReactCommand(args);
       sandbox.stub(fs, "readFileSync").returns(`
@@ -1068,11 +1165,11 @@ describe("codepush release-react command", function () {
             ...goldenPathArgs,
             // prettier-ignore
             args: [
-                "--target-binary-version", "1.0.0",
-                "--deployment-name", deployment,
-                "--app", app,
-                "--token", "c1o3d3e7",
-              ],
+              "--target-binary-version", "1.0.0",
+              "--deployment-name", deployment,
+              "--app", app,
+              "--token", "c1o3d3e7",
+            ],
           };
           const command = new CodePushReleaseReactCommand(args);
           sandbox.stub(fs, "readFileSync").returns(`
