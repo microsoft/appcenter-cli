@@ -189,9 +189,8 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
       out.text('\n"sourcemap-output-dir" argument will be ignored as "sourcemap-output" argument is provided.\n');
     }
 
-    if ((this.outputDir || this.sourcemapOutputDir) && !this.sourcemapOutput) {
-      const sourcemapDir = this.sourcemapOutputDir || this.updateContentsPath;
-      this.sourcemapOutput = path.join(sourcemapDir, this.bundleName + ".map");
+    if (this.sourcemapOutputDir && !this.sourcemapOutput) {
+      this.sourcemapOutput = path.join(this.sourcemapOutputDir, this.bundleName + ".map");
     }
 
     this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
