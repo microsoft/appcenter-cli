@@ -119,7 +119,7 @@
     "fast-xml-parser": "3.21.1",
     "from2": "2.3.0",
     "glob": "7.2.0",
-    "gradle-to-js": "2.0.0",
+    "gradle-to-js": "2.0.1",
     "inquirer": "8.2.0",
     "iso8601-duration": "1.3.0",
     "jsonwebtoken": "8.5.1",
