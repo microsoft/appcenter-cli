@@ -541,7 +541,8 @@ async function getHermesCommand(gradleFile: string): Promise<string> {
     }
   };
   // Hermes is bundled with react-native since 0.69
-  const bundledHermesEngine = path.join("node_modules", "react-native", "sdks", "hermesc", getHermesOSBin(), getHermesOSExe());
+  const reactNativePath = path.dirname(require.resolve('react-native'));
+  const bundledHermesEngine = path.join(reactNativePath, 'sdks', 'hermesc', getHermesOSBin(), getHermesOSExe());
   if (fileExists(bundledHermesEngine)) {
     return bundledHermesEngine;
   }
