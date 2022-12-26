@@ -96,7 +96,7 @@
     "mocha": "9.2.0",
     "mocha-junit-reporter": "2.0.2",
     "mock-require": "3.0.3",
-    "nock": "13.2.1",
+    "nock": "13.2.9",
     "prettier": "2.5.1",
     "sinon": "11.1.2",
     "ts-node": "9.1.1",
