@@ -45,14 +45,12 @@ describe("Validating UITest template generation", () => {
       )
     ).to.be.true;
     expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/Tests.cs`))).to.be.true;
-    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`))).to.be.true;
     expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/Properties/AssemblyInfo.cs`))).to.be
       .true;
   });
 
   it("should update NuGet version", async () => {
     // Arrange
-    const fakeLatestVersion = "2.5.6";
     const args: CommandArgs = {
       command: ["test", "generate", "uitest"],
       commandPath: "Test",
@@ -66,7 +64,10 @@ describe("Validating UITest template generation", () => {
       });
     });
 
-    const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+    const packageFilePath = path.join(
+      command.outputPath,
+      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
+    );
     const projectFilePath = path.join(
       command.outputPath,
       `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
@@ -105,7 +106,10 @@ describe("Validating UITest template generation", () => {
       });
     });
 
-    const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+    const packageFilePath = path.join(
+      command.outputPath,
+      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
+    );
     const projectFilePath = path.join(
       command.outputPath,
       `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
@@ -155,7 +159,10 @@ describe("Validating UITest template generation", () => {
       });
     });
 
-    const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+    const packageFilePath = path.join(
+      command.outputPath,
+      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
+    );
     const projectFilePath = path.join(
       command.outputPath,
       `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
