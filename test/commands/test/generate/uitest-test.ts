@@ -50,6 +50,7 @@ describe("Validating UITest template generation", () => {
   });
 
   it("should update NuGet version", async () => {
+    const fakeLatestVersion = "3.14.0";
     // Arrange
     const args: CommandArgs = {
       command: ["test", "generate", "uitest"],
@@ -64,19 +65,12 @@ describe("Validating UITest template generation", () => {
       });
     });
 
-    const packageFilePath = path.join(
-      command.outputPath,
-      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
-    );
     const projectFilePath = path.join(
       command.outputPath,
       `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
     );
 
     // Assert
-    let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).not.contain(fakeLatestVersion);
-
     let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
     expect(projectFileContent).not.contain(fakeLatestVersion);
 
@@ -84,14 +78,12 @@ describe("Validating UITest template generation", () => {
     await (command as any).processTemplate();
 
     // Assert
-    packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).contain(fakeLatestVersion);
-
     projectFileContent = await pfs.readFile(projectFilePath, "utf8");
     expect(projectFileContent).contain(fakeLatestVersion);
   });
 
   it("should not touch NuGet version on failure", async () => {
+    const latestVersion = "3.13.3";
     // Arrange
     const args: CommandArgs = {
       command: ["test", "generate", "uitest"],
@@ -106,31 +98,21 @@ describe("Validating UITest template generation", () => {
       });
     });
 
-    const packageFilePath = path.join(
-      command.outputPath,
-      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
-    );
     const projectFilePath = path.join(
       command.outputPath,
       `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
     );
 
     // Assert
-    let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).contain("3.2.2");
-
     let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain("3.2.2");
+    expect(projectFileContent).contain(latestVersion);
 
     // Act
     await (command as any).processTemplate();
 
     // Assert
-    packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).contain("3.2.2");
-
     projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain("3.2.2");
+    expect(projectFileContent).contain(latestVersion);
   });
 
   it("should recover original template files on failure", async () => {
@@ -159,19 +141,12 @@ describe("Validating UITest template generation", () => {
       });
     });
 
-    const packageFilePath = path.join(
-      command.outputPath,
-      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
-    );
     const projectFilePath = path.join(
       command.outputPath,
       `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
     );
 
     // Assert
-    let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).not.contain(fakeLatestVersion);
-
     let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
     expect(projectFileContent).not.contain(fakeLatestVersion);
 
@@ -179,9 +154,6 @@ describe("Validating UITest template generation", () => {
     await (command as any).processTemplate();
 
     // Assert
-    packageFileContent = await pfs.readFile(packageFilePath, "utf8");
-    expect(packageFileContent).not.contain(fakeLatestVersion);
-
     projectFileContent = await pfs.readFile(projectFilePath, "utf8");
     expect(projectFileContent).not.contain(fakeLatestVersion);
   });

@@ -16,7 +16,6 @@ export default class GenerateUITestCommand extends GenerateCommand {
 
   protected async processTemplate(): Promise<void> {
     const platform = this.isIOS() ? "iOS" : "Android";
-    const packageFilePath = path.join(this.outputPath, `AppCenter.UITest.${platform}/packages.config`);
     const projectFilePath = path.join(this.outputPath, `AppCenter.UITest.${platform}/AppCenter.UITest.${platform}.csproj`);
 
     let latestVersion: string;
@@ -29,11 +28,12 @@ export default class GenerateUITestCommand extends GenerateCommand {
     }
 
     try {
-      // Replace version inside packages.config file
-      await this.replaceVersionInFile(packageFilePath, /(id="Xamarin\.UITest" version=")(\d+(\.\d+)+)/, latestVersion);
-
       // Replace version inside *.csproj file
-      await this.replaceVersionInFile(projectFilePath, /(packages\\Xamarin\.UITest\.)(\d+(\.\d+)+)/, latestVersion);
+      await this.replaceVersionInFile(
+        projectFilePath,
+        /(<PackageReference Include="Xamarin\.UITest" Version=")(\d+(\.\d+)+)/,
+        latestVersion
+      );
     } catch (e) {
       await this.copyTemplates();
       console.warn("Can't update UITest version. Using default templates. Details: " + e);
