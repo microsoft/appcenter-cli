@@ -83,7 +83,7 @@ describe("Validating UITest template generation", () => {
   });
 
   it("should not touch NuGet version on failure", async () => {
-    const latestVersion = "3.13.3";
+    const latestVersion = "4.1.0";
     // Arrange
     const args: CommandArgs = {
       command: ["test", "generate", "uitest"],
