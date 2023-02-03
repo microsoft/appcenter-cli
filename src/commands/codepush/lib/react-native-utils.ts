@@ -419,12 +419,12 @@ export async function runHermesEmitBinaryCommand(
     }
 
     return new Promise((resolve, reject) => {
-      const composeSourceMapsArgs = [sourcemapOutput, jsCompilerSourceMapFile, "-o", sourcemapOutput];
+      const composeSourceMapsArgs = [composeSourceMapsPath, sourcemapOutput, jsCompilerSourceMapFile, "-o", sourcemapOutput];
 
       // https://github.com/facebook/react-native/blob/master/react.gradle#L211
       // https://github.com/facebook/react-native/blob/master/scripts/react-native-xcode.sh#L178
       // packager.sourcemap.map + hbc.sourcemap.map = sourcemap.map
-      const composeSourceMapsProcess = childProcess.spawn(composeSourceMapsPath, composeSourceMapsArgs);
+      const composeSourceMapsProcess = childProcess.spawn("node", composeSourceMapsArgs);
       out.text(`${composeSourceMapsPath} ${composeSourceMapsArgs.join(" ")}`);
 
       composeSourceMapsProcess.stdout.on("data", (data: Buffer) => {
