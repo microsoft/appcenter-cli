@@ -104,7 +104,7 @@
     "typescript": "4.3.5"
   },
   "dependencies": {
-    "@xmldom/xmldom": "0.7.7",
+    "@xmldom/xmldom": "0.8.3",
     "abort-controller": "3.0.0",
     "appcenter-file-upload-client": "0.1.0",
     "appcenter-file-upload-client-node": "^1.2.4",
