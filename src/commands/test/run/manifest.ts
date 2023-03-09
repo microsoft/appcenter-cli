@@ -2,6 +2,7 @@ import { CommandArgs, help, longName, required, hasArg } from "../../../util/com
 import { Messages } from "../lib/help-messages";
 import * as path from "path";
 import { writeFile, walk } from "../../../util/misc/promisfied-fs";
+import { XMLSerializer } from "@xmldom/xmldom";
 import { XmlUtil } from "../lib/xml-util";
 import { XmlUtilBuilder } from "../lib/xml-util-builder";
 import { generateAbsolutePath } from "../../../util/misc/fs-helper";
@@ -65,6 +66,7 @@ export default class RunManifestTestsCommand extends RunTestsDownloadResultComma
       throw new Error("XML merging has ended with an error");
     }
 
-    await writeFile(path.join(outputDir, this.outputXmlName), xml);
+    const strXml: string = new XMLSerializer().serializeToString(xml);
+    await writeFile(path.join(outputDir, this.outputXmlName), strXml);
   }
 }
