@@ -59,7 +59,7 @@ export default class RunAppiumTestsCommand extends RunTestsDownloadResultCommand
       throw new Error(`Couldn't merge xml test results to ${this.mergeJUnitXml}`);
     }
 
-        const strXml: string = new XMLSerializer().serializeToString(xml);
-        return pfs.writeFile(path.join(reportPath, this.mergeJUnitXml), strXml);
+    const strXml: string = new XMLSerializer().serializeToString(xml);
+    return pfs.writeFile(path.join(reportPath, this.mergeJUnitXml), strXml);
   }
 }
