@@ -4,6 +4,7 @@ import { generateAbsolutePath } from "../../../util/misc/fs-helper";
 import { CommandArgs, help, longName, hasArg, required } from "../../../util/commandline";
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { Messages } from "../lib/help-messages";
+import { XMLSerializer } from "@xmldom/xmldom";
 import { JUnitXmlUtil } from "../lib/junit-xml-util";
 import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-command";
 
@@ -58,6 +59,7 @@ export default class RunAppiumTestsCommand extends RunTestsDownloadResultCommand
       throw new Error(`Couldn't merge xml test results to ${this.mergeJUnitXml}`);
     }
 
-    return pfs.writeFile(path.join(reportPath, this.mergeJUnitXml), xml);
+    const strXml: string = new XMLSerializer().serializeToString(xml);
+    return pfs.writeFile(path.join(reportPath, this.mergeJUnitXml), strXml);
   }
 }
