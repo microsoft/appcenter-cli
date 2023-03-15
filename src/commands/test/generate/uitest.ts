@@ -22,7 +22,14 @@ export default class GenerateUITestCommand extends GenerateCommand {
     let latestVersion: string;
 
     try {
-      latestVersion = await this.getLatestUITestVersionNumber();
+      // Using hardcoded version because starting from version 4.* Xamarin.UITest drops framework v4.5.
+      // Using latest version of Xamarin.UITest requires to update the generated project (see https://github.com/microsoft/appcenter-cli/pull/2179).
+      // However, it will also require us to update the backend side of the Build service,
+      // so the generated project would be built using newer msbuild tool (currently it is msbuild 14, see https://dev.azure.com/msmobilecenter/Mobile-Center/_git/appcenter/pullrequest/55845).
+      // The mentioned PR in build service doesn't work, so we need to debug it to make the msbuild udpated properly.
+      // Until then, we are using a hardcoded working version of Xamarin.UITest.
+
+      latestVersion = "3.2.9"; // await this.getLatestUITestVersionNumber();
     } catch (e) {
       console.warn("Can't retrieve latest UITest version. Using default version from template. Details: " + e);
       return;
