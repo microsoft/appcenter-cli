@@ -50,7 +50,7 @@ export default class GenerateUITestCommand extends GenerateCommand {
   }
 
   // private async getLatestUITestVersionNumber(): Promise<string> {
-    // Retrieve the latest stable version number of Xamarin.UITest via NuGet api
+  // Retrieve the latest stable version number of Xamarin.UITest via NuGet api
   //  return new Promise<string>((resolve, reject) => {
   //    const UITestNugetApiUrl = "https://api.nuget.org/v3-flatcontainer/Xamarin.UITest/index.json";
 
