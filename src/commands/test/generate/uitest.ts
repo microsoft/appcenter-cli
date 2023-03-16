@@ -28,6 +28,7 @@ export default class GenerateUITestCommand extends GenerateCommand {
       // so the generated project would be built using newer msbuild tool (currently it is msbuild 14, see https://dev.azure.com/msmobilecenter/Mobile-Center/_git/appcenter/pullrequest/55845).
       // The mentioned PR in build service doesn't work, so we need to debug it to make the msbuild udpated properly.
       // Until then, we are using a hardcoded working version of Xamarin.UITest.
+      // After removing it - uncomment lines 52-78.
 
       latestVersion = "3.2.9"; // await this.getLatestUITestVersionNumber();
     } catch (e) {
@@ -48,33 +49,33 @@ export default class GenerateUITestCommand extends GenerateCommand {
     }
   }
 
-  private async getLatestUITestVersionNumber(): Promise<string> {
+  // private async getLatestUITestVersionNumber(): Promise<string> {
     // Retrieve the latest stable version number of Xamarin.UITest via NuGet api
-    return new Promise<string>((resolve, reject) => {
-      const UITestNugetApiUrl = "https://api.nuget.org/v3-flatcontainer/Xamarin.UITest/index.json";
+  //  return new Promise<string>((resolve, reject) => {
+  //    const UITestNugetApiUrl = "https://api.nuget.org/v3-flatcontainer/Xamarin.UITest/index.json";
 
-      request(
-        {
-          url: UITestNugetApiUrl,
-          json: true,
-        },
-        (error, response, body) => {
-          if (!error && response.statusCode === 200) {
-            const stableVersions: string[] = (body.versions as string[]).filter(
-              (version) => version.indexOf("dev") === -1 && version.indexOf("beta") === -1
-            );
-            if (stableVersions.length) {
-              resolve(stableVersions[stableVersions.length - 1]);
-            } else {
-              reject("Can't load latest UITest NuGet version number: response does not contain valid versions");
-            }
-          } else {
-            reject(`Can't load latest UITest NuGet version number: ${response.statusCode}: ${error}`);
-          }
-        }
-      );
-    });
-  }
+  //    request(
+  //      {
+  //        url: UITestNugetApiUrl,
+  //        json: true,
+  //      },
+  //      (error, response, body) => {
+  //        if (!error && response.statusCode === 200) {
+  //          const stableVersions: string[] = (body.versions as string[]).filter(
+  //            (version) => version.indexOf("dev") === -1 && version.indexOf("beta") === -1
+  //          );
+  //          if (stableVersions.length) {
+  //            resolve(stableVersions[stableVersions.length - 1]);
+  //          } else {
+  //            reject("Can't load latest UITest NuGet version number: response does not contain valid versions");
+  //          }
+  //        } else {
+  //          reject(`Can't load latest UITest NuGet version number: ${response.statusCode}: ${error}`);
+  //        }
+  //      }
+  //    );
+  //  });
+  //}
 
   private async replaceVersionInFile(filePath: string, regex: RegExp, version: string): Promise<void> {
     let fileContent = await pfs.readFile(filePath, "utf8");
