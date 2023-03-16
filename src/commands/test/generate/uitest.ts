@@ -2,7 +2,7 @@ import { CommandArgs, help } from "../../../util/commandline";
 import { GenerateCommand } from "../lib/generate-command";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import * as request from "request";
+// import * as request from "request";
 import * as path from "path";
 
 @help(Messages.TestCloud.Commands.GenerateUITest)
@@ -28,7 +28,7 @@ export default class GenerateUITestCommand extends GenerateCommand {
       // so the generated project would be built using newer msbuild tool (currently it is msbuild 14, see https://dev.azure.com/msmobilecenter/Mobile-Center/_git/appcenter/pullrequest/55845).
       // The mentioned PR in build service doesn't work, so we need to debug it to make the msbuild udpated properly.
       // Until then, we are using a hardcoded working version of Xamarin.UITest.
-      // After removing it - uncomment lines 52-78.
+      // After removing it - uncomment lines 52-78 and line 5.
 
       latestVersion = "3.2.9"; // await this.getLatestUITestVersionNumber();
     } catch (e) {
