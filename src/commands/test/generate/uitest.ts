@@ -29,6 +29,7 @@ export default class GenerateUITestCommand extends GenerateCommand {
       // The mentioned PR in build service doesn't work, so we need to debug it to make the msbuild udpated properly.
       // Until then, we are using a hardcoded working version of Xamarin.UITest.
       // After removing it - uncomment lines 52-78 and line 5.
+      // Also, after removing this hardcode - uncomment lines 53-180 in file test/commands/test/generate/uitest-test.ts
 
       latestVersion = "3.2.9"; // await this.getLatestUITestVersionNumber();
     } catch (e) {
