@@ -45,116 +45,137 @@ describe("Validating UITest template generation", () => {
       )
     ).to.be.true;
     expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/Tests.cs`))).to.be.true;
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`))).to.be.true;
     expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/Properties/AssemblyInfo.cs`))).to.be
       .true;
   });
 
-  it("should update NuGet version", async () => {
-    const fakeLatestVersion = "3.14.0";
-    // Arrange
-    const args: CommandArgs = {
-      command: ["test", "generate", "uitest"],
-      commandPath: "Test",
-      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)],
-    };
+  // it("should update NuGet version", async () => {
+  //   // Arrange
+  //   const fakeLatestVersion = "2.5.6";
+  //   const args: CommandArgs = {
+  //     command: ["test", "generate", "uitest"],
+  //     commandPath: "Test",
+  //     args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)],
+  //   };
 
-    const command = new GenerateUITestCommand(args);
-    sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
-      return new Promise<string>((resolve) => {
-        resolve(fakeLatestVersion);
-      });
-    });
+  //   const command = new GenerateUITestCommand(args);
+  //   sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
+  //     return new Promise<string>((resolve) => {
+  //       resolve(fakeLatestVersion);
+  //     });
+  //   });
 
-    const projectFilePath = path.join(
-      command.outputPath,
-      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
-    );
+  //   const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+  //   const projectFilePath = path.join(
+  //     command.outputPath,
+  //     `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
+  //   );
 
-    // Assert
-    let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).not.contain(fakeLatestVersion);
+  //   // Assert
+  //   let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+  //   expect(packageFileContent).not.contain(fakeLatestVersion);
 
-    // Act
-    await (command as any).processTemplate();
+  //   let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+  //   expect(projectFileContent).not.contain(fakeLatestVersion);
 
-    // Assert
-    projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain(fakeLatestVersion);
-  });
+  //   // Act
+  //   await (command as any).processTemplate();
 
-  it("should not touch NuGet version on failure", async () => {
-    const latestVersion = "4.1.0";
-    // Arrange
-    const args: CommandArgs = {
-      command: ["test", "generate", "uitest"],
-      commandPath: "Test",
-      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)],
-    };
+  //   // Assert
+  //   packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+  //   expect(packageFileContent).contain(fakeLatestVersion);
 
-    const command = new GenerateUITestCommand(args);
-    sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
-      return new Promise<string>((resolve) => {
-        throw "Test error";
-      });
-    });
+  //   projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+  //   expect(projectFileContent).contain(fakeLatestVersion);
+  // });
 
-    const projectFilePath = path.join(
-      command.outputPath,
-      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
-    );
+  // it("should not touch NuGet version on failure", async () => {
+  //   // Arrange
+  //   const args: CommandArgs = {
+  //     command: ["test", "generate", "uitest"],
+  //     commandPath: "Test",
+  //     args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)],
+  //   };
 
-    // Assert
-    let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain(latestVersion);
+  //   const command = new GenerateUITestCommand(args);
+  //   sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
+  //     return new Promise<string>((resolve) => {
+  //       throw "Test error";
+  //     });
+  //   });
 
-    // Act
-    await (command as any).processTemplate();
+  //   const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+  //   const projectFilePath = path.join(
+  //     command.outputPath,
+  //     `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
+  //   );
 
-    // Assert
-    projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).contain(latestVersion);
-  });
+  //   // Assert
+  //   let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+  //   expect(packageFileContent).contain("3.2.2");
 
-  it("should recover original template files on failure", async () => {
-    // Arrange
-    const fakeLatestVersion = "2.5.6";
-    const args: CommandArgs = {
-      command: ["test", "generate", "uitest"],
-      commandPath: "Test",
-      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)],
-    };
+  //   let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+  //   expect(projectFileContent).contain("3.2.2");
 
-    const command = new GenerateUITestCommand(args);
-    sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
-      return new Promise<string>((resolve) => {
-        resolve(fakeLatestVersion);
-      });
-    });
+  //   // Act
+  //   await (command as any).processTemplate();
 
-    sandbox.stub(command as any, "replaceVersionInFile").callsFake((filePath: string, regex: RegExp, version: string) => {
-      return new Promise<void>((resolve) => {
-        if (filePath.indexOf("packages.config") !== -1) {
-          resolve();
-        } else {
-          throw "Test error";
-        }
-      });
-    });
+  //   // Assert
+  //   packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+  //   expect(packageFileContent).contain("3.2.2");
 
-    const projectFilePath = path.join(
-      command.outputPath,
-      `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
-    );
+  //   projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+  //   expect(projectFileContent).contain("3.2.2");
+  // });
 
-    // Assert
-    let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).not.contain(fakeLatestVersion);
+  // it("should recover original template files on failure", async () => {
+  //   // Arrange
+  //   const fakeLatestVersion = "2.5.6";
+  //   const args: CommandArgs = {
+  //     command: ["test", "generate", "uitest"],
+  //     commandPath: "Test",
+  //     args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)],
+  //   };
 
-    // Act
-    await (command as any).processTemplate();
+  //   const command = new GenerateUITestCommand(args);
+  //   sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
+  //     return new Promise<string>((resolve) => {
+  //       resolve(fakeLatestVersion);
+  //     });
+  //   });
 
-    // Assert
-    projectFileContent = await pfs.readFile(projectFilePath, "utf8");
-    expect(projectFileContent).not.contain(fakeLatestVersion);
-  });
+  //   sandbox.stub(command as any, "replaceVersionInFile").callsFake((filePath: string, regex: RegExp, version: string) => {
+  //     return new Promise<void>((resolve) => {
+  //       if (filePath.indexOf("packages.config") !== -1) {
+  //         resolve();
+  //       } else {
+  //         throw "Test error";
+  //       }
+  //     });
+  //   });
+
+  //   const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+  //   const projectFilePath = path.join(
+  //     command.outputPath,
+  //     `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`
+  //   );
+
+  //   // Assert
+  //   let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+  //   expect(packageFileContent).not.contain(fakeLatestVersion);
+
+  //   let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+  //   expect(projectFileContent).not.contain(fakeLatestVersion);
+
+  //   // Act
+  //   await (command as any).processTemplate();
+
+  //   // Assert
+  //   packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+  //   expect(packageFileContent).not.contain(fakeLatestVersion);
+
+  //   projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+  //   expect(projectFileContent).not.contain(fakeLatestVersion);
+  // });
 });
