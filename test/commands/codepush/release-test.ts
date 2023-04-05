@@ -205,7 +205,7 @@ describe("codepush release command", () => {
           // Assert
           expect(result.succeeded).to.be.false;
           expect(result.errorMessage).to.eql(
-            `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`
+            `Rollout value should be integer value between ${chalk.bold("1")} and ${chalk.bold("100")}.`
           );
         });
       });

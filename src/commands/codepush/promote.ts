@@ -91,7 +91,7 @@ export default class CodePushPromoteCommand extends AppCommand {
     if (this.rollout != null && (!Number.isSafeInteger(rollout) || !isValidRollout(rollout))) {
       return failure(
         ErrorCodes.Exception,
-        `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`
+        `Rollout value should be integer value between ${chalk.bold("1")} and ${chalk.bold("100")}.`
       );
     }
 
