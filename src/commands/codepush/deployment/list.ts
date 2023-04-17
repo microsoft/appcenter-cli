@@ -27,6 +27,11 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   @longName("displayKeys")
   public displayKeys: boolean;
 
+  @help("Specifies whether to Fetch Deployment Metric or Not")
+  @shortName("m")
+  @longName("disableDeploymentMetric")
+  public disableDeploymentMetric: boolean;
+
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -107,7 +112,11 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   }
 
   private async generateMetricsJSON(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushReleaseMetric> {
-    const metrics: models.CodePushReleaseMetric[] = await this.getMetrics(deployment, client);
+    let metrics: models.CodePushReleaseMetric[] = [];
+    if (!this.disableDeploymentMetric) {
+      out.text("Note: To Disbale Deployment Metrics Info set -m | --disableDeploymentMetric option to true");
+      metrics = await this.getMetrics(deployment, client);
+    }
 
     if (metrics.length) {
       let releasesTotalActive: number = 0;
