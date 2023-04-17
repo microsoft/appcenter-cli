@@ -88,10 +88,12 @@ jobs:
       arguments: '-Token $(ac-cli-account-api-token)'
       pwsh: true
     displayName: 'Run functional tests'
+    condition: eq(variables['RUN_FUNCTIONAL_TESTS'], 'true')
 
   - script: |
       [ -f './test/functional/testresult.xml' ]
     displayName: 'Verify that functional test result file exists'
+    condition: eq(variables['RUN_FUNCTIONAL_TESTS'], 'true')
 
   - task: PublishTestResults@2
     inputs:
@@ -101,6 +103,7 @@ jobs:
       failTaskOnFailedTests: true
       testRunTitle: 'Functional tests'
     displayName: 'Verify functional test result'
+    condition: eq(variables['RUN_FUNCTIONAL_TESTS'], 'true')
 
   - script: |
       npm pack
