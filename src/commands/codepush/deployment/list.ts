@@ -17,6 +17,18 @@ import { scriptName } from "../../../util/misc";
 import { promiseMap } from "../../../util/misc/promise-map";
 import { formatDate } from "./lib/date-helper";
 
+const skipDeploymentMetrics = <T>() => {
+  return function (_1: any, _2: string, descriptor: PropertyDescriptor) {
+    const originalValue = descriptor.value;
+    descriptor.value = function (...args: T[]) {
+      if (this.skipFetchingDeploymentMetrics) {
+        return null;
+      }
+      return originalValue.apply(this, args);
+    };
+  };
+};
+
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
 const PROMISE_CONCURRENCY = 30;
 
@@ -27,11 +39,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   @longName("displayKeys")
   public displayKeys: boolean;
 
-  @help("Specifies whether to Fetch Deployment Metric or Not")
-  @shortName("m")
-  @longName("disableDeploymentMetric")
-  public disableDeploymentMetric: boolean;
-
+  @help("Specifies whether to fetch deployment metrics")
+  @shortName("s")
+  @longName("skipFetchingDeploymentMetrics")
+  public skipFetchingDeploymentMetrics: boolean;
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -71,7 +82,12 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
         )} to see what apps you have access to.`;
         return failure(ErrorCodes.InvalidParameter, appNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, "Failed to get list of deployments for the app");
+        let message = "Failed to get list of deployments for the app";
+        if (error.statusCode === 429) {
+          message =
+            "There are too many request please try disabling fetching the metrics for each deployment by using -s | --skipFetchingDeploymentMetrics flags";
+        }
+        return failure(ErrorCodes.Exception, message);
       }
     }
   }
@@ -111,12 +127,9 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     );
   }
 
+  @skipDeploymentMetrics()
   private async generateMetricsJSON(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushReleaseMetric> {
-    let metrics: models.CodePushReleaseMetric[] = [];
-    if (!this.disableDeploymentMetric) {
-      out.text("Note: To Disbale Deployment Metrics Info set -m | --disableDeploymentMetric option to true");
-      metrics = await this.getMetrics(deployment, client);
-    }
+    const metrics: models.CodePushReleaseMetric[] = await this.getMetrics(deployment, client);
 
     if (metrics.length) {
       let releasesTotalActive: number = 0;
