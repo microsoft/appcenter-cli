@@ -25,7 +25,7 @@ export default class SymbolsUploadingHelper {
     try {
       // putting ZIP to the specified URL
       const uploadUrl: string = uploadingBeginRequestResult.uploadUrl;
-      await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, artifactPath);
+      await new AzureBlobUploadHelper().upload(uploadUrl, artifactPath);
 
       // sending 'committed' API request to finish uploading
       await this.executeSymbolsUploadingEndRequest(this.client, this.app, symbolUploadId, "committed");
