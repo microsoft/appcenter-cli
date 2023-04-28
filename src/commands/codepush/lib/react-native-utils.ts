@@ -580,7 +580,7 @@ function getCliPath(): string {
 function getReactNativePackagePath(): string {
   const result = childProcess.spawnSync("node", ["--print", "require.resolve('react-native/package.json')"]);
   const packagePath = path.dirname(result.stdout.toString());
-  if (directoryExistsSync(packagePath)) {
+  if (result.status === 0 && directoryExistsSync(packagePath)) {
     return packagePath;
   }
 
