@@ -12,6 +12,7 @@ const plist = require("plist");
 const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
 import * as childProcess from "child_process";
+import { directoryExistsSync } from "../../../util/misc/fs-helper";
 
 export interface VersionSearchParams {
   os: string; // ios or android
@@ -541,7 +542,7 @@ async function getHermesCommand(gradleFile: string): Promise<string> {
     }
   };
   // Hermes is bundled with react-native since 0.69
-  const bundledHermesEngine = path.join("node_modules", "react-native", "sdks", "hermesc", getHermesOSBin(), getHermesOSExe());
+  const bundledHermesEngine = path.join(getReactNativePackagePath(), "sdks", "hermesc", getHermesOSBin(), getHermesOSExe());
   if (fileExists(bundledHermesEngine)) {
     return bundledHermesEngine;
   }
@@ -561,7 +562,7 @@ async function getHermesCommand(gradleFile: string): Promise<string> {
 
 function getComposeSourceMapsPath(): string {
   // detect if compose-source-maps.js script exists
-  const composeSourceMaps = path.join("node_modules", "react-native", "scripts", "compose-source-maps.js");
+  const composeSourceMaps = path.join(getReactNativePackagePath(), "scripts", "compose-source-maps.js");
   if (fs.existsSync(composeSourceMaps)) {
     return composeSourceMaps;
   }
@@ -570,10 +571,20 @@ function getComposeSourceMapsPath(): string {
 
 function getCliPath(): string {
   if (process.platform === "win32") {
-    return path.join("node_modules", "react-native", "local-cli", "cli.js");
+    return path.join(getReactNativePackagePath(), "local-cli", "cli.js");
   }
 
   return path.join("node_modules", ".bin", "react-native");
+}
+
+function getReactNativePackagePath(): string {
+  const result = childProcess.spawnSync("node", ["--print", "require.resolve('react-native/package.json')"]);
+  const packagePath = path.dirname(result.stdout.toString());
+  if (result.status === 0 && directoryExistsSync(packagePath)) {
+    return packagePath;
+  }
+
+  return path.join("node_modules", "react-native");
 }
 
 export function isValidOS(os: string): boolean {
