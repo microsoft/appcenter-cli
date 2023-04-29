@@ -17,18 +17,6 @@ import { scriptName } from "../../../util/misc";
 import { promiseMap } from "../../../util/misc/promise-map";
 import { formatDate } from "./lib/date-helper";
 
-const skipDeploymentMetrics = <T>() => {
-  return function (_1: any, _2: string, descriptor: PropertyDescriptor) {
-    const originalValue = descriptor.value;
-    descriptor.value = function (...args: T[]) {
-      if (this.skipFetchingDeploymentMetrics) {
-        return null;
-      }
-      return originalValue.apply(this, args);
-    };
-  };
-};
-
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
 const PROMISE_CONCURRENCY = 30;
 
@@ -85,7 +73,8 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
         let message = "Failed to get list of deployments for the app";
         if (error.statusCode === 429) {
           message =
-            "There are too many request please try disabling fetching the metrics for each deployment by using -s | --skipFetchingDeploymentMetrics flags";
+            message +
+            ". Too many requests. Try disabling metrics request for each deployment by using -s | --skipFetchingDeploymentMetrics flag.";
         }
         return failure(ErrorCodes.Exception, message);
       }
@@ -127,8 +116,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     );
   }
 
-  @skipDeploymentMetrics()
   private async generateMetricsJSON(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushReleaseMetric> {
+    if (this.skipFetchingDeploymentMetrics) {
+      return null;
+    }
     const metrics: models.CodePushReleaseMetric[] = await this.getMetrics(deployment, client);
 
     if (metrics.length) {
