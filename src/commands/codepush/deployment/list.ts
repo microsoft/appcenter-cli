@@ -90,6 +90,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
       deployments,
       async (deployment) => {
         if (formatIsJson()) {
+          if (!deployment.latestRelease || this.skipFetchingDeploymentMetrics) {
+            return deployment;
+          }
+
           const metricsJSON: models.CodePushReleaseMetric = await this.generateMetricsJSON(deployment, client);
 
           if (metricsJSON && deployment.latestRelease) {
@@ -104,7 +108,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
 
         if (deployment.latestRelease) {
           metadataString = this.generateMetadataString(deployment.latestRelease);
-          metricsString = await this.getMetricsString(deployment, client);
+          metricsString = this.skipFetchingDeploymentMetrics ? "" : await this.getMetricsString(deployment, client);
         } else {
           metadataString = chalk.magenta("No updates released");
           metricsString = chalk.magenta("No installs recorded");
@@ -117,9 +121,6 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   }
 
   private async generateMetricsJSON(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushReleaseMetric> {
-    if (this.skipFetchingDeploymentMetrics) {
-      return null;
-    }
     const metrics: models.CodePushReleaseMetric[] = await this.getMetrics(deployment, client);
 
     if (metrics.length) {
