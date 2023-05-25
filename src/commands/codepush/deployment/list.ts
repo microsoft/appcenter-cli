@@ -27,6 +27,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   @longName("displayKeys")
   public displayKeys: boolean;
 
+  @help("Specifies whether to fetch deployment metrics")
+  @shortName("s")
+  @longName("skipFetchingDeploymentMetrics")
+  public skipFetchingDeploymentMetrics: boolean;
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -66,7 +70,13 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
         )} to see what apps you have access to.`;
         return failure(ErrorCodes.InvalidParameter, appNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, "Failed to get list of deployments for the app");
+        let message = "Failed to get list of deployments for the app";
+        if (error.statusCode === 429) {
+          message =
+            message +
+            ". Too many requests. Try disabling metrics request for each deployment by using -s | --skipFetchingDeploymentMetrics flag.";
+        }
+        return failure(ErrorCodes.Exception, message);
       }
     }
   }
@@ -80,9 +90,13 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
       deployments,
       async (deployment) => {
         if (formatIsJson()) {
+          if (!deployment.latestRelease || this.skipFetchingDeploymentMetrics) {
+            return deployment;
+          }
+
           const metricsJSON: models.CodePushReleaseMetric = await this.generateMetricsJSON(deployment, client);
 
-          if (metricsJSON && deployment.latestRelease) {
+          if (metricsJSON) {
             deployment.latestRelease.metrics = metricsJSON;
           }
 
@@ -94,7 +108,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
 
         if (deployment.latestRelease) {
           metadataString = this.generateMetadataString(deployment.latestRelease);
-          metricsString = await this.getMetricsString(deployment, client);
+          metricsString = this.skipFetchingDeploymentMetrics ? "" : await this.getMetricsString(deployment, client);
         } else {
           metadataString = chalk.magenta("No updates released");
           metricsString = chalk.magenta("No installs recorded");
