@@ -96,7 +96,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
 
           const metricsJSON: models.CodePushReleaseMetric = await this.generateMetricsJSON(deployment, client);
 
-          if (metricsJSON && deployment.latestRelease) {
+          if (metricsJSON) {
             deployment.latestRelease.metrics = metricsJSON;
           }
 
