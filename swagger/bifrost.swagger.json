@@ -3,7 +3,12 @@
   "info": {
     "version": "preview",
     "title": "App Center Client",
-    "description": "Microsoft Visual Studio App Center API"
+    "description": "Microsoft Visual Studio App Center API",
+    "contact": {
+      "name": "API Support",
+      "url": "http://www.example.com/support",
+      "email": "support@example.com"
+      }
   },
   "host": "api.appcenter.ms",
   "basePath": "/",
@@ -316,6 +321,7 @@
     },
     "/v0.1/user/metadata/optimizely": {
       "get": {
+        "description": "test",
         "responses": {
           "200": {
             "description": "Success",
@@ -778,6 +784,7 @@
     },
     "/v0.1/user/dsr/export/{token}/cancel": {
       "post": {
+        "description": "test",
         "operationId": "DataSubjectRight_CancelExportRequest",
         "parameters": [
           {
@@ -900,6 +907,7 @@
     },
     "/v0.1/user/dsr/export/{token}": {
       "get": {
+        "description": "test",
         "operationId": "DataSubjectRight_ExportStatusRequest",
         "parameters": [
           {
@@ -996,6 +1004,7 @@
     },
     "/v0.1/user/dsr/export": {
       "post": {
+        "description": "test",
         "operationId": "DataSubjectRight_ExportRequest",
         "parameters": [],
         "responses": {
@@ -1074,6 +1083,7 @@
     },
     "/v0.1/user/dsr/delete/{token}/cancel": {
       "post": {
+        "description": "test",
         "operationId": "DataSubjectRight_CancelDeleteRequest",
         "parameters": [
           {
@@ -1212,6 +1222,7 @@
     },
     "/v0.1/user/dsr/delete/{token}": {
       "get": {
+        "description": "test",
         "operationId": "DataSubjectRight_DeleteStatusRequest",
         "parameters": [
           {
@@ -1316,6 +1327,7 @@
     },
     "/v0.1/user/dsr/delete": {
       "post": {
+        "description": "test",
         "operationId": "DataSubjectRight_DeleteRequest",
         "parameters": [],
         "responses": {
@@ -9359,31 +9371,37 @@
         "parameters": [
           {
             "name": "deploymentKey",
+            "description": "description",
             "in": "query",
             "type": "string"
           },
           {
             "name": "appVersion",
+            "description": "description",
             "in": "query",
             "type": "string"
           },
           {
             "name": "packageHash",
+            "description": "description",
             "in": "query",
             "type": "string"
           },
           {
             "name": "label",
+            "description": "description",
             "in": "query",
             "type": "string"
           },
           {
             "name": "clientUniqueId",
+            "description": "description",
             "in": "query",
             "type": "string"
           },
           {
             "name": "isCompanion",
+            "description": "description",
             "in": "query",
             "type": "string"
           }
@@ -25259,6 +25277,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "description",
             "required": false,
             "type": "array",
             "items": {
@@ -26596,6 +26615,7 @@
           },
           {
             "name": "model",
+            "description": "test",
             "in": "query",
             "required": false,
             "type": "string",
@@ -26604,6 +26624,7 @@
           },
           {
             "name": "os",
+            "description": "test",
             "in": "query",
             "required": false,
             "type": "string",
@@ -26866,6 +26887,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "string",
             "format": "string",
@@ -27811,6 +27833,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "string",
             "format": "string",
@@ -27828,6 +27851,7 @@
           {
             "name": "groupState",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "string",
             "format": "string",
@@ -28135,6 +28159,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "string",
             "format": "string",
@@ -28446,6 +28471,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "x-ms-parameter-location": "method"
@@ -34536,6 +34562,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/data/resource_provisioning": {
       "get": {
+        "summary": "test",
         "operationId": "data_getResourceProvisioning",
         "parameters": [
           {
@@ -34641,6 +34668,7 @@
           {
             "name": "AC-Authorization-ARM",
             "in": "header",
+            "description": "test",
             "required": true,
             "type": "string"
           },
@@ -36238,7 +36266,7 @@
             "in": "query",
             "type": "string",
             "format": "date-time",
-            "description": "",
+            "description": "test",
             "required": false,
             "x-ms-parameter-location": "method"
           },
@@ -36247,7 +36275,7 @@
             "in": "query",
             "type": "string",
             "format": "date-time",
-            "description": "",
+            "description": "test",
             "required": false,
             "x-ms-parameter-location": "method"
           },
@@ -36262,6 +36290,7 @@
           {
             "name": "error_type",
             "in": "query",
+            "description": "test",
             "type": "string",
             "required": false,
             "enum": [
@@ -36767,6 +36796,7 @@
           {
             "name": "group_type",
             "in": "query",
+            "description": "test",
             "type": "string",
             "required": false,
             "enum": [
@@ -36778,6 +36808,7 @@
           {
             "name": "group_status",
             "in": "query",
+            "description": "test",
             "type": "string",
             "required": false,
             "enum": [
@@ -42594,6 +42625,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -42728,6 +42760,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -42864,6 +42897,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -42997,6 +43031,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -43125,6 +43160,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -43262,6 +43298,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -43397,6 +43434,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -43779,6 +43817,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -44199,6 +44238,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -44434,6 +44474,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -44565,6 +44606,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -44700,6 +44742,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -44831,6 +44874,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -45026,6 +45070,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -45464,6 +45509,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "format": "string",
@@ -45574,6 +45620,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "format": "string",
@@ -45670,6 +45717,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "format": "string",
@@ -45791,6 +45839,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "format": "string",
@@ -45912,6 +45961,7 @@
           {
             "name": "version",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "format": "string",
@@ -46174,6 +46224,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -47391,6 +47442,7 @@
           {
             "name": "versions",
             "in": "query",
+            "description": "test",
             "required": false,
             "type": "array",
             "items": {
@@ -47402,6 +47454,7 @@
           {
             "name": "app_build",
             "in": "query",
+            "description": "test",
             "required": true,
             "type": "string",
             "format": "string",
@@ -58571,16 +58624,6 @@
         "frameworkType"
       ]
     },
-    "TestCloudProjectFrameworkProperties": {
-      "properties": {
-        "configurations": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "ToolsetProjects": {
       "description": "A collection of projects for each type of toolset",
       "properties": {
@@ -59853,230 +59896,6 @@
           ]
         }
       ]
-    },
-    "BranchConfigurationToolsets": {
-      "description": "The branch build configuration for each toolset",
-      "properties": {
-        "xcode": {
-          "description": "Build configuration when Xcode is part of the build steps",
-          "properties": {
-            "projectOrWorkspacePath": {
-              "description": "Xcode project/workspace path",
-              "type": "string"
-            },
-            "podfilePath": {
-              "description": "Path to CococaPods file, if present",
-              "type": "string"
-            },
-            "cartfilePath": {
-              "description": "Path to Carthage file, if present",
-              "type": "string"
-            },
-            "provisioningProfileEncoded": {
-              "type": "string"
-            },
-            "certificateEncoded": {
-              "type": "string"
-            },
-            "provisioningProfileFileId": {
-              "type": "string"
-            },
-            "certificateFileId": {
-              "type": "string"
-            },
-            "provisioningProfileUploadId": {
-              "type": "string"
-            },
-            "appExtensionProvisioningProfileFiles": {
-              "type": "array",
-              "items": {
-                "description": "Provisioning profile fetch and store information",
-                "properties": {
-                  "fileName": {
-                    "description": "Name of uploaded provisioning profile",
-                    "type": "string"
-                  },
-                  "fileId": {
-                    "description": "File id from secure file storage",
-                    "type": "string"
-                  },
-                  "uploadId": {
-                    "description": "Upload id to App Center File Upload Store",
-                    "type": "string"
-                  },
-                  "targetBundleIdentifier": {
-                    "description": "Target the provisioning profile is used to sign",
-                    "type": "string"
-                  }
-                }
-              }
-            },
-            "certificateUploadId": {
-              "type": "string"
-            },
-            "certificatePassword": {
-              "type": "string"
-            },
-            "scheme": {
-              "type": "string"
-            },
-            "xcodeVersion": {
-              "type": "string",
-              "description": "Xcode version used to build. Available versions can be found in \"/xcode_versions\" API. Default is latest stable version, at the time when the configuration is set."
-            },
-            "provisioningProfileFilename": {
-              "type": "string"
-            },
-            "certificateFilename": {
-              "type": "string"
-            },
-            "teamId": {
-              "type": "string"
-            },
-            "automaticSigning": {
-              "type": "boolean"
-            },
-            "xcodeProjectSha": {
-              "type": "string",
-              "description": "The selected pbxproject hash to the repositroy"
-            },
-            "archiveConfiguration": {
-              "type": "string",
-              "description": "The build configuration of the target to archive"
-            },
-            "targetToArchive": {
-              "type": "string",
-              "description": "The target id of the selected scheme to archive"
-            },
-            "forceLegacyBuildSystem": {
-              "type": "boolean",
-              "description": "Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting from workspace settings is used.\nBy default new build system is used if workspace setting is not committed to the repository. Only used for iOS React Native app, with Xcode 10.\n"
-            }
-          }
-        },
-        "javascript": {
-          "description": "Build configuration when React Native, or other JavaScript tech, is part of the build steps",
-          "properties": {
-            "packageJsonPath": {
-              "description": "Path to package.json file for the main project, e.g. \"package.json\" or \"myapp/package.json\"",
-              "type": "string"
-            },
-            "runTests": {
-              "description": "Whether to run Jest unit tests, via npm test, during the build",
-              "type": "boolean"
-            },
-            "reactNativeVersion": {
-              "description": "Version of React Native from package.json files",
-              "type": "string"
-            }
-          }
-        },
-        "xamarin": {
-          "description": "Build configuration for Xamarin projects",
-          "properties": {
-            "slnPath": {
-              "type": "string"
-            },
-            "isSimBuild": {
-              "type": "boolean"
-            },
-            "args": {
-              "type": "string"
-            },
-            "configuration": {
-              "type": "string"
-            },
-            "p12File": {
-              "type": "string"
-            },
-            "p12Pwd": {
-              "type": "string"
-            },
-            "provProfile": {
-              "type": "string"
-            },
-            "monoVersion": {
-              "type": "string"
-            },
-            "sdkBundle": {
-              "type": "string"
-            },
-            "symlink": {
-              "description": "Symlink of the SDK Bundle and Mono installation.\nThe build will use the associated Mono bundled with related Xamarin SDK. If both symlink and monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink is passed, the current stable Mono version will be configured for building.\n",
-              "type": "string"
-            }
-          }
-        },
-        "android": {
-          "description": "Build configuration for Android projects",
-          "properties": {
-            "gradleWrapperPath": {
-              "description": "Path to the Gradle wrapper script",
-              "type": "string",
-              "example": "android/gradlew"
-            },
-            "module": {
-              "description": "The Gradle module to build",
-              "type": "string",
-              "example": "app"
-            },
-            "buildVariant": {
-              "description": "The Android build variant to build",
-              "type": "string",
-              "example": "release"
-            },
-            "runTests": {
-              "description": "Whether to run unit tests during the build (default)",
-              "type": "boolean",
-              "default": true
-            },
-            "runLint": {
-              "description": "Whether to run lint checks during the build (default)",
-              "type": "boolean"
-            },
-            "isRoot": {
-              "description": "Whether it is the root module or not",
-              "type": "boolean"
-            },
-            "automaticSigning": {
-              "description": "Whether to apply automatic signing or not",
-              "type": "boolean"
-            },
-            "keystorePassword": {
-              "description": "The password of the keystore",
-              "type": "string"
-            },
-            "keyAlias": {
-              "description": "The key alias",
-              "type": "string"
-            },
-            "keyPassword": {
-              "description": "The key password",
-              "type": "string"
-            },
-            "keystoreFilename": {
-              "description": "The name of the keystore file",
-              "type": "string"
-            },
-            "keystoreEncoded": {
-              "description": "The keystore encoded value",
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "BranchConfigurationArtifactVersioning": {
-      "description": "The versioning configuration for artifacts built for this branch",
-      "properties": {
-        "buildNumberFormat": {
-          "type": "string",
-          "enum": [
-            "buildId",
-            "timestamp"
-          ]
-        }
-      }
     },
     "XcodeBranchConfigurationProperties": {
       "description": "Build configuration when Xcode is part of the build steps",
@@ -67298,44 +67117,6 @@
         "user_email": {
           "type": "string",
           "description": ""
-        }
-      }
-    },
-    "CrashDetails": {
-      "required": [
-        "locale",
-        "screen_size",
-        "rooted"
-      ],
-      "properties": {
-        "carrier_country": {
-          "type": "string",
-          "description": "Carrier country code (for mobile devices).\n"
-        },
-        "carrier_name": {
-          "type": "string",
-          "description": "Carrier name (for mobile devices).\n"
-        },
-        "locale": {
-          "type": "string",
-          "description": "Language code (example: en_US).\n"
-        },
-        "os_build": {
-          "type": "string",
-          "description": "OS build code (example: LMY47X).\n"
-        },
-        "rooted": {
-          "type": "boolean",
-          "description": "Whether the device where the crash occurred is rooted or jailbroken\n"
-        },
-        "screen_size": {
-          "type": "string",
-          "description": "Screen size of the device in pixels (example: 640x480).\n"
-        },
-        "app_start_timestamp": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Application launch timestamp (example: 1985-04-12T23:20:50.52Z).\n"
         }
       }
     },
@@ -81254,101 +81035,6 @@
         }
       }
     },
-    "TestRun": {
-      "title": "Test Run",
-      "description": "Summary single test run on Xamarin Test Cloud",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid",
-          "description": "The unique id of the test upload"
-        },
-        "date": {
-          "description": "The date and time the test was uploaded",
-          "type": "string"
-        },
-        "appVersion": {
-          "description": "The compiled version of the app binary",
-          "type": "string"
-        },
-        "testSeries": {
-          "description": "The name of the test series with which this test upload is associated",
-          "type": "string"
-        },
-        "platform": {
-          "description": "The device platform targeted by the test. Possible values are 'ios' or 'android'",
-          "type": "string"
-        },
-        "runStatus": {
-          "description": "The current status of the test run, in relation to the various phases",
-          "type": "string"
-        },
-        "resultStatus": {
-          "description": "The passed/failed state",
-          "type": "string"
-        },
-        "state": {
-          "description": "Deprecated. Use runStatus instead.",
-          "type": "string"
-        },
-        "status": {
-          "description": "Deprecated. Use resultStatus instead.",
-          "type": "string"
-        },
-        "description": {
-          "description": "Human readable explanation of the current test status",
-          "type": "string"
-        },
-        "stats": {
-          "title": "Test Run Statistics",
-          "description": "Summary single test run on Xamarin Test Cloud",
-          "type": "object",
-          "properties": {
-            "devices": {
-              "description": "Number of devices running the test",
-              "type": "number"
-            },
-            "devicesFinished": {
-              "description": "Number of finished devices",
-              "type": "number"
-            },
-            "devicesFailed": {
-              "description": "Number of failed devices",
-              "type": "number"
-            },
-            "total": {
-              "description": "Number of tests in total",
-              "type": "number"
-            },
-            "passed": {
-              "description": "Number of passed tests",
-              "type": "number"
-            },
-            "failed": {
-              "description": "Number of failed tests",
-              "type": "number"
-            },
-            "skipped": {
-              "description": "Number of skipped tests",
-              "type": "number"
-            },
-            "peakMemory": {
-              "description": "The max amount of MB used during the test run",
-              "type": "number"
-            },
-            "totalDeviceMinutes": {
-              "description": "The number of minutes of device time the test has been runnign",
-              "type": "number"
-            }
-          }
-        },
-        "testType": {
-          "description": "The name of the test framework used to run this test",
-          "type": "string"
-        }
-      }
-    },
     "TestRunStatistics": {
       "title": "Test Run Statistics",
       "description": "Summary single test run on Xamarin Test Cloud",
@@ -81392,62 +81078,6 @@
         }
       }
     },
-    "TestSeries": {
-      "title": "Test Series",
-      "description": "Summary of a single test series",
-      "type": "object",
-      "properties": {
-        "slug": {
-          "description": "Unique, human-readable identifier of the test series",
-          "type": "string"
-        },
-        "name": {
-          "description": "Name of the test series",
-          "type": "string"
-        },
-        "mostRecentActivity": {
-          "description": "Date of the latest test run that used this test series",
-          "type": "string",
-          "format": "dateTime"
-        },
-        "testRuns": {
-          "description": "Most recent test runs",
-          "type": "array",
-          "items": {
-            "title": "Test Run Summary",
-            "description": "Most important information about a test run.",
-            "type": "object",
-            "properties": {
-              "date": {
-                "description": "Date of the test run.",
-                "type": "string",
-                "format": "dateTime"
-              },
-              "statusDescription": {
-                "description": "Human-readable status of the test run.",
-                "type": "string"
-              },
-              "failed": {
-                "description": "Number of failed tests",
-                "type": "number"
-              },
-              "passed": {
-                "description": "Number of passed tests",
-                "type": "number"
-              },
-              "completed": {
-                "description": "Tells whether the test run has completed",
-                "type": "boolean"
-              }
-            }
-          }
-        }
-      },
-      "required": [
-        "slug",
-        "name"
-      ]
-    },
     "TestSeriesName": {
       "title": "Name of the test series",
       "type": "object",
@@ -81489,36 +81119,6 @@
         }
       }
     },
-    "DeviceList": {
-      "title": "Device List",
-      "description": "A list of device IDs",
-      "type": "object",
-      "properties": {
-        "devices": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "devices"
-      ]
-    },
-    "DeviceSelection": {
-      "title": "Device Selection",
-      "description": "Short ID for a list of device IDs",
-      "type": "object",
-      "properties": {
-        "shortId": {
-          "description": "Identifier of the device selection",
-          "type": "string"
-        }
-      },
-      "required": [
-        "shortId"
-      ]
-    },
     "DeviceSetUpdate": {
       "title": "Device Set update information",
       "description": "The name of the device set and the list of device IDs",
@@ -81537,136 +81137,6 @@
       },
       "required": [
         "devices",
-        "name"
-      ]
-    },
-    "DeviceSet": {
-      "title": "Device Set",
-      "description": "The name and devices of the device set",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifier of the device set",
-          "type": "string"
-        },
-        "manufacturerCount": {
-          "description": "The number of manufacturers in the device set's device selection",
-          "type": "number"
-        },
-        "name": {
-          "description": "Name of the device set",
-          "type": "string"
-        },
-        "slug": {
-          "description": "Slug of the device set",
-          "type": "string"
-        },
-        "owner": {
-          "title": "Device Set Owner",
-          "description": "The owner of a device set",
-          "type": "object",
-          "properties": {
-            "type": {
-              "description": "Type of account",
-              "type": "string"
-            },
-            "id": {
-              "description": "Account ID",
-              "type": "string"
-            },
-            "displayName": {
-              "description": "Display name of the account",
-              "type": "string"
-            },
-            "name": {
-              "description": "Name of the account",
-              "type": "string"
-            }
-          },
-          "required": [
-            "type",
-            "id",
-            "name"
-          ]
-        },
-        "osVersionCount": {
-          "description": "The number of os versions in the device set's device selection",
-          "type": "number"
-        },
-        "deviceConfigurations": {
-          "type": "array",
-          "items": {
-            "properties": {
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "The unique id of the device configuration"
-              },
-              "image": {
-                "properties": {
-                  "thumb": {
-                    "type": "string"
-                  }
-                }
-              },
-              "model": {
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "manufacturer": {
-                    "type": "string"
-                  },
-                  "releaseDate": {
-                    "type": "string"
-                  },
-                  "formFactor": {
-                    "type": "string"
-                  }
-                }
-              },
-              "os": {
-                "type": "string"
-              },
-              "osName": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "owner",
-        "deviceConfigurations"
-      ]
-    },
-    "DeviceSetOwner": {
-      "title": "Device Set Owner",
-      "description": "The owner of a device set",
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "Type of account",
-          "type": "string"
-        },
-        "id": {
-          "description": "Account ID",
-          "type": "string"
-        },
-        "displayName": {
-          "description": "Display name of the account",
-          "type": "string"
-        },
-        "name": {
-          "description": "Name of the account",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "id",
         "name"
       ]
     },
@@ -82073,25 +81543,6 @@
         }
       }
     },
-    "TestCloudErrorDetails": {
-      "title": "Test Cloud Error Details",
-      "description": "Details of a failed operation",
-      "type": "object",
-      "properties": {
-        "status": {
-          "description": "Status of the operation",
-          "type": "string"
-        },
-        "message": {
-          "description": "Human-readable message that describes the error",
-          "type": "string"
-        }
-      },
-      "required": [
-        "status",
-        "message"
-      ]
-    },
     "TestCloudFileHashDeprecated": {
       "title": "Test Cloud File Hash",
       "description": "Hash, type, path and byte range of a file that is required in test run",
@@ -82123,35 +81574,6 @@
         "file_type",
         "checksum",
         "relative_path"
-      ]
-    },
-    "TestCloudFileHash": {
-      "title": "Test Cloud File Hash",
-      "description": "Hash, type, path and byte range of a file that is required in test run",
-      "type": "object",
-      "properties": {
-        "fileType": {
-          "type": "string",
-          "description": "Type of the file",
-          "enum": [
-            "dsym-file",
-            "app-file",
-            "test-file"
-          ]
-        },
-        "checksum": {
-          "type": "string",
-          "description": "SHA256 hash of the file"
-        },
-        "relativePath": {
-          "type": "string",
-          "description": "Relative path of the file"
-        }
-      },
-      "required": [
-        "fileType",
-        "checksum",
-        "relativePath"
       ]
     },
     "TestCloudFileHashResponse": {
@@ -82219,41 +81641,6 @@
         "statusCode"
       ]
     },
-    "TestCloudStartTestRunOptions": {
-      "title": "Test Cloud Start Test Run Options",
-      "description": "Options required to start the test run",
-      "type": "object",
-      "properties": {
-        "test_framework": {
-          "type": "string",
-          "description": "Test framework used by tests."
-        },
-        "device_selection": {
-          "type": "string",
-          "description": "Device selection string."
-        },
-        "language": {
-          "type": "string",
-          "description": "Language that should be used to run tests."
-        },
-        "locale": {
-          "type": "string",
-          "description": "Locale that should be used to run tests."
-        },
-        "test_series": {
-          "type": "string",
-          "description": "Name of the test series."
-        },
-        "test_parameters": {
-          "type": "object",
-          "description": "A JSON dictionary with additional test parameters"
-        }
-      },
-      "required": [
-        "test_framework",
-        "device_selection"
-      ]
-    },
     "TestCloudStartTestRunResult": {
       "title": "Test Cloud Test Run Start Result",
       "description": "Result of starting a test run",
@@ -82272,28 +81659,6 @@
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "TestRunState": {
-      "title": "Test Run State",
-      "description": "Current status of a test run",
-      "type": "object",
-      "properties": {
-        "message": {
-          "description": "Multi-line message that describes the status",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "wait_time": {
-          "description": "Time (in seconds) that the client should wait for before checking the status again",
-          "type": "integer"
-        },
-        "exit_code": {
-          "description": "The exit code that the client should use when exiting. Used for indicating status to the caller of the client.\n0: test run completes with no failing tests\n1: test run completes with at least one failing test\n2: test run failed to complete. Status for test run is unknown\n",
-          "type": "integer"
         }
       }
     },
@@ -84754,32 +84119,6 @@
         "user_enabled"
       ]
     },
-    "AlertingBugtrackerSettings": {
-      "description": "Bugtracker specific settings",
-      "type": "object",
-      "discriminator": "type",
-      "properties": {
-        "callback_url": {
-          "type": "string"
-        },
-        "owner_name": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "description": "type of bugtracker",
-          "enum": [
-            "github",
-            "vsts",
-            "jira"
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "owner_name"
-      ]
-    },
     "AlertingVstsBugtrackerSettings": {
       "type": "object",
       "description": "VSTS bugtracker specific settings",
@@ -85105,21 +84444,6 @@
         "url",
         "id"
       ]
-    },
-    "AlertBugTrackerRepoOwner": {
-      "description": "Repository owner object",
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "login": {
-          "type": "string"
-        }
-      }
     },
     "AlertCrashGroupStateChange": {
       "description": "AlertCrashGroup patching parameter",
@@ -88601,16 +87925,25 @@
       "name": "account"
     },
     {
+      "name": "alerting"
+    },
+    {
+      "name": "analytics"
+    },
+    {
+      "name": "billing"
+    },
+    {
       "name": "build"
     },
     {
-      "name": "distribute"
+      "name": "codepush"
     },
     {
       "name": "crash"
     },
     {
-      "name": "analytics"
+      "name": "distribute"
     },
     {
       "name": "errors"
@@ -88619,25 +87952,16 @@
       "name": "export"
     },
     {
-      "name": "push"
-    },
-    {
-      "name": "test"
-    },
-    {
-      "name": "codepush"
-    },
-    {
-      "name": "alerting"
-    },
-    {
-      "name": "billing"
-    },
-    {
       "name": "gdpr"
     },
     {
       "name": "mbaas"
+    },
+    {
+      "name": "push"
+    },
+    {
+      "name": "test"
     }
   ]
 }
