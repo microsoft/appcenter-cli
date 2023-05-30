@@ -485,10 +485,21 @@ async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
   }
 }
 
-export function getAndroidHermesEnabled(gradleFile: string): boolean {
-  return parseBuildGradleFile(gradleFile).then((buildGradle: any) => {
-    return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
-  });
+export async function getAndroidHermesEnabled(gradleFile: string): Promise<boolean> {
+  // find hermesEnabled in gradle.properties first
+  try {
+    const properties = await g2js.parseFile(path.join("android", "gradle.properties"));
+    if (typeof properties["hermesEnabled"] !== "undefined") {
+      return properties["hermesEnabled"];
+    }
+    const enabled = !!(await parseBuildGradleFile(gradleFile).then((buildGradle: any) => {
+      return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
+    }));
+    return enabled;
+  } catch (error) {
+    out.text(error);
+    return false;
+  }
 }
 
 export function getiOSHermesEnabled(podFile: string): boolean {
