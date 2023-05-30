@@ -2368,42 +2368,6 @@
                         "allOf": [
                           {
                             "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution group.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution group.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "id"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "is_latest": {
-                                "description": "Is the containing release the latest one in this distribution group.",
-                                "type": "boolean"
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "allOf": [
-                          {
-                            "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution store.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution store.",
-                                "type": "string"
-                              },
                               "type": {
                                 "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                 "type": "string",
@@ -2418,10 +2382,7 @@
                                 "description": "publishing status of the release in the store.",
                                 "type": "string"
                               }
-                            },
-                            "required": [
-                              "id"
-                            ]
+                            }
                           },
                           {
                             "type": "object",
@@ -2446,7 +2407,10 @@
                             "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                             "type": "string"
                           }
-                        }
+                        },
+                        "required": [
+                          "id"
+                        ]
                       },
                       {
                         "type": "object",
@@ -2757,42 +2721,6 @@
                         "allOf": [
                           {
                             "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution group.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution group.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "id"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "is_latest": {
-                                "description": "Is the containing release the latest one in this distribution group.",
-                                "type": "boolean"
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "allOf": [
-                          {
-                            "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution store.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution store.",
-                                "type": "string"
-                              },
                               "type": {
                                 "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                 "type": "string",
@@ -2807,10 +2735,7 @@
                                 "description": "publishing status of the release in the store.",
                                 "type": "string"
                               }
-                            },
-                            "required": [
-                              "id"
-                            ]
+                            }
                           },
                           {
                             "type": "object",
@@ -2835,7 +2760,10 @@
                             "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                             "type": "string"
                           }
-                        }
+                        },
+                        "required": [
+                          "id"
+                        ]
                       },
                       {
                         "type": "object",
@@ -7541,9 +7469,6 @@
     "/v0.1/orgs/{org_name}/avatar": {
       "post": {
         "description": "Sets the organization avatar",
-        "consumes": [
-          "multipart/form-data"
-        ],
         "parameters": [
           {
             "name": "org_name",
@@ -12002,8 +11927,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/transfer/{destination_owner_name}": {
       "post": {
         "consumes": [
-          "application/json",
-          "application/octet-stream"
+          "application/json"
         ],
         "description": "Transfers ownership of an app to a different user or organization",
         "parameters": [
@@ -18581,42 +18505,6 @@
                         "allOf": [
                           {
                             "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution group.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution group.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "id"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "is_latest": {
-                                "description": "Is the containing release the latest one in this distribution group.",
-                                "type": "boolean"
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "allOf": [
-                          {
-                            "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution store.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution store.",
-                                "type": "string"
-                              },
                               "type": {
                                 "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                 "type": "string",
@@ -18631,10 +18519,7 @@
                                 "description": "publishing status of the release in the store.",
                                 "type": "string"
                               }
-                            },
-                            "required": [
-                              "id"
-                            ]
+                            }
                           },
                           {
                             "type": "object",
@@ -18659,7 +18544,10 @@
                             "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                             "type": "string"
                           }
-                        }
+                        },
+                        "required": [
+                          "id"
+                        ]
                       },
                       {
                         "type": "object",
@@ -19481,42 +19369,6 @@
                           "allOf": [
                             {
                               "properties": {
-                                "id": {
-                                  "description": "ID identifying a unique distribution group.",
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "description": "A name identifying a unique distribution group.",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "id"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "is_latest": {
-                                  "description": "Is the containing release the latest one in this distribution group.",
-                                  "type": "boolean"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "allOf": [
-                            {
-                              "properties": {
-                                "id": {
-                                  "description": "ID identifying a unique distribution store.",
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "description": "A name identifying a unique distribution store.",
-                                  "type": "string"
-                                },
                                 "type": {
                                   "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                   "type": "string",
@@ -19531,10 +19383,7 @@
                                   "description": "publishing status of the release in the store.",
                                   "type": "string"
                                 }
-                              },
-                              "required": [
-                                "id"
-                              ]
+                              }
                             },
                             {
                               "type": "object",
@@ -19559,7 +19408,10 @@
                               "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                               "type": "string"
                             }
-                          }
+                          },
+                          "required": [
+                            "id"
+                          ]
                         },
                         {
                           "type": "object",
@@ -19794,42 +19646,6 @@
                           "allOf": [
                             {
                               "properties": {
-                                "id": {
-                                  "description": "ID identifying a unique distribution group.",
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "description": "A name identifying a unique distribution group.",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "id"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "is_latest": {
-                                  "description": "Is the containing release the latest one in this distribution group.",
-                                  "type": "boolean"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "allOf": [
-                            {
-                              "properties": {
-                                "id": {
-                                  "description": "ID identifying a unique distribution store.",
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "description": "A name identifying a unique distribution store.",
-                                  "type": "string"
-                                },
                                 "type": {
                                   "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                   "type": "string",
@@ -19844,10 +19660,7 @@
                                   "description": "publishing status of the release in the store.",
                                   "type": "string"
                                 }
-                              },
-                              "required": [
-                                "id"
-                              ]
+                              }
                             },
                             {
                               "type": "object",
@@ -19872,7 +19685,10 @@
                               "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                               "type": "string"
                             }
-                          }
+                          },
+                          "required": [
+                            "id"
+                          ]
                         },
                         {
                           "type": "object",
@@ -20093,42 +19909,6 @@
                           "allOf": [
                             {
                               "properties": {
-                                "id": {
-                                  "description": "ID identifying a unique distribution group.",
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "description": "A name identifying a unique distribution group.",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "id"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "is_latest": {
-                                  "description": "Is the containing release the latest one in this distribution group.",
-                                  "type": "boolean"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "allOf": [
-                            {
-                              "properties": {
-                                "id": {
-                                  "description": "ID identifying a unique distribution store.",
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "description": "A name identifying a unique distribution store.",
-                                  "type": "string"
-                                },
                                 "type": {
                                   "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                   "type": "string",
@@ -20143,10 +19923,7 @@
                                   "description": "publishing status of the release in the store.",
                                   "type": "string"
                                 }
-                              },
-                              "required": [
-                                "id"
-                              ]
+                              }
                             },
                             {
                               "type": "object",
@@ -20171,7 +19948,10 @@
                               "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                               "type": "string"
                             }
-                          }
+                          },
+                          "required": [
+                            "id"
+                          ]
                         },
                         {
                           "type": "object",
@@ -22373,10 +22153,6 @@
                 },
                 {
                   "properties": {
-                    "request_id": {
-                      "description": "Unique request",
-                      "type": "string"
-                    },
                     "appId": {
                       "description": "Application ID",
                       "type": "string"
@@ -30579,42 +30355,6 @@
                         "allOf": [
                           {
                             "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution group.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution group.",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "id"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "is_latest": {
-                                "description": "Is the containing release the latest one in this distribution group.",
-                                "type": "boolean"
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "allOf": [
-                          {
-                            "properties": {
-                              "id": {
-                                "description": "ID identifying a unique distribution store.",
-                                "type": "string"
-                              },
-                              "name": {
-                                "description": "A name identifying a unique distribution store.",
-                                "type": "string"
-                              },
                               "type": {
                                 "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                                 "type": "string",
@@ -30629,10 +30369,7 @@
                                 "description": "publishing status of the release in the store.",
                                 "type": "string"
                               }
-                            },
-                            "required": [
-                              "id"
-                            ]
+                            }
                           },
                           {
                             "type": "object",
@@ -30657,7 +30394,10 @@
                             "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                             "type": "string"
                           }
-                        }
+                        },
+                        "required": [
+                          "id"
+                        ]
                       },
                       {
                         "type": "object",
@@ -34797,7 +34537,6 @@
     "/v0.1/apps/{owner_name}/{app_name}/data/resource_provisioning": {
       "get": {
         "operationId": "data_getResourceProvisioning",
-        "consumes": [],
         "parameters": [
           {
             "name": "owner_name",
@@ -34896,10 +34635,7 @@
         "summary": "Creates Cosmos DB or attaches an existing one",
         "operationId": "data_postResourceProvisioning",
         "consumes": [
-          "application/json-patch+json",
-          "application/json",
-          "text/json",
-          "application/*+json"
+          "application/json"
         ],
         "parameters": [
           {
@@ -35106,7 +34842,6 @@
       "get": {
         "summary": "Gets general data about the provisioned database",
         "operationId": "data_getOverview",
-        "consumes": [],
         "parameters": [
           {
             "name": "AC-Authorization-ARM",
@@ -35189,7 +34924,6 @@
       "head": {
         "summary": "Checks that the Azure Cosmos DB account name already exists. A valid account name may contain only lowercase letters, numbers, and the '-' character, and must be between 3 and 31 characters.",
         "operationId": "data_checkNameExists",
-        "consumes": [],
         "parameters": [
           {
             "name": "AC-Authorization-ARM",
@@ -41370,9 +41104,6 @@
     "/v0.1/apps/{owner_name}/{app_name}/avatar": {
       "post": {
         "description": "Sets the app avatar",
-        "consumes": [
-          "multipart/form-data"
-        ],
         "parameters": [
           {
             "name": "owner_name",
@@ -41910,7 +41641,6 @@
       "get": {
         "summary": "Returns users of a tenant.\nReturns all users if no searchTerm param is specified.",
         "operationId": "identity_getUsers",
-        "consumes": [],
         "parameters": [
           {
             "name": "AC-Authorization-AAD-Graph",
@@ -54390,10 +54120,6 @@
                     "hockeyapp"
                   ]
                 },
-                "created_at": {
-                  "description": "The creation date of this organization",
-                  "type": "string"
-                },
                 "updated_at": {
                   "description": "The date the organization was last updated at",
                   "type": "string"
@@ -54404,7 +54130,6 @@
                 "display_name",
                 "name",
                 "origin",
-                "created_at",
                 "updated_at"
               ]
             },
@@ -54429,10 +54154,6 @@
             },
             "created_at": {
               "description": "The date when the organization was created",
-              "type": "string"
-            },
-            "updated_at": {
-              "description": "The date when the organization was updated",
               "type": "string"
             }
           }
@@ -55741,6 +55462,9 @@
       "description": "Apple connection secrets",
       "x-ms-discriminator-value": "apple",
       "discriminator": "credentialType",
+      "required": [
+        "credentialType"
+      ],
       "allOf": [
         {
           "description": "SharedConnectionRequest",
@@ -55785,6 +55509,9 @@
           "description": "Apple connection secrets",
           "x-ms-discriminator-value": "apple",
           "discriminator": "credentialType",
+          "required": [
+            "credentialType"
+          ],
           "allOf": [
             {
               "description": "SharedConnectionRequest",
@@ -55863,6 +55590,9 @@
           "description": "Apple connection secrets",
           "x-ms-discriminator-value": "apple",
           "discriminator": "credentialType",
+          "required": [
+            "credentialType"
+          ],
           "allOf": [
             {
               "description": "SharedConnectionRequest",
@@ -55934,6 +55664,9 @@
           "description": "Apple connection secrets",
           "x-ms-discriminator-value": "apple",
           "discriminator": "credentialType",
+          "required": [
+            "credentialType"
+          ],
           "allOf": [
             {
               "description": "SharedConnectionRequest",
@@ -55998,7 +55731,6 @@
     "PrivateAppleSecretResponse": {
       "description": "private Apple connection secrets response",
       "x-ms-discriminator-value": "apple",
-      "discriminator": "credentialType",
       "allOf": [
         {
           "description": "PrivateSharedConnectionResponse",
@@ -56046,7 +55778,6 @@
         {
           "description": "private Apple connection secrets response",
           "x-ms-discriminator-value": "apple",
-          "discriminator": "credentialType",
           "allOf": [
             {
               "description": "PrivateSharedConnectionResponse",
@@ -56088,7 +55819,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "apple secret details",
@@ -56122,7 +55852,6 @@
         {
           "description": "private Apple connection secrets response",
           "x-ms-discriminator-value": "apple",
-          "discriminator": "credentialType",
           "allOf": [
             {
               "description": "PrivateSharedConnectionResponse",
@@ -56314,7 +56043,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "apple secret details",
@@ -56385,6 +56113,9 @@
           ]
         }
       ],
+      "required": [
+        "credentialType"
+      ],
       "discriminator": "credentialType"
     },
     "AppleCredentialNonSecretDetailsResponse": {
@@ -56441,6 +56172,9 @@
                 "credentialType"
               ]
             }
+          ],
+          "required": [
+            "credentialType"
           ],
           "discriminator": "credentialType"
         }
@@ -56518,6 +56252,9 @@
                 "credentialType"
               ]
             }
+          ],
+          "required": [
+            "credentialType"
           ],
           "discriminator": "credentialType"
         }
@@ -56602,7 +56339,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "apple certificate secret details.",
@@ -56834,7 +56570,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "jira secret details",
@@ -56901,7 +56636,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "jira secret details",
@@ -57071,7 +56805,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "google play secret details",
@@ -57124,7 +56857,6 @@
           ]
         }
       ],
-      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "google secret details",
@@ -57186,6 +56918,9 @@
           ]
         }
       ],
+      "required": [
+        "credentialType"
+      ],
       "discriminator": "credentialType"
     },
     "GooglePlayCredentialNonSecretDetailsResponse": {
@@ -57242,6 +56977,9 @@
                 "credentialType"
               ]
             }
+          ],
+          "required": [
+            "credentialType"
           ],
           "discriminator": "credentialType"
         }
@@ -57307,6 +57045,9 @@
           ]
         }
       ],
+      "required": [
+        "credentialType"
+      ],
       "discriminator": "credentialType"
     },
     "JiraCredentialNonSecretDetailsResponse": {
@@ -57363,6 +57104,9 @@
                 "credentialType"
               ]
             }
+          ],
+          "required": [
+            "credentialType"
           ],
           "discriminator": "credentialType"
         }
@@ -62431,42 +62175,6 @@
                 "allOf": [
                   {
                     "properties": {
-                      "id": {
-                        "description": "ID identifying a unique distribution group.",
-                        "type": "string"
-                      },
-                      "name": {
-                        "description": "A name identifying a unique distribution group.",
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "id"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "is_latest": {
-                        "description": "Is the containing release the latest one in this distribution group.",
-                        "type": "boolean"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "allOf": [
-                  {
-                    "properties": {
-                      "id": {
-                        "description": "ID identifying a unique distribution store.",
-                        "type": "string"
-                      },
-                      "name": {
-                        "description": "A name identifying a unique distribution store.",
-                        "type": "string"
-                      },
                       "type": {
                         "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                         "type": "string",
@@ -62481,10 +62189,7 @@
                         "description": "publishing status of the release in the store.",
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "id"
-                    ]
+                    }
                   },
                   {
                     "type": "object",
@@ -62509,7 +62214,10 @@
                     "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "id"
+                ]
               },
               {
                 "type": "object",
@@ -62740,42 +62448,6 @@
                 "allOf": [
                   {
                     "properties": {
-                      "id": {
-                        "description": "ID identifying a unique distribution group.",
-                        "type": "string"
-                      },
-                      "name": {
-                        "description": "A name identifying a unique distribution group.",
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "id"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "is_latest": {
-                        "description": "Is the containing release the latest one in this distribution group.",
-                        "type": "boolean"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "allOf": [
-                  {
-                    "properties": {
-                      "id": {
-                        "description": "ID identifying a unique distribution store.",
-                        "type": "string"
-                      },
-                      "name": {
-                        "description": "A name identifying a unique distribution store.",
-                        "type": "string"
-                      },
                       "type": {
                         "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                         "type": "string",
@@ -62790,10 +62462,7 @@
                         "description": "publishing status of the release in the store.",
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "id"
-                    ]
+                    }
                   },
                   {
                     "type": "object",
@@ -62818,7 +62487,10 @@
                     "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "id"
+                ]
               },
               {
                 "type": "object",
@@ -63534,42 +63206,6 @@
           "allOf": [
             {
               "properties": {
-                "id": {
-                  "description": "ID identifying a unique distribution group.",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "A name identifying a unique distribution group.",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "is_latest": {
-                  "description": "Is the containing release the latest one in this distribution group.",
-                  "type": "boolean"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "allOf": [
-            {
-              "properties": {
-                "id": {
-                  "description": "ID identifying a unique distribution store.",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "A name identifying a unique distribution store.",
-                  "type": "string"
-                },
                 "type": {
                   "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
                   "type": "string",
@@ -63584,10 +63220,7 @@
                   "description": "publishing status of the release in the store.",
                   "type": "string"
                 }
-              },
-              "required": [
-                "id"
-              ]
+              }
             },
             {
               "type": "object",
@@ -63612,7 +63245,10 @@
               "description": "Id of a distribution group / store. The release will be associated with this distribution group / store. If the distribution group / store doesn't exist a 400 is returned. If both distribution group / store name and id are passed, the id is taking precedence.",
               "type": "string"
             }
-          }
+          },
+          "required": [
+            "id"
+          ]
         },
         {
           "type": "object",
@@ -63856,13 +63492,6 @@
         "provisioning_bundle_id": {
           "description": "The bundle identifier associated with the profile.",
           "type": "string"
-        },
-        "appex_profiles": {
-          "description": "Array of provisioning profiles for any app extensions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ProvisioningProfileResponse"
-          }
         }
       },
       "required": [
@@ -66876,12 +66505,6 @@
         "relevant": {
           "description": "relevant exception (crashed)",
           "type": "boolean"
-        },
-        "inner_exceptions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Exception"
-          }
         },
         "platform": {
           "description": "SDK/Platform this thread is beeing generated from",
@@ -76151,12 +75774,6 @@
           "description": "relevant exception (crashed)",
           "type": "boolean"
         },
-        "inner_exceptions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DiagnosticsException"
-          }
-        },
         "platform": {
           "description": "SDK/Platform this thread is beeing generated from",
           "type": "string",
@@ -85122,10 +84739,6 @@
         },
         {
           "properties": {
-            "request_id": {
-              "description": "Unique request",
-              "type": "string"
-            },
             "appId": {
               "description": "Application ID",
               "type": "string"
@@ -87896,9 +87509,6 @@
       "properties": {
         "code": {
           "type": "string"
-        },
-        "innererror": {
-          "$ref": "#/definitions/InnerError"
         }
       }
     },
