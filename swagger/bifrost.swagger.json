@@ -17928,10 +17928,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/ProvisioningProfileResponse"
-            }
+            "description": "Success"
           },
           "400": {
             "description": "The app's OS is not iOS.",
@@ -25433,10 +25430,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Gets the stack trace for the error group.",
-            "schema": {
-              "$ref": "#/definitions/DiagnosticsStackTrace"
-            }
+            "description": "Gets the stack trace for the error group."
           },
           "default": {
             "description": "Error code with reason",
@@ -25765,10 +25759,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Error stacktrace details.",
-            "schema": {
-              "$ref": "#/definitions/DiagnosticsStackTrace"
-            }
+            "description": "Error stacktrace details."
           },
           "default": {
             "description": "Error code with reason",
@@ -35690,10 +35681,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Stacktrace"
-            }
+            "description": "Success"
           },
           "default": {
             "description": "Error",
@@ -35769,10 +35757,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Stacktrace"
-            }
+            "description": "Success"
           },
           "default": {
             "description": "Error",
@@ -36101,10 +36086,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/Crash"
-            }
+            "description": "Created"
           },
           "default": {
             "description": "Error",
@@ -36318,13 +36300,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Crash"
-              }
-            }
+            "description": "Success"
           },
           "default": {
             "description": "Error",
