@@ -455,7 +455,7 @@ export async function runHermesEmitBinaryCommand(
   });
 }
 
-function parseBuildGradleFile(gradleFile: string) {
+function getBuildGradleFilePath(gradleFile: string) {
   let buildGradlePath: string = path.join("android", "app");
   if (gradleFile) {
     buildGradlePath = gradleFile;
@@ -468,9 +468,49 @@ function parseBuildGradleFile(gradleFile: string) {
     throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
   }
 
+  return buildGradlePath;
+}
+
+function parseBuildGradleFile(gradleFile: string) {
+  const buildGradlePath: string = getBuildGradleFilePath(gradleFile);
   return g2js.parseFile(buildGradlePath).catch(() => {
     throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
   });
+}
+
+// parse gradle.properties file
+async function parseGradlePropertiesFile(gradleFile: string) {
+  // find gradle.properties file based on gradleFile
+  const buildGradlePath: string = getBuildGradleFilePath(gradleFile);
+  const gradlePropertiesPath: string = path.join(path.dirname(buildGradlePath), "../", "gradle.properties");
+  // check if gradle.properties file exists
+  if (fileDoesNotExistOrIsDirectory(gradlePropertiesPath)) {
+    console.error(`Unable to find gradle.properties file at "${gradlePropertiesPath}".`);
+    return;
+  }
+  try {
+    const properties = await g2js.parseFile(gradlePropertiesPath);
+    if (properties && typeof properties["hermesEnabled"] === "boolean") {
+      return properties["hermesEnabled"];
+    }
+  } catch (error) {
+    console.error(`Unable to parse the "${gradlePropertiesPath}" file. Please ensure it is a well-formed Gradle file.`);
+  }
+}
+
+export async function getAndroidHermesEnabled(gradleFile: string): Promise<boolean> {
+  try {
+    const hermesEnabled = await parseGradlePropertiesFile(gradleFile);
+    if (hermesEnabled !== undefined) {
+      return hermesEnabled;
+    }
+    return parseBuildGradleFile(gradleFile).then((buildGradle: any) => {
+      return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
+    });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
@@ -482,23 +522,6 @@ async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
     return hermesCommandProperty.replace("hermesCommand:", "").trim().slice(1, -1);
   } else {
     return "";
-  }
-}
-
-export async function getAndroidHermesEnabled(gradleFile: string): Promise<boolean> {
-  // find hermesEnabled in gradle.properties first
-  try {
-    const properties = await g2js.parseFile(path.join("android", "gradle.properties"));
-    if (typeof properties["hermesEnabled"] !== "undefined") {
-      return properties["hermesEnabled"];
-    }
-    const enabled = !!(await parseBuildGradleFile(gradleFile).then((buildGradle: any) => {
-      return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
-    }));
-    return enabled;
-  } catch (error) {
-    out.text(error);
-    return false;
   }
 }
 
