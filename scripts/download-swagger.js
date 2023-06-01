@@ -1,8 +1,11 @@
 // Command line tool to download swagger files from the given environment.
+
 const _ = require("lodash");
 const fs = require("fs");
+const pipeline = require("stream");
+const util = require("util");
 const path = require("path");
-const request = require("request");
+const fetch = require("node-fetch");
 
 const endpoints = {
   prod: "https://api.appcenter.ms",
@@ -51,16 +54,17 @@ function downloadSwagger(environment, version) {
 
     const swaggerUrl = `${endpoints[environment]}/${version}/swagger.json`;
     console.log(`Downloading swagger from ${swaggerUrl}`);
-    return new Promise((resolve, reject) => {
-      const sd = streamDone(resolve, reject);
-      const rs = request(swaggerUrl);
-      const s = rs.pipe(fs.createWriteStream(swaggerDest(environment, version)));
 
-      rs.on("error", (e) => {
-        sd.reject(e);
-      });
-      s.on("error", (e) => sd.reject(e)).on("finish", () => sd.resolve());
-    });
+    // return new Promise((resolve, reject) => {
+    //   const sd = streamDone(resolve, reject);
+    //   fetch(swaggerUrl).then((response) => {
+    //     if (!response.ok) throw new Error(`unexpected response ${response.statusText}`);
+
+    //     response.body.pipe(fs.createWriteStream(swaggerDest(environment, version)));
+    //     response.body.on("end", () => sd.resolve());
+    //     response.body.on("error", (error) => sd.reject(error));
+    //   })
+    // });
   });
 }
 
