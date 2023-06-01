@@ -5443,7 +5443,7 @@
             }
           }
         },
-        "operationId": "orgInvitations_",
+        "operationId": "orgInvitations_revoke",
         "security": [
           {
             "APIToken": []
@@ -42426,7 +42426,7 @@
         ]
       },
       "post": {
-        "operationId": "appApiTokens_new",
+        "operationId": "appApiTokens_create",
         "description": "Creates a new App API token",
         "parameters": [
           {
@@ -49028,7 +49028,7 @@
         ]
       },
       "post": {
-        "operationId": "userApiTokens_new",
+        "operationId": "userApiTokens_create",
         "description": "Creates a new User API token",
         "parameters": [
           {
