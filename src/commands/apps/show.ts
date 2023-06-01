@@ -4,6 +4,7 @@ import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCo
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { appName } from "../../util/apis/generated/src/models/parameters";
 
 @help("Get the details of an app")
 export default class AppShowCommand extends AppCommand {
@@ -16,23 +17,27 @@ export default class AppShowCommand extends AppCommand {
 
     const appDetailsResponse = await out.progress(
       "Getting app details ...",
-      clientRequest<models.AppResponse>((cb) => client.appsOperations.get(app.ownerName, app.appName, cb))
+      client.apps.get(app.ownerName, app.appName).catch ((error) =>
+      {
+        return failure(ErrorCodes.Exception, error);
+      })
+      // clientRequest<models.AppResponse>((cb) => client.appsOperations.get(app.ownerName, app.appName, cb))
     );
 
-    const statusCode = appDetailsResponse.response.statusCode;
+    // const statusCode = appDetailsResponse.response.statusCode;
 
-    if (statusCode >= 400) {
-      switch (statusCode) {
-        case 400:
-          return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-        case 404:
-          return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
-        default:
-          return failure(ErrorCodes.Exception, "Unknown error when loading apps");
-      }
-    }
+    // if (statusCode >= 400) {
+    //   switch (statusCode) {
+    //     case 400:
+    //       return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
+    //     case 404:
+    //       return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
+    //     default:
+    //       return failure(ErrorCodes.Exception, "Unknown error when loading apps");
+    //   }
+    // }
 
-    reportApp(appDetailsResponse.result);
+    reportApp(appDetailsResponse);
 
     return success();
   }

@@ -15,20 +15,23 @@ export default class AppDeleteCommand extends AppCommand {
     const confirmation = await prompt.confirm(`Do you really want to delete the app "${app.identifier}"`);
 
     if (confirmation) {
-      const deleteAppResponse = await out.progress(
+      await out.progress(
         "Deleting app ...",
-        clientRequest<models.AppResponse>((cb) => client.appsOperations.deleteMethod(app.appName, app.ownerName, cb))
+        client.apps.delete(app.ownerName, app.appName).catch ((error) =>
+        {
+          return failure(ErrorCodes.Exception, error);
+        })
       );
 
-      const statusCode = deleteAppResponse.response.statusCode;
-      if (statusCode >= 400) {
-        switch (statusCode) {
-          case 404:
-            return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
-          default:
-            return failure(ErrorCodes.Exception, "Unknown error when deleting the app");
-        }
-      }
+      // const statusCode = deleteAppResponse.response.statusCode;
+      // if (statusCode >= 400) {
+      //   switch (statusCode) {
+      //     case 404:
+      //       return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
+      //     default:
+      //       return failure(ErrorCodes.Exception, "Unknown error when deleting the app");
+      //   }
+      // }
     } else {
       out.text(`Deletion of "${app.identifier}" canceled`);
     }

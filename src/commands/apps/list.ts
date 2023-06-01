@@ -7,6 +7,7 @@ const debug = require("debug")("appcenter-cli:commands:apps:list");
 import { inspect } from "util";
 
 import * as _ from "lodash";
+// import { AppResponse } from "../../util/apis/generated/src/models/mappers";
 
 @help("Get list of configured applications")
 export default class AppsListCommand extends Command {
@@ -14,7 +15,7 @@ export default class AppsListCommand extends Command {
     super(args);
   }
 
-  formatApp(defaultApp: DefaultApp, app: models.AppResponse): string {
+  formatApp(defaultApp: DefaultApp, app: models.AppsGetResponse): string {
     let prefix = "  ";
     let suffix = "";
     if (defaultApp && defaultApp.appName === app.name && defaultApp.ownerName === app.owner.name) {
@@ -27,16 +28,18 @@ export default class AppsListCommand extends Command {
   async run(client: AppCenterClient): Promise<CommandResult> {
     const appsResponse = await out.progress(
       "Getting app list ...",
-      clientRequest<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
+      client.apps.list()
+      // clientRequest<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
     );
 
-    if (appsResponse.response.statusCode >= 400) {
-      return failure(ErrorCodes.Exception, "Unknown error when loading apps");
-    }
+    // if (appsResponse.response.statusCode >= 400) {
+    //   return failure(ErrorCodes.Exception, "Unknown error when loading apps");
+    // }
 
     const defaultApp = getCurrentApp(null);
     debug(`Current app = ${inspect(defaultApp)}`);
-    const sortedApps = _.sortBy(appsResponse.result, (app) => (app.owner.name + app.name).toLowerCase());
+
+    const sortedApps = _.sortBy(appsResponse, (app) => (app.owner.name + app.name).toLowerCase());
     out.list((app) => this.formatApp(defaultApp.value, app), sortedApps);
 
     return success();

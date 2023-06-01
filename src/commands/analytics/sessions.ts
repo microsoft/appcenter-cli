@@ -125,20 +125,15 @@ export default class SessionCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<models.SessionDurationsDistribution> {
     try {
-      return (
-        await clientRequest<models.SessionDurationsDistribution>((cb) =>
-          client.analytics.sessionDurationsDistributionMethod(
-            startDate,
-            app.ownerName,
-            app.appName,
-            {
-              end: endDate,
-              versions: appVersion,
-            },
-            cb
-          )
-        )
-      ).result;
+      return await client.analytics.sessionDurationsDistribution(
+        startDate,
+        app.ownerName,
+        app.appName,
+        {
+          end: endDate,
+          versions: appVersion,
+        }
+      );
     } catch (error) {
       debug(`Failed to get sessions duration distributions - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to get sessions duration distributions");
@@ -153,21 +148,16 @@ export default class SessionCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<models.DateTimeCounts[]> {
     try {
-      const httpResponse = await clientRequest<models.DateTimeCounts[]>((cb) =>
-        client.analytics.sessionCounts(
-          startDate,
-          "P1D",
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-            versions: appVersion,
-          },
-          cb
-        )
-      );
-
-      return httpResponse.result;
+      return await client.analytics.sessionCounts(
+        startDate,
+        "P1D",
+        app.ownerName,
+        app.appName,
+        {
+          end: endDate,
+          versions: appVersion,
+        }
+      )
     } catch (error) {
       debug(`Failed to get session counts - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to get session counts");
@@ -253,7 +243,7 @@ interface IRequestsResult {
 }
 
 interface IJsonOutput {
-  sessions?: models.SessionDurationsDistributionDistributionItem[];
+  sessions?: models.SessionDurationsDistributionItem[];
   statistics?: {
     totalSessions: IChangingCount;
     averageSessionsPerDay: IChangingCount;

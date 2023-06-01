@@ -15,7 +15,7 @@ import {
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { APP_RELEASE_TYPE_VALIDATIONS } from "./lib/app-release-type-validation";
 
 const debug = require("debug")("appcenter-cli:commands:apps:create");
@@ -93,21 +93,25 @@ export default class AppCreateCommand extends Command {
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
     const createAppResponse = await out.progress(
       "Creating app ...",
-      clientRequest<models.AppResponse>((cb) => client.appsOperations.create(appAttributes, cb))
+      client.apps.create(appAttributes).catch ((error) =>
+      {
+        return failure(ErrorCodes.Exception, error);
+      })
     );
-    const statusCode = createAppResponse.response.statusCode;
-    if (statusCode >= 400) {
-      switch (statusCode) {
-        case 400:
-          return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-        case 404:
-          return failure(ErrorCodes.NotFound, "there appears to be no such user");
-        case 409:
-          return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
-      }
-    }
 
-    reportApp(createAppResponse.result);
+    // const statusCode = createAppResponse.status;
+    // if (statusCode >= 400) {
+    //   switch (statusCode) {
+    //     case 400:
+    //       return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
+    //     case 404:
+    //       return failure(ErrorCodes.NotFound, "there appears to be no such user");
+    //     case 409:
+    //       return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
+    //   }
+    // }
+
+    reportApp(createAppResponse);
 
     return success();
   }

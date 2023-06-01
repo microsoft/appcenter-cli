@@ -32,7 +32,7 @@ export default class DeleteCommand extends AppCommand {
     try {
       await out.progress(
         "Deleting event...",
-        clientRequest((cb) => client.analytics.eventsDelete(this.eventName, app.ownerName, app.appName, cb))
+        client.analytics.eventsDelete(this.eventName, app.ownerName, app.appName)
       );
     } catch (error) {
       debug(`Failed to delete event ${this.eventName} - ${inspect(error)}`);

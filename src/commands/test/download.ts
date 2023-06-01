@@ -1,5 +1,5 @@
 import { AppCenterClient } from "../../util/apis";
-import { TestReport } from "../../util/apis/generated/models";
+import { TestReport } from "../../util/apis/generated/src/models";
 import {
   AppCommand,
   CommandArgs,

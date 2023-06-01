@@ -1,7 +1,7 @@
 import { out } from "../../../util/interaction";
-import { models } from "../../../util/apis";
+// import { models } from "../../../util/apis";
 
-export function reportApp(app: models.AppResponse): void {
+export function reportApp(app: any): void {
   out.report(
     [
       ["App Secret", "appSecret"],

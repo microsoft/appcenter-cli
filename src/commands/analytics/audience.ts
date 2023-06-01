@@ -135,21 +135,17 @@ export default class AudienceCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) =>
-        client.analytics.modelCounts(
-          startDate,
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-            versions: appVersion,
-          },
-          cb
-        )
+      const result = await client.analytics.modelCounts(
+        startDate,
+        app.ownerName,
+        app.appName,
+        {
+          end: endDate,
+          versions: appVersion,
+        }
       );
-
-      const result = httpRequest.result;
-      statisticsObject.devices = result.modelsProperty.map((model) => ({
+      
+      statisticsObject.devices = result.models.map((model) => ({
         count: model.count,
         value: model.modelName,
         percentage: calculatePercentage(model.count, result.total),
@@ -169,20 +165,16 @@ export default class AudienceCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Places>((cb) =>
-        client.analytics.placeCounts(
-          startDate,
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-            versions: appVersion,
-          },
-          cb
-        )
-      );
+      const result = await client.analytics.placeCounts(
+        startDate,
+        app.ownerName,
+        app.appName,
+        {
+          end: endDate,
+          versions: appVersion,
+        }
+      )
 
-      const result = httpRequest.result;
       statisticsObject.countries = result.places.map((place) => ({
         count: place.count,
         value: place.code,
@@ -203,20 +195,16 @@ export default class AudienceCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Languages>((cb) =>
-        client.analytics.languageCounts(
-          startDate,
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-            versions: appVersion,
-          },
-          cb
-        )
+      const result = await client.analytics.languageCounts(
+        startDate,
+        app.ownerName,
+        app.appName,
+        {
+          end: endDate,
+          versions: appVersion,
+        }
       );
 
-      const result = httpRequest.result;
       statisticsObject.languages = result.languages.map((language) => ({
         count: language.count,
         value: language.languageName,
@@ -238,21 +226,16 @@ export default class AudienceCommand extends AppCommand {
     appBuild?: string
   ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) =>
-        client.analytics.deviceCounts(
-          startDate,
-          appBuild,
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-            versions: appVersion,
-          },
-          cb
-        )
+      const result = await client.analytics.deviceCounts(
+        startDate,
+        appBuild,
+        app.ownerName,
+        app.appName,
+        {
+          end: endDate,
+          versions: appVersion,
+        }
       );
-
-      const result = httpRequest.result;
 
       statisticsObject.activeUsers = result.daily.map((dailyData, index) => ({
         date: new Date(dailyData.datetime),
