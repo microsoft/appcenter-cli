@@ -15,7 +15,8 @@ import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import * as Process from "process";
-import * as Request from "request";
+import { fetchWithOptions } from "appcenter-file-upload-client-node";
+import { Response } from "node-fetch";
 import * as JsZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
 import * as Path from "path";
@@ -117,16 +118,13 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     return success();
   }
 
-  private downloadFile(uri: string): Promise<ClientResponse<Buffer>> {
-    return new Promise<ClientResponse<Buffer>>((resolve, reject) => {
-      Request.get(uri, { encoding: null }, (error, response, body: Buffer) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve({ result: body, response });
-        }
-      });
+  private async downloadFile(uri: string): Promise<Response> {
+
+    var response = await fetchWithOptions(uri, {
+        compress: false
     });
+
+    return response;
   }
 
   private async generateNameForOutputFile(branchName: string, extension: string): Promise<string> {
@@ -218,7 +216,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async downloadContent(uri: string): Promise<Buffer> {
-    let downloadFileRequestResponse: ClientResponse<Buffer>;
+    let downloadFileRequestResponse: Response;
     try {
       downloadFileRequestResponse = await out.progress(`Loading ${this.type} for build ${this.buildId}...`, this.downloadFile(uri));
     } catch (error) {
@@ -226,7 +224,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
       throw failure(ErrorCodes.Exception, `failed to load file with ${this.type} for build ${this.buildId}`);
     }
 
-    const statusCode = downloadFileRequestResponse.response.statusCode;
+    const statusCode = downloadFileRequestResponse.status;
     if (statusCode >= 400) {
       switch (statusCode) {
         case 404:
@@ -234,12 +232,12 @@ export default class DownloadBuildStatusCommand extends AppCommand {
         default:
           throw failure(
             ErrorCodes.Exception,
-            `failed to load file with ${this.type} for build ${this.buildId} - HTTP ${statusCode} ${downloadFileRequestResponse.response.statusMessage}`
+            `failed to load file with ${this.type} for build ${this.buildId} - HTTP ${statusCode} ${downloadFileRequestResponse.statusText}`
           );
       }
     }
 
-    return downloadFileRequestResponse.result;
+    return await downloadFileRequestResponse.buffer();
   }
 
   private getPayload(zip: JsZip): JsZip.JSZipObject {

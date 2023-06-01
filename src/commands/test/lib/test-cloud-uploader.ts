@@ -8,7 +8,8 @@ import * as _ from "lodash";
 import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
-import * as request from "request";
+import fetch from "node-fetch";
+const FormData = require('form-data');
 
 const debug = require("debug")("appcenter-cli:commands:test:lib:test-cloud-uploader");
 const pLimit = require("p-limit");
@@ -204,27 +205,22 @@ export class TestCloudUploader {
   private async makeDirectUpload(directUrl: string, file: TestRunFile): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
-        const formData = {
-          relative_path: file.targetRelativePath,
-          file: fs.createReadStream(file.sourcePath),
-          file_type: file.fileType,
-        };
+        const formData = new FormData();
+        formData.append('relative_path', file.targetRelativePath);
+        formData.append('file', fs.createReadStream(file.sourcePath));
+        formData.append('file_type', file.fileType);
 
-        request.post(
-          {
-            url: directUrl,
-            formData: formData,
-          },
-          (err, response, body) => {
-            if (err) {
-              reject(err);
-            } else if (response.statusCode >= 400) {
-              reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));
-            } else {
-              resolve();
-            }
+        fetch(directUrl, {
+          method: "POST",
+          body: formData
+        }).then ((response) => {
+          if (response.status >= 400) {
+            reject(new Error(`Cannot upload file. Response: ${response.status}; Message: ${response.body}`));
+          } else {
+            resolve()
           }
-        );
+        })
+        .catch((error) => reject(error));
       } catch (err) {
         reject(err);
       }

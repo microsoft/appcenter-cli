@@ -108,7 +108,7 @@ export default class LoginCommand extends Command {
       clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod({ description: "AppCenter CLI" }, cb))
     );
 
-    if (createTokenResponse.response.statusCode >= 400) {
+    if (createTokenResponse.response.status >= 400) {
       throw new Error("login was not successful");
     }
     return { id: createTokenResponse.result.id, token: createTokenResponse.result.apiToken };
