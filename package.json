@@ -116,7 +116,7 @@
     "date-fns": "2.29.3",
     "debug": "4.3.4",
     "es5-ext": "0.10.53",
-    "fast-xml-parser": "3.21.1",
+    "fast-xml-parser": "4.2.3",
     "from2": "2.3.0",
     "glob": "7.2.0",
     "gradle-to-js": "2.0.1",
