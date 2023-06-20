@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
-import * as parser from "fast-xml-parser";
+import { XMLParser, XMLBuilder } from "fast-xml-parser";
 import * as path from "path";
 import { JUnitXmlUtil } from "../../../../src/commands/test/lib/junit-xml-util";
 
@@ -163,7 +163,10 @@ describe("junit xml util", function () {
     expect(skippedAttr.value).to.equal("0");
 
     // Doesn't throw exception
-    parser.parse(finalStrXml);
+    const parser = new XMLParser();
+    var jObj = parser.parse(finalStrXml);
+    const builder = new XMLBuilder();
+    builder.build(jObj);
   });
 
   it("should throw an explicit exception", async () => {

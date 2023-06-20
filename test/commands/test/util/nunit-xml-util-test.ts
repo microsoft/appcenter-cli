@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
-import * as parser from "fast-xml-parser";
+import { XMLParser, XMLBuilder } from "fast-xml-parser";
 import * as path from "path";
 import * as fs from "fs";
 import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
@@ -173,7 +173,7 @@ describe("nunit xml util", function () {
     const finalStrXml: string = new XMLSerializer().serializeToString(xml);
 
     // Doesn't throw exception
-    parser.parse(finalStrXml);
+    parseXML(finalStrXml);
   });
 
   it("should combine nunit3 xmls correctly", async () => {
@@ -187,7 +187,7 @@ describe("nunit xml util", function () {
     const finalStrXml: string = new XMLSerializer().serializeToString(xml);
 
     // Doesn't throw exception
-    parser.parse(finalStrXml);
+    parseXML(finalStrXml);
   });
 
   it("should throw an explicit exception", async () => {
@@ -205,4 +205,11 @@ describe("nunit xml util", function () {
     // Exception was thrown
     expect(exception).to.eql(true);
   });
+
+  function parseXML(xml: string) {
+    const parser = new XMLParser();
+    var jObj = parser.parse(xml);
+    const builder = new XMLBuilder();
+    builder.build(jObj);
+  }
 });
