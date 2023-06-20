@@ -464,29 +464,25 @@ function getBuildGradleFilePath(gradleFile: string) {
     buildGradlePath = path.join(buildGradlePath, "build.gradle");
   }
 
-  if (fileDoesNotExistOrIsDirectory(buildGradlePath)) {
-    throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
-  }
-
   return buildGradlePath;
 }
 
-function parseBuildGradleFile(gradleFile: string) {
+function getBuildGradleFilePath(gradleFile: string) {
   const buildGradlePath: string = getBuildGradleFilePath(gradleFile);
+  if (fileDoesNotExistOrIsDirectory(buildGradlePath)) {
+    throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
+  }
   return g2js.parseFile(buildGradlePath).catch(() => {
     throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
   });
 }
 
-// parse gradle.properties file
 async function parseGradlePropertiesFile(gradleFile: string) {
-  // find gradle.properties file based on gradleFile
   const buildGradlePath: string = getBuildGradleFilePath(gradleFile);
   const gradlePropertiesPath: string = path.join(path.dirname(buildGradlePath), "../", "gradle.properties");
-  // check if gradle.properties file exists
   if (fileDoesNotExistOrIsDirectory(gradlePropertiesPath)) {
     console.error(`Unable to find gradle.properties file at "${gradlePropertiesPath}".`);
-    return;
+    return undefined;
   }
   try {
     const properties = await g2js.parseFile(gradlePropertiesPath);
@@ -496,6 +492,7 @@ async function parseGradlePropertiesFile(gradleFile: string) {
   } catch (error) {
     console.error(`Unable to parse the "${gradlePropertiesPath}" file. Please ensure it is a well-formed Gradle file.`);
   }
+  return undefined;
 }
 
 export async function getAndroidHermesEnabled(gradleFile: string): Promise<boolean> {
@@ -503,13 +500,13 @@ export async function getAndroidHermesEnabled(gradleFile: string): Promise<boole
     if (hermesEnabled !== undefined) {
       return hermesEnabled;
     }
-    return parseBuildGradleFile(gradleFile).then((buildGradle: any) => {
+    return getBuildGradleFilePath(gradleFile).then((buildGradle: any) => {
       return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
     });
 }
 
 async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
-  const buildGradle: any = await parseBuildGradleFile(gradleFile);
+  const buildGradle: any = await getBuildGradleFilePath(gradleFile);
   const hermesCommandProperty: any = Array.from(buildGradle["project.ext.react"] || []).find((prop: string) =>
     prop.trim().startsWith("hermesCommand:")
   );
