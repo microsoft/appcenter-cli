@@ -208,7 +208,7 @@ describe("nunit xml util", function () {
 
   function parseXML(xml: string) {
     const parser = new XMLParser();
-    var jObj = parser.parse(xml);
+    const jObj = parser.parse(xml);
     const builder = new XMLBuilder();
     builder.build(jObj);
   }

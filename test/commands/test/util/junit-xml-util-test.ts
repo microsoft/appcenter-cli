@@ -164,7 +164,7 @@ describe("junit xml util", function () {
 
     // Doesn't throw exception
     const parser = new XMLParser();
-    var jObj = parser.parse(finalStrXml);
+    const jObj = parser.parse(finalStrXml);
     const builder = new XMLBuilder();
     builder.build(jObj);
   });
