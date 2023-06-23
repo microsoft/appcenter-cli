@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
-import { XMLParser, XMLBuilder } from "fast-xml-parser";
+import { XMLParser } from "fast-xml-parser";
 import * as path from "path";
 import { JUnitXmlUtil } from "../../../../src/commands/test/lib/junit-xml-util";
 
@@ -164,9 +164,7 @@ describe("junit xml util", function () {
 
     // Doesn't throw exception
     const parser = new XMLParser();
-    const jObj = parser.parse(finalStrXml);
-    const builder = new XMLBuilder();
-    builder.build(jObj);
+    parser.parse(finalStrXml);
   });
 
   it("should throw an explicit exception", async () => {

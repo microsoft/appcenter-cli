@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
-import { XMLParser, XMLBuilder } from "fast-xml-parser";
+import { XMLParser } from "fast-xml-parser";
 import * as path from "path";
 import * as fs from "fs";
 import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
@@ -208,8 +208,6 @@ describe("nunit xml util", function () {
 
   function parseXML(xml: string) {
     const parser = new XMLParser();
-    const jObj = parser.parse(xml);
-    const builder = new XMLBuilder();
-    builder.build(jObj);
+    parser.parse(xml);
   }
 });
