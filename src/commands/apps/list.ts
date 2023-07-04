@@ -1,13 +1,12 @@
-import { Command, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, getCurrentApp, ErrorCodes, failure } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:apps:list");
 import { inspect } from "util";
 
 import * as _ from "lodash";
-// import { AppResponse } from "../../util/apis/generated/src/models/mappers";
 
 @help("Get list of configured applications")
 export default class AppsListCommand extends Command {
@@ -26,15 +25,18 @@ export default class AppsListCommand extends Command {
   }
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const appsResponse = await out.progress(
-      "Getting app list ...",
-      client.apps.list()
-      // clientRequest<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
-    );
 
-    // if (appsResponse.response.statusCode >= 400) {
-    //   return failure(ErrorCodes.Exception, "Unknown error when loading apps");
-    // }
+    let appsResponse: models.AppsListResponse;
+    try {
+      appsResponse = await out.progress(
+        "Getting app list ...",
+        client.apps.list()
+      );
+    } catch (error) {
+      if (error.response.status >= 400) {
+        return failure(ErrorCodes.Exception, "Unknown error when loading apps");
+      }
+    }
 
     const defaultApp = getCurrentApp(null);
     debug(`Current app = ${inspect(defaultApp)}`);

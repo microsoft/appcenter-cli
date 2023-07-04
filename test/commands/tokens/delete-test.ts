@@ -1,18 +1,21 @@
-import { expect } from "chai";
 import * as Nock from "nock";
 import * as Sinon from "sinon";
 import { prompt } from "../../../src/util/interaction";
 
 import DeleteTokenCommand from "../../../src/commands/tokens/delete";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../src/util/misc/constants";
+
+import * as chai from "chai";
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe("Tokens Delete", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
-  /* tslint:disable-next-line:no-http-string */
-  const fakeHost = "http://localhost:1700";
   let inputStub: Sinon.SinonStub;
   let nockScope: Nock.Scope;
 

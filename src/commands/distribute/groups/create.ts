@@ -10,7 +10,7 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -81,16 +81,17 @@ export default class CreateDistributionGroupCommand extends AppCommand {
 
   private async createDistributionGroup(client: AppCenterClient, app: DefaultApp) {
     try {
-      const createDistributionGroupRequestResponse = await out.progress(
+      await out.progress(
         "Creating distribution group...",
-        clientRequest((cb) => client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup, cb))
+        client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup)
       );
-      if (createDistributionGroupRequestResponse.response.statusCode >= 400) {
-        throw createDistributionGroupRequestResponse.response.statusCode;
-      }
     } catch (error) {
+      
       if (error === 409) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} already exists`);
+      } else if (error >= 400) {
+        //TODO:
+        throw error;
       } else {
         debug(`Failed to create distribution group ${this.distributionGroup} - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to create distribution group");
@@ -102,27 +103,24 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     client: AppCenterClient,
     app: DefaultApp,
     users: string[]
-  ): Promise<models.DistributionGroupUserPostResponse[]> {
+  ): Promise<models.DistributionGroupsAddUserResponse> {
     try {
-      const addUsersToDistributionGroupRequestResponse = await out.progress(
-        "Adding testers to the distribution group...",
-        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) =>
-          client.distributionGroups.addUser(
-            app.ownerName,
-            app.appName,
-            this.distributionGroup,
-            {
-              userEmails: users,
-            },
-            cb
-          )
+      return await out.progress(
+      "Adding testers to the distribution group...",
+        client.distributionGroups.addUser(
+          app.ownerName,
+          app.appName,
+          this.distributionGroup,
+          {
+            userEmails: users,
+          }
         )
       );
-      if (addUsersToDistributionGroupRequestResponse.response.statusCode >= 400) {
-        throw addUsersToDistributionGroupRequestResponse.response.statusCode;
-      }
-      return addUsersToDistributionGroupRequestResponse.result;
     } catch (error) {
+      if (error.response.statusCode >= 400) {
+        throw error.response.statusCode;
+      }
+
       debug(`Failed to add testers to the new distribution group ${this.distributionGroup} - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to add testers to the new distribution group");
     }

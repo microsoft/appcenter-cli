@@ -14,7 +14,7 @@ import {
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models  } from "../../util/apis";
 import { APP_RELEASE_TYPE_VALIDATIONS } from "./lib/app-release-type-validation";
 
 @help("Update an app")
@@ -83,7 +83,7 @@ export default class AppUpdateCommand extends AppCommand {
       // clientRequest<models.AppResponse>((cb) => client.appsOperations.update(app.appName, app.ownerName, { app: appAttributes }, cb))
     );
 
-    // const statusCode = updateAppResponse.response.statusCode;
+    // const statusCode = updateAppResponse.response.status;
     // if (statusCode >= 400) {
     //   switch (statusCode) {
     //     case 400:

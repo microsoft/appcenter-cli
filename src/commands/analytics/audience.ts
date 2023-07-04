@@ -10,7 +10,7 @@ import {
   shortName,
   success,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out, supportsCsv } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";

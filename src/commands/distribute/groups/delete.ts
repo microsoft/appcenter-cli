@@ -10,7 +10,7 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -34,13 +34,10 @@ export default class DeleteDistributionGroupCommand extends AppCommand {
     }
 
     try {
-      const httpResponse = await out.progress(
+      await out.progress(
         `Removing the distribution group...`,
-        clientRequest((cb) => client.distributionGroups.deleteMethod(app.appName, app.ownerName, this.distributionGroup, cb))
+        client.distributionGroups.delete(app.appName, app.ownerName, this.distributionGroup)
       );
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response.statusCode;
-      }
     } catch (error) {
       if (error === 404) {
         return failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exists`);

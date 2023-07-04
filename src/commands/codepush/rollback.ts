@@ -12,7 +12,7 @@ import {
   position,
   name,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out, prompt } from "../../util/interaction";
 import { inspect } from "util";
 
@@ -47,13 +47,11 @@ export default class CodePushRollbackCommand extends AppCommand {
       debug("Rollback CodePush release");
       await out.progress(
         "Rollback CodePush release...",
-        clientRequest<models.CodePushRelease>((cb) =>
-          client.codePushDeploymentRelease.rollback(this.deploymentName, app.ownerName, app.appName, { label: this.targetRelease }, cb)
-        )
+        client.codePushDeploymentRelease.rollback(this.deploymentName, app.ownerName, app.appName, { label: this.targetRelease })
       );
     } catch (error) {
       debug(`Failed to rollback CodePush release - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, error.response.body);
+      return failure(ErrorCodes.Exception, error.response.bodyAsText);
     }
 
     out.text(`Successfully performed a rollback on the '${this.deploymentName}' deployment of the '${this.identifier}' app.`);

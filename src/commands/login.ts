@@ -17,8 +17,6 @@ import {
 } from "../util/commandline";
 import { environments, getUser, saveUser, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { models, clientRequest, ClientResponse } from "../util/apis";
-import { TokenValueType } from "../util/token-store";
 import { logout } from "./lib/logout";
 
 const debug = require("debug")("appcenter-cli:commands:login");
@@ -48,21 +46,22 @@ export default class LoginCommand extends Command {
       if (succeeded(result)) {
         await this.removeLoggedInUser();
 
-        let token: TokenValueType;
+        let token: string;
         if (this.token) {
           userSuppliedToken = true;
-          token = await this.doTokenLogin();
+          token = this.token;
         } else if (this.isInteractiveEnvironment) {
           userSuppliedToken = false;
           token = await this.doInteractiveLogin();
-        } else {
-          userSuppliedToken = false;
-          token = await this.doUserNameAndPasswordLogin();
         }
 
-        const userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
-        await saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
-        out.text(`Logged in as ${userResponse.result.name}`);
+        const endpoint = environments(this.environmentName).endpoint;
+        out.text(`endpoint and token ${endpoint}, ${token}`);
+        const client = this.clientFactory.fromToken(token, endpoint);
+        const userResponse = await out.progress("Getting user info ...", client.users.get());
+        
+        await saveUser(userResponse, { id: "SuppliedByUser", token: this.token }, this.environmentName, userSuppliedToken);
+        out.text(`Logged in as ${userResponse.name}`);
         // Force early exit to avoid long standing delays if token deletion is slow
         process.exit(0);
         result = success();
@@ -93,69 +92,13 @@ export default class LoginCommand extends Command {
     return success();
   }
 
-  private async doUserNameAndPasswordLogin(): Promise<TokenValueType> {
-    const questions: any[] = this.userNameQuestion.concat(this.passwordQuestion);
-    if (questions.length > 0) {
-      const answers = await prompt.question(questions);
-      Object.assign(this, answers);
-    }
-
-    const endpoint = environments(this.environmentName).endpoint;
-    const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
-
-    const createTokenResponse = await out.progress(
-      "Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod({ description: "AppCenter CLI" }, cb))
-    );
-
-    if (createTokenResponse.response.status >= 400) {
-      throw new Error("login was not successful");
-    }
-    return { id: createTokenResponse.result.id, token: createTokenResponse.result.apiToken };
-  }
-
-  private async doInteractiveLogin(): Promise<TokenValueType> {
+  private async doInteractiveLogin(): Promise<string> {
     const loginUrl = environments(this.environmentName).loginEndpoint + "?" + qs.stringify({ hostname: os.hostname() });
 
     out.text(`Opening your browser... ${os.EOL}? Visit ${loginUrl} and enter the code:`);
     opener(loginUrl);
     const token = await prompt("Access code from browser: ");
-    return { id: null, token: token };
-  }
-
-  private async doTokenLogin(): Promise<TokenValueType> {
-    return { id: "SuppliedByUser", token: this.token };
-  }
-
-  private get userNameQuestion(): any[] {
-    if (!this.token && !this.userName) {
-      return [
-        {
-          name: "userName",
-          message: "Username or email: ",
-        },
-      ];
-    }
-    return [];
-  }
-
-  private get passwordQuestion(): any[] {
-    if (!this.token && !this.password) {
-      return [
-        {
-          type: "password",
-          name: "password",
-          message: "Password: ",
-        },
-      ];
-    }
-    return [];
-  }
-
-  private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
-    const endpoint = environments(this.environmentName).endpoint;
-    const client = this.clientFactory.fromToken(token, endpoint);
-    return clientRequest<models.UserProfileResponse>((cb) => client.users.get(cb));
+    return token;
   }
 
   private async removeLoggedInUser(): Promise<void> {

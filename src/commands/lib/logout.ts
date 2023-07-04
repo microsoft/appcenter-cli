@@ -1,4 +1,4 @@
-import { AppCenterClient, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { Profile, deleteUser } from "../../util/profile";
 import { out } from "../../util/interaction";
 
@@ -17,19 +17,19 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
     let tokenId: string;
     try {
       await Promise.race([
-        clientRequest(async (cb) => {
+        async () => {
           try {
             tokenId = await user.accessTokenId;
             if (!tokenId || tokenId === "null") {
               tokenId = "current";
             }
             debug(`Attempting to delete token id ${tokenId} off server`);
-            client.userApiTokens.deleteMethod(tokenId, cb);
+            client.userApiTokens.delete(tokenId);
           } catch (err) {
             debug("Could not retrieve current token from token store");
-            cb(err, null, null, null);
+            // cb(err, null, null, null);
           }
-        }),
+        },
         new Promise<void>((resolve, reject) =>
           setTimeout(() => {
             // TODO: Investigate if there's a way to explicitly cancel the outstanding call.

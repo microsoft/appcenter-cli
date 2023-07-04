@@ -10,7 +10,7 @@ import {
   required,
   ErrorCodes,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientCall } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { toDefaultApp, getUser } from "../../util/profile";
 
@@ -36,7 +36,7 @@ export default class SetCurrentAppCommand extends Command {
 
     const apps = await out.progress(
       "Reading available apps...",
-      clientCall<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
+      client.apps.list(),
     );
 
     const found = apps.find((app) => app.name === newDefault.appName && app.owner.name === newDefault.ownerName);

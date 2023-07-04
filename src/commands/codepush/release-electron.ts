@@ -1,6 +1,6 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, defaultValue } from "../../util/commandline";
 import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
-import { AppCenterClient, clientRequest, models } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
@@ -88,9 +88,9 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
     const appInfo = (
       await out.progress(
         "Getting app info...",
-        clientRequest<models.AppResponse>((cb) => client.appsOperations.get(this.app.ownerName, this.app.appName, cb))
+        client.apps.get(this.app.ownerName, this.app.appName)
       )
-    ).result;
+    );
     this.os = appInfo.os.toLowerCase();
 
     this.updateContentsPath = this.outputDir || (await pfs.mkTempDir("code-push"));

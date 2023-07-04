@@ -11,7 +11,7 @@ import {
   defaultValue,
 } from "../../../util/commandline";
 import { CommandArgs } from "../../../util/commandline/command";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as fs from "fs";
@@ -106,9 +106,9 @@ export default class CodePushReleaseCommandBase extends AppCommand {
       const appInfo = (
         await out.progress(
           "Getting app info...",
-          clientRequest<models.AppResponse>((cb) => client.appsOperations.get(this.app.ownerName, this.app.appName, cb))
+          client.apps.get(this.app.ownerName, this.app.appName)
         )
-      ).result;
+      );
       const platform = appInfo.platform.toLowerCase();
 
       // In React-Native case we should add "CodePush" name folder as root for relase files for keeping sync with React Native client SDK.
@@ -134,10 +134,11 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
       const releaseUpload = this.upload(client, app, this.deploymentName, updateContentsZipPath);
       await out.progress("Uploading bundle...", releaseUpload);
+      const uploadedRelease = await releaseUpload;
       await out.progress(
         "Creating CodePush release...",
         this.createRelease(client, app, this.deploymentName, {
-          releaseUpload: await releaseUpload,
+          releaseUpload: uploadedRelease,
           targetBinaryVersion: this.targetBinaryVersion,
           description: this.description,
           disabled: this.disabled,
@@ -154,14 +155,14 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
       return success();
     } catch (error) {
-      if (error.response && error.response.statusCode === 409 && this.disableDuplicateReleaseError) {
+      if (error.response?.status  === 409 && this.disableDuplicateReleaseError) {
         // 409 (Conflict) status code means that uploaded package is identical
         // to the contents of the specified deployment's current release
-        console.warn(chalk.yellow("[Warning] " + error.response.body));
+        console.warn(chalk.yellow("[Warning] " + error.response?.bodyAsText));
         return success();
       } else {
         debug(`Failed to release a CodePush update - ${inspect(error)}`);
-        return failure(ErrorCodes.Exception, error.response ? error.response.body : error);
+        return failure(ErrorCodes.Exception, error.response ? error.response.bodyAsText : error);
       }
     } finally {
       await pfs.rmDir(updateContentsZipPath);
@@ -176,11 +177,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
   ): Promise<models.CodePushReleaseUpload> {
     debug(`Starting release upload on deployment: ${deploymentName} with zip file: ${updateContentsZipPath}`);
 
-    const releaseUpload = (
-      await clientRequest<models.CodePushReleaseUpload>((cb) =>
-        client.codePushDeploymentUpload.create(deploymentName, app.ownerName, app.appName, cb)
-      )
-    ).result;
+    const releaseUpload = await client.codePushDeploymentUpload.create(deploymentName, app.ownerName, app.appName);
 
     await this.uploadBundle(releaseUpload, updateContentsZipPath);
     return releaseUpload;
@@ -194,9 +191,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
   ): Promise<void> {
     debug(`Starting release process on deployment: ${deploymentName} with uploaded release metadata: ${inspect(uploadedRelease)}`);
 
-    await clientRequest<models.CodePushRelease>((cb) =>
-      client.codePushDeploymentReleases.create(deploymentName, uploadedRelease, app.ownerName, app.appName, cb)
-    );
+    await client.codePushDeploymentReleases.create(deploymentName, app.ownerName, app.appName, uploadedRelease);
   }
 
   private async uploadBundle(releaseUpload: models.CodePushReleaseUpload, bundleZipPath: string): Promise<void> {

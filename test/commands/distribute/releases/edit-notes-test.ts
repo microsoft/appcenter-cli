@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import * as Nock from "nock";
 import * as Temp from "temp";
 import * as _ from "lodash";
@@ -7,6 +6,12 @@ import * as Fs from "fs";
 
 import EditNotesReleaseCommand from "../../../../src/commands/distribute/releases/edit-notes";
 import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
+
+import * as chai from "chai";
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 Temp.track();
 
@@ -16,7 +21,6 @@ describe("distribute releases edit-notes command", async () => {
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "5";
-  const fakeHost = "http://localhost:1700";
   const releaseIdOption = "--release-id";
   const releaseNotesFileName = "releaseNotesFile.txt";
   const releaseNotes = "Release Notes for v1";

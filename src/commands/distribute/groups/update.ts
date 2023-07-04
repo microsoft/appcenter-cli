@@ -10,7 +10,7 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -163,14 +163,13 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   private async isDistributionGroupNameFree(client: AppCenterClient, app: DefaultApp, name: string) {
     if (!_.isNil(name)) {
       try {
-        const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) =>
-          client.distributionGroups.get(app.ownerName, app.appName, name, cb)
-        );
+        await client.distributionGroups.get(app.ownerName, app.appName, name);
 
         // Throw an exception if 404 error was not thrown during clientRequest
-        throw httpRequest.response.statusCode;
+        //TODO: requires additional testing.
+        throw 200;
       } catch (error) {
-        if (error && error.response && error.response.statusCode === 404) {
+        if (error && error.statusCode === 404) {
           // 404 is correct status code for this case
           return;
         }
@@ -179,7 +178,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${name} already exists`);
         } else {
           debug(`Failed to check if the distribution group ${name} already exists - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `failed to check if the distribution group ${name} already exists`);
+          throw failure(ErrorCodes.Exception, `failed to check if the distribution group ${name} already exists - ${inspect(error)}`);
         }
       }
     }
@@ -187,25 +186,18 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
 
   private async deleteTestersFromDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
-      const httpResponse = await out.progress(
+      const result = await out.progress(
         "Deleting testers from the distribution group...",
-        clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) =>
-          client.distributionGroups.removeUser(
-            app.ownerName,
-            app.appName,
-            this.distributionGroup,
-            {
-              userEmails,
-            },
-            cb
-          )
+        client.distributionGroups.removeUser(
+          app.ownerName,
+          app.appName,
+          this.distributionGroup,
+          {
+            userEmails,
+          }
         )
       );
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response.statusCode;
-      } else {
-        return httpResponse.result.filter((result) => result.status < 400).map((result) => result.userEmail);
-      }
+      return result.filter((result) => result.status < 400).map((result) => result.userEmail);
     } catch (error) {
       if (error === 404) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
@@ -218,25 +210,18 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
 
   private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
-      const httpResponse = await out.progress(
+      const result = await out.progress(
         "Adding testers to the distribution group...",
-        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) =>
-          client.distributionGroups.addUser(
-            app.ownerName,
-            app.appName,
-            this.distributionGroup,
-            {
-              userEmails,
-            },
-            cb
-          )
+        client.distributionGroups.addUser(
+          app.ownerName,
+          app.appName,
+          this.distributionGroup,
+          {
+            userEmails,
+          }
         )
       );
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response.statusCode;
-      } else {
-        return httpResponse.result.filter((result) => result.status < 400).map((result) => result.userEmail);
-      }
+      return result.filter((result) => result.status < 400).map((result) => result.userEmail);
     } catch (error) {
       if (error === 404) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
@@ -253,17 +238,11 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     options: { name?: string; isPublic?: boolean }
   ): Promise<void> {
     try {
-      const httpResponse = await out.progress(
+      await out.progress(
         "Updating the distribution group...",
-        clientRequest<models.DistributionGroupResponse>((cb) =>
-          client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, options, cb)
-        )
+        client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, options)
       );
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response.statusCode;
-      } else {
-        return;
-      }
+      return;
     } catch (error) {
       switch (error) {
         case 400:
@@ -272,7 +251,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
         default:
           debug(`Failed to update distribution group ${this.distributionGroup} - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `failed to update the distribution group`);
+          throw failure(ErrorCodes.Exception, `failed to update the distribution group : ${inspect(error)}`);
       }
     }
   }

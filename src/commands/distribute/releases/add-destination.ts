@@ -10,12 +10,12 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { inspect } from "util";
 import * as _ from "lodash";
 import { getDistributionGroup, getExternalStoreToDistributeRelease, addGroupToRelease } from "../lib/distribute-util";
-import { IncomingMessage } from "http";
+import { FullOperationResponse } from "@azure/core-client";
+import { inspect } from "util";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:add-destination");
 
@@ -125,41 +125,47 @@ export default class AddDestinationCommand extends AppCommand {
         releaseId,
       })
     );
-    const { result, response } = await clientRequest<any>(async (cb) => {
-      client.releasesOperations.addStore(releaseId, this.app.ownerName, this.app.appName, store.id, cb);
-    });
+    await client.releases.addStore(
+      releaseId,
+      this.app.ownerName,
+      this.app.appName,
+      store.id,
+      {
+        onResponse : (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse)
+      },
+    );
 
-    this.handleAddDestinationResponse(result, response);
+    // this.handleAddDestinationResponse(result, response);
   }
 
   private async addTesterToRelease(client: AppCenterClient, releaseId: number) {
-    const { result, response } = await clientRequest<models.ReleaseDetailsResponse>(async (cb) => {
-      client.releasesOperations.addTesters(
-        releaseId,
-        this.app.ownerName,
-        this.app.appName,
-        this.destination,
-        {
-          mandatoryUpdate: this.mandatory,
-          notifyTesters: !this.silent,
-        },
-        cb
-      );
-    });
+    await client.releases.addTesters(
+      releaseId,
+      this.app.ownerName,
+      this.app.appName,
+      this.destination,
+      {
+        mandatoryUpdate: this.mandatory,
+        notifyTesters: !this.silent,
 
-    this.handleAddDestinationResponse(result, response);
+        onResponse : (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse)
+      }
+    );
+
+    // this.handleAddDestinationResponse(result, response);
   }
 
-  private handleAddDestinationResponse(result: any, response: IncomingMessage) {
-    if (response.statusCode >= 200 && response.statusCode < 400) {
-      return result;
-    } else if (response.statusCode === 404) {
+  private handleAddDestinationResponse(response: FullOperationResponse) {
+    if (response.status >= 200 && response.status < 400) {
+      return;
+    } else if (response.status === 404) {
       throw failure(ErrorCodes.InvalidParameter, `Could not find release ${this.releaseId}`);
-    } else if (response.statusCode === 400 && result && result.message) {
-      throw failure(ErrorCodes.InvalidParameter, result.message);
+    } else if (response.status === 400 && response.parsedBody?.message) {
+      throw failure(ErrorCodes.InvalidParameter, response.parsedBody.message);
     } else {
-      debug(`Failed to distribute the release - ${inspect(result)}`);
-      const extraInfo = response.statusMessage ? `: ${response.statusMessage}` : "";
+      debug(`Failed to distribute the release - ${inspect(response.parsedBody)}`);
+      const extraInfo = response.status ? `: ${response.status}` : "";
+
       throw failure(
         ErrorCodes.Exception,
         `Could not add ${this.destinationType} ${this.destination} to release ${this.releaseId}${extraInfo}`

@@ -53,18 +53,17 @@ function downloadSwagger(environment, version) {
     }
 
     const swaggerUrl = `${endpoints[environment]}/${version}/swagger.json`;
-    console.log(`Downloading swagger from ${swaggerUrl}`);
 
-    // return new Promise((resolve, reject) => {
-    //   const sd = streamDone(resolve, reject);
-    //   fetch(swaggerUrl).then((response) => {
-    //     if (!response.ok) throw new Error(`unexpected response ${response.statusText}`);
+    return new Promise((resolve, reject) => {
+      const sd = streamDone(resolve, reject);
+      fetch(swaggerUrl).then((response) => {
+        if (!response.ok) throw new Error(`unexpected response ${response.statusText}`);
 
-    //     response.body.pipe(fs.createWriteStream(swaggerDest(environment, version)));
-    //     response.body.on("end", () => sd.resolve());
-    //     response.body.on("error", (error) => sd.reject(error));
-    //   })
-    // });
+        response.body.pipe(fs.createWriteStream(swaggerDest(environment, version)));
+        response.body.on("end", () => sd.resolve());
+        response.body.on("error", (error) => sd.reject(error));
+      })
+    });
   });
 }
 

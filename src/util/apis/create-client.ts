@@ -3,19 +3,17 @@ const debug = require("debug")("appcenter-cli:util:apis:create-client");
 import { inspect } from "util";
 
 import { AppCenterClient } from "./generated/src/appCenterClient";
-import { createEmptyPipeline } from "@azure/core-rest-pipeline"
-import { userAgentPolicy } from "./user-agent-policy";
+// import { logPolicy } from "@azure/core-rest-pipeline"
+// import { userAgentPolicy } from "./user-agent-policy";
 import { telemetryPolicy } from "./telemetry-policy";
-import { TokenCredential, GetTokenOptions, AccessToken } from '@azure/core-auth';
 
 import { ServiceClientOptions } from "@azure/core-client";
 
-const BasicAuthenticationCredentials = require("@azure/ms-rest-js").BasicAuthenticationCredentials;
 import { ServiceCallback, RestError, HttpOperationResponse, WebResource } from "@azure/ms-rest-js";
 
-// import { isDebug } from "../interaction";
 import { Profile } from "../profile";
 import { failure, ErrorCodes } from "../../util/commandline/command-result";
+import { authorizationPolicy } from "./authorization-policy";
 
 export interface AppCenterClientFactory {
   fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient;
@@ -23,13 +21,17 @@ export interface AppCenterClientFactory {
 }
 
 export function createAppCenterClient(command: string[], telemetryEnabled: boolean): AppCenterClientFactory {
-  function createClientOptions(): ServiceClientOptions {
-    const pipeline = createEmptyPipeline();
-    pipeline.addPolicy(telemetryPolicy(command.join(" "), telemetryEnabled));
-    pipeline.addPolicy(userAgentPolicy());
-  
+  function createClientOptions(token: Promise<string>): ServiceClientOptions {
+
+    const policies = [
+      { policy : telemetryPolicy(command.join(" "), telemetryEnabled), position: "perCall" as "perCall" | "perRetry" },
+      // { policy : userAgentPolicy(), position: "perCall" as "perCall" | "perRetry"  },
+      // { policy : logPolicy(), position: "perCall" as "perCall" | "perRetry"  },
+      { policy : authorizationPolicy(token), position: "perCall" as "perCall" | "perRetry"  },
+    ]
+
     const serviceClientOptions: ServiceClientOptions = {
-      pipeline,
+      additionalPolicies: policies,
     };
   
     return serviceClientOptions;
@@ -50,8 +52,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
         debug("Creating from token as function");
         tokenFunc = token;
       }
-      debug(`Passing token ${tokenFunc} of type ${typeof tokenFunc}`);
-      return new AppCenterClient(new SimpleTokenCredential(tokenFunc), { endpoint: endpoint, ...createClientOptions() });
+      return new AppCenterClient({ endpoint: endpoint, ...createClientOptions(tokenFunc()) });
     },
 
     fromProfile(user: Profile): AppCenterClient {
@@ -60,7 +61,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
         return null;
       }
       debug(`Creating client from user for user ${inspect(user)}`);
-      return new AppCenterClient(new SimpleTokenCredential(() => user.accessToken), { endpoint: user.endpoint, ...createClientOptions() });
+      return new AppCenterClient({ endpoint: user.endpoint, ...createClientOptions(user.accessToken) });
     },
   };
 }
@@ -116,16 +117,4 @@ export function clientRequest<T>(action: { (cb: ServiceCallback<any>): void }): 
       }
     });
   });
-}
-
-class SimpleTokenCredential implements TokenCredential {
-  constructor(private tokenFunc: () => Promise<string>) {}
-
-  async getToken(scope: string | string[], options?: GetTokenOptions): Promise<AccessToken | null> {
-    const token = await this.tokenFunc();
-    // Assuming the token never expires. You might want to provide a way to set the expiry.
-    const expiryTimestamp = new Date().getTime() + 60 * 60 * 24 * 1000;
-    
-    return { token, expiresOnTimestamp: expiryTimestamp };
-  }
 }

@@ -4,6 +4,7 @@ import * as _ from "lodash";
 
 import UpdateDistributionGroupCommand from "../../../../src/commands/distribute/groups/update";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 describe("distribute groups update command", () => {
   const fakeAppOwner = "fakeAppOwner";
@@ -12,7 +13,6 @@ describe("distribute groups update command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
   const updatedFakeDistributionGroupName = "updatedFakeDistributionGroupName";
-  const fakeHost = "http://localhost:1700";
 
   before(() => {
     Nock.disableNetConnect();
@@ -124,7 +124,6 @@ describe("distribute groups update command", () => {
   });
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope?: Nock.Scope) {
-    console.log(result);
     expect(result.succeeded).to.eql(true, "Command should be successfully completed");
     if (abortScope) {
       expect(abortScope.isDone()).to.eql(false, "Unexpected requests were made");

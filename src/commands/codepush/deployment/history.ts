@@ -12,7 +12,7 @@ import {
 } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { formatDate } from "./lib/date-helper";
 import { scriptName } from "../../../util/misc";
 import * as chalk from "chalk";
@@ -33,24 +33,18 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
 
   async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
-    let releases: models.CodePushRelease[];
-    let metrics: models.CodePushReleaseMetric[];
+    let releases: models.CodePushDeploymentReleasesGetResponse;
+    let metrics: models.CodePushDeploymentMetricsGetResponse;
     try {
-      const releasesHttpRequest = await out.progress(
+      releases = await out.progress(
         "Getting CodePush releases...",
-        clientRequest<models.CodePushRelease[]>((cb) =>
-          client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)
-        )
+        client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName)
       );
-      releases = releasesHttpRequest.result;
 
-      const metricsHttpRequest = await out.progress(
+      metrics = await out.progress(
         "Getting CodePush releases metrics...",
-        clientRequest<models.CodePushReleaseMetric[]>((cb) =>
-          client.codePushDeploymentMetrics.get(this.deploymentName, app.ownerName, app.appName, cb)
-        )
+        client.codePushDeploymentMetrics.get(this.deploymentName, app.ownerName, app.appName)
       );
-      metrics = metricsHttpRequest.result;
 
       const releasesTotalActive = metrics.reduce((sum, releaseMetrics) => (sum += releaseMetrics.active), 0);
 
@@ -79,7 +73,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       return success();
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
-      if (error.statusCode === 404 && error.response.body === `Deployment "${this.deploymentName}" does not exist.`) {
+      if (error.statusCode === 404 && error.response.bodyAsText === `Deployment "${this.deploymentName}" does not exist.`) {
         const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
         return failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
       } else if (error.statusCode === 404) {
@@ -90,7 +84,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
         )} to see what apps you have access to.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.response.body);
+        return failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
   }
@@ -109,8 +103,8 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
   }
 
   private generateReleaseMetricsString(
-    release: models.CodePushRelease,
-    metrics: models.CodePushReleaseMetric[],
+    release: any,
+    metrics: models.CodePushDeploymentMetricsGetResponse,
     releasesTotalActive: number
   ): string {
     let metricsString = "";

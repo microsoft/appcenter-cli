@@ -28,7 +28,7 @@ export type BuildReportObject = {
 
 export function getBuildReportObject(
   build: models.Build,
-  commitInfo: models.CommitDetails,
+  commitInfo: any, // Commit info model.
   app: DefaultApp,
   portalBaseUrl: string
 ): BuildReportObject {

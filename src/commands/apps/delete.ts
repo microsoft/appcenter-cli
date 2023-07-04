@@ -2,7 +2,7 @@
 
 import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 
 @help("Delete an app")
 export default class AppDeleteCommand extends AppCommand {
@@ -15,23 +15,25 @@ export default class AppDeleteCommand extends AppCommand {
     const confirmation = await prompt.confirm(`Do you really want to delete the app "${app.identifier}"`);
 
     if (confirmation) {
-      await out.progress(
-        "Deleting app ...",
-        client.apps.delete(app.ownerName, app.appName).catch ((error) =>
-        {
-          return failure(ErrorCodes.Exception, error);
-        })
-      );
-
-      // const statusCode = deleteAppResponse.response.statusCode;
-      // if (statusCode >= 400) {
-      //   switch (statusCode) {
-      //     case 404:
-      //       return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
-      //     default:
-      //       return failure(ErrorCodes.Exception, "Unknown error when deleting the app");
-      //   }
-      // }
+      try {
+        await out.progress(
+          "Deleting app ...",
+          client.apps.delete(app.ownerName, app.appName).catch ((error) =>
+          {
+            return failure(ErrorCodes.Exception, error);
+          })
+        );
+      } catch (error) {
+        const statusCode = error.response.status;
+        if (statusCode >= 400) {
+          switch (statusCode) {
+            case 404:
+              return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
+            default:
+              return failure(ErrorCodes.Exception, "Unknown error when deleting the app");
+          }
+        }
+      }
     } else {
       out.text(`Deletion of "${app.identifier}" canceled`);
     }

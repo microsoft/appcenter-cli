@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -12,22 +12,18 @@ export default class ListStoresCommand extends AppCommand {
     const app = this.app;
 
     debug("Getting list of the stores");
-    let storesListRequestResponse: ClientResponse<models.ExternalStoreResponse[]>;
+    let storesListRequestResponse: models.StoresListResponse;
     try {
       storesListRequestResponse = await out.progress(
         "Getting list of the stores...",
-        clientRequest<models.ExternalStoreResponse[]>((cb) => client.stores.list(app.ownerName, app.appName, cb))
+        client.stores.list(app.ownerName, app.appName)
       );
     } catch (error) {
       debug(`Failed to get list of the stores - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch list of all stores");
     }
 
-    if (storesListRequestResponse.response.statusCode >= 400) {
-      return failure(ErrorCodes.Exception, "failed to fetch list of all stores");
-    }
-
-    const sortedStores = _(storesListRequestResponse.result).sortBy((store) => [store.type, store.track, store.name]);
+    const sortedStores = _(storesListRequestResponse).sortBy((store) => [store.type, store.track, store.name]);
 
     const storesNames = sortedStores.map((store) => store.name).value();
     const storesTypes = sortedStores.map((store) => store.type).value();

@@ -5,6 +5,7 @@ import * as Sinon from "sinon";
 import OrgsAppsCreateCommand from "../../../../src/commands/orgs/apps/create";
 import { out } from "../../../../src/util/interaction";
 import { CommandArgs, CommandFailedResult } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 describe("orgs apps create command", () => {
   const fakeOrgName = "ClandestineOrganization17";
@@ -14,7 +15,6 @@ describe("orgs apps create command", () => {
   const fakeAppOs = "Android";
   const fakeAppPlatform = "Java";
   const fakeAppReleaseType = "Gamma";
-  const fakeHost = "http://localhost:1700";
   const fakeOrgId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
   const fakeOrgEmail = "info@fake.org";
   const fakeToken = "fd6327f9-198c-4161-8127-dd445b727601";

@@ -4,8 +4,8 @@ import * as path from "path";
 import { prompt, out } from "../../util/interaction";
 import { help, CommandArgs, AppCommand, CommandResult } from "../../util/commandline";
 import { Messages } from "./lib/help-messages";
-import { AppCenterClient, clientCall, models } from "../../util/apis";
-import { DeviceSet, DeviceConfiguration, AppResponse } from "../../util/apis/generated/models";
+import { AppCenterClient } from "../../util/apis";
+import { DeviceSet, DeviceConfiguration } from "../../util/apis/generated/src/models";
 import { DeviceConfigurationSort } from "./lib/deviceConfigurationSort";
 import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
 import RunAppiumWizardTestCommand from "./lib/wizard/appium";
@@ -57,8 +57,8 @@ export default class WizardTestCommand extends AppCommand {
     const app = await this.selectApp(client);
 
     const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(app.ownerName, app.appName);
-    const getAppOS: Promise<AppResponse> = client.appsOperations.get(app.ownerName, app.appName);
-    this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
+    const appResult = await client.apps.get(app.ownerName, app.appName);
+    this.isAndroidApp = appResult.os.toLowerCase() === "android";
 
     const frameworkName: TestFramework = await this.promptFramework();
     const searchApps: Promise<AppFile[]> = this.scanFolder();
@@ -218,9 +218,9 @@ export default class WizardTestCommand extends AppCommand {
   private async getApps(client: AppCenterClient): Promise<DefaultApp> {
     const apps = await out.progress(
       "Getting list of apps...",
-      clientCall<models.AppResponse[]>((cb) => client.appsOperations.list(cb))
+      client.apps.list()
     );
-    const choices = apps.map((app: models.AppResponse) => {
+    const choices = apps.map((app) => {
       return {
         name: app.name,
         value: `${app.owner.name}/${app.name}`,

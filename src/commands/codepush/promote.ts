@@ -11,7 +11,7 @@ import {
   longName,
   hasArg,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import { isValidRollout, isValidRange } from "./lib/validation-utils";
@@ -99,42 +99,36 @@ export default class CodePushPromoteCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
 
-    const promote: models.CodePushReleasePromote = {
+    const promote = {
       targetBinaryRange: this.targetBinaryRange,
       description: this.description,
       label: this.label,
       isDisabled: this.isDisabled,
       isMandatory: this.isMandatory,
+      rollout: parseInt(this.rollout)
     };
-
-    if (this.rollout != null) {
-      promote.rollout = rollout;
-    }
 
     try {
       debug("Promote CodePush release");
       await out.progress(
         "Promoting CodePush release...",
-        clientRequest<models.CodePushRelease>((cb) =>
-          client.codePushDeployments.promote(
-            this.sourceDeploymentName,
-            this.destinationDeploymentName,
-            app.ownerName,
-            app.appName,
-            { release: promote },
-            cb
-          )
+        client.codePushDeployments.promote(
+          this.sourceDeploymentName,
+          this.destinationDeploymentName,
+          app.ownerName,
+          app.appName,
+          { release: promote }
         )
       );
     } catch (error) {
-      if (error.response.statusCode === 409 && this.disableDuplicateReleaseError) {
+      if (error.statusCode  === 409 && this.disableDuplicateReleaseError) {
         // 409 (Conflict) status code means that uploaded package is identical
         // to the contents of the specified deployment's current release
-        console.warn(chalk.yellow("[Warning] " + error.response.body));
+        console.warn(chalk.yellow("[Warning] " + error.response.bodyAsText));
         return success();
       } else {
         debug(`Failed to promote CodePush release - ${inspect(error)}`);
-        return failure(ErrorCodes.Exception, error.response.body);
+        return failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
 

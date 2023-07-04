@@ -10,7 +10,7 @@ import {
   shortName,
   success,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as PortalHelper from "../../util/portal/portal-helper";
@@ -41,22 +41,32 @@ export default class QueueBuildCommand extends AppCommand {
     const app = this.app;
 
     debug(`Queuing build for branch ${this.branchName}`);
-    let queueBuildRequestResponse: ClientResponse<models.Build>;
+
     try {
-      queueBuildRequestResponse = await out.progress(
+      const queueBuildRequestResponse = await out.progress(
         `Queueing build for branch ${this.branchName}...`,
-        clientRequest<models.Build>((cb) =>
-          client.builds.create(
-            this.branchName,
-            app.ownerName,
-            app.appName,
-            {
-              debug: this.debugLogs,
-              sourceVersion: this.sourceVersion,
-            },
-            cb
-          )
+        client.builds.create(
+          this.branchName,
+          app.ownerName,
+          app.appName,
+          {
+            debug: this.debugLogs,
+            sourceVersion: this.sourceVersion,
+          }
         )
+      );
+
+      const buildId = queueBuildRequestResponse.id;
+      const realBranchName = queueBuildRequestResponse.sourceBranch;
+  
+      const url = PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, realBranchName, buildId.toString());
+  
+      out.report(
+        [
+          ["Build ID", "buildId"],
+          ["Build URL", "url"],
+        ],
+        { buildId, url }
       );
     } catch (error) {
       if (error.statusCode === 400) {
@@ -66,19 +76,6 @@ export default class QueueBuildCommand extends AppCommand {
         return failure(ErrorCodes.Exception, "failed to queue build request");
       }
     }
-
-    const buildId = queueBuildRequestResponse.result.id;
-    const realBranchName = queueBuildRequestResponse.result.sourceBranch;
-
-    const url = PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, realBranchName, buildId.toString());
-
-    out.report(
-      [
-        ["Build ID", "buildId"],
-        ["Build URL", "url"],
-      ],
-      { buildId, url }
-    );
 
     return success();
   }

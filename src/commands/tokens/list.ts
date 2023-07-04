@@ -12,7 +12,7 @@ import {
   ErrorCodes,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
 import { PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
@@ -34,34 +34,38 @@ export default class ApiTokenListCommand extends AppCommand {
     const tokenMessaging = `Getting ${this.principalType} API tokens ...`;
 
     let listTokensResponse;
-    if (this.principalType === PrincipalType.USER) {
-      listTokensResponse = await out.progress(
-        tokenMessaging,
-        clientRequest<models.ApiTokensGetResponse[]>((cb) => client.userApiTokens.list(cb))
-      );
-    } else if (this.principalType === PrincipalType.APP) {
-      const app: DefaultApp = this.app;
-      listTokensResponse = await out.progress(
-        tokenMessaging,
-        clientRequest<models.ApiTokensGetResponse[]>((cb) => client.appApiTokens.list(app.ownerName, app.appName, cb))
-      );
-    }
-    const statusCode = listTokensResponse.response.statusCode;
-    if (statusCode >= 400) {
-      switch (statusCode) {
-        case 400:
-        default:
-          return failure(ErrorCodes.Exception, "invalid request");
-        case 401:
-          return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
-        case 404:
-          return failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
+
+    try {
+      if (this.principalType === PrincipalType.USER) {
+        listTokensResponse = await out.progress(
+          tokenMessaging,
+          client.userApiTokens.list()
+        );
+      } else if (this.principalType === PrincipalType.APP) {
+        const app: DefaultApp = this.app;
+        listTokensResponse = await out.progress(
+          tokenMessaging,
+          client.appApiTokens.list(app.ownerName, app.appName)
+        );
+      }
+    } catch (error) {
+      const statusCode = error.response.statusCode;
+      if (statusCode >= 400) {
+        switch (statusCode) {
+          case 400:
+          default:
+            return failure(ErrorCodes.Exception, "invalid request");
+          case 401:
+            return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
+          case 404:
+            return failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
+        }
       }
     }
 
     out.table(
       out.getCommandOutputTableOptions(["ID", "Description", "Type", "Created At"]),
-      listTokensResponse.result.map((apiToken) => [apiToken.id, apiToken.description, this.principalType, apiToken.createdAt])
+      listTokensResponse.map((apiToken) => [apiToken.id, apiToken.description, this.principalType, apiToken.createdAt])
     );
 
     return success();

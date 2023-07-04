@@ -10,7 +10,7 @@ import {
   shortName,
   success,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -171,12 +171,21 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async getBuildStatus(client: AppCenterClient, app: DefaultApp, buildIdNumber: number): Promise<models.Build> {
-    let buildStatusRequestResponse: ClientResponse<models.Build>;
+    // let buildStatusRequestResponse: ClientResponse<models.Build>;
     try {
-      buildStatusRequestResponse = await out.progress(
+      const buildInfo = await out.progress(
         `Getting status of build ${this.buildId}...`,
-        clientRequest<models.Build>((cb) => client.builds.get(buildIdNumber, app.ownerName, app.appName, cb))
+        client.builds.get(buildIdNumber, app.ownerName, app.appName)
       );
+
+      if (buildInfo.status !== DownloadBuildStatusCommand.completedStatus) {
+        throw failure(ErrorCodes.InvalidParameter, `cannot download ${this.type} for an uncompleted build`);
+      }
+      if (buildInfo.result === DownloadBuildStatusCommand.failedResult && this.type !== DownloadBuildStatusCommand.logsType) {
+        throw failure(ErrorCodes.InvalidParameter, `no ${this.type} to download - build failed`);
+      }
+  
+      return buildInfo;
     } catch (error) {
       if (error.statusCode === 404) {
         throw failure(ErrorCodes.InvalidParameter, `build ${buildIdNumber} was not found`);
@@ -185,34 +194,20 @@ export default class DownloadBuildStatusCommand extends AppCommand {
         throw failure(ErrorCodes.Exception, `failed to get status of build ${this.buildId}`);
       }
     }
-
-    const buildInfo = buildStatusRequestResponse.result;
-
-    if (buildInfo.status !== DownloadBuildStatusCommand.completedStatus) {
-      throw failure(ErrorCodes.InvalidParameter, `cannot download ${this.type} for an uncompleted build`);
-    }
-    if (buildInfo.result === DownloadBuildStatusCommand.failedResult && this.type !== DownloadBuildStatusCommand.logsType) {
-      throw failure(ErrorCodes.InvalidParameter, `no ${this.type} to download - build failed`);
-    }
-
-    return buildInfo;
   }
 
   private async getDownloadUri(client: AppCenterClient, app: DefaultApp, buildIdNumber: number): Promise<string> {
-    let downloadDataResponse: ClientResponse<models.DownloadContainer>;
     try {
-      downloadDataResponse = await out.progress(
+      const downloadDataResponse = await out.progress(
         `Getting ${this.type} download URL for build ${this.buildId}...`,
-        clientRequest<models.DownloadContainer>((cb) =>
-          client.builds.getDownloadUri(buildIdNumber, this.type, app.ownerName, app.appName, cb)
-        )
+        client.builds.getDownloadUri(buildIdNumber, this.type, app.ownerName, app.appName)
       );
+
+      return downloadDataResponse.uri;
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get ${this.type} downloading URL for build ${this.buildId}`);
     }
-
-    return downloadDataResponse.result.uri;
   }
 
   private async downloadContent(uri: string): Promise<Buffer> {

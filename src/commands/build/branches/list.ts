@@ -1,9 +1,10 @@
 import { getBuildReportObject, reportBuilds } from "./lib/format-build";
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
+import { BuildsListBranchesResponse, CommitsListByShaListResponse } from "../../../util/apis/generated/src";
 
 const debug = require("debug")("appcenter-cli:commands:build:branches:list");
 
@@ -13,30 +14,34 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     const app = this.app;
 
     debug(`Getting list of branches for app ${app.appName}`);
-    let branchesStatusesRequestResponse: ClientResponse<models.BranchStatus[]>;
+    let branches: BuildsListBranchesResponse;
     try {
-      branchesStatusesRequestResponse = await out.progress(
+      branches = await out.progress(
         `Getting statuses for branches of app ${app.appName}...`,
-        clientRequest<models.BranchStatus[]>((cb) => client.builds.listBranches(app.ownerName, app.appName, cb))
+        client.builds.listBranches(app.ownerName, app.appName)
       );
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
+
+      //TODO: Requires testing
+      if (error.statusCode >= 400) {
+        switch (error.statusCode) {
+          case 400:
+            return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
+          default:
+            debug(`Request failed - HTTP ${error.statusCode} ${error.statusMessage}`);
+            return failure(ErrorCodes.Exception, "failed to fetch branches list");
+        }
+      }
+
       return failure(ErrorCodes.Exception, "failed to fetch branches list");
     }
 
-    const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.statusCode;
+    // const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.status;
 
-    if (branchBuildsHttpResponseCode >= 400) {
-      switch (branchBuildsHttpResponseCode) {
-        case 400:
-          return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
-        default:
-          debug(`Request failed - HTTP ${branchBuildsHttpResponseCode} ${branchesStatusesRequestResponse.response.statusMessage}`);
-          return failure(ErrorCodes.Exception, "failed to fetch branches list");
-      }
-    }
+    
 
-    const branchesWithBuilds = _(branchesStatusesRequestResponse.result)
+    const branchesWithBuilds = _(branches)
       .filter((branch) => !_.isNil(branch.lastBuild))
       .sortBy((b) => b.lastBuild.sourceBranch)
       .value();
@@ -49,18 +54,16 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     const buildShas = branchesWithBuilds.map((branch) => branch.lastBuild.sourceVersion);
 
     debug("Getting commit info for the last builds of the branches");
-    let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
+    let commits: CommitsListByShaListResponse;
     try {
-      commitInfoRequestResponse = await out.progress(
+      commits = await out.progress(
         "Getting commit info for the last builds of branches...",
-        clientRequest<models.CommitDetails[]>((cb) => client.commits.listByShaList(buildShas, app.ownerName, app.appName, cb))
+        client.commits.listByShaList(buildShas, app.ownerName, app.appName)
       );
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to get commit details");
     }
-
-    const commits = commitInfoRequestResponse.result;
 
     const buildReportObjects = branchesWithBuilds.map((branch, index) =>
       getBuildReportObject(branch.lastBuild, commits[index], app, portalBaseUrl)

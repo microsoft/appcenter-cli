@@ -7,8 +7,6 @@
  */
 
 import * as coreClient from "@azure/core-client";
-import * as coreRestPipeline from "@azure/core-rest-pipeline";
-import { TokenCredential } from '@azure/core-auth';
 import {
   DevicesImpl,
   NotificationsImpl,
@@ -128,7 +126,7 @@ export class AppCenterClient extends coreClient.ServiceClient {
    * Initializes a new instance of the AppCenterClient class.
    * @param options The parameter options
    */
-  constructor(credentials: TokenCredential, options?: AppCenterClientOptionalParams) {
+  constructor(options?: AppCenterClientOptionalParams) {
     // Initializing default values for options
     if (!options) {
       options = {};
@@ -153,38 +151,6 @@ export class AppCenterClient extends coreClient.ServiceClient {
         options.endpoint ?? options.baseUri ?? "https://api.appcenter.ms"
     };
     super(optionsWithDefaults);
-
-    let bearerTokenAuthenticationPolicyFound: boolean = false;
-    if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
-      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
-      bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
-        (pipelinePolicy) =>
-          pipelinePolicy.name ===
-          coreRestPipeline.bearerTokenAuthenticationPolicyName
-      );
-    }
-    if (
-      !options ||
-      !options.pipeline ||
-      options.pipeline.getOrderedPolicies().length == 0 ||
-      !bearerTokenAuthenticationPolicyFound
-    ) {
-      this.pipeline.removePolicy({
-        name: coreRestPipeline.bearerTokenAuthenticationPolicyName
-      });
-      this.pipeline.addPolicy(
-        coreRestPipeline.bearerTokenAuthenticationPolicy({
-          credential: credentials,
-          scopes:
-            optionsWithDefaults.credentialScopes ??
-            `${optionsWithDefaults.endpoint}/.default`,
-          challengeCallbacks: {
-            authorizeRequestOnChallenge:
-              coreClient.authorizeRequestOnClaimChallenge
-          }
-        })
-      );
-    }
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://api.appcenter.ms";

@@ -10,7 +10,7 @@ import {
   required,
   success,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { DefaultApp } from "../../../util/profile";

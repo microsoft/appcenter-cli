@@ -1,5 +1,7 @@
 // Management for the current environment.
 
+import { localEndpoint } from "../misc/constants";
+
 export const appCenterEndpointEnvVar = "APPCENTER_ENDPOINT";
 export const appCenterLoginEndpointEnvVar = "APPCENTER_LOGIN_ENDPOINT";
 export const appCenterPortalEndpointEnvVar = "APPCENTER_PORTAL_ENDPOINT";
@@ -36,7 +38,7 @@ const environmentsData: EnvironmentsFile = {
       description: "Production",
     },
     local: {
-      endpoint: process.env[appCenterEndpointEnvVar] || "http://localhost:1700",
+      endpoint: process.env[appCenterEndpointEnvVar] || localEndpoint,
       loginEndpoint: process.env[appCenterLoginEndpointEnvVar] || null,
       portalEndpoint: process.env[appCenterPortalEndpointEnvVar] || "http://localhost:8080",
       description: "Local Development",

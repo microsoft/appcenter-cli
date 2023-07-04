@@ -21,6 +21,7 @@ import UploadSymbolsCommand from "../../../../src/commands/crashes/upload-symbol
 MockRequire.stopAll();
 
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 Temp.track();
 
@@ -31,7 +32,6 @@ describe("upload-symbols command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
-  const fakeHost = "http://localhost:1700";
   const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
   const symbolsFile1Name = "symbolsFile1";

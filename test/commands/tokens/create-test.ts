@@ -6,6 +6,7 @@ use(ChaiAsPromised);
 
 import CreateTokenCommand from "../../../src/commands/tokens/create";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../src/util/misc/constants";
 
 describe("Tokens Create", () => {
   const fakeAppOwner = "fakeAppOwner";
@@ -14,7 +15,6 @@ describe("Tokens Create", () => {
   const fakeToken = "c1o3d3e7";
   const fakeDescription = "fakeDescription";
   /* tslint:disable-next-line:no-http-string */
-  const fakeHost = "http://localhost:1700";
 
   let nockScope: Nock.Scope;
 

@@ -5,6 +5,7 @@ import * as Sinon from "sinon";
 import ListTokenCommand from "../../../src/commands/tokens/list";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../src/util/commandline";
 import { out } from "../../../src/util/interaction";
+import { localEndpoint as fakeHost } from "../../../src/util/misc/constants";
 
 // Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
 const stripAnsi = require("strip-ansi");
@@ -16,8 +17,6 @@ describe("Tokens List", () => {
   const fakeToken = "c1o3d3e7";
   const fakeDescription = "fakeDescription";
   const fakeId = "00000000-0000-0000-0000-000000000000";
-  /* tslint:disable-next-line:no-http-string */
-  const fakeHost = "http://localhost:1700";
   const testData = [
     {
       id: fakeId,

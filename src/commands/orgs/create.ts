@@ -11,7 +11,7 @@ import {
   required,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:create");
 import { inspect } from "util";
@@ -36,25 +36,17 @@ export default class OrgCreateCommand extends Command {
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     let organizationInfo: models.OrganizationResponse;
     try {
-      const httpResponse = await out.progress(
+      organizationInfo = await out.progress(
         "Creating new organization...",
-        clientRequest<models.OrganizationResponse>((cb) =>
-          client.organizations.createOrUpdate(
-            {
-              displayName: this.displayName,
-              name: this.name,
-            },
-            cb
-          )
+        client.organizations.createOrUpdate(
+          {
+            displayName: this.displayName,
+            name: this.name,
+          }
         )
       );
-      if (httpResponse.response.statusCode < 400) {
-        organizationInfo = httpResponse.result;
-      } else {
-        throw httpResponse.response;
-      }
     } catch (error) {
-      if (error.statusCode === 409) {
+      if (error.response?.status === 409) {
         return failure(ErrorCodes.InvalidParameter, `organization ${this.name || this.displayName} already exists`);
       } else {
         debug(`Failed to create organization - ${inspect(error)}`);

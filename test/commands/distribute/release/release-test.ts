@@ -9,6 +9,7 @@ import * as ChaiAsPromised from "chai-as-promised";
 use(ChaiAsPromised);
 
 import ReleaseBinaryCommand from "../../../../src/commands/distribute/release";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
 
 Temp.track();
@@ -28,7 +29,6 @@ describe("release command", () => {
   const fakeUploadUrl = `/upload/upload_chunk/${fakeGuid}`;
   const fakeStoreType = "googleplay";
   const fakeStoreTrack = "alpha";
-  const fakeHost = "http://localhost:1700";
   const version = "1.0";
   const shortVersion = "1";
   const fakeUrlEncodedToken = "fakeUrlEncodedToken";
@@ -975,7 +975,7 @@ describe("release command", () => {
       notify_testers: !silent,
     };
 
-    return nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody).reply(404);
+    return nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody).reply(404, {});
   }
 
   function setupSuccsessFulGetDistributionGroupResponse(group: string, nockScope: Nock.Scope): Nock.Scope {

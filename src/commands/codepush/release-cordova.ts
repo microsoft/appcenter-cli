@@ -1,6 +1,6 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
 import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as path from "path";
@@ -43,9 +43,9 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     const appInfo = (
       await out.progress(
         "Getting app info...",
-        clientRequest<models.AppResponse>((cb) => client.appsOperations.get(this.app.ownerName, this.app.appName, cb))
+        client.apps.get(this.app.ownerName, this.app.appName)
       )
-    ).result;
+    );
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();
 

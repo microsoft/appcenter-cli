@@ -10,7 +10,7 @@ import {
   position,
   name,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -40,7 +40,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
       debug("Clearing release history");
       await out.progress(
         `Clearing release history for deployment ${this.deploymentName}...`,
-        clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb))
+        client.codePushDeploymentReleases.delete(this.deploymentName, app.ownerName, app.appName)
       );
     } catch (error) {
       debug(`Failed to clear deployment history - ${inspect(error)}`);
@@ -48,7 +48,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
         const deploymentNotFoundErrorMsg = `The deployment ${this.deploymentName} does not exist for the app ${this.identifier}`;
         return failure(ErrorCodes.NotFound, deploymentNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.response.body);
+        return failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
 

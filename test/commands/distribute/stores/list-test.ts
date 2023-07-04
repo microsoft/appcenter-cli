@@ -9,14 +9,14 @@ use(ChaiAsPromised);
 import ListStoresCommand from "../../../../src/commands/distribute/stores/list";
 import { CommandArgs } from "../../../../src/util/commandline";
 import { out } from "../../../../src/util/interaction";
-import { ExternalStoreResponse } from "../../../../src/util/apis/generated/models";
+import { ExternalStoreResponse } from "../../../../src/util/apis/generated/src/models";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 describe("stores list command", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
-  const fakeHost = "http://localhost:1700";
   const storesListUrl = `/v0.1/apps/${fakeAppIdentifier}/distribution_stores`;
 
   const fakeStores: ExternalStoreResponse[] = [

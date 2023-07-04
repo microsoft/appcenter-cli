@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";

@@ -1,4 +1,4 @@
-import { PipelinePolicy, PipelineRequest, PipelineResponse, createPipelineRequest } from "@azure/core-rest-pipeline";
+import { PipelinePolicy, PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
 import * as uuid from "uuid";
 import { getTelemetrySourceFromEnvironmentVar } from "../profile";
 
@@ -13,6 +13,7 @@ export function telemetryPolicy(commandName: string, telemetryIsEnabled: boolean
   return {
     name: 'telemetryPolicy',
     sendRequest: async (request: PipelineRequest, next: Function): Promise<PipelineResponse> => {
+
       if (telemetryIsEnabled) {
         request.headers.set("internal-request-source", telemetrySource);
         request.headers.set(sessionHeaderName, sessionId);

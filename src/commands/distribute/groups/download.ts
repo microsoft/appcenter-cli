@@ -10,7 +10,7 @@ import {
   hasArg,
   ErrorCodes,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { DefaultApp } from "../../../util/profile";
 import { cwd } from "process";
@@ -92,14 +92,19 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   ): Promise<string> {
     debug(`Getting download URL for the ${releaseId} release of the specified distribution group`);
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, releaseId, cb)
-      );
-      if (httpRequest.response.statusCode >= 400) {
-        throw httpRequest.result;
-      } else {
-        return httpRequest.result.downloadUrl;
-      }
+      const release = await client.releases.getLatestByDistributionGroup(
+        app.ownerName,
+        app.appName,
+        distributionGroup,
+        releaseId,
+        { onResponse : (response, _flatResponse, _error?) =>
+          {
+            if (response.status >= 400) {
+              throw release;
+            }
+          }}
+        );
+      return release.downloadUrl;
     } catch (error) {
       switch (error.code) {
         case "no_releases_for_app":

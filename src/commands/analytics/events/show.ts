@@ -11,7 +11,7 @@ import {
   success,
   defaultValue,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models, ClientResponse } from "../../../util/apis";
 import { out, supportsCsv } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";

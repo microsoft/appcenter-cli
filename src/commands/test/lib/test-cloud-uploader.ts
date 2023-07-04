@@ -1,4 +1,4 @@
-import { AppCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
@@ -6,7 +6,7 @@ import { AppValidator } from "./app-validator";
 import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
-import * as http from "http";
+// import * as http from "http";
 import * as path from "path";
 import fetch from "node-fetch";
 const FormData = require('form-data');
@@ -72,7 +72,7 @@ export class TestCloudUploader {
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
-    const app = await this._client.appsOperations.get(this._userName, this._appName);
+    const app = await this._client.apps.get(this._userName, this._appName);
     const isOrg = app.owner.type === "org";
 
     const manifest = await progressWithResult<TestManifest>("Validating arguments", this.validateAndParseManifest());
@@ -113,35 +113,37 @@ export class TestCloudUploader {
   }
 
   private createTestRun(isOrg: boolean): Promise<StartedTestRun> {
-    return new Promise<StartedTestRun>((resolve, reject) => {
-      this._client.test.createTestRun(
-        this._userName,
-        this._appName,
-        (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
-          if (err) {
-            if ((err as any).statusCode === 404) {
-              err.message = `The app named ${this._appName} does not exist in the organization or user: ${this._userName}`;
-            }
-            reject(err);
-          } else {
-            const location: string = response.headers["location"];
-            const testRunId = _.last(location.split("/"));
-            resolve({
-              acceptedDevices: [],
-              rejectedDevices: [],
-              testRunId: testRunId,
-              testRunUrl: PortalHelper.getPortalTestLink(
-                this._portalBaseUrl,
-                isOrg,
-                this._userName,
-                this._appName,
-                this.testSeries,
-                testRunId
-              ),
-            });
-          }
+    return new Promise<StartedTestRun>(async (resolve, reject) => {
+      var testRunHeaders: models.TestCreateTestRunHeaders;
+      try {
+        testRunHeaders = await this._client.test.createTestRun(
+          this._userName,
+          this._appName
+          
+        );
+      } catch (error) {
+        if (error.response?.status == 404) {
+          error.message = `The app named ${this._appName} does not exist in the organization or user: ${this._userName}`;
         }
-      );
+
+        reject(error);
+      }
+
+
+      const testRunId = _.last(testRunHeaders.location.split("/"));
+      resolve({
+        acceptedDevices: [],
+        rejectedDevices: [],
+        testRunId: testRunId,
+        testRunUrl: PortalHelper.getPortalTestLink(
+          this._portalBaseUrl,
+          isOrg,
+          this._userName,
+          this._appName,
+          this.testSeries,
+          testRunId
+        )
+      });
     });
   }
 
@@ -167,11 +169,10 @@ export class TestCloudUploader {
   ): Promise<{ file: TestRunFile; response: models.TestCloudFileHashResponse }[]> {
     const mappedFiles = files.map((f) => this.testRunFileToFileHash(f.file, f.byteRange));
 
-    const clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>((cb) => {
-      this._client.test.uploadHashesBatch(testRunId, mappedFiles, this._userName, this._appName, cb);
-    });
+    //TODO: Test carefully
+    const result = await this._client.test.uploadHashesBatch(testRunId, this._userName, this._appName, mappedFiles);
 
-    return _.zip<any>(files, clientResponse.result).map((fr: any) => {
+    return _.zip<any>(files, result).map((fr: any) => {
       return { file: fr[0].file, response: fr[1] };
     });
   }
@@ -191,14 +192,11 @@ export class TestCloudUploader {
 
   private getDirectUploadUrl(client: AppCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      client.test.startUploadingFile(testRunId, this._userName, this._appName, (err, _result, _request, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const location: string = response.headers["location"];
-          resolve(location);
-        }
-      });
+      try {
+        client.test.startUploadingFile(testRunId, this._userName, this._appName).then(result => resolve(result.location));
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
@@ -239,8 +237,6 @@ export class TestCloudUploader {
       testParameters: allTestParameters,
     };
 
-    return clientCall((cb) => {
-      this._client.test.startTestRun(testRunId, startOptions, this._userName, this._appName, cb);
-    });
+    return this._client.test.startTestRun(testRunId, this._userName, this._appName, startOptions);
   }
 }

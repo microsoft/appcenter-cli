@@ -11,7 +11,7 @@ import {
   required,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:update");
 import { inspect } from "util";
@@ -43,29 +43,32 @@ export default class OrgUpdateCommand extends Command {
     }
 
     try {
-      const httpContent = await out.progress(
+      await out.progress(
         "Updating organization...",
-        clientRequest<models.OrganizationResponse>((cb) =>
-          client.organizations.update(
-            this.name,
-            {
-              displayName: this.newDisplayName,
-              name: this.newName,
-            },
-            cb
-          )
+        client.organizations.update(
+          this.name,
+          {
+            displayName: this.newDisplayName,
+            name: this.newName,
+          }
         )
       );
-      if (httpContent.response.statusCode < 400) {
-        if (this.newDisplayName) {
-          out.text(`Successfully changed display name of ${this.name} to ${this.newDisplayName}`);
-        }
-        if (this.newName) {
-          out.text(`Successfully renamed ${this.name} to ${this.newName}`);
-        }
-      } else {
-        throw httpContent.response;
+      if (this.newDisplayName) {
+        out.text(`Successfully changed display name of ${this.name} to ${this.newDisplayName}`);
       }
+      if (this.newName) {
+        out.text(`Successfully renamed ${this.name} to ${this.newName}`);
+      }
+      // if (httpContent.response.statusCode < 400) {
+      //   if (this.newDisplayName) {
+      //     out.text(`Successfully changed display name of ${this.name} to ${this.newDisplayName}`);
+      //   }
+      //   if (this.newName) {
+      //     out.text(`Successfully renamed ${this.name} to ${this.newName}`);
+      //   }
+      // } else {
+      //   throw httpContent.response;
+      // }
     } catch (error) {
       switch (error.statusCode) {
         case 404:
