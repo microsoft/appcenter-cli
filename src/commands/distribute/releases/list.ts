@@ -15,13 +15,9 @@ export default class ShowReleasesCommand extends AppCommand {
     try {
       releases = await out.progress(
         "Loading list of releases...",
-        client.releases.list(
-          app.ownerName,
-          app.appName,
-          {
-            publishedOnly: true,
-          }
-        )
+        client.releases.list(app.ownerName, app.appName, {
+          publishedOnly: true,
+        })
       );
     } catch (error) {
       debug(`Failed to get list of releases for the application - ${inspect(error)}`);

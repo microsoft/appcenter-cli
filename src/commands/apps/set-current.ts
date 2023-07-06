@@ -34,10 +34,7 @@ export default class SetCurrentAppCommand extends Command {
       return failure(ErrorCodes.InvalidParameter, `'${this.appId}' is not a valid application.`);
     }
 
-    const apps = await out.progress(
-      "Reading available apps...",
-      client.apps.list(),
-    );
+    const apps = await out.progress("Reading available apps...", client.apps.list());
 
     const found = apps.find((app) => app.name === newDefault.appName && app.owner.name === newDefault.ownerName);
     if (!found) {

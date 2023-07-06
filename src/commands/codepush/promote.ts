@@ -105,23 +105,19 @@ export default class CodePushPromoteCommand extends AppCommand {
       label: this.label,
       isDisabled: this.isDisabled,
       isMandatory: this.isMandatory,
-      rollout: parseInt(this.rollout)
+      rollout: parseInt(this.rollout, 10),
     };
 
     try {
       debug("Promote CodePush release");
       await out.progress(
         "Promoting CodePush release...",
-        client.codePushDeployments.promote(
-          this.sourceDeploymentName,
-          this.destinationDeploymentName,
-          app.ownerName,
-          app.appName,
-          { release: promote }
-        )
+        client.codePushDeployments.promote(this.sourceDeploymentName, this.destinationDeploymentName, app.ownerName, app.appName, {
+          release: promote,
+        })
       );
     } catch (error) {
-      if (error.statusCode  === 409 && this.disableDuplicateReleaseError) {
+      if (error.statusCode === 409 && this.disableDuplicateReleaseError) {
         // 409 (Conflict) status code means that uploaded package is identical
         // to the contents of the specified deployment's current release
         console.warn(chalk.yellow("[Warning] " + error.response.bodyAsText));

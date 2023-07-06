@@ -39,10 +39,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     const app = this.app;
     let deployments: models.CodePushDeploymentsListResponse;
     try {
-      deployments = await out.progress(
-        "Getting CodePush deployments...",
-        client.codePushDeployments.list(app.ownerName, app.appName)
-      );
+      deployments = await out.progress("Getting CodePush deployments...", client.codePushDeployments.list(app.ownerName, app.appName));
 
       if (this.displayKeys) {
         out.table(
@@ -136,7 +133,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     return null;
   }
 
-  private async getMetrics(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushDeploymentMetricsGetResponse> {
+  private async getMetrics(
+    deployment: models.Deployment,
+    client: AppCenterClient
+  ): Promise<models.CodePushDeploymentMetricsGetResponse> {
     const metrics = await out.progress(
       "Getting CodePush deployments metrics...",
       client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName)

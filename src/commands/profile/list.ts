@@ -12,12 +12,12 @@ export default class ProfileListCommand extends Command {
   }
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    let commandResult : CommandResult;
+    let commandResult: CommandResult;
 
     const userInfo = await out.progress(
       "Getting user information...",
-      client.users.get({onResponse : (rawResponse, _flatResponse, _error?) =>
-        {
+      client.users.get({
+        onResponse: (rawResponse, _flatResponse, _error?) => {
           if (rawResponse.status >= 400) {
             switch (rawResponse.status) {
               case 400:
@@ -28,7 +28,8 @@ export default class ProfileListCommand extends Command {
                 commandResult = failure(ErrorCodes.Exception, "Unknown error when loading apps");
             }
           }
-        }})
+        },
+      })
     );
 
     if (commandResult) {

@@ -93,8 +93,7 @@ export default class AppCreateCommand extends Command {
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
     const createAppResponse = await out.progress(
       "Creating app ...",
-      client.apps.create(appAttributes).catch ((error) =>
-      {
+      client.apps.create(appAttributes).catch((error) => {
         return failure(ErrorCodes.Exception, error);
       })
     );

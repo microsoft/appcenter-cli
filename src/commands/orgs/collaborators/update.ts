@@ -368,13 +368,9 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async changeUserRole(client: AppCenterClient, collaboratorName: string, role: UserRole): Promise<void> {
     try {
-      await client.users.updateOrgRole(
-        this.name,
-        collaboratorName,
-        {
-          role,
-        }
-      );
+      await client.users.updateOrgRole(this.name, collaboratorName, {
+        role,
+      });
     } catch (error) {
       if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);

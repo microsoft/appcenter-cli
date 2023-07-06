@@ -216,10 +216,7 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private async getApps(client: AppCenterClient): Promise<DefaultApp> {
-    const apps = await out.progress(
-      "Getting list of apps...",
-      client.apps.list()
-    );
+    const apps = await out.progress("Getting list of apps...", client.apps.list());
     const choices = apps.map((app) => {
       return {
         name: app.name,

@@ -135,16 +135,11 @@ export default class AudienceCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<void> {
     try {
-      const result = await client.analytics.modelCounts(
-        startDate,
-        app.ownerName,
-        app.appName,
-        {
-          end: endDate,
-          versions: appVersion,
-        }
-      );
-      
+      const result = await client.analytics.modelCounts(startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersion,
+      });
+
       statisticsObject.devices = result.models.map((model) => ({
         count: model.count,
         value: model.modelName,
@@ -165,15 +160,10 @@ export default class AudienceCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<void> {
     try {
-      const result = await client.analytics.placeCounts(
-        startDate,
-        app.ownerName,
-        app.appName,
-        {
-          end: endDate,
-          versions: appVersion,
-        }
-      )
+      const result = await client.analytics.placeCounts(startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersion,
+      });
 
       statisticsObject.countries = result.places.map((place) => ({
         count: place.count,
@@ -195,15 +185,10 @@ export default class AudienceCommand extends AppCommand {
     appVersion?: string[]
   ): Promise<void> {
     try {
-      const result = await client.analytics.languageCounts(
-        startDate,
-        app.ownerName,
-        app.appName,
-        {
-          end: endDate,
-          versions: appVersion,
-        }
-      );
+      const result = await client.analytics.languageCounts(startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersion,
+      });
 
       statisticsObject.languages = result.languages.map((language) => ({
         count: language.count,
@@ -226,16 +211,10 @@ export default class AudienceCommand extends AppCommand {
     appBuild?: string
   ): Promise<void> {
     try {
-      const result = await client.analytics.deviceCounts(
-        startDate,
-        appBuild,
-        app.ownerName,
-        app.appName,
-        {
-          end: endDate,
-          versions: appVersion,
-        }
-      );
+      const result = await client.analytics.deviceCounts(startDate, appBuild, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersion,
+      });
 
       statisticsObject.activeUsers = result.daily.map((dailyData, index) => ({
         date: new Date(dailyData.datetime),

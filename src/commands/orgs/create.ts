@@ -38,12 +38,10 @@ export default class OrgCreateCommand extends Command {
     try {
       organizationInfo = await out.progress(
         "Creating new organization...",
-        client.organizations.createOrUpdate(
-          {
-            displayName: this.displayName,
-            name: this.name,
-          }
-        )
+        client.organizations.createOrUpdate({
+          displayName: this.displayName,
+          name: this.name,
+        })
       );
     } catch (error) {
       if (error.response?.status === 409) {

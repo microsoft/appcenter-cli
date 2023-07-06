@@ -121,20 +121,15 @@ export default class ShowCommand extends AppCommand {
   ): Promise<IEventStatistics[]> {
     let eventsStatistics: IEventStatistics[];
     try {
-      const result = await client.analytics.events(
-        startDate,
-        app.ownerName,
-        app.appName,
-        {
-          end: endDate,
-          versions: appVersions,
-          orderby: "count desc",
-          top: eventCount,
-          skip: 0,
-          eventName: eventNames,
-          inlinecount: "allpages",
-        }
-      );
+      const result = await client.analytics.events(startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersions,
+        orderby: "count desc",
+        top: eventCount,
+        skip: 0,
+        eventName: eventNames,
+        inlinecount: "allpages",
+      });
 
       eventsStatistics = result.events.map((event) => ({
         name: event.name,
@@ -173,9 +168,9 @@ export default class ShowCommand extends AppCommand {
   ): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
-      const httpContent = await (limit(() =>
-        client.analytics.eventProperties(eventName, app.ownerName, app.appName)
-      ) as Promise<ClientResponse<models.EventProperties>>);
+      const httpContent = await (limit(() => client.analytics.eventProperties(eventName, app.ownerName, app.appName)) as Promise<
+        ClientResponse<models.EventProperties>
+      >);
 
       propertiesNames = httpContent.result.eventProperties;
     } catch (error) {
@@ -204,17 +199,10 @@ export default class ShowCommand extends AppCommand {
     limit: any
   ): Promise<IPropertyValueStatistics[]> {
     try {
-      const result = await client.analytics.eventPropertyCounts(
-        eventName,
-        eventPropertyName,
-        startDate,
-        app.ownerName,
-        app.appName,
-        {
-          end: endDate,
-          versions: appVersions,
-        }
-      )
+      const result = await client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersions,
+      });
 
       return result.values.map((value) => ({
         value: value.name,

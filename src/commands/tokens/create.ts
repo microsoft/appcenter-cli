@@ -41,19 +41,16 @@ export default class TokenCreateCommand extends AppCommand {
   async run(client: AppCenterClient): Promise<CommandResult> {
     validatePrincipalType(this.principalType);
     const tokenMessaging = `Creating ${this.principalType} API token ...`;
-    
+
     const tokenAttributes: models.UserApiTokensCreateOptionalParams = {
       description: this.description,
-      onResponse : (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
+      onResponse: (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
     };
-    
+
     let createTokenResponse;
     try {
       if (this.principalType === PrincipalType.USER) {
-        createTokenResponse = await out.progress(
-          tokenMessaging,
-          client.userApiTokens.create(tokenAttributes)
-        );
+        createTokenResponse = await out.progress(tokenMessaging, client.userApiTokens.create(tokenAttributes));
       } else if (this.principalType === PrincipalType.APP) {
         const app: DefaultApp = this.app;
         createTokenResponse = await out.progress(
@@ -61,7 +58,7 @@ export default class TokenCreateCommand extends AppCommand {
           client.appApiTokens.create(app.ownerName, app.appName, tokenAttributes)
         );
       }
-      } catch (error) {
+    } catch (error) {
       return error;
     }
 
@@ -70,8 +67,7 @@ export default class TokenCreateCommand extends AppCommand {
     return success();
   }
 
-  private handleCreateTokenResponse(statusCode: number)
-  {
+  private handleCreateTokenResponse(statusCode: number) {
     if (statusCode >= 400) {
       switch (statusCode) {
         case 400:

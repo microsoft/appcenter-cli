@@ -19,7 +19,7 @@ import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
 import { inspect } from "util";
 import * as Url from "url";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 import * as Fs from "fs";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:groups:download");
@@ -92,18 +92,13 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   ): Promise<string> {
     debug(`Getting download URL for the ${releaseId} release of the specified distribution group`);
     try {
-      const release = await client.releases.getLatestByDistributionGroup(
-        app.ownerName,
-        app.appName,
-        distributionGroup,
-        releaseId,
-        { onResponse : (response, _flatResponse, _error?) =>
-          {
-            if (response.status >= 400) {
-              throw release;
-            }
-          }}
-        );
+      const release = await client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, releaseId, {
+        onResponse: (response, _flatResponse, _error?) => {
+          if (response.status >= 400) {
+            throw release;
+          }
+        },
+      });
       return release.downloadUrl;
     } catch (error) {
       switch (error.code) {
@@ -158,22 +153,26 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private downloadReleasePackageToFile(downloadUrl: string, filePath: string): Promise<void> {
     debug("Downloading the release package to the path");
 
-
-    return fetch(downloadUrl).then(response => new Promise<void>((resolve, reject) => {
-      const dest = Fs.createWriteStream(filePath);
-      response.body.pipe(dest);
-      response.body.on("end", () => {
-        resolve()
+    return fetch(downloadUrl)
+      .then(
+        (response) =>
+          new Promise<void>((resolve, reject) => {
+            const dest = Fs.createWriteStream(filePath);
+            response.body.pipe(dest);
+            response.body.on("end", () => {
+              resolve();
+            });
+            dest.on("error", (error) => {
+              debug(`Failed to save the release to ${filePath} - ${inspect(error)}`);
+              reject(failure(ErrorCodes.Exception, `failed to save the release to ${filePath}`));
+            });
+          })
+      )
+      .catch((error) => {
+        debug(`Failed to download the release from ${downloadUrl} - ${inspect(error)}`);
+        return new Promise<void>((_resolve, reject) => {
+          reject(failure(ErrorCodes.Exception, `failed to download the release from ${downloadUrl}`));
+        });
       });
-      dest.on("error", (error) => {
-        debug(`Failed to save the release to ${filePath} - ${inspect(error)}`);
-        reject(failure(ErrorCodes.Exception, `failed to save the release to ${filePath}`))
-      });
-    })).catch((error) => {
-      debug(`Failed to download the release from ${downloadUrl} - ${inspect(error)}`);
-      return new Promise<void>((_resolve, reject) => {
-        reject(failure(ErrorCodes.Exception, `failed to download the release from ${downloadUrl}`))
-      });
-    });
   }
 }

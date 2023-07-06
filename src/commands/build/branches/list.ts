@@ -39,8 +39,6 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
 
     // const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.status;
 
-    
-
     const branchesWithBuilds = _(branches)
       .filter((branch) => !_.isNil(branch.lastBuild))
       .sortBy((b) => b.lastBuild.sourceBranch)

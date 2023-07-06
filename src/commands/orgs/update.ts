@@ -45,13 +45,10 @@ export default class OrgUpdateCommand extends Command {
     try {
       await out.progress(
         "Updating organization...",
-        client.organizations.update(
-          this.name,
-          {
-            displayName: this.newDisplayName,
-            name: this.newName,
-          }
-        )
+        client.organizations.update(this.name, {
+          displayName: this.newDisplayName,
+          name: this.newName,
+        })
       );
       if (this.newDisplayName) {
         out.text(`Successfully changed display name of ${this.name} to ${this.newDisplayName}`);

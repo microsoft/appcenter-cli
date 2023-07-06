@@ -188,14 +188,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     try {
       const result = await out.progress(
         "Deleting testers from the distribution group...",
-        client.distributionGroups.removeUser(
-          app.ownerName,
-          app.appName,
-          this.distributionGroup,
-          {
-            userEmails,
-          }
-        )
+        client.distributionGroups.removeUser(app.ownerName, app.appName, this.distributionGroup, {
+          userEmails,
+        })
       );
       return result.filter((result) => result.status < 400).map((result) => result.userEmail);
     } catch (error) {
@@ -212,14 +207,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     try {
       const result = await out.progress(
         "Adding testers to the distribution group...",
-        client.distributionGroups.addUser(
-          app.ownerName,
-          app.appName,
-          this.distributionGroup,
-          {
-            userEmails,
-          }
-        )
+        client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
+          userEmails,
+        })
       );
       return result.filter((result) => result.status < 400).map((result) => result.userEmail);
     } catch (error) {

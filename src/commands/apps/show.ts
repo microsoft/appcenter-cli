@@ -14,10 +14,7 @@ export default class AppShowCommand extends AppCommand {
   async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
     try {
-      const appDetailsResponse = await out.progress(
-        "Getting app details ...",
-        client.apps.get(app.ownerName, app.appName)
-      );
+      const appDetailsResponse = await out.progress("Getting app details ...", client.apps.get(app.ownerName, app.appName));
       reportApp(appDetailsResponse);
     } catch (error) {
       const statusCode = error.response.status;

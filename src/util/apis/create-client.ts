@@ -22,18 +22,17 @@ export interface AppCenterClientFactory {
 
 export function createAppCenterClient(command: string[], telemetryEnabled: boolean): AppCenterClientFactory {
   function createClientOptions(token: Promise<string>): ServiceClientOptions {
-
     const policies = [
-      { policy : telemetryPolicy(command.join(" "), telemetryEnabled), position: "perCall" as "perCall" | "perRetry" },
+      { policy: telemetryPolicy(command.join(" "), telemetryEnabled), position: "perCall" as "perCall" | "perRetry" },
       // { policy : userAgentPolicy(), position: "perCall" as "perCall" | "perRetry"  },
       // { policy : logPolicy(), position: "perCall" as "perCall" | "perRetry"  },
-      { policy : authorizationPolicy(token), position: "perCall" as "perCall" | "perRetry"  },
-    ]
+      { policy: authorizationPolicy(token), position: "perCall" as "perCall" | "perRetry" },
+    ];
 
     const serviceClientOptions: ServiceClientOptions = {
       additionalPolicies: policies,
     };
-  
+
     return serviceClientOptions;
   }
 

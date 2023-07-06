@@ -37,16 +37,10 @@ export default class ApiTokenListCommand extends AppCommand {
 
     try {
       if (this.principalType === PrincipalType.USER) {
-        listTokensResponse = await out.progress(
-          tokenMessaging,
-          client.userApiTokens.list()
-        );
+        listTokensResponse = await out.progress(tokenMessaging, client.userApiTokens.list());
       } else if (this.principalType === PrincipalType.APP) {
         const app: DefaultApp = this.app;
-        listTokensResponse = await out.progress(
-          tokenMessaging,
-          client.appApiTokens.list(app.ownerName, app.appName)
-        );
+        listTokensResponse = await out.progress(tokenMessaging, client.appApiTokens.list(app.ownerName, app.appName));
       }
     } catch (error) {
       const statusCode = error.response.statusCode;

@@ -65,27 +65,21 @@ export async function getExternalStoreToDistributeRelease(
 export async function addGroupToRelease(options: AddGroupToReleaseOptions): Promise<models.ReleaseDestinationResponse> {
   const { client, app, distributionGroup, releaseId, mandatory, silent, destinationType, destination } = options;
 
-  return await client.releases.addDistributionGroup(
-    releaseId,
-    app.ownerName,
-    app.appName,
-    distributionGroup.id,
-    {
-      mandatoryUpdate: !!mandatory,
-      notifyTesters: !silent,
+  return await client.releases.addDistributionGroup(releaseId, app.ownerName, app.appName, distributionGroup.id, {
+    mandatoryUpdate: !!mandatory,
+    notifyTesters: !silent,
 
-      onResponse : (response, _flatResponse, _error?) => {
-        if (response.status >= 200 && response.status < 400) {
-          // all good;
-        } else if (response.status === 404) {
-          throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
-        } else {
-          debug(`Failed to distribute the release - ${inspect(response.parsedBody)}`);
-          throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
-        }
+    onResponse: (response, _flatResponse, _error?) => {
+      if (response.status >= 200 && response.status < 400) {
+        // all good;
+      } else if (response.status === 404) {
+        throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
+      } else {
+        debug(`Failed to distribute the release - ${inspect(response.parsedBody)}`);
+        throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
       }
-    }
-  );
+    },
+  });
 }
 
 export function parseDistributionGroups(groups: string): string[] {

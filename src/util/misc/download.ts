@@ -1,10 +1,10 @@
-import { AppCommand} from "../../util/commandline";
+import { AppCommand } from "../../util/commandline";
 import { StreamingArrayOutput } from "../../util/interaction";
 import * as fsHelper from "../../util/misc/fs-helper";
 import * as Fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 const debug = require("debug")("appcenter-cli:util:misc:download");
 

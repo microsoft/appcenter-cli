@@ -43,14 +43,9 @@ export default class ShowAppVersionsCommand extends AppCommand {
     try {
       const result = await out.progress(
         "Getting list of application versions...",
-        client.analytics.versions(
-          startDate,
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-          }
-        )
+        client.analytics.versions(startDate, app.ownerName, app.appName, {
+          end: endDate,
+        })
       );
       listOfVersions = result.versions;
     } catch (error) {

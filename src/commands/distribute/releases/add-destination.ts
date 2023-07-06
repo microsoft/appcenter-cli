@@ -125,32 +125,20 @@ export default class AddDestinationCommand extends AppCommand {
         releaseId,
       })
     );
-    await client.releases.addStore(
-      releaseId,
-      this.app.ownerName,
-      this.app.appName,
-      store.id,
-      {
-        onResponse : (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse)
-      },
-    );
+    await client.releases.addStore(releaseId, this.app.ownerName, this.app.appName, store.id, {
+      onResponse: (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse),
+    });
 
     // this.handleAddDestinationResponse(result, response);
   }
 
   private async addTesterToRelease(client: AppCenterClient, releaseId: number) {
-    await client.releases.addTesters(
-      releaseId,
-      this.app.ownerName,
-      this.app.appName,
-      this.destination,
-      {
-        mandatoryUpdate: this.mandatory,
-        notifyTesters: !this.silent,
+    await client.releases.addTesters(releaseId, this.app.ownerName, this.app.appName, this.destination, {
+      mandatoryUpdate: this.mandatory,
+      notifyTesters: !this.silent,
 
-        onResponse : (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse)
-      }
-    );
+      onResponse: (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse),
+    });
 
     // this.handleAddDestinationResponse(result, response);
   }

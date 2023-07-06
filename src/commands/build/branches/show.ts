@@ -32,7 +32,7 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
     const app = this.app;
 
     debug(`Getting builds for branch ${this.branchName}`);
-    let builds : BuildsListByBranchResponse;
+    let builds: BuildsListByBranchResponse;
     try {
       builds = await out.progress(
         `Getting builds for branch ${this.branchName}...`,

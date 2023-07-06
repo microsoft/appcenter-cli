@@ -63,18 +63,13 @@ export default class DeleteReleaseCommand extends AppCommand {
       debug("Removing release");
       await out.progress(
         `Removing the release...`,
-        client.releases.delete(
-          releaseId,
-          app.ownerName,
-          app.appName,
-          { onResponse : (response, _flatResponse, _error?) =>
-            {
-              if (response.status >= 400) {
-                throw response.parsedBody;
-              }
+        client.releases.delete(releaseId, app.ownerName, app.appName, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              throw response.parsedBody;
             }
-          }
-        )
+          },
+        })
       );
     } catch (error) {
       if (error.code === "partially_deleted") {

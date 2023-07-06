@@ -22,8 +22,8 @@ export function isValidRollout(rollout: number): boolean {
 
 export async function isValidDeployment(client: AppCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
   try {
-    var result = await client.codePushDeployments.get(deploymentName, app.ownerName, app.appName);
-    return result != null && result != undefined;
+    const result = await client.codePushDeployments.get(deploymentName, app.ownerName, app.appName);
+    return result !== null && result !== undefined;
   } catch (error) {
     if (error.response?.status === 404) {
       // 404 is correct status code for this case

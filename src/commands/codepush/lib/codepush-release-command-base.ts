@@ -103,12 +103,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
     this.deploymentName = this.specifiedDeploymentName;
 
     if (this.privateKeyPath) {
-      const appInfo = (
-        await out.progress(
-          "Getting app info...",
-          client.apps.get(this.app.ownerName, this.app.appName)
-        )
-      );
+      const appInfo = await out.progress("Getting app info...", client.apps.get(this.app.ownerName, this.app.appName));
       const platform = appInfo.platform.toLowerCase();
 
       // In React-Native case we should add "CodePush" name folder as root for relase files for keeping sync with React Native client SDK.
@@ -155,7 +150,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
       return success();
     } catch (error) {
-      if (error.response?.status  === 409 && this.disableDuplicateReleaseError) {
+      if (error.response?.status === 409 && this.disableDuplicateReleaseError) {
         // 409 (Conflict) status code means that uploaded package is identical
         // to the contents of the specified deployment's current release
         console.warn(chalk.yellow("[Warning] " + error.response?.bodyAsText));

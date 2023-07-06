@@ -39,18 +39,13 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       debug("Loading release details");
       releaseDetails = await out.progress(
         "Loading release details...",
-        client.releases.getLatestByUser(
-          this.releaseId,
-          app.ownerName,
-          app.appName,
-          {
-            onResponse : (response, _flatResponse, _error?) =>
-            {
-              if (response.status >= 400) {
-                throw response.status
-              }
-            },
-          },)
+        client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              throw response.status;
+            }
+          },
+        })
       );
     } catch (error) {
       if (error === 404) {

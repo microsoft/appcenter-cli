@@ -85,12 +85,7 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
       this.deploymentName = this.specifiedDeploymentName;
     }
 
-    const appInfo = (
-      await out.progress(
-        "Getting app info...",
-        client.apps.get(this.app.ownerName, this.app.appName)
-      )
-    );
+    const appInfo = await out.progress("Getting app info...", client.apps.get(this.app.ownerName, this.app.appName));
     this.os = appInfo.os.toLowerCase();
 
     this.updateContentsPath = this.outputDir || (await pfs.mkTempDir("code-push"));

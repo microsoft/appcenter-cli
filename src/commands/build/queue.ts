@@ -45,22 +45,17 @@ export default class QueueBuildCommand extends AppCommand {
     try {
       const queueBuildRequestResponse = await out.progress(
         `Queueing build for branch ${this.branchName}...`,
-        client.builds.create(
-          this.branchName,
-          app.ownerName,
-          app.appName,
-          {
-            debug: this.debugLogs,
-            sourceVersion: this.sourceVersion,
-          }
-        )
+        client.builds.create(this.branchName, app.ownerName, app.appName, {
+          debug: this.debugLogs,
+          sourceVersion: this.sourceVersion,
+        })
       );
 
       const buildId = queueBuildRequestResponse.id;
       const realBranchName = queueBuildRequestResponse.sourceBranch;
-  
+
       const url = PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, realBranchName, buildId.toString());
-  
+
       out.report(
         [
           ["Build ID", "buildId"],

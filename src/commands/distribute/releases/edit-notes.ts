@@ -56,21 +56,16 @@ export default class EditReleaseCommand extends AppCommand {
       debug("Loading release details");
       releaseDetails = await out.progress(
         "Loading release details...",
-        client.releases.getLatestByUser(
-          this.releaseId,
-          app.ownerName,
-          app.appName,
-          {
-            onResponse : (response, _flatResponse, _error?) =>
-            {
-              if (response.status >= 400) {
-                commandFailure = response.status === 404
+        client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              commandFailure =
+                response.status === 404
                   ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`)
                   : failure(ErrorCodes.Exception, "failed to load release details");
-              }
             }
           },
-        )
+        })
       );
     } catch (error) {
       handleHttpError(error, false, "failed to load release details");

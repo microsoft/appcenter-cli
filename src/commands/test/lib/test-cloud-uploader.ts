@@ -9,7 +9,7 @@ import * as fs from "fs";
 // import * as http from "http";
 import * as path from "path";
 import fetch from "node-fetch";
-const FormData = require('form-data');
+const FormData = require("form-data");
 
 const debug = require("debug")("appcenter-cli:commands:test:lib:test-cloud-uploader");
 const pLimit = require("p-limit");
@@ -114,21 +114,16 @@ export class TestCloudUploader {
 
   private createTestRun(isOrg: boolean): Promise<StartedTestRun> {
     return new Promise<StartedTestRun>(async (resolve, reject) => {
-      var testRunHeaders: models.TestCreateTestRunHeaders;
+      let testRunHeaders: models.TestCreateTestRunHeaders;
       try {
-        testRunHeaders = await this._client.test.createTestRun(
-          this._userName,
-          this._appName
-          
-        );
+        testRunHeaders = await this._client.test.createTestRun(this._userName, this._appName);
       } catch (error) {
-        if (error.response?.status == 404) {
+        if (error.response?.status === 404) {
           error.message = `The app named ${this._appName} does not exist in the organization or user: ${this._userName}`;
         }
 
         reject(error);
       }
-
 
       const testRunId = _.last(testRunHeaders.location.split("/"));
       resolve({
@@ -142,7 +137,7 @@ export class TestCloudUploader {
           this._appName,
           this.testSeries,
           testRunId
-        )
+        ),
       });
     });
   }
@@ -193,7 +188,7 @@ export class TestCloudUploader {
   private getDirectUploadUrl(client: AppCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       try {
-        client.test.startUploadingFile(testRunId, this._userName, this._appName).then(result => resolve(result.location));
+        client.test.startUploadingFile(testRunId, this._userName, this._appName).then((result) => resolve(result.location));
       } catch (err) {
         reject(err);
       }
@@ -204,21 +199,22 @@ export class TestCloudUploader {
     return new Promise<void>((resolve, reject) => {
       try {
         const formData = new FormData();
-        formData.append('relative_path', file.targetRelativePath);
-        formData.append('file', fs.createReadStream(file.sourcePath));
-        formData.append('file_type', file.fileType);
+        formData.append("relative_path", file.targetRelativePath);
+        formData.append("file", fs.createReadStream(file.sourcePath));
+        formData.append("file_type", file.fileType);
 
         fetch(directUrl, {
           method: "POST",
-          body: formData
-        }).then ((response) => {
-          if (response.status >= 400) {
-            reject(new Error(`Cannot upload file. Response: ${response.status}; Message: ${response.body}`));
-          } else {
-            resolve()
-          }
+          body: formData,
         })
-        .catch((error) => reject(error));
+          .then((response) => {
+            if (response.status >= 400) {
+              reject(new Error(`Cannot upload file. Response: ${response.status}; Message: ${response.body}`));
+            } else {
+              resolve();
+            }
+          })
+          .catch((error) => reject(error));
       } catch (err) {
         reject(err);
       }

@@ -42,7 +42,7 @@ export default class SymbolsUploadingHelper {
     symbolType: models.SymbolUploadBeginRequest
   ): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
-    
+
     try {
       return await client.symbolUploads.create(app.ownerName, app.appName, symbolType);
     } catch (error) {

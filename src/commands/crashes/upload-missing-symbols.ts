@@ -82,9 +82,7 @@ export default class UploadMissingSymbols extends AppCommand {
     try {
       const result = await client.missingSymbolGroups.list(MAX_SQL_INTEGER, app.ownerName, app.appName);
       return _.flatten(
-        result.groups.map((crashGroup) =>
-          crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)
-        )
+        result.groups.map((crashGroup) => crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId))
       );
     } catch (error) {
       debug(`Failed to get list of missing symbols - ${inspect(error)}`);

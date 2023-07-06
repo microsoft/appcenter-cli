@@ -29,10 +29,18 @@ export default class ShowDistributionGroupCommand extends AppCommand {
     const app = this.app;
 
     // creating distribution group users list request
-    const distributionGroupMembersRequestResponse = client.distributionGroups.listUsers(app.ownerName, app.appName, this.distributionGroup);
+    const distributionGroupMembersRequestResponse = client.distributionGroups.listUsers(
+      app.ownerName,
+      app.appName,
+      this.distributionGroup
+    );
 
     // creating releases information request
-    const basicReleasesDetailsRequestResponse = client.releases.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName);
+    const basicReleasesDetailsRequestResponse = client.releases.listByDistributionGroup(
+      this.distributionGroup,
+      app.ownerName,
+      app.appName
+    );
 
     // show spinner and wait for the requests to finish
     await out.progress(

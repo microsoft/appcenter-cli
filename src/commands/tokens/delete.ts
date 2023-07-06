@@ -54,21 +54,17 @@ export default class TokenDeleteCommand extends AppCommand {
       if (this.principalType === PrincipalType.USER) {
         await out.progress(
           tokenMessaging,
-          client.userApiTokens.delete(
-            this.id,
-            { onResponse : (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status)},
-          )
+          client.userApiTokens.delete(this.id, {
+            onResponse: (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
+          })
         );
       } else if (this.principalType === PrincipalType.APP) {
         const app: DefaultApp = this.app;
         await out.progress(
           tokenMessaging,
-          client.appApiTokens.delete(
-            app.ownerName,
-            app.appName,
-            this.id,
-            { onResponse : (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status)},
-          )
+          client.appApiTokens.delete(app.ownerName, app.appName, this.id, {
+            onResponse: (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
+          })
         );
       }
     } catch (error) {
@@ -78,8 +74,7 @@ export default class TokenDeleteCommand extends AppCommand {
     return success();
   }
 
-  private handleCreateTokenResponse(statusCode: number)
-  {
+  private handleCreateTokenResponse(statusCode: number) {
     if (statusCode >= 400) {
       switch (statusCode) {
         case 400:

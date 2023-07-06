@@ -56,27 +56,22 @@ export default class EditReleaseCommand extends AppCommand {
       debug("Loading release details");
       releaseDetails = await out.progress(
         "Loading release details...",
-        client.releases.getLatestByUser(
-          this.releaseId,
-          app.ownerName,
-          app.appName,
-          {
-            onResponse : (response, _flatResponse, _error?) =>
-            {
-              if (response.status >= 400) {
-                commandFailure = response.status === 404
+        client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              commandFailure =
+                response.status === 404
                   ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`)
                   : failure(ErrorCodes.Exception, "failed to load release details");
-              }
             }
-          },)
+          },
+        })
       );
     } catch (error) {
       handleHttpError(error, false, "failed to load release details");
     }
 
-    if (commandFailure)
-    {
+    if (commandFailure) {
       return commandFailure;
     }
 
@@ -84,29 +79,21 @@ export default class EditReleaseCommand extends AppCommand {
       debug(`Updating release state to "${state}"`);
       await out.progress(
         `${state === "enabled" ? "Enabling" : "Disabling"} the release...`,
-        client.releases.updateDetails(
-          releaseId,
-          app.ownerName,
-          app.appName,
-          {
-            enabled: state === "enabled",
-            onResponse : (response, _flatResponse, _error?) =>
-            {
-              if (response.status >= 400) {
-                commandFailure = failure(ErrorCodes.Exception, `failed to ${state === "enabled" ? "enable" : "disable"} the release`);
-              }
-            },
+        client.releases.updateDetails(releaseId, app.ownerName, app.appName, {
+          enabled: state === "enabled",
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              commandFailure = failure(ErrorCodes.Exception, `failed to ${state === "enabled" ? "enable" : "disable"} the release`);
+            }
           },
-        )
+        })
       );
-      
     } catch (error) {
       debug(`Failed to update the release - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, `failed to ${state === "enabled" ? "enable" : "disable"} the release`);
     }
 
-    if (commandFailure)
-    {
+    if (commandFailure) {
       return commandFailure;
     }
 

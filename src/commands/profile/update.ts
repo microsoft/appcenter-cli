@@ -13,10 +13,7 @@ export default class ProfileConfigureCommand extends Command {
   }
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const profile = await out.progress(
-      "Getting current user profile...",
-      client.users.get()
-    );
+    const profile = await out.progress("Getting current user profile...", client.users.get());
 
     const questions: any[] = [
       {
@@ -31,10 +28,7 @@ export default class ProfileConfigureCommand extends Command {
     const anyChanged = Object.keys(answers).some((k) => answers[k] !== (profile as any)[k]);
 
     if (anyChanged) {
-      const updated = await out.progress(
-        "Updating user profile...",
-        client.users.update({ displayName: answers.displayName })
-      );
+      const updated = await out.progress("Updating user profile...", client.users.update({ displayName: answers.displayName }));
 
       reportProfile(updated);
     } else {

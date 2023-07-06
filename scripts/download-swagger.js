@@ -57,12 +57,14 @@ function downloadSwagger(environment, version) {
     return new Promise((resolve, reject) => {
       const sd = streamDone(resolve, reject);
       fetch(swaggerUrl).then((response) => {
-        if (!response.ok) throw new Error(`unexpected response ${response.statusText}`);
+        if (!response.ok) {
+          throw new Error(`unexpected response ${response.statusText}`);
+        }
 
         response.body.pipe(fs.createWriteStream(swaggerDest(environment, version)));
         response.body.on("end", () => sd.resolve());
         response.body.on("error", (error) => sd.reject(error));
-      })
+      });
     });
   });
 }

@@ -119,9 +119,8 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async downloadFile(uri: string): Promise<Response> {
-
-    var response = await fetchWithOptions(uri, {
-        compress: false
+    const response = await fetchWithOptions(uri, {
+      compress: false,
     });
 
     return response;
@@ -184,7 +183,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
       if (buildInfo.result === DownloadBuildStatusCommand.failedResult && this.type !== DownloadBuildStatusCommand.logsType) {
         throw failure(ErrorCodes.InvalidParameter, `no ${this.type} to download - build failed`);
       }
-  
+
       return buildInfo;
     } catch (error) {
       if (error.statusCode === 404) {

@@ -541,14 +541,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       const result = await out.progress(
         `Updating release details...`,
-        client.releases.updateDetails(
-          releaseId,
-          app.ownerName,
-          app.appName,
-          {
-            releaseNotes: releaseNotesString,
-          }
-        )
+        client.releases.updateDetails(releaseId, app.ownerName, app.appName, {
+          releaseNotes: releaseNotesString,
+        })
       );
 
       return result;

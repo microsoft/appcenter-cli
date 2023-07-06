@@ -14,10 +14,7 @@ export default class ListStoresCommand extends AppCommand {
     debug("Getting list of the stores");
     let storesListRequestResponse: models.StoresListResponse;
     try {
-      storesListRequestResponse = await out.progress(
-        "Getting list of the stores...",
-        client.stores.list(app.ownerName, app.appName)
-      );
+      storesListRequestResponse = await out.progress("Getting list of the stores...", client.stores.list(app.ownerName, app.appName));
     } catch (error) {
       debug(`Failed to get list of the stores - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch list of all stores");

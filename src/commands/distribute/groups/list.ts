@@ -36,9 +36,7 @@ export default class ListDistributionGroupsCommand extends AppCommand {
     const distributionGroupUsersPromises: Array<Promise<models.DistributionGroupsListUsersResponse>> = [];
     for (const distributionGroupName of distributionGroupsNames) {
       distributionGroupUsersPromises.push(
-        limit(() =>
-          client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, distributionGroupName)
-        )
+        limit(() => client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, distributionGroupName))
       );
     }
 

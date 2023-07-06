@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { DefaultApp } from "../../../util/profile/index";
 import * as fs from "fs";
-import FormData = require('form-data');
+import FormData = require("form-data");
 
 export interface PackageInfo {
   appVersion?: string;
@@ -32,8 +32,8 @@ export default class LegacyCodePushServiceClient {
     return new Promise<void>((resolve, reject) => {
       const releaseUrl = this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`);
       const formData = new FormData();
-      formData.append('packageInfo', JSON.stringify(updateMetadata));
-      formData.append('package', fs.createReadStream(filePath));
+      formData.append("packageInfo", JSON.stringify(updateMetadata));
+      formData.append("package", fs.createReadStream(filePath));
 
       fetch(releaseUrl, {
         headers: {
@@ -41,13 +41,15 @@ export default class LegacyCodePushServiceClient {
           Authorization: `Bearer ${this.accessKey}`,
         },
         body: formData,
-      }).then((response) => {
-        if (response.status === 201) {
-          resolve();
-        } else {
-          reject();
-        }
-      }).catch((error) => reject(error));
+      })
+        .then((response) => {
+          if (response.status === 201) {
+            resolve();
+          } else {
+            reject();
+          }
+        })
+        .catch((error) => reject(error));
     });
   }
 

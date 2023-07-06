@@ -86,7 +86,6 @@ export default class CreateDistributionGroupCommand extends AppCommand {
         client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup)
       );
     } catch (error) {
-      
       if (error === 409) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} already exists`);
       } else if (error >= 400) {
@@ -106,15 +105,10 @@ export default class CreateDistributionGroupCommand extends AppCommand {
   ): Promise<models.DistributionGroupsAddUserResponse> {
     try {
       return await out.progress(
-      "Adding testers to the distribution group...",
-        client.distributionGroups.addUser(
-          app.ownerName,
-          app.appName,
-          this.distributionGroup,
-          {
-            userEmails: users,
-          }
-        )
+        "Adding testers to the distribution group...",
+        client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
+          userEmails: users,
+        })
       );
     } catch (error) {
       if (error.response.statusCode >= 400) {

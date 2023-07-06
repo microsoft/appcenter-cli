@@ -93,10 +93,7 @@ export default class OrgAppCreateCommand extends Command {
     }
 
     try {
-      const createAppResponse = await out.progress(
-        "Creating app in org...",
-        client.apps.createForOrg(this.orgName, appAttributes)
-      );
+      const createAppResponse = await out.progress("Creating app in org...", client.apps.createForOrg(this.orgName, appAttributes));
 
       reportApp(createAppResponse);
 
