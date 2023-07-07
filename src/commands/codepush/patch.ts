@@ -124,7 +124,6 @@ export default class PatchCommand extends AppCommand {
         "Patching CodePush release...",
         client.deploymentReleases.update(this.deploymentName, this.releaseLabel, app.ownerName, app.appName, patch, {
           onResponse: (response, _flatResponse, _error?) => {
-            console.log(`response : ${JSON.stringify(response)}`);
             if (response.status === 204) {
               out.text(
                 `No update for the ${chalk.bold(this.releaseLabel)} of ${this.identifier} app's ${chalk.bold(
