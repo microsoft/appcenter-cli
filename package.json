@@ -106,7 +106,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.14.0",
-    "@xmldom/xmldom": "0.8.7",
+    "@xmldom/xmldom": "0.9.0-beta.8",
     "abort-controller": "3.0.0",
     "appcenter-file-upload-client": "0.1.0",
     "appcenter-file-upload-client-node": "^1.2.10",
