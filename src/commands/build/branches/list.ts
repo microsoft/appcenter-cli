@@ -23,7 +23,6 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
 
-      //TODO: Requires testing
       if (error.statusCode >= 400) {
         switch (error.statusCode) {
           case 400:
@@ -36,8 +35,6 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
 
       return failure(ErrorCodes.Exception, "failed to fetch branches list");
     }
-
-    // const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.status;
 
     const branchesWithBuilds = _(branches)
       .filter((branch) => !_.isNil(branch.lastBuild))

@@ -74,27 +74,24 @@ export default class AppUpdateCommand extends AppCommand {
     }
 
     const app = this.app;
-    const updateAppResponse = await out.progress(
-      "Updating app ...",
-      client.apps.update(app.ownerName, app.appName).catch((error) => {
-        return failure(ErrorCodes.Exception, error);
-      })
-      // clientRequest<models.AppResponse>((cb) => client.appsOperations.update(app.appName, app.ownerName, { app: appAttributes }, cb))
-    );
 
-    // const statusCode = updateAppResponse.response.status;
-    // if (statusCode >= 400) {
-    //   switch (statusCode) {
-    //     case 400:
-    //       return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-    //     case 404:
-    //       return failure(ErrorCodes.NotLoggedIn, `the app "${app.identifier}" could not be found`);
-    //     case 409:
-    //       return failure(ErrorCodes.InvalidParameter, `an app with the "name" ${app.appName} already exists`);
-    //   }
-    // }
+    try {
+      const updateAppResponse = await out.progress("Updating app ...", client.apps.update(app.ownerName, app.appName));
 
-    reportApp(updateAppResponse);
+      reportApp(updateAppResponse);
+    } catch (error) {
+      const statusCode = error.response.status;
+      if (statusCode >= 400) {
+        switch (statusCode) {
+          case 400:
+            return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
+          case 404:
+            return failure(ErrorCodes.NotLoggedIn, `the app "${app.identifier}" could not be found`);
+          case 409:
+            return failure(ErrorCodes.InvalidParameter, `an app with the "name" ${app.appName} already exists`);
+        }
+      }
+    }
 
     return success();
   }

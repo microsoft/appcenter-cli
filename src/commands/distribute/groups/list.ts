@@ -54,9 +54,6 @@ export default class ListDistributionGroupsCommand extends AppCommand {
       try {
         debug(`Waiting for ${distributionGroupsNames[i]} distribution group users request response`);
         const distributionGroupUsersRequestResponse = await distributionGroupUsers;
-        // if (distributionGroupUsersRequestResponse.response.statusCode >= 400) {
-        //   throw distributionGroupUsersRequestResponse.response.statusCode;
-        // }
         debug(`Request for the list of ${distributionGroupsNames[i]} distribution group users has succeeded`);
         userCount = distributionGroupUsersRequestResponse.length.toString();
       } catch (error) {

@@ -46,7 +46,7 @@ export default class LegacyCodePushServiceClient {
           if (response.status === 201) {
             resolve();
           } else {
-            reject();
+            reject(response.body);
           }
         })
         .catch((error) => reject(error));

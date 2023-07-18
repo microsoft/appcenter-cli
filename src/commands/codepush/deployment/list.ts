@@ -124,8 +124,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
       metrics.forEach((metric) => (releasesTotalActive += metric.active));
 
       const latestMetric = metrics.pop();
+
+      // NOTE: Property `active` is used as a sum of `active`'s of all metrics.
       latestMetric.active = releasesTotalActive;
-      // latestMetric.totalActive = releasesTotalActive;
+
       delete latestMetric.label;
       return latestMetric;
     }

@@ -1,5 +1,4 @@
 import { out } from "../../../util/interaction";
-// import { models } from "../../../util/apis";
 
 export function reportApp(app: any): void {
   out.report(

@@ -91,26 +91,24 @@ export default class AppCreateCommand extends Command {
     }
 
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
-    const createAppResponse = await out.progress(
-      "Creating app ...",
-      client.apps.create(appAttributes).catch((error) => {
-        return failure(ErrorCodes.Exception, error);
-      })
-    );
 
-    // const statusCode = createAppResponse.status;
-    // if (statusCode >= 400) {
-    //   switch (statusCode) {
-    //     case 400:
-    //       return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-    //     case 404:
-    //       return failure(ErrorCodes.NotFound, "there appears to be no such user");
-    //     case 409:
-    //       return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
-    //   }
-    // }
+    try {
+      const createAppResponse = await out.progress("Creating app ...", client.apps.create(appAttributes));
 
-    reportApp(createAppResponse);
+      reportApp(createAppResponse);
+    } catch (error) {
+      const statusCode = error.response?.status;
+      if (statusCode >= 400) {
+        switch (statusCode) {
+          case 400:
+            return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
+          case 404:
+            return failure(ErrorCodes.NotFound, "there appears to be no such user");
+          case 409:
+            return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
+        }
+      }
+    }
 
     return success();
   }

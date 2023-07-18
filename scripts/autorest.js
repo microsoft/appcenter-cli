@@ -40,7 +40,7 @@ function runAutorest() {
 
 downloadSwagger
   .downloadSwagger(args.env, args.version)
-  // .then(() => fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath))
+  .then(() => fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath))
   .then(() => runAutorest())
   .then(() => console.log(`Swagger update complete`))
   .catch((err) => console.log(`Autorest process failed, ${err}`));

@@ -170,7 +170,6 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async getBuildStatus(client: AppCenterClient, app: DefaultApp, buildIdNumber: number): Promise<models.Build> {
-    // let buildStatusRequestResponse: ClientResponse<models.Build>;
     try {
       const buildInfo = await out.progress(
         `Getting status of build ${this.buildId}...`,

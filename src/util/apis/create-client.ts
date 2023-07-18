@@ -3,8 +3,7 @@ const debug = require("debug")("appcenter-cli:util:apis:create-client");
 import { inspect } from "util";
 
 import { AppCenterClient } from "./generated/src/appCenterClient";
-// import { logPolicy } from "@azure/core-rest-pipeline"
-// import { userAgentPolicy } from "./user-agent-policy";
+import { userAgentPolicy } from "./user-agent-policy";
 import { telemetryPolicy } from "./telemetry-policy";
 
 import { ServiceClientOptions } from "@azure/core-client";
@@ -24,8 +23,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
   function createClientOptions(token: Promise<string>): ServiceClientOptions {
     const policies = [
       { policy: telemetryPolicy(command.join(" "), telemetryEnabled), position: "perCall" as "perCall" | "perRetry" },
-      // { policy : userAgentPolicy(), position: "perCall" as "perCall" | "perRetry"  },
-      // { policy : logPolicy(), position: "perCall" as "perCall" | "perRetry"  },
+      { policy: userAgentPolicy(), position: "perCall" as "perCall" | "perRetry" },
       { policy: authorizationPolicy(token), position: "perCall" as "perCall" | "perRetry" },
     ];
 

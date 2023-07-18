@@ -165,11 +165,11 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       try {
         await client.distributionGroups.get(app.ownerName, app.appName, name);
 
-        // Throw an exception if 404 error was not thrown during clientRequest
-        //TODO: requires additional testing.
+        // Throw an exception if 404 error was not thrown during clientRequest.
+        // In particular case existance of the group means it is "not free".
         throw 200;
       } catch (error) {
-        if (error && error.statusCode === 404) {
+        if (error && error.response.status === 404) {
           // 404 is correct status code for this case
           return;
         }

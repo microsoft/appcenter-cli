@@ -128,8 +128,6 @@ export default class AddDestinationCommand extends AppCommand {
     await client.releases.addStore(releaseId, this.app.ownerName, this.app.appName, store.id, {
       onResponse: (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse),
     });
-
-    // this.handleAddDestinationResponse(result, response);
   }
 
   private async addTesterToRelease(client: AppCenterClient, releaseId: number) {
@@ -139,8 +137,6 @@ export default class AddDestinationCommand extends AppCommand {
 
       onResponse: (rawResponse, _flatResponse, _error?) => this.handleAddDestinationResponse(rawResponse),
     });
-
-    // this.handleAddDestinationResponse(result, response);
   }
 
   private handleAddDestinationResponse(response: FullOperationResponse) {
