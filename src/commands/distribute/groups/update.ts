@@ -169,7 +169,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
         // In particular case existance of the group means it is "not free".
         throw 200;
       } catch (error) {
-        if (error && error.response.status === 404) {
+        if (error && error.response && error.response.status === 404) {
           // 404 is correct status code for this case
           return;
         }
