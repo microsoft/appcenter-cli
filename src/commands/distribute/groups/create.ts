@@ -88,9 +88,6 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     } catch (error) {
       if (error === 409) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} already exists`);
-      } else if (error >= 400) {
-        //TODO:
-        throw error;
       } else {
         debug(`Failed to create distribution group ${this.distributionGroup} - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to create distribution group");

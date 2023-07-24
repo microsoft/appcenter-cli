@@ -18,9 +18,7 @@ export default class AppDeleteCommand extends AppCommand {
       try {
         await out.progress(
           "Deleting app ...",
-          client.apps.delete(app.ownerName, app.appName).catch((error) => {
-            return failure(ErrorCodes.Exception, error);
-          })
+          client.apps.delete(app.ownerName, app.appName)
         );
       } catch (error) {
         const statusCode = error.response.status;
