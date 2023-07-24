@@ -1,6 +1,6 @@
 import { resolveProxySettings } from "../../src/ac-fus-util";
 import * as assert from "assert";
-import * as ProxyAgent from "proxy-agent";
+import { ProxyAgent } from 'proxy-agent';
 import { after } from "mocha";
 
 describe('fetchWithOptions', () => {
