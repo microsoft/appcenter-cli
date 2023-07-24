@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import * as ProxyAgent from "proxy-agent";
+import { ProxyAgent } from 'proxy-agent';
 
 export function resolveProxySettings(options: any = {}) {
   const instanceOptions = {
@@ -14,7 +14,7 @@ export function resolveProxySettings(options: any = {}) {
     console.warn("Proxy address in environment variable does not start with either 'http://' or 'https://'. CLI might not work correctly.");
   }
   if (!options.agent && proxyServer) {
-    instanceOptions.agent = ProxyAgent(proxyServer);
+    instanceOptions.agent = new ProxyAgent({ getProxyForUrl: () => proxyServer });
   }
   return instanceOptions;
 }
