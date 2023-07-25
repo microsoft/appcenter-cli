@@ -35,12 +35,12 @@
     "prettier": "2.4.1",
     "ts-node": "9.1.1",
     "typemoq": "2.1.0",
-    "typescript": "3.8.3",
+    "typescript": "^5.1.6",
     "uuid": "7.0.3"
   },
   "dependencies": {
     "abort-controller": "3.0.0",
     "node-fetch": "~2.6.7",
-    "proxy-agent": "5.0.0"
+    "proxy-agent": "6.3.0"
   }
 }
