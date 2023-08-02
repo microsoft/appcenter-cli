@@ -455,7 +455,7 @@ export async function runHermesEmitBinaryCommand(
   });
 }
 
-function getBuildGradleFilePath(gradleFile: string) {
+function getGradleBuildFilePath(gradleFile: string) {
   let buildGradlePath: string = path.join("android", "app");
   if (gradleFile) {
     buildGradlePath = gradleFile;
@@ -467,8 +467,8 @@ function getBuildGradleFilePath(gradleFile: string) {
   return buildGradlePath;
 }
 
-function getBuildGradleFilePath(gradleFile: string) {
-  const buildGradlePath: string = getBuildGradleFilePath(gradleFile);
+function checkHermesInGradlePropertiesFile(gradleFile: string) {
+  const buildGradlePath: string = getGradleBuildFilePath(gradleFile);
   if (fileDoesNotExistOrIsDirectory(buildGradlePath)) {
     throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
   }
@@ -478,7 +478,7 @@ function getBuildGradleFilePath(gradleFile: string) {
 }
 
 async function parseGradlePropertiesFile(gradleFile: string) {
-  const buildGradlePath: string = getBuildGradleFilePath(gradleFile);
+  const buildGradlePath: string = getGradleBuildFilePath(gradleFile);
   const gradlePropertiesPath: string = path.join(path.dirname(buildGradlePath), "../", "gradle.properties");
   if (fileDoesNotExistOrIsDirectory(gradlePropertiesPath)) {
     console.error(`Unable to find gradle.properties file at "${gradlePropertiesPath}".`);
@@ -500,13 +500,13 @@ export async function getAndroidHermesEnabled(gradleFile: string): Promise<boole
     if (hermesEnabled !== undefined) {
       return hermesEnabled;
     }
-    return getBuildGradleFilePath(gradleFile).then((buildGradle: any) => {
+    return checkHermesInGradlePropertiesFile(gradleFile).then((buildGradle: any) => {
       return Array.from(buildGradle["project.ext.react"] || []).some((line: string) => /^enableHermes\s{0,}:\s{0,}true/.test(line));
     });
 }
 
 async function getHermesCommandFromGradle(gradleFile: string): Promise<string> {
-  const buildGradle: any = await getBuildGradleFilePath(gradleFile);
+  const buildGradle: any = await checkHermesInGradlePropertiesFile(gradleFile);
   const hermesCommandProperty: any = Array.from(buildGradle["project.ext.react"] || []).find((prop: string) =>
     prop.trim().startsWith("hermesCommand:")
   );
