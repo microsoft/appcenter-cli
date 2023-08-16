@@ -16,7 +16,7 @@ import {
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { isValidRollout, isValidRange } from "./lib/validation-utils";
 import { DefaultApp } from "../../util/profile";
 import { scriptName } from "../../util/misc";
@@ -120,43 +120,42 @@ export default class PatchCommand extends AppCommand {
     }
 
     try {
-      const httpRequest = await out.progress(
+      release = await out.progress(
         "Patching CodePush release...",
-        clientRequest<models.CodePushRelease>((cb) =>
-          client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)
-        )
+        client.deploymentReleases.update(this.deploymentName, this.releaseLabel, app.ownerName, app.appName, patch, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status === 204) {
+              out.text(
+                `No update for the ${chalk.bold(this.releaseLabel)} of ${this.identifier} app's ${chalk.bold(
+                  this.deploymentName
+                )} deployment`
+              );
+            }
+          },
+        })
       );
-      release = httpRequest.result;
-      if (httpRequest.response.statusCode === 204) {
-        out.text(
-          `No update for the ${chalk.bold(this.releaseLabel)} of ${this.identifier} app's ${chalk.bold(
-            this.deploymentName
-          )} deployment`
-        );
-      } else {
-        out.text(
-          `Successfully updated the ${chalk.bold(release.label)} of ${this.identifier} app's ${chalk.bold(
-            this.deploymentName
-          )} deployment`
-        );
-      }
+
+      out.text(
+        `Successfully updated the ${chalk.bold(release.label)} of ${this.identifier} app's ${chalk.bold(
+          this.deploymentName
+        )} deployment`
+      );
+
       return success();
     } catch (error) {
+      console.log(`error : ${JSON.stringify(error)}`);
       debug(`Failed to patch Codepush deployment - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, error.response.body);
+      return failure(ErrorCodes.Exception, error.response.bodyAsText);
     }
   }
 
   private async getLatestReleaseLabel(client: AppCenterClient, app: DefaultApp): Promise<string> {
-    let releases: models.CodePushRelease[];
+    let releases: models.CodePushDeploymentReleasesGetResponse;
     try {
-      const httpRequest = await out.progress(
+      releases = await out.progress(
         "Fetching latest release label...",
-        clientRequest<models.CodePushRelease[]>((cb) =>
-          client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)
-        )
+        client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName)
       );
-      releases = httpRequest.result;
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
@@ -170,7 +169,7 @@ export default class PatchCommand extends AppCommand {
         const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
         throw failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
       } else {
-        throw failure(ErrorCodes.Exception, error.response.body);
+        throw failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
 

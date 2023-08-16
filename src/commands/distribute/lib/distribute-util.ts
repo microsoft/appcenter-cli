@@ -1,4 +1,4 @@
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { ErrorCodes, failure } from "../../../util/commandline";
 import { inspect } from "util";
 import { DefaultApp } from "../../../util/profile";
@@ -35,11 +35,7 @@ export async function getDistributionGroup(options: GetDistributionGroupOptions)
   const { client, app, destination, destinationType, releaseId } = options;
 
   try {
-    const { result } = await clientRequest<models.DistributionGroupResponse>(async (cb) => {
-      client.distributionGroups.get(app.ownerName, app.appName, destination, cb);
-    });
-
-    return result;
+    return await client.distributionGroups.get(app.ownerName, app.appName, destination);
   } catch (error) {
     if (error.statusCode === 404) {
       throw failure(ErrorCodes.InvalidParameter, `Could not find group ${destination}`);
@@ -55,11 +51,7 @@ export async function getExternalStoreToDistributeRelease(
 ): Promise<models.ExternalStoreResponse> {
   const { client, app, storeName, releaseId } = options;
   try {
-    const { result } = await clientRequest<models.ExternalStoreResponse>(async (cb) => {
-      client.stores.get(storeName, app.ownerName, app.appName, cb);
-    });
-
-    return result;
+    return await client.stores.get(storeName, app.ownerName, app.appName);
   } catch (error) {
     if (error.statusCode === 404) {
       throw failure(ErrorCodes.InvalidParameter, `Could not find store ${storeName}`);
@@ -71,30 +63,23 @@ export async function getExternalStoreToDistributeRelease(
 }
 
 export async function addGroupToRelease(options: AddGroupToReleaseOptions): Promise<models.ReleaseDestinationResponse> {
-  const { client, app, distributionGroup, releaseId, mandatory, silent, destination, destinationType } = options;
+  const { client, app, distributionGroup, releaseId, mandatory, silent, destinationType, destination } = options;
 
-  const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
-    client.releasesOperations.addDistributionGroup(
-      releaseId,
-      app.ownerName,
-      app.appName,
-      distributionGroup.id,
-      {
-        mandatoryUpdate: !!mandatory,
-        notifyTesters: !silent,
-      },
-      cb
-    );
+  return await client.releases.addDistributionGroup(releaseId, app.ownerName, app.appName, distributionGroup.id, {
+    mandatoryUpdate: !!mandatory,
+    notifyTesters: !silent,
+
+    onResponse: (response, _flatResponse, _error?) => {
+      if (response.status >= 200 && response.status < 400) {
+        // all good;
+      } else if (response.status === 404) {
+        throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
+      } else {
+        debug(`Failed to distribute the release - ${inspect(response.parsedBody)}`);
+        throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
+      }
+    },
   });
-
-  if (response.statusCode >= 200 && response.statusCode < 400) {
-    return result;
-  } else if (response.statusCode === 404) {
-    throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
-  } else {
-    debug(`Failed to distribute the release - ${inspect(result)}`);
-    throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
-  }
 }
 
 export function parseDistributionGroups(groups: string): string[] {

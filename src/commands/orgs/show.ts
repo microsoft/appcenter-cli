@@ -11,7 +11,7 @@ import {
   required,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:show");
 import { inspect } from "util";
@@ -58,14 +58,9 @@ export default class OrgShowCommand extends Command {
 
   private async getOrgApps(client: AppCenterClient, organization: string): Promise<models.AppResponse[]> {
     try {
-      const httpResponse = await clientRequest<models.AppResponse[]>((cb) => client.appsOperations.listForOrg(organization, cb));
-      if (httpResponse.response.statusCode < 400) {
-        return httpResponse.result;
-      } else {
-        throw httpResponse.response;
-      }
+      return await client.apps.listForOrg(organization);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${organization} doesn't exist`);
       } else {
         debug(`Failed to load list of organization apps - ${inspect(error)}`);
@@ -76,14 +71,9 @@ export default class OrgShowCommand extends Command {
 
   private async getOrgDetails(client: AppCenterClient, organization: string): Promise<models.OrganizationResponse> {
     try {
-      const httpResponse = await clientRequest<models.OrganizationResponse>((cb) => client.organizations.get(organization, cb));
-      if (httpResponse.response.statusCode < 400) {
-        return httpResponse.result;
-      } else {
-        throw httpResponse.response;
-      }
+      return await client.organizations.get(organization);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${organization} doesn't exist`);
       } else {
         debug(`Failed to get organization details - ${inspect(error)}`);

@@ -8,9 +8,9 @@ license-header: MICROSOFT_MIT_NO_VERSION
 payload-flattening-threshold: 3
 add-credentials: true
 clear-output-folder: true
-nodejs:
+typescript:
   override-client-name: AppCenterClient
   output-folder: ../src/util/apis/generated
   source-code-folder-path: ""
-  generate-package-json: false
+  verbose: true
 ```

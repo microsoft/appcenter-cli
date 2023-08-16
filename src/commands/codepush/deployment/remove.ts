@@ -10,7 +10,7 @@ import {
   position,
   name,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -40,7 +40,7 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
       debug("Removing CodePush deployment");
       await out.progress(
         `Removing CodePush deployment...`,
-        clientRequest((cb) => client.codePushDeployments.deleteMethod(this.deploymentName.toString(), app.ownerName, app.appName, cb))
+        client.codePushDeployments.delete(this.deploymentName.toString(), app.ownerName, app.appName)
       );
     } catch (error) {
       debug(`Failed to remove CodePush deployment - ${inspect(error)}`);
@@ -48,7 +48,7 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
         const appNotFoundErrorMsg = `Deployment ${this.deploymentName} for the ${this.identifier} app does not exist.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.response.body);
+        return failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
 

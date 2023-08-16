@@ -6,6 +6,7 @@ use(ChaiAsPromised);
 
 import AddDestinationCommand from "../../../../src/commands/distribute/releases/add-destination";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 describe("releases add-destination command", () => {
   const fakeAppOwner = "fakeAppOwner";
@@ -15,7 +16,6 @@ describe("releases add-destination command", () => {
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
   const fakeStoreName = "fakeStore";
-  const fakeHost = "http://localhost:1700";
 
   let nockScope: Nock.Scope;
 
@@ -304,7 +304,7 @@ describe("releases add-destination command", () => {
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.Exception);
 
-        expect(result.errorMessage).to.eql(`Could not add tester ${fakeTesterEmail} to release ${fakeReleaseId}`);
+        expect(result.errorMessage).to.eql(`Could not add tester ${fakeTesterEmail} to release ${fakeReleaseId}: 400`);
       });
     });
 

@@ -3,7 +3,7 @@ import { hasArg, help, longName } from "../../../util/commandline";
 import { Messages } from "./help-messages";
 import { AppCenterClient } from "../../../util/apis";
 import { StartedTestRun } from "./test-cloud-uploader";
-import { TestReport } from "../../../util/apis/generated/models";
+import { TestReport } from "../../../util/apis/generated/src/models";
 import * as downloadUtil from "../../../util/misc/download";
 import { StreamingArrayOutput } from "../../../util/interaction";
 

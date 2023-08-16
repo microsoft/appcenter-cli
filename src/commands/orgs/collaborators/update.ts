@@ -10,7 +10,7 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -229,16 +229,10 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async getUsersInvitedToOrg(client: AppCenterClient): Promise<string[]> {
     try {
-      const httpRequest = await clientRequest<models.AppInvitationDetailResponse[]>((cb) =>
-        client.orgInvitations.listPending(this.name, cb)
-      );
-      if (httpRequest.response.statusCode < 400) {
-        return httpRequest.result.map((invitation) => invitation.email);
-      } else {
-        throw httpRequest.response;
-      }
+      const result = await client.orgInvitations.listPending(this.name);
+      return result.map((invitation) => invitation.email);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
       } else {
         debug(`Failed to get list of user invitations for organization ${this.name} - ${inspect(error)}`);
@@ -275,12 +269,9 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async sendInvitationToUser(client: AppCenterClient, collaborator: string): Promise<void> {
     try {
-      const httpResponse = await clientRequest((cb) => client.orgInvitations.create(this.name, collaborator, cb));
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response;
-      }
+      await client.orgInvitations.create(this.name, collaborator);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
       } else {
         debug(`Failed to send invitation for ${collaborator} to organization ${this.name} - ${inspect(error)}`);
@@ -291,12 +282,9 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async resendInvitationToUser(client: AppCenterClient, collaborator: string): Promise<void> {
     try {
-      const httpResponse = await clientRequest((cb) => client.orgInvitations.sendNewInvitation(this.name, collaborator, cb));
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response;
-      }
+      await client.orgInvitations.sendNewInvitation(this.name, collaborator);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
       } else {
         debug(`Failed to re-send invitation for ${collaborator} to organization ${this.name} - ${inspect(error)}`);
@@ -335,12 +323,9 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async cancelUserInvitation(client: AppCenterClient, collaborator: string): Promise<void> {
     try {
-      const httpResponse = await clientRequest((cb) => client.orgInvitations.deleteMethod(this.name, collaborator, cb));
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response;
-      }
+      await client.orgInvitations.delete(this.name, collaborator);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
       } else {
         debug(`Failed to cancel invitation for ${collaborator} to organization ${this.name} - ${inspect(error)}`);
@@ -351,12 +336,9 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async deleteUserFromOrganization(client: AppCenterClient, collaboratorName: string): Promise<void> {
     try {
-      const httpResponse = await clientRequest((cb) => client.users.removeFromOrg(this.name, collaboratorName, cb));
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response;
-      }
+      await client.users.removeFromOrg(this.name, collaboratorName);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
       } else {
         debug(`Failed to delete user ${collaboratorName} from organization ${this.name} - ${inspect(error)}`);
@@ -386,21 +368,11 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
   private async changeUserRole(client: AppCenterClient, collaboratorName: string, role: UserRole): Promise<void> {
     try {
-      const httpResponse = await clientRequest((cb) =>
-        client.users.updateOrgRole(
-          this.name,
-          collaboratorName,
-          {
-            role,
-          },
-          cb
-        )
-      );
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.response;
-      }
+      await client.users.updateOrgRole(this.name, collaboratorName, {
+        role,
+      });
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         throw failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
       } else {
         debug(`Failed to change role of ${collaboratorName} to ${role} - ${inspect(error)}`);

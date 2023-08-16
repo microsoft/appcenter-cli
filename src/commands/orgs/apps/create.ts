@@ -11,7 +11,7 @@ import {
   shortName,
   success,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { reportApp } from "../../apps/lib/format-app";
 import { APP_RELEASE_TYPE_VALIDATIONS } from "../../apps/lib/app-release-type-validation";
@@ -93,12 +93,9 @@ export default class OrgAppCreateCommand extends Command {
     }
 
     try {
-      const createAppResponse = await out.progress(
-        "Creating app in org...",
-        clientRequest<models.AppResponse>((cb) => client.appsOperations.createForOrg(this.orgName, appAttributes, cb))
-      );
+      const createAppResponse = await out.progress("Creating app in org...", client.apps.createForOrg(this.orgName, appAttributes));
 
-      reportApp(createAppResponse.result);
+      reportApp(createAppResponse);
 
       return success();
     } catch (error) {

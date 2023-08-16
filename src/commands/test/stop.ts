@@ -1,5 +1,5 @@
 import { AppCommand, CommandArgs, CommandResult, help, success, longName, required, hasArg } from "../../util/commandline";
-import { AppCenterClient, clientCall } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { Messages } from "./lib/help-messages";
 
 @help(Messages.TestCloud.Commands.Stop)
@@ -20,9 +20,7 @@ export default class StopCommand extends AppCommand {
     return success();
   }
 
-  private stopTestRun(client: AppCenterClient, testRunId: string): Promise<VoidFunction> {
-    return clientCall((cb) => {
-      client.test.stopTestRun(testRunId, this.app.ownerName, this.app.appName, cb);
-    });
+  private async stopTestRun(client: AppCenterClient, testRunId: string) {
+    await client.test.stopTestRun(testRunId, this.app.ownerName, this.app.appName);
   }
 }

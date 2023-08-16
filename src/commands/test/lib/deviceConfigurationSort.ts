@@ -1,6 +1,6 @@
 // From appcenter testCloud utils
 
-import { DeviceConfiguration } from "../../../util/apis/generated/models";
+import { DeviceConfiguration } from "../../../util/apis/generated/src/models";
 import { CompareVersionNumbers } from "./compareVersionNumbers";
 
 /**

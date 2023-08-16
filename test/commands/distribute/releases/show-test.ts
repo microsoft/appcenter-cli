@@ -8,7 +8,8 @@ use(ChaiAsPromised);
 import ShowReleasesCommand from "../../../../src/commands/distribute/releases/show";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { out } from "../../../../src/util/interaction";
-import { Destination, ReleaseDetailsResponse } from "../../../../src/util/apis/generated/models";
+import { ReleaseDetailsResponse } from "../../../../src/util/apis/generated/src/models";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 describe("releases show command", () => {
   const fakeAppOwner = "fakeAppOwner";
@@ -18,7 +19,6 @@ describe("releases show command", () => {
   const fakeReleaseId = 1;
   const fakeVersion = "1.0";
   const fakeUploadAt = new Date().toISOString();
-  const fakeHost = "http://localhost:1700";
   const releaseUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`;
 
   let sandbox: sinon.SinonSandbox;
@@ -46,7 +46,8 @@ describe("releases show command", () => {
   });
 
   describe("when everything works as expected", () => {
-    const destinations: Destination[] = [
+    // Destination[]
+    const destinations = [
       {
         name: "destination 1",
         id: "12345",

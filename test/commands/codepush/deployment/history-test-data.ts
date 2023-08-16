@@ -1,6 +1,7 @@
 import CodePushDeploymentHistoryCommand from "../../../../src/commands/codepush/deployment/history";
 import { formatDate } from "../../../../src/commands/codepush/deployment/lib/date-helper";
 import { models } from "../../../../src/util/apis";
+export { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 const lineFeed = "\n";
 
@@ -12,7 +13,6 @@ export const fakeDeploymentName = "Staging";
 export const fakeNonExistentDeploymentName = "Dev";
 export const fakeEmail = "fake@email.com";
 export const fakeToken = "c1o3d3e7";
-export const fakeHost = "http://localhost:1700";
 
 const fakeCommandArgs = {
   command: ["codepush", "deployment", "history"],
@@ -22,7 +22,8 @@ const fakeCommandArgs = {
 
 export const fakeCommand = new CodePushDeploymentHistoryCommand(fakeCommandArgs);
 
-export const fakeReleases: models.CodePushRelease[] = [
+// models.CodePushRelease[]
+export const fakeReleases = [
   { label: "v1", releaseMethod: "Upload", description: "First Release!" },
   { label: "v2", releaseMethod: "Promote", originalLabel: "v6", originalDeployment: "TestDep" },
   { label: "v3", releaseMethod: "Rollback", originalLabel: "v1", isDisabled: true },

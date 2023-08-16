@@ -7,6 +7,7 @@ import * as Nock from "nock";
 import { formatDate } from "../../../../src/commands/codepush/deployment/lib/date-helper";
 import { getFakeParamsForRequest, FakeParamsForRequests } from "../utils";
 import { out } from "../../../../src/util/interaction/index";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 import * as chalk from "chalk";
 
 // Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
@@ -28,12 +29,12 @@ describe("codepush deployment list tests", () => {
   const fakeReleasesTotalActive = 3;
   const successfulStatus = 200;
   const unsuccessfulStatus = 404;
-  const fakeHost = "http://localhost:1700";
 
   const fakeParamsForRequest: FakeParamsForRequests = getFakeParamsForRequest();
   const defaultCommandArgsForListCommand: CommandArgs = getCommandArgsForListCommand(fakeParamsForRequest);
 
-  const fakeMetadataRelease: models.CodePushRelease = {
+  // models.CodePushRelease
+  const fakeMetadataRelease = {
     blobUrl: fakeBlobUrl,
     isDisabled: fakeIsDisabled,
     isMandatory: fakeIsMandatory,

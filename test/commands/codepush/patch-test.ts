@@ -1,9 +1,13 @@
 import { CommandArgs, ErrorCodes } from "../../../src/util/commandline";
-import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as Nock from "nock";
 import PatchCommand from "../../../src/commands/codepush/patch";
 import { getFakeParamsForRequest } from "./utils";
+
+import * as chai from "chai";
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe("codepush patch", function () {
   let sandbox: Sinon.SinonSandbox;
@@ -129,7 +133,7 @@ describe("codepush patch", function () {
     expect((result as any).errorMessage).equals(errorMessage);
   });
 
-  context("getLatestRelease(). When error occurs throws the error for entire command.", function () {
+  context("getLatestRelease(). When error occurs throws the error for entire command.", async function () {
     it("404 status code", async function () {
       // Arrange
       const args: CommandArgs = {
@@ -137,12 +141,13 @@ describe("codepush patch", function () {
         args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(200, null);
 
       // Act
       const result = patchCommand.execute();
 
       // Assert
-      await expect(result).to.eventually.be.rejected.and.has.property("errorCode", ErrorCodes.NotFound);
+      await expect(result).eventually.be.rejected.and.has.property("errorCode", ErrorCodes.NotFound);
     });
 
     it("400 status code", async function () {
@@ -152,13 +157,13 @@ describe("codepush patch", function () {
         args: ["--rollout", "50", "--app", app, deployment, "--token", getFakeParamsForRequest().token],
       };
       const patchCommand = new PatchCommand(args);
-      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(400, "errorMessage");
+      Nock("https://api.appcenter.ms/").get(`/v0.1/apps/${app}/deployments/${deployment}/releases`).reply(1, "errorMessage");
 
       // Act
       const result = patchCommand.execute();
 
       // Assert
-      await expect(result).to.eventually.be.rejected.and.has.property("errorCode", ErrorCodes.Exception);
+      await expect(result).eventually.be.rejected.and.has.property("errorCode", ErrorCodes.Exception);
     });
 
     it("400 status code", async function () {

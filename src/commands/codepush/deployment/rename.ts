@@ -10,7 +10,7 @@ import {
   position,
   name,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -41,9 +41,7 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
       debug("Renaming CodePush deployments");
       await out.progress(
         `Renaming CodePush deployments...`,
-        clientRequest((cb) =>
-          client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName, cb)
-        )
+        client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName)
       );
     } catch (error) {
       debug(`Failed to rename deployments - ${inspect(error)}`);
@@ -54,7 +52,7 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
         const alreadyExistErrorMsg = `The deployment with name ${this.newDeploymentName} already exists.`;
         return failure(ErrorCodes.Exception, alreadyExistErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.response.body);
+        return failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
 

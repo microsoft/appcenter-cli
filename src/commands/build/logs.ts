@@ -10,7 +10,7 @@ import {
   shortName,
   success,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -69,7 +69,7 @@ export default class DisplayLogsStatusCommand extends AppCommand {
       async () => {
         try {
           debug(`Downloading logs for build ${this.buildId}`);
-          return await clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb));
+          return await client.builds.getLog(buildIdNumber, app.ownerName, app.appName);
         } catch (error) {
           debug(`Request failed - ${inspect(error)}`);
           switch (error.statusCode) {
@@ -84,7 +84,7 @@ export default class DisplayLogsStatusCommand extends AppCommand {
       },
       (response, responsesProcessed) => {
         // processing response
-        const logs = response.result.value;
+        const logs = response.value;
         let filteredLogs: string[];
         if (responsesProcessed) {
           filteredLogs = _.drop(logs, skippedAndShownLogsCount);

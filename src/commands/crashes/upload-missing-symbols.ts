@@ -1,4 +1,4 @@
-import { clientRequest, AppCenterClient, models } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { AppCommand, CommandResult } from "../../util/commandline";
 import { ErrorCodes, failure, success } from "../../util/commandline";
 import { help, name, position } from "../../util/commandline";
@@ -80,13 +80,9 @@ export default class UploadMissingSymbols extends AppCommand {
 
   private async getMissingSymbolsIds(client: AppCenterClient, app: DefaultApp): Promise<string[]> {
     try {
-      const httpResponse = await clientRequest<models.V2MissingSymbolCrashGroupsResponse>((cb) =>
-        client.missingSymbolGroups.list(MAX_SQL_INTEGER, app.ownerName, app.appName, cb)
-      );
+      const result = await client.missingSymbolGroups.list(MAX_SQL_INTEGER, app.ownerName, app.appName);
       return _.flatten(
-        httpResponse.result.groups.map((crashGroup) =>
-          crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)
-        )
+        result.groups.map((crashGroup) => crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId))
       );
     } catch (error) {
       debug(`Failed to get list of missing symbols - ${inspect(error)}`);

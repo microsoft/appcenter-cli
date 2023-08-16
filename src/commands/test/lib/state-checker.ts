@@ -1,4 +1,4 @@
-import { AppCenterClient, models, clientCall } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out, StreamingArrayOutput } from "../../../util/interaction";
 import * as os from "os";
 import * as process from "process";
@@ -109,9 +109,7 @@ export class StateChecker {
   }
 
   private getTestRunState(client: AppCenterClient, testRunId: string): Promise<models.TestRunState> {
-    return clientCall((cb) => {
-      client.test.getTestRunState(testRunId, this.ownerName, this.appName, cb);
-    });
+    return client.test.getTestRunState(testRunId, this.ownerName, this.appName);
   }
 
   private async delay(milliseconds: number): Promise<void> {

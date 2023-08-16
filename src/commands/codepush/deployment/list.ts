@@ -1,6 +1,6 @@
 import * as chalk from "chalk";
 import { inspect } from "util";
-import { AppCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import {
   AppCommand,
   CommandArgs,
@@ -37,13 +37,9 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
 
   async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
-    let deployments: models.Deployment[];
+    let deployments: models.CodePushDeploymentsListResponse;
     try {
-      const httpRequest = await out.progress(
-        "Getting CodePush deployments...",
-        clientRequest<models.Deployment[]>((cb) => client.codePushDeployments.list(app.ownerName, app.appName, cb))
-      );
-      deployments = httpRequest.result;
+      deployments = await out.progress("Getting CodePush deployments...", client.codePushDeployments.list(app.ownerName, app.appName));
 
       if (this.displayKeys) {
         out.table(
@@ -85,7 +81,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     return tableTitles.map((title) => chalk.cyan(title));
   }
 
-  private async generateInfo(deployments: models.Deployment[], client: AppCenterClient) {
+  private async generateInfo(deployments: models.CodePushDeploymentsListResponse, client: AppCenterClient) {
     return await promiseMap(
       deployments,
       async (deployment) => {
@@ -97,7 +93,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
           const metricsJSON: models.CodePushReleaseMetric = await this.generateMetricsJSON(deployment, client);
 
           if (metricsJSON) {
-            deployment.latestRelease.metrics = metricsJSON;
+            return { deployment: deployment, metrics: metricsJSON };
           }
 
           return deployment;
@@ -121,14 +117,17 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   }
 
   private async generateMetricsJSON(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushReleaseMetric> {
-    const metrics: models.CodePushReleaseMetric[] = await this.getMetrics(deployment, client);
+    const metrics = await this.getMetrics(deployment, client);
 
     if (metrics.length) {
       let releasesTotalActive: number = 0;
       metrics.forEach((metric) => (releasesTotalActive += metric.active));
 
       const latestMetric = metrics.pop();
-      latestMetric.totalActive = releasesTotalActive;
+
+      // NOTE: Property `active` is used as a sum of `active`'s of all metrics.
+      latestMetric.active = releasesTotalActive;
+
       delete latestMetric.label;
       return latestMetric;
     }
@@ -136,14 +135,14 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     return null;
   }
 
-  private async getMetrics(deployment: models.Deployment, client: AppCenterClient): Promise<models.CodePushReleaseMetric[]> {
-    const httpRequest = await out.progress(
+  private async getMetrics(
+    deployment: models.Deployment,
+    client: AppCenterClient
+  ): Promise<models.CodePushDeploymentMetricsGetResponse> {
+    const metrics = await out.progress(
       "Getting CodePush deployments metrics...",
-      clientRequest<models.CodePushReleaseMetric[]>((cb) =>
-        client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName, cb)
-      )
+      client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName)
     );
-    const metrics: models.CodePushReleaseMetric[] = httpRequest.result;
 
     return metrics;
   }
@@ -189,7 +188,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     }
   }
 
-  private generateMetadataString(release: models.CodePushRelease): string {
+  private generateMetadataString(release: any): string {
     let metadataString: string = "";
     const lineFeed: string = "\n";
 

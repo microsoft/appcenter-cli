@@ -1,4 +1,4 @@
-import { clientRequest, AppCenterClient, models } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { ErrorCodes, failure } from "../../../util/commandline";
 import { DefaultApp } from "../../../util/profile";
 import { inspect } from "util";
@@ -42,24 +42,23 @@ export default class SymbolsUploadingHelper {
     symbolType: models.SymbolUploadBeginRequest
   ): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
-    const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) =>
-      client.symbolUploads.create(symbolType, app.ownerName, app.appName, cb)
-    ).catch((error: any) => {
-      this.debug(`Failed to start the symbol uploading - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, "failed to start the symbol uploading");
-    });
 
-    this.debug("Analyzing upload start request response status code");
-    const uploadingBeginStatusCode = uploadingBeginResponse.response.statusCode;
-    const uploadingBeginStatusMessage = uploadingBeginResponse.response.statusMessage;
-    if (uploadingBeginStatusCode >= 400) {
-      throw failure(
-        ErrorCodes.Exception,
-        `the symbol upload begin API request was rejected: HTTP ${uploadingBeginStatusCode} - ${uploadingBeginStatusMessage}`
-      );
+    try {
+      return await client.symbolUploads.create(app.ownerName, app.appName, symbolType);
+    } catch (error) {
+      this.debug("Analyzing upload start request response status code");
+      const uploadingBeginStatusCode = error.response.statusCode;
+      const uploadingBeginStatusMessage = error.response.statusMessage;
+      if (uploadingBeginStatusCode >= 400) {
+        throw failure(
+          ErrorCodes.Exception,
+          `the symbol upload begin API request was rejected: HTTP ${uploadingBeginStatusCode} - ${uploadingBeginStatusMessage}`
+        );
+      } else {
+        this.debug(`Failed to start the symbol uploading - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, "failed to start the symbol uploading");
+      }
     }
-
-    return uploadingBeginResponse.result;
   }
 
   private async executeSymbolsUploadingEndRequest(
@@ -69,24 +68,23 @@ export default class SymbolsUploadingHelper {
     desiredStatus: SymbolsUploadEndRequestStatus
   ): Promise<models.SymbolUpload> {
     this.debug(`Finishing symbols uploading with desired status: ${desiredStatus}`);
-    const uploadingEndResponse = await clientRequest<models.SymbolUpload>((cb) =>
-      client.symbolUploads.complete(symbolUploadId, app.ownerName, app.appName, desiredStatus, cb)
-    ).catch((error: any) => {
-      this.debug(`Failed to finalize the symbol upload - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, `failed to finalize the symbol upload with status`);
-    });
 
-    this.debug("Analyzing upload end request response status code");
-    const uploadingEndStatusCode = uploadingEndResponse.response.statusCode;
-    const uploadingEndStatusMessage = uploadingEndResponse.response.statusMessage;
-    if (uploadingEndStatusCode >= 400) {
-      throw failure(
-        ErrorCodes.Exception,
-        `the symbol upload end API request was rejected: HTTP ${uploadingEndStatusCode} - ${uploadingEndStatusMessage}`
-      );
+    try {
+      return await client.symbolUploads.complete(symbolUploadId, app.ownerName, app.appName, desiredStatus);
+    } catch (error) {
+      this.debug("Analyzing upload end request response status code");
+      const uploadingEndStatusCode = error.response.statusCode;
+      const uploadingEndStatusMessage = error.response.statusMessage;
+      if (uploadingEndStatusCode >= 400) {
+        throw failure(
+          ErrorCodes.Exception,
+          `the symbol upload end API request was rejected: HTTP ${uploadingEndStatusCode} - ${uploadingEndStatusMessage}`
+        );
+      } else {
+        this.debug(`Failed to finalize the symbol upload - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `failed to finalize the symbol upload with status`);
+      }
     }
-
-    return uploadingEndResponse.result;
   }
 
   private async abortUploadingRequest(client: AppCenterClient, app: DefaultApp, symbolUploadId: string): Promise<models.SymbolUpload> {

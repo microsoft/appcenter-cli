@@ -22,3 +22,5 @@ export const profileFile = "profile.json";
 // Token file storage
 //
 export const tokenFile = "tokens.json";
+
+export const localEndpoint = "https://localhost:1700";

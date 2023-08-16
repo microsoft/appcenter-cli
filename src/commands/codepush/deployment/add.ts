@@ -12,7 +12,7 @@ import {
 } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { scriptName } from "../../../util/misc";
 import * as _ from "lodash";
 import * as chalk from "chalk";
@@ -35,13 +35,10 @@ export default class CodePushAddCommand extends AppCommand {
     const app = this.app;
     let deployment: models.Deployment;
     try {
-      const httpRequest = await out.progress(
+      deployment = await out.progress(
         "Creating a new CodePush deployment...",
-        clientRequest<models.Deployment>((cb) =>
-          client.codePushDeployments.create(app.ownerName, app.appName, this.newDeploymentName.toString(), cb)
-        )
+        client.codePushDeployments.create(app.ownerName, app.appName, this.newDeploymentName.toString())
       );
-      deployment = httpRequest.result;
       out.text(`Deployment ${chalk.bold(deployment.name)} has been created for ${this.identifier} with key ${deployment.key}`);
       return success();
     } catch (error) {
@@ -57,7 +54,7 @@ export default class CodePushAddCommand extends AppCommand {
         const deploymentExistErrorMsg = `A deployment named ${chalk.bold(this.newDeploymentName)} already exists.`;
         return failure(ErrorCodes.Exception, deploymentExistErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.response.body);
+        return failure(ErrorCodes.Exception, error.response.bodyAsText);
       }
     }
   }

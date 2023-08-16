@@ -1,6 +1,6 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, defaultValue } from "../../util/commandline";
 import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
@@ -142,12 +142,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
       this.deploymentName = this.specifiedDeploymentName;
     }
 
-    const appInfo = (
-      await out.progress(
-        "Getting app info...",
-        clientRequest<models.AppResponse>((cb) => client.appsOperations.get(this.app.ownerName, this.app.appName, cb))
-      )
-    ).result;
+    const appInfo = await out.progress("Getting app info...", client.apps.get(this.app.ownerName, this.app.appName));
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();
 

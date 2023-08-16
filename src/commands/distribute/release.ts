@@ -10,7 +10,7 @@ import {
   shortName,
   success,
 } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -330,24 +330,18 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let userCount = 0;
     const groups = parseDistributionGroups(this.distributionGroup);
     for (const group of groups) {
-      let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
+      let distributionGroupUsersRequestResponse: models.DistributionGroupsListUsersResponse;
       try {
-        distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
-          client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, group, cb)
-        );
-        const statusCode = distributionGroupUsersRequestResponse.response.statusCode;
-        if (statusCode >= 400) {
-          throw statusCode;
-        }
+        distributionGroupUsersRequestResponse = await client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, group);
       } catch (error) {
-        if (error === 404) {
+        if (error.response?.code === 404) {
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${group} was not found`);
         } else {
           debug(`Failed to get users of distribution group ${group}, returning null - ${inspect(error)}`);
           return null;
         }
       }
-      userCount += distributionGroupUsersRequestResponse.result.length;
+      userCount += distributionGroupUsersRequestResponse.length;
     }
 
     return userCount;
@@ -355,14 +349,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async getStoreDetails(client: AppCenterClient): Promise<models.ExternalStoreResponse | null> {
     try {
-      const storeDetailsResponse = await clientRequest<models.ExternalStoreResponse>((cb) =>
-        client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb)
-      );
-      const statusCode = storeDetailsResponse.response.statusCode;
-      if (statusCode >= 400) {
-        throw { statusCode };
-      }
-      return storeDetailsResponse.result;
+      const storeDetailsResponse = await client.stores.get(this.storeName, this.app.ownerName, this.app.appName);
+      return storeDetailsResponse;
     } catch (error) {
       if (error.statusCode === 404) {
         throw failure(ErrorCodes.InvalidParameter, `store '${this.storeName}' was not found`);
@@ -528,13 +516,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     app: DefaultApp,
     releaseId: number
   ): Promise<models.ReleaseDetailsResponse> {
-    let releaseRequestResponse: ClientResponse<models.ReleaseDetailsResponse>;
     try {
-      releaseRequestResponse = await out.progress(
+      return await out.progress(
         `Retrieving the release...`,
-        clientRequest<models.ReleaseDetailsResponse>(async (cb) =>
-          client.releasesOperations.getLatestByUser(releaseId.toString(), app.ownerName, app.appName, cb)
-        )
+        client.releases.getLatestByUser(releaseId.toString(), app.ownerName, app.appName)
       );
     } catch (error) {
       if (error === 400) {
@@ -545,8 +530,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         return null;
       }
     }
-
-    return releaseRequestResponse.result;
   }
 
   private async putReleaseDetails(
@@ -556,26 +539,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
     releaseNotesString?: string
   ): Promise<models.ReleaseUpdateResponse> {
     try {
-      const { result, response } = await out.progress(
+      const result = await out.progress(
         `Updating release details...`,
-        clientRequest<models.ReleaseUpdateResponse>(async (cb) =>
-          client.releasesOperations.updateDetails(
-            releaseId,
-            app.ownerName,
-            app.appName,
-            {
-              releaseNotes: releaseNotesString,
-            },
-            cb
-          )
-        )
+        client.releases.updateDetails(releaseId, app.ownerName, app.appName, {
+          releaseNotes: releaseNotesString,
+        })
       );
 
-      const statusCode = response.statusCode;
-      if (statusCode >= 400) {
-        debug(`Got error response: ${inspect(response)}`);
-        throw result;
-      }
       return result;
     } catch (error) {
       debug(`Failed to set the release notes - ${inspect(error)}`);
@@ -590,18 +560,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     releaseId: number
   ): Promise<void> {
     try {
-      const { result, response } = await out.progress(
+      await out.progress(
         `Publishing to store '${storeInformation.name}'...`,
-        clientRequest<void>(async (cb) =>
-          client.releasesOperations.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb)
-        )
+        client.releases.addStore(releaseId, app.ownerName, app.appName, storeInformation.id)
       );
-
-      const statusCode = response.statusCode;
-      if (statusCode >= 400) {
-        throw result;
-      }
-      return result;
     } catch (error) {
       debug(`Failed to distribute the release to store - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, error.message);

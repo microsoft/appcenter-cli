@@ -10,7 +10,7 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { handleHttpError } from "../../../util/apis/create-client";
@@ -51,38 +51,38 @@ export default class EditReleaseCommand extends AppCommand {
     }
 
     let releaseDetails: models.ReleaseDetailsResponse;
+    let commandFailure: any;
     try {
       debug("Loading release details");
-      const httpRequest = await out.progress(
+      releaseDetails = await out.progress(
         "Loading release details...",
-        clientRequest<models.ReleaseDetailsResponse>((cb) =>
-          client.releasesOperations.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
-        )
+        client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              commandFailure =
+                response.status === 404
+                  ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`)
+                  : failure(ErrorCodes.Exception, "failed to load release details");
+            }
+          },
+        })
       );
-      if (httpRequest.response.statusCode >= 400) {
-        return httpRequest.response.statusCode === 404
-          ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`)
-          : failure(ErrorCodes.Exception, "failed to load release details");
-      } else {
-        releaseDetails = httpRequest.result;
-      }
     } catch (error) {
       handleHttpError(error, false, "failed to load release details");
+    }
+
+    if (commandFailure) {
+      return commandFailure;
     }
 
     const releaseNotes = await this.getReleaseNotesString();
 
     try {
       debug(`Updating release notes`);
-      const httpResponse = await out.progress(
+      await out.progress(
         `Updating release notes`,
-        clientRequest((cb) =>
-          client.releasesOperations.updateDetails(releaseId, app.ownerName, app.appName, { releaseNotes: releaseNotes }, cb)
-        )
+        client.releases.updateDetails(releaseId, app.ownerName, app.appName, { releaseNotes: releaseNotes })
       );
-      if (httpResponse.response.statusCode >= 400) {
-        return failure(ErrorCodes.Exception, `failed to update the release notes`);
-      }
     } catch (error) {
       debug(`Failed to update the release - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, `failed to update the release notes`);

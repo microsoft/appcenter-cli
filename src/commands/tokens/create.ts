@@ -5,18 +5,18 @@ import {
   CommandResult,
   help,
   success,
-  failure,
-  ErrorCodes,
   shortName,
   longName,
   hasArg,
   AppCommand,
   defaultValue,
+  ErrorCodes,
+  failure,
 } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
 import { DefaultApp } from "../../util/profile";
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { PrincipalType, validatePrincipalType } from "../../util/misc/principal-type";
 
 @help("Create a new API token")
@@ -41,41 +41,43 @@ export default class TokenCreateCommand extends AppCommand {
   async run(client: AppCenterClient): Promise<CommandResult> {
     validatePrincipalType(this.principalType);
     const tokenMessaging = `Creating ${this.principalType} API token ...`;
-    const tokenAttributes: models.ApiTokensCreateRequest = {
-      description: this.description,
-    };
-    let createTokenResponse;
 
-    if (this.principalType === PrincipalType.USER) {
-      createTokenResponse = await out.progress(
-        tokenMessaging,
-        clientRequest<models.ApiTokensCreateResponse>((cb) => client.userApiTokens.newMethod(tokenAttributes, cb))
-      );
-    } else if (this.principalType === PrincipalType.APP) {
-      const app: DefaultApp = this.app;
-      createTokenResponse = await out.progress(
-        tokenMessaging,
-        clientRequest<models.ApiTokensCreateResponse>((cb) =>
-          client.appApiTokens.newMethod(app.ownerName, app.appName, tokenAttributes, cb)
-        )
-      );
+    const tokenAttributes: models.UserApiTokensCreateOptionalParams = {
+      description: this.description,
+      onResponse: (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
+    };
+
+    let createTokenResponse;
+    try {
+      if (this.principalType === PrincipalType.USER) {
+        createTokenResponse = await out.progress(tokenMessaging, client.userApiTokens.create(tokenAttributes));
+      } else if (this.principalType === PrincipalType.APP) {
+        const app: DefaultApp = this.app;
+        createTokenResponse = await out.progress(
+          tokenMessaging,
+          client.appApiTokens.create(app.ownerName, app.appName, tokenAttributes)
+        );
+      }
+    } catch (error) {
+      return error;
     }
 
-    const statusCode = createTokenResponse.response.statusCode;
+    reportToken(createTokenResponse);
+
+    return success();
+  }
+
+  private handleCreateTokenResponse(statusCode: number) {
     if (statusCode >= 400) {
       switch (statusCode) {
         case 400:
         default:
-          return failure(ErrorCodes.Exception, "invalid request");
+          throw failure(ErrorCodes.Exception, "invalid request");
         case 403:
-          return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
+          throw failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
         case 404:
-          return failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
+          throw failure(ErrorCodes.NotLoggedIn, `${this.principalType} could not be found`);
       }
     }
-
-    reportToken(createTokenResponse.result);
-
-    return success();
   }
 }

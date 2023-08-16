@@ -1,43 +1,40 @@
 // Helper function to create client objects
 const debug = require("debug")("appcenter-cli:util:apis:create-client");
 import { inspect } from "util";
-import { IncomingMessage } from "http";
 
-import { AppCenterClient } from "./generated/appCenterClient";
-import { AppCenterClientCredentials } from "./appcenter-client-credentials";
-import { userAgentFilter } from "./user-agent-filter";
-import { telemetryFilter } from "./telemetry-filter";
+import { AppCenterClient } from "./generated/src/appCenterClient";
+import { userAgentPolicy } from "./user-agent-policy";
+import { telemetryPolicy } from "./telemetry-policy";
 
-const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
-import { ServiceCallback, ServiceError, WebResource } from "ms-rest";
+import { ServiceClientOptions } from "@azure/core-client";
 
-const createLogger = require("ms-rest").LogFilter.create;
+import { ServiceCallback, RestError, HttpOperationResponse, WebResource } from "@azure/ms-rest-js";
 
-import { isDebug } from "../interaction";
 import { Profile } from "../profile";
 import { failure, ErrorCodes } from "../../util/commandline/command-result";
+import { authorizationPolicy } from "./authorization-policy";
 
 export interface AppCenterClientFactory {
-  fromUserNameAndPassword(userName: string, password: string, endpoint: string): AppCenterClient;
   fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient;
   fromProfile(user: Profile): AppCenterClient;
 }
 
 export function createAppCenterClient(command: string[], telemetryEnabled: boolean): AppCenterClientFactory {
-  function createClientOptions(): any {
-    debug(`Creating client options, isDebug = ${isDebug()}`);
-    const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled)];
-    return {
-      filters: isDebug() ? [createLogger()].concat(filters) : filters,
+  function createClientOptions(token: Promise<string>): ServiceClientOptions {
+    const policies = [
+      { policy: telemetryPolicy(command.join(" "), telemetryEnabled), position: "perCall" as "perCall" | "perRetry" },
+      { policy: userAgentPolicy(), position: "perCall" as "perCall" | "perRetry" },
+      { policy: authorizationPolicy(token), position: "perCall" as "perCall" | "perRetry" },
+    ];
+
+    const serviceClientOptions: ServiceClientOptions = {
+      additionalPolicies: policies,
     };
+
+    return serviceClientOptions;
   }
 
   return {
-    fromUserNameAndPassword(userName: string, password: string, endpoint: string): AppCenterClient {
-      debug(`Creating client from user name and password for endpoint ${endpoint}`);
-      return new AppCenterClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
-    },
-
     fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient {
       debug(`Creating client from token for endpoint ${endpoint}`);
       let tokenFunc: { (): Promise<string> };
@@ -52,8 +49,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
         debug("Creating from token as function");
         tokenFunc = token;
       }
-      debug(`Passing token ${tokenFunc} of type ${typeof tokenFunc}`);
-      return new AppCenterClient(new AppCenterClientCredentials(tokenFunc), endpoint, createClientOptions());
+      return new AppCenterClient({ endpoint: endpoint, ...createClientOptions(tokenFunc()) });
     },
 
     fromProfile(user: Profile): AppCenterClient {
@@ -62,7 +58,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
         return null;
       }
       debug(`Creating client from user for user ${inspect(user)}`);
-      return new AppCenterClient(new AppCenterClientCredentials(() => user.accessToken), user.endpoint, createClientOptions());
+      return new AppCenterClient({ endpoint: user.endpoint, ...createClientOptions(user.accessToken) });
     },
   };
 }
@@ -85,7 +81,7 @@ export function clientCall<T>(action: { (cb: ServiceCallback<any>): void }): Pro
 //
 export interface ClientResponse<T> {
   result: T;
-  response: IncomingMessage;
+  response: HttpOperationResponse;
 }
 
 export async function handleHttpError(
@@ -110,7 +106,7 @@ export async function handleHttpError(
 // Helper function to wrap client calls into pormises and returning both HTTP response and parsed result
 export function clientRequest<T>(action: { (cb: ServiceCallback<any>): void }): Promise<ClientResponse<T>> {
   return new Promise<ClientResponse<T>>((resolve, reject) => {
-    action((err: Error | ServiceError, result: T, request: WebResource, response: IncomingMessage) => {
+    action((err: Error | RestError, result: T, request: WebResource, response: HttpOperationResponse) => {
       if (err) {
         reject(err);
       } else {

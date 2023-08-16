@@ -5,8 +5,6 @@ import {
   CommandResult,
   help,
   success,
-  failure,
-  ErrorCodes,
   position,
   required,
   name,
@@ -15,9 +13,11 @@ import {
   longName,
   hasArg,
   defaultValue,
+  failure,
+  ErrorCodes,
 } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
-import { AppCenterClient, clientRequest } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { DefaultApp } from "../../util/profile";
 import { PrincipalType, validatePrincipalType as validateTokenPrincipal } from "../../util/misc/principal-type";
 
@@ -50,32 +50,41 @@ export default class TokenDeleteCommand extends AppCommand {
       return success();
     }
 
-    let deleteTokenResponse;
-    if (this.principalType === PrincipalType.USER) {
-      deleteTokenResponse = await out.progress(
-        tokenMessaging,
-        clientRequest<null>((cb) => client.userApiTokens.deleteMethod(this.id, cb))
-      );
-    } else if (this.principalType === PrincipalType.APP) {
-      const app: DefaultApp = this.app;
-      deleteTokenResponse = await out.progress(
-        tokenMessaging,
-        clientRequest<null>((cb) => client.appApiTokens.deleteMethod(app.ownerName, app.appName, this.id, cb))
-      );
+    try {
+      if (this.principalType === PrincipalType.USER) {
+        await out.progress(
+          tokenMessaging,
+          client.userApiTokens.delete(this.id, {
+            onResponse: (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
+          })
+        );
+      } else if (this.principalType === PrincipalType.APP) {
+        const app: DefaultApp = this.app;
+        await out.progress(
+          tokenMessaging,
+          client.appApiTokens.delete(app.ownerName, app.appName, this.id, {
+            onResponse: (response, _flatResponse, _error?) => this.handleCreateTokenResponse(response.status),
+          })
+        );
+      }
+    } catch (error) {
+      return error;
     }
 
-    const statusCode = deleteTokenResponse.response.statusCode;
+    return success();
+  }
+
+  private handleCreateTokenResponse(statusCode: number) {
     if (statusCode >= 400) {
       switch (statusCode) {
         case 400:
         default:
-          return failure(ErrorCodes.Exception, "invalid request");
+          throw failure(ErrorCodes.Exception, "invalid request");
         case 401:
-          return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
+          throw failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
         case 404:
-          return failure(ErrorCodes.NotLoggedIn, `the ${this.principalType} API token with ID "${this.id}" could not be found`);
+          throw failure(ErrorCodes.NotLoggedIn, `the ${this.principalType} API token with ID "${this.id}" could not be found`);
       }
     }
-    return success();
   }
 }

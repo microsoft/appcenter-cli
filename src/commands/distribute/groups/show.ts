@@ -10,7 +10,7 @@ import {
   ErrorCodes,
   failure,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -29,13 +29,17 @@ export default class ShowDistributionGroupCommand extends AppCommand {
     const app = this.app;
 
     // creating distribution group users list request
-    const distributionGroupMembersRequestResponse = clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
-      client.distributionGroups.listUsers(app.ownerName, app.appName, this.distributionGroup, cb)
+    const distributionGroupMembersRequestResponse = client.distributionGroups.listUsers(
+      app.ownerName,
+      app.appName,
+      this.distributionGroup
     );
 
     // creating releases information request
-    const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetailsResponse[]>((cb) =>
-      client.releasesOperations.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb)
+    const basicReleasesDetailsRequestResponse = client.releases.listByDistributionGroup(
+      this.distributionGroup,
+      app.ownerName,
+      app.appName
     );
 
     // show spinner and wait for the requests to finish
@@ -48,15 +52,10 @@ export default class ShowDistributionGroupCommand extends AppCommand {
       )
     );
 
-    let distributionGroupMembers: models.DistributionGroupUserGetResponse[];
+    let distributionGroupMembers: models.DistributionGroupsListUsersResponse;
     try {
       debug(`Getting users of distribution group ${this.distributionGroup}`);
-      const response = await distributionGroupMembersRequestResponse;
-      if (response.response.statusCode < 400) {
-        distributionGroupMembers = response.result;
-      } else {
-        throw response.response.statusCode;
-      }
+      distributionGroupMembers = await distributionGroupMembersRequestResponse;
     } catch (error) {
       if (error === 404) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} was not found`);
@@ -66,15 +65,10 @@ export default class ShowDistributionGroupCommand extends AppCommand {
       }
     }
 
-    let basicReleasesDetails: models.BasicReleaseDetailsResponse[];
+    let basicReleasesDetails: models.ReleasesListByDistributionGroupResponse;
     try {
       debug(`Getting releases details for distribution group ${this.distributionGroup}`);
-      const response = await basicReleasesDetailsRequestResponse;
-      if (response.response.statusCode < 400) {
-        basicReleasesDetails = response.result;
-      } else {
-        throw response.response.statusCode;
-      }
+      basicReleasesDetails = await basicReleasesDetailsRequestResponse;
     } catch (error) {
       debug(`Failed to get releases for the distribution group - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to retrieve releases details for the distribution group");

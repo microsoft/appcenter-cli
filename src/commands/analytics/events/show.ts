@@ -11,7 +11,7 @@ import {
   success,
   defaultValue,
 } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models, ClientResponse } from "../../../util/apis";
 import { out, supportsCsv } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -121,25 +121,17 @@ export default class ShowCommand extends AppCommand {
   ): Promise<IEventStatistics[]> {
     let eventsStatistics: IEventStatistics[];
     try {
-      const httpContent = await clientRequest<models.Events>((cb) =>
-        client.analytics.eventsMethod(
-          startDate,
-          app.ownerName,
-          app.appName,
-          {
-            end: endDate,
-            versions: appVersions,
-            orderby: "count desc",
-            top: eventCount,
-            skip: 0,
-            eventName: eventNames,
-            inlinecount: "allpages",
-          },
-          cb
-        )
-      );
+      const result = await client.analytics.events(startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersions,
+        orderby: "count desc",
+        top: eventCount,
+        skip: 0,
+        eventName: eventNames,
+        inlinecount: "allpages",
+      });
 
-      eventsStatistics = httpContent.result.events.map((event) => ({
+      eventsStatistics = result.events.map((event) => ({
         name: event.name,
         count: event.count,
         countChange: calculatePercentChange(event.count, event.previousCount),
@@ -176,11 +168,9 @@ export default class ShowCommand extends AppCommand {
   ): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
-      const httpContent = await (limit(() =>
-        clientRequest<models.EventProperties>((cb) =>
-          client.analytics.eventPropertiesMethod(eventName, app.ownerName, app.appName, cb)
-        )
-      ) as Promise<ClientResponse<models.EventProperties>>);
+      const httpContent = await (limit(() => client.analytics.eventProperties(eventName, app.ownerName, app.appName)) as Promise<
+        ClientResponse<models.EventProperties>
+      >);
 
       propertiesNames = httpContent.result.eventProperties;
     } catch (error) {
@@ -209,24 +199,12 @@ export default class ShowCommand extends AppCommand {
     limit: any
   ): Promise<IPropertyValueStatistics[]> {
     try {
-      const httpContent = await (limit(() =>
-        clientRequest<models.EventPropertyValues>((cb) =>
-          client.analytics.eventPropertyCounts(
-            eventName,
-            eventPropertyName,
-            startDate,
-            app.ownerName,
-            app.appName,
-            {
-              end: endDate,
-              versions: appVersions,
-            },
-            cb
-          )
-        )
-      ) as Promise<ClientResponse<models.EventPropertyValues>>);
+      const result = await client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
+        end: endDate,
+        versions: appVersions,
+      });
 
-      return httpContent.result.values.map((value) => ({
+      return result.values.map((value) => ({
         value: value.name,
         count: value.count,
         countChange: calculatePercentChange(value.count, value.previousCount),

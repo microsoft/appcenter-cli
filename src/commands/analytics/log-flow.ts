@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models } from "../../util/apis";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -45,15 +45,15 @@ export default class ShowLogFlowCommand extends AppCommand {
         try {
           debug("Loading logs");
           // start time is not specified for the first request
-          return await clientRequest((cb) => client.analytics.genericLogFlow(app.ownerName, app.appName, options, cb));
+          return await client.analytics.genericLogFlow(app.ownerName, app.appName, options);
         } catch (error) {
           debug(`Failed to load the logs - ${inspect(error)}`);
           throw failure(ErrorCodes.Exception, "failed to load the logs");
         }
       },
-      (response: ClientResponse<models.GenericLogContainer>, responsesProcessed: number) => {
+      (response: models.GenericLogContainer, responsesProcessed: number) => {
         // processing http response
-        const result = response.result;
+        const result = response;
         if (result.logs.length) {
           // new logs were received
           options = { start: result.lastReceivedLogTimestamp };

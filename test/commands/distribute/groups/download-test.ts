@@ -7,6 +7,7 @@ import * as _ from "lodash";
 
 import DownloadBinaryFromDistributionGroupCommand from "../../../../src/commands/distribute/groups/download";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 Temp.track();
 
@@ -17,7 +18,6 @@ describe("distribute groups download command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
-  const fakeHost = "http://localhost:1700";
   const fakeDownloadUrl = "/fake/download/url?format=apk";
   const fakeDownloadUrl2 = "/fake/download/url2?format=ipa";
 

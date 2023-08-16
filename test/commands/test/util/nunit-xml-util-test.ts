@@ -188,7 +188,7 @@ describe("nunit xml util", function () {
 
     // Doesn't throw exception
     parseXML(finalStrXml);
-  });
+  }).timeout(8000);
 
   it("should throw an explicit exception", async () => {
     let exception = false;

@@ -10,7 +10,7 @@ import {
   required,
   hasArg,
 } from "../../../util/commandline";
-import { AppCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -41,17 +41,15 @@ export default class DeleteReleaseCommand extends AppCommand {
     let releaseDetails: models.ReleaseDetailsResponse;
     try {
       debug("Loading release details");
-      const httpRequest = await out.progress(
+      releaseDetails = await out.progress(
         "Loading release details...",
-        clientRequest<models.ReleaseDetailsResponse>((cb) =>
-          client.releasesOperations.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
-        )
+        client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName)
       );
-      if (httpRequest.response.statusCode >= 400) {
-        throw httpRequest.response.statusCode;
-      } else {
-        releaseDetails = httpRequest.result;
-      }
+      // if (httpRequest.response.statusCode >= 400) {
+      //   throw httpRequest.response.statusCode;
+      // } else {
+      //   releaseDetails = httpRequest.result;
+      // }
     } catch (error) {
       if (error === 404) {
         return failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`);
@@ -63,13 +61,16 @@ export default class DeleteReleaseCommand extends AppCommand {
 
     try {
       debug("Removing release");
-      const httpResponse = await out.progress(
+      await out.progress(
         `Removing the release...`,
-        clientRequest((cb) => client.releasesOperations.deleteMethod(releaseId, app.ownerName, app.appName, cb))
+        client.releases.delete(releaseId, app.ownerName, app.appName, {
+          onResponse: (response, _flatResponse, _error?) => {
+            if (response.status >= 400) {
+              throw response.parsedBody;
+            }
+          },
+        })
       );
-      if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.result;
-      }
     } catch (error) {
       if (error.code === "partially_deleted") {
         return failure(

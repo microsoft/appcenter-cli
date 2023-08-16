@@ -5,6 +5,7 @@ import * as _ from "lodash";
 
 import EditReleaseCommand from "../../../../src/commands/distribute/releases/edit";
 import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
+import { localEndpoint as fakeHost } from "../../../../src/util/misc/constants";
 
 Temp.track();
 
@@ -14,7 +15,6 @@ describe("distribute releases edit command", async () => {
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "5";
-  const fakeHost = "http://localhost:1700";
   const releaseIdOption = "--release-id";
 
   before(() => {

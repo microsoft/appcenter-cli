@@ -2,7 +2,7 @@
 // Custom credentials object for talking to AppCenter
 //
 
-import { WebResource } from "ms-rest";
+import { WebResource } from "@azure/ms-rest-js";
 const debug = require("debug")("appcenter-cli:util:apis:appcenter-client-credentials");
 
 export class AppCenterClientCredentials {
@@ -18,7 +18,7 @@ export class AppCenterClientCredentials {
     this.getToken()
       .then((token) => {
         debug(`got token ${token} of type ${typeof token}`);
-        request.headers["x-api-token"] = token;
+        request.headers.set("x-api-token", token);
         callback(null);
       })
       .catch((err: Error) => {

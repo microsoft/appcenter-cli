@@ -29,7 +29,7 @@ export function getFakeParamsForRequest(): FakeParamsForRequests {
 }
 
 export const releaseUploadResponse = {
-  id: "id",
+  id: "11111111-1111-1111-1111-111111111111",
   token: "token",
   upload_domain: "https://uploadDomain.test",
 };
