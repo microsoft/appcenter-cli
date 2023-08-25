@@ -39,6 +39,14 @@ function runCli() {
     // eslint-disable-next-line security/detect-non-literal-require
     const pkg = require(path.join(__dirname, "..", "package.json"));
     import("update-notifier").then(({ default: updateNotifier }) => updateNotifier({ pkg }).notify());
+
+    import("update-notifier")
+      .then(({ default: updateNotifier }) => {
+        updateNotifier({ pkg }).notify();
+      })
+      .catch((error) => {
+        console.error("Error while importing update-notifier:", error);
+      });
   }
 
   runner(args).then(function (result) {
