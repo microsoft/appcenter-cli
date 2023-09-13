@@ -99,7 +99,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @hasArg
   public sourcemapOutputDir: string;
 
-  @help("Path to where the bundle and sourcemap should be written. If omitted, a bundle and sourcemap will not be written")
+  @help("Path to where the bundle should be written. If omitted, the bundle will not be saved on your machine")
   @shortName("o")
   @longName("output-dir")
   @hasArg
