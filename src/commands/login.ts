@@ -56,11 +56,10 @@ export default class LoginCommand extends Command {
         }
 
         const endpoint = environments(this.environmentName).endpoint;
-        out.text(`endpoint and token ${endpoint}, ${token}`);
         const client = this.clientFactory.fromToken(token, endpoint);
         const userResponse = await out.progress("Getting user info ...", client.users.get());
 
-        await saveUser(userResponse, { id: "SuppliedByUser", token: this.token }, this.environmentName, userSuppliedToken);
+        await saveUser(userResponse, { id: "UserToken", token: token }, this.environmentName, userSuppliedToken);
         out.text(`Logged in as ${userResponse.name}`);
         // Force early exit to avoid long standing delays if token deletion is slow
         process.exit(0);
