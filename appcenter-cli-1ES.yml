@@ -99,7 +99,7 @@ extends:
             filePath: '$(Build.SourcesDirectory)test/functional/Invoke-FunctionalTests.ps1'
             arguments: '-Token $(ac-cli-account-api-token)'
             pwsh: true
-            workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
+            workingDirectory: $(Build.SourcesDirectory)
           displayName: 'Run functional tests'
 
         - script: |
