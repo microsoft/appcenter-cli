@@ -45,25 +45,19 @@ extends:
           displayName: 'Install Node.js'
 
         - script: |
-            git clone https://github.com/microsoft/appcenter-cli $(Build.SourcesDirectory)/appcenter-cli
-          displayName: 'Clone appcenter-cli repository'
-
-        - script: |
             npm ci
             npm run build
           displayName: 'Install and build'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
 
         - script: |
             npm run test:ci || [ -f './test-results.xml' ]
           displayName: 'Run CLI tests (with JUnit output)'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
 
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
             testResultsFiles: 'test-results.xml'
-            searchFolder: '$(Build.SourcesDirectory)/appcenter-cli'
+            searchFolder: '$(Build.SourcesDirectory)'
             failTaskOnFailedTests: true
             testRunTitle: 'CLI unit tests'
           displayName: 'Verify CLI unit test result'
@@ -72,18 +66,18 @@ extends:
             npm ci
             npm run build
           displayName: 'Install and build appcenter-file-upload-client-node'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli/appcenter-file-upload-client-node
+          workingDirectory: $(Build.SourcesDirectory)/appcenter-file-upload-client-node
 
         - script: |
             npm run test:ci || [ -f './test-results.xml' ]
           displayName: 'Run appcenter-file-upload-client-node tests'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli/appcenter-file-upload-client-node
+          workingDirectory: $(Build.SourcesDirectory)/appcenter-file-upload-client-node
 
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
             testResultsFiles: 'test-results.xml'
-            searchFolder: '$(Build.SourcesDirectory)/appcenter-cli/appcenter-file-upload-client-node'
+            searchFolder: '$(Build.SourcesDirectory)/appcenter-file-upload-client-node'
             failTaskOnFailedTests: true
             testRunTitle: 'appcenter-file-upload-client-node unit tests'
           displayName: 'Verify appcenter-file-upload-client-node unit test result'
@@ -92,7 +86,7 @@ extends:
             npm pack
             npm install -g appcenter-cli*.tgz
           displayName: 'Package appcenter-cli'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
+          workingDirectory: $(Build.SourcesDirectory)
 
         - task: AzureKeyVault@1
           inputs:
@@ -102,7 +96,7 @@ extends:
 
         - task: PowerShell@2
           inputs:
-            filePath: '$(Build.SourcesDirectory)/appcenter-cli/test/functional/Invoke-FunctionalTests.ps1'
+            filePath: '$(Build.SourcesDirectory)test/functional/Invoke-FunctionalTests.ps1'
             arguments: '-Token $(ac-cli-account-api-token)'
             pwsh: true
             workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
@@ -111,13 +105,13 @@ extends:
         - script: |
             [ -f './test/functional/testresult.xml' ]
           displayName: 'Verify that functional test result file exists'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
+          workingDirectory: $(Build.SourcesDirectory)
 
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'NUnit'
             testResultsFiles: 'testresult.xml'
-            searchFolder: '$(Build.SourcesDirectory)/appcenter-cli/test/functional'
+            searchFolder: '$(Build.SourcesDirectory)/test/functional'
             failTaskOnFailedTests: true
             testRunTitle: 'Functional tests'
           displayName: 'Verify functional test result'
@@ -125,7 +119,7 @@ extends:
         - script: |
             npm pack
           displayName: 'Package for npm release'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-cli
+          workingDirectory: $(Build.SourcesDirectory)
 
         - task: DeleteFiles@1
           inputs:
@@ -134,7 +128,7 @@ extends:
 
         - task: ArchiveFiles@2
           inputs:
-            rootFolderOrFile: '$(Build.SourcesDirectory)/appcenter-cli'
+            rootFolderOrFile: '$(Build.SourcesDirectory)'
             includeRootFolder: false
             archiveType: 'tar'
             archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
