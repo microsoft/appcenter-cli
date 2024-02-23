@@ -1,9 +1,12 @@
 trigger: none
 
 variables: 
-  API_TOKEN_KEY_VAULT: 'distributionStoresInt'
-  API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION: 'App Center - INT (f4147d36-1601-4338-ae2c-693eb61b75d8)'
-  COMPONENT_GOVERNANCE_IGNORE_DIRS: 'src/commands/test/lib/templates/appium,dist/commands/test/lib/templates/appium'
+- name: API_TOKEN_KEY_VAULT
+  value: 'distributionStoresInt'
+- name: API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION
+  value: 'App Center - INT (f4147d36-1601-4338-ae2c-693eb61b75d8)'
+- name: COMPONENT_GOVERNANCE_IGNORE_DIRS
+  value: 'src/commands/test/lib/templates/appium,dist/commands/test/lib/templates/appium'
 
 resources:
   repositories:
