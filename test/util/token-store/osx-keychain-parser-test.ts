@@ -49,6 +49,7 @@ describe("storing data without a tokenId in keychain", function () {
   const keychain = tokenStore.createOsxTokenStore();
 
   const testUser = "appcenter-user";
+  //[SuppressMessage("Microsoft.Security", "CS002:SecretInNextLine", Justification="this is not a secret")]
   const testPassword = "Sekret!";
 
   before(() => {

@@ -94,7 +94,7 @@ extends:
 
         - task: PowerShell@2
           inputs:
-            filePath: '$(Build.SourcesDirectory)test/functional/Invoke-FunctionalTests.ps1'
+            filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
             arguments: '-Token $(ac-cli-account-api-token)'
             pwsh: true
             workingDirectory: $(Build.SourcesDirectory)
