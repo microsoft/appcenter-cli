@@ -5,8 +5,6 @@ variables:
   value: 'distributionStoresInt'
 - name: API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION
   value: 'App Center - INT'
-- name: COMPONENT_GOVERNANCE_IGNORE_DIRS
-  value: 'src/commands/test/lib/templates/appium,dist/commands/test/lib/templates/appium'
 
 resources:
   repositories:
