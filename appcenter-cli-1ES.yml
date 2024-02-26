@@ -4,9 +4,7 @@ variables:
 - name: API_TOKEN_KEY_VAULT
   value: 'distributionStoresInt'
 - name: API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION
-  value: 'App Center - INT (f4147d36-1601-4338-ae2c-693eb61b75d8)'
-- name: COMPONENT_GOVERNANCE_IGNORE_DIRS
-  value: 'src/commands/test/lib/templates/appium,dist/commands/test/lib/templates/appium'
+  value: 'App Center - INT'
 
 resources:
   repositories:
@@ -80,12 +78,6 @@ extends:
             testRunTitle: 'appcenter-file-upload-client-node unit tests'
           displayName: 'Verify appcenter-file-upload-client-node unit test result'
 
-        - script: |
-            npm pack
-            npm install -g appcenter-cli*.tgz
-          displayName: 'Package appcenter-cli'
-          workingDirectory: $(Build.SourcesDirectory)
-
         - task: AzureKeyVault@1
           inputs:
             azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
@@ -116,7 +108,8 @@ extends:
 
         - script: |
             npm pack
-          displayName: 'Package for npm release'
+            npm install -g appcenter-cli*.tgz
+          displayName: 'Package appcenter-cli'
           workingDirectory: $(Build.SourcesDirectory)
 
         - task: DeleteFiles@1
