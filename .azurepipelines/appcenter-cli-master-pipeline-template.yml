@@ -24,7 +24,7 @@ extends:
     sdl:
       sourceAnalysisPool: 1ES-PT-Windows-2022
     stages:
-    - stage: Stage
+    - stage: Stage  
       jobs:
       - job: HostJob
         templateContext:
