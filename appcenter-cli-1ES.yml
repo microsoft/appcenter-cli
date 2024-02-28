@@ -13,116 +13,128 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
-extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
-  parameters:
-    pool:
-      name: 1ES-PT-CBL-Mariner-2.0-Gen2
-      os: linux
-    customBuildTags:
-    - ES365AIMigrationTooling-BulkMigrated
-    sdl:
-      sourceAnalysisPool: 1ES-PT-Windows-2022
-    stages:
-    - stage: Stage
-      jobs:
-      - job: HostJob
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            displayName: "Publish Artifact: artifacts"
-            path: '$(Build.ArtifactStagingDirectory)/npm'
-            artifactName: npm
-            
-        steps:
-        - task: NodeTool@0
-          inputs:
-            versionSpec: '14.x'
-          displayName: 'Install Node.js'
+jobs:
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    - template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+      parameters:
+        pool:
+          name: 1ES-PT-CBL-Mariner-2.0-Gen2
+          os: linux
+        customBuildTags:
+        - ES365AIMigrationTooling-BulkMigrated
+        sdl:
+          sourceAnalysisPool: 1ES-PT-Windows-2022
+  - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    - template: v1/1ES.Unofficial.PipelineTemplate.yml@1ESPipelineTemplates
+      parameters:
+        pool:
+          name: 1ES-PT-CBL-Mariner-2.0-Gen2
+          os: linux
+        customBuildTags:
+        - ES365AIMigrationTooling-BulkMigrated
+        sdl:
+          sourceAnalysisPool: 1ES-PT-Windows-2022
 
-        - script: |
-            npm ci
-            npm run build
-          displayName: 'Install and build'
 
-        - script: |
-            npm run test:ci || [ -f './test-results.xml' ]
-          displayName: 'Run CLI tests (with JUnit output)'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
 
-        - task: PublishTestResults@2
-          inputs:
-            testResultsFormat: 'JUnit'
-            testResultsFiles: 'test-results.xml'
-            searchFolder: '$(Build.SourcesDirectory)'
-            failTaskOnFailedTests: true
-            testRunTitle: 'CLI unit tests'
-          displayName: 'Verify CLI unit test result'
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'Install and build'
 
-        - script: |
-            npm ci
-            npm run build
-          displayName: 'Install and build appcenter-file-upload-client-node'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-file-upload-client-node
+  - script: |
+      npm run test:ci || [ -f './test-results.xml' ]
+    displayName: 'Run CLI tests (with JUnit output)'
 
-        - script: |
-            npm run test:ci || [ -f './test-results.xml' ]
-          displayName: 'Run appcenter-file-upload-client-node tests'
-          workingDirectory: $(Build.SourcesDirectory)/appcenter-file-upload-client-node
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test-results.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+      failTaskOnFailedTests: true
+      testRunTitle: 'CLI unit tests'
+    displayName: 'Verify CLI unit test result'
 
-        - task: PublishTestResults@2
-          inputs:
-            testResultsFormat: 'JUnit'
-            testResultsFiles: 'test-results.xml'
-            searchFolder: '$(Build.SourcesDirectory)/appcenter-file-upload-client-node'
-            failTaskOnFailedTests: true
-            testRunTitle: 'appcenter-file-upload-client-node unit tests'
-          displayName: 'Verify appcenter-file-upload-client-node unit test result'
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'Install and build appcenter-file-upload-client-node'
+    workingDirectory: $(Build.SourcesDirectory)/appcenter-file-upload-client-node
 
-        - task: AzureKeyVault@1
-          inputs:
-            azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
-            KeyVaultName: '$(API_TOKEN_KEY_VAULT)'
-            SecretsFilter: 'ac-cli-account-api-token'
+  - script: |
+      npm run test:ci || [ -f './test-results.xml' ]
+    displayName: 'Run appcenter-file-upload-client-node tests'
+    workingDirectory: $(Build.SourcesDirectory)/appcenter-file-upload-client-node
 
-        - task: PowerShell@2
-          inputs:
-            filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
-            arguments: '-Token $(ac-cli-account-api-token)'
-            pwsh: true
-            workingDirectory: $(Build.SourcesDirectory)
-          displayName: 'Run functional tests'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test-results.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)/appcenter-file-upload-client-node'
+      failTaskOnFailedTests: true
+      testRunTitle: 'appcenter-file-upload-client-node unit tests'
+    displayName: 'Verify appcenter-file-upload-client-node unit test result'
 
-        - script: |
-            [ -f './test/functional/testresult.xml' ]
-          displayName: 'Verify that functional test result file exists'
-          workingDirectory: $(Build.SourcesDirectory)
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
+      KeyVaultName: '$(API_TOKEN_KEY_VAULT)'
+      SecretsFilter: 'ac-cli-account-api-token'
 
-        - task: PublishTestResults@2
-          inputs:
-            testResultsFormat: 'NUnit'
-            testResultsFiles: 'testresult.xml'
-            searchFolder: '$(Build.SourcesDirectory)/test/functional'
-            failTaskOnFailedTests: true
-            testRunTitle: 'Functional tests'
-          displayName: 'Verify functional test result'
+  - task: PowerShell@2
+    inputs:
+      filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
+      arguments: '-Token $(ac-cli-account-api-token)'
+      pwsh: true
+      workingDirectory: $(Build.SourcesDirectory)
+    displayName: 'Run functional tests'
 
-        - script: |
-            npm pack
-            npm install -g appcenter-cli*.tgz
-          displayName: 'Package appcenter-cli'
-          workingDirectory: $(Build.SourcesDirectory)
+  - script: |
+      [ -f './test/functional/testresult.xml' ]
+    displayName: 'Verify that functional test result file exists'
+    workingDirectory: $(Build.SourcesDirectory)
 
-        - task: DeleteFiles@1
-          inputs:
-            contents: node_modules
-          displayName: 'Delete node_modules'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/testresult.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)/test/functional'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Functional tests'
+    displayName: 'Verify functional test result'
 
-        - task: ArchiveFiles@2
-          inputs:
-            rootFolderOrFile: '$(Build.SourcesDirectory)'
-            includeRootFolder: false
-            archiveType: 'tar'
-            archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
-            replaceExistingArchive: true
-            verbose: true
-          displayName: 'Prepare npm artifact'
+  - script: |
+      npm pack
+      npm install -g appcenter-cli*.tgz
+    displayName: 'Package appcenter-cli'
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - task: DeleteFiles@1
+    inputs:
+      contents: 'node_modules'
+    displayName: 'Delete node_modules'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'tar'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
+      replaceExistingArchive: true
+      verbose: true
+    displayName: 'Prepare npm artifact'
+
+  - script: echo "Artifact will be published from $(Build.ArtifactStagingDirectory)/npm"
+    displayName: "Simulate templateContext"
+  - publish: $(Build.ArtifactStagingDirectory)/npm
+    artifact: npm
+    displayName: "Publish Artifact: npm"
