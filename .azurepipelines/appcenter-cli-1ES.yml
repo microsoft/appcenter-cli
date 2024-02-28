@@ -133,3 +133,15 @@ extends:
             replaceExistingArchive: true
             verbose: true
           displayName: 'Prepare npm artifact'
+
+        - task: APIScan@2
+          displayName: Run APIScan
+          inputs:
+            softwareFolder: $(Build.ArtifactStagingDirectory)/npm
+            softwareName: 'appcenter-cli'
+            softwareVersionNum: '$(Build.BuildId)'
+            isLargeApp: false
+            toolVersion: 'Latest'
+          condition: and(succeeded(), ne(variables['DisableAPIScan'], 'true'))
+          env:
+            AzureServicesAuthConnectionString: runAs=App;AppId=$(ApiScanClientId);TenantId=$(ApiScanTenant);AppKey=$(ApiScanSecret)
