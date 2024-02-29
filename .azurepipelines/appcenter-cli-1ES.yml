@@ -17,9 +17,6 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
-parameters:
-- name: Skip1ESComplianceTasks
-  default: false
 
 extends:
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
@@ -33,8 +30,6 @@ extends:
     customBuildTags:
     - ES365AIMigrationTooling-BulkMigrated
     sdl:
-      ${{ if eq('${{ parameters.Skip1ESComplianceTasks }}', 'true') }}:
-        enableAllTools: false
       sourceAnalysisPool: 1ES-PT-Windows-2022
     stages:
     - stage: Stage
