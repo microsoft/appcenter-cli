@@ -1,4 +1,8 @@
-trigger: none
+trigger:
+- master
+
+pr:
+- master
 
 variables: 
 - name: API_TOKEN_KEY_VAULT
