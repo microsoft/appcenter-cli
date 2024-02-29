@@ -13,6 +13,10 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
+parameters:
+- name: Skip1ESComplianceTasks
+  default: false
+
 extends:
   ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq('${{ parameters.Skip1ESComplianceTasks }}', 'true')) }}:
     template: v1/1ES.Unofficial.PipelineTemplate.yml@1ESPipelineTemplates
