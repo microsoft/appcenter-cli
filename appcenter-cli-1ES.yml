@@ -15,9 +15,9 @@ resources:
 
 extends:
   ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq('${{ parameters.Skip1ESComplianceTasks }}', 'true')) }}:
-    template: v1/1ES.Unofficial.PipelineTemplate.yml@1esPipelines
+    template: v1/1ES.Unofficial.PipelineTemplate.yml@1ESPipelineTemplates
   ${{ else }}:
-    template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+    template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     pool:
       name: 1ES-PT-CBL-Mariner-2.0-Gen2
