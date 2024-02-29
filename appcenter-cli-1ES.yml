@@ -25,6 +25,8 @@ extends:
     customBuildTags:
     - ES365AIMigrationTooling-BulkMigrated
     sdl:
+      ${{ if eq('${{ parameters.Skip1ESComplianceTasks }}', 'true') }}:
+        enableAllTools: false
       sourceAnalysisPool: 1ES-PT-Windows-2022
     stages:
     - stage: Stage
