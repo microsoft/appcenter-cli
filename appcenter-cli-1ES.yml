@@ -14,7 +14,10 @@ resources:
     ref: refs/tags/release
 
 extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq('${{ parameters.Skip1ESComplianceTasks }}', 'true')) }}:
+    template: v1/1ES.Unofficial.PipelineTemplate.yml@1esPipelines
+  ${{ else }}:
+    template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
     pool:
       name: 1ES-PT-CBL-Mariner-2.0-Gen2
