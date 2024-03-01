@@ -144,4 +144,4 @@ extends:
             toolVersion: 'Latest'
           condition: and(succeeded(), ne(variables['DisableAPIScan'], 'true'))
           env:
-            AzureServicesAuthConnectionString: runAs=App;AppId=$(ApiScanClientId);TenantId=$(ApiScanTenant);AppKey=$(ApiScanSecret)
+            AzureServicesAuthConnectionString: runAs=App;AppId=$(ApiScanClientId);KeyVaultCertificateSecretIdentifier=$(KeyVaultCertificateSecretIdentifier)
