@@ -134,7 +134,7 @@ extends:
             verbose: true
           displayName: 'Prepare npm artifact'
 
-      - job: HostJob
+      - job: APIScan
         pool: 1ES-PT-Windows-2022
         steps:
         - task: AzureKeyVault@2
