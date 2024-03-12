@@ -133,3 +133,24 @@ extends:
             replaceExistingArchive: true
             verbose: true
           displayName: 'Prepare npm artifact'
+
+      - job: HostJob
+        pool: 1ES-PT-Windows-2022
+        steps:
+        - task: AzureKeyVault@2
+          inputs:
+            azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
+            KeyVaultName: 'mobile-center-sdk'
+            SecretsFilter: 'appcenter-sdk-managed-identity-clientid'
+            RunAsPreJob: false
+        - task: APIScan@2
+          displayName: 'Run APIScan'
+          inputs:
+            softwareFolder: '$(Build.ArtifactStagingDirectory)'
+            softwareName: 'appcenter-cli'
+            softwareVersionNum: Latest
+            isLargeApp: false
+            verbosityLevel: verbose
+          condition: and(succeeded(), ne(variables['DisableAPIScan'], 'true'))
+          env:
+            AzureServicesAuthConnectionString: 'runAs=App;AppId=$(appcenter-sdk-managed-identity-clientid)'
