@@ -146,7 +146,7 @@ extends:
         steps:
         - task: AzureKeyVault@2
           inputs:
-            azureSubscription: 'AC - Dev Infra & Build Pool (5a7c335f-ef8e-4c07-9bca-866d3460876a)'
+            azureSubscription: 'AC - Dev Infra & Build Pool'
             KeyVaultName: 'mobile-center-sdk'
             SecretsFilter: 'appcenter-sdk-managed-identity-clientid'
             RunAsPreJob: false
