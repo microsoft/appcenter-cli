@@ -138,7 +138,9 @@ extends:
           displayName: 'Prepare npm artifact'
     - stage: APIScan
       dependsOn: Stage
-      pool: 1ES-PT-Windows-2022
+      pool:
+        name: 1ES-PT-Windows-2022
+        os: windows
       jobs:
       - job: APIScan
         steps:
