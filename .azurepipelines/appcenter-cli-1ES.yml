@@ -144,6 +144,10 @@ extends:
       jobs:
       - job: APIScan
         steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: Download Build Artifacts for APIScan
+          inputs:
+            artifactName: npm
         - task: AzureKeyVault@2
           inputs:
             azureSubscription: 'AC - Dev Infra & Build Pool'
@@ -153,7 +157,7 @@ extends:
         - task: APIScan@2
           displayName: 'Run APIScan'
           inputs:
-            softwareFolder: '$(Build.ArtifactStagingDirectory)'
+            softwareFolder: '$(System.ArtifactsDirectory)\npm'
             softwareName: 'appcenter-cli'
             softwareVersionNum: Latest
             isLargeApp: false
