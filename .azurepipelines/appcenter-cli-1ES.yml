@@ -136,6 +136,11 @@ extends:
             replaceExistingArchive: true
             verbose: true
           displayName: 'Prepare npm artifact'
+        - task: PublishBuildArtifacts@1
+          displayName: Publish Artifact
+          inputs:
+            PathtoPublish: $(Build.ArtifactStagingDirectory)/npm
+            ArtifactName: npm
     - stage: APIScan
       dependsOn: Stage
       pool:
@@ -149,6 +154,7 @@ extends:
         - task: DownloadBuildArtifacts@0
           displayName: Download Build Artifacts for APIScan
           inputs:
+            downloadPath: '$(System.ArtifactsDirectory)'
             artifactName: npm
         - script: |
             echo "Work folder:"
