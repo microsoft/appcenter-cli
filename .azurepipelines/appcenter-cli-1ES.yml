@@ -136,10 +136,6 @@ extends:
             replaceExistingArchive: true
             verbose: true
           displayName: 'Prepare npm artifact'
-        - task: PublishBuildArtifacts@1
-          displayName: Publish Artifact
-          inputs:
-            PathtoPublish: $(Build.ArtifactStagingDirectory)/npm
             ArtifactName: npm
     - stage: APIScan
       dependsOn: Stage
@@ -156,6 +152,10 @@ extends:
           inputs:
             downloadPath: '$(System.ArtifactsDirectory)'
             artifactName: npm
+        - task: ExtractFiles@1
+          inputs:
+            archiveFilePatterns: '$(System.ArtifactsDirectory)/**/*.tgz'
+            destinationFolder: '$(System.ArtifactsDirectory)/npm_extracted'
         - script: |
             echo "Work folder:"
             tree $(Agent.BuildDirectory) /f
