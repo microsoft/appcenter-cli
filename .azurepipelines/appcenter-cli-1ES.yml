@@ -146,16 +146,15 @@ extends:
       jobs:
       - job: APIScan
         steps:
-        - task: DownloadBuildArtifacts@0
-          displayName: Download Build Artifacts for APIScan
+        - task: DownloadPipelineArtifact@2
+          displayName: Download Pipeline Artifacts for APIScan
           inputs:
-            downloadPath: '$(System.ArtifactsDirectory)'
             artifactName: npm
         - task: ExtractFiles@1
           inputs:
-            archiveFilePatterns: '$(System.ArtifactsDirectory)/**/*.tgz'
-            destinationFolder: '$(System.ArtifactsDirectory)/npm_extracted'
-        - powershell: Get-ChildItem -Path '$(System.ArtifactsDirectory)\**\*.*' -recurse
+            archiveFilePatterns: '$(Agent.BuildDirectory)/**/*.tgz'
+            destinationFolder: '$(Agent.BuildDirectory)/npm_extracted'
+        - powershell: Get-ChildItem -Path '$(Agent.BuildDirectory)\npm_extracted\*.*' -recurse
         - script: |
             echo "Work folder:"
             tree $(Agent.BuildDirectory) /f
@@ -175,7 +174,7 @@ extends:
         - task: APIScan@2
           displayName: 'Run APIScan'
           inputs:
-            softwareFolder: '$(System.ArtifactsDirectory)'
+            softwareFolder: 'npm_extracted'
             softwareName: 'appcenter-cli'
             softwareVersionNum: Latest
             isLargeApp: false
