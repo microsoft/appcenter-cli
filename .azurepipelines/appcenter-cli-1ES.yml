@@ -155,6 +155,7 @@ extends:
           inputs:
             archiveFilePatterns: '$(System.ArtifactsDirectory)/**/*.tgz'
             destinationFolder: '$(System.ArtifactsDirectory)/npm_extracted'
+        - powershell: Get-ChildItem -Path '$(System.ArtifactsDirectory)\**\*.*' -recurse
         - script: |
             echo "Work folder:"
             tree $(Agent.BuildDirectory) /f
