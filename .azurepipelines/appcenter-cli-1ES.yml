@@ -136,7 +136,6 @@ extends:
             replaceExistingArchive: true
             verbose: true
           displayName: 'Prepare npm artifact'
-            ArtifactName: npm
     - stage: APIScan
       dependsOn: Stage
       pool:
