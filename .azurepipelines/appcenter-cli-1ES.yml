@@ -137,7 +137,6 @@ extends:
             verbose: true
           displayName: 'Prepare npm artifact'
     - stage: APIScan
-      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
       dependsOn: Stage
       pool:
         name: 1ES-PT-Windows-2022
