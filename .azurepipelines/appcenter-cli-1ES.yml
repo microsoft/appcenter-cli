@@ -98,11 +98,13 @@ extends:
             pwsh: true
             workingDirectory: $(Build.SourcesDirectory)
           displayName: 'Run functional tests'
+          condition: and(succeeded(), ne(variables['SkipFunctionalTests'], 'true'))
 
         - script: |
             [ -f './test/functional/testresult.xml' ]
           displayName: 'Verify that functional test result file exists'
           workingDirectory: $(Build.SourcesDirectory)
+          condition: and(succeeded(), ne(variables['SkipFunctionalTests'], 'true'))
 
         - task: PublishTestResults@2
           inputs:
@@ -112,6 +114,7 @@ extends:
             failTaskOnFailedTests: true
             testRunTitle: 'Functional tests'
           displayName: 'Verify functional test result'
+          condition: and(succeeded(), ne(variables['SkipFunctionalTests'], 'true'))
 
         - script: |
             npm pack
@@ -133,3 +136,40 @@ extends:
             replaceExistingArchive: true
             verbose: true
           displayName: 'Prepare npm artifact'
+    - stage: APIScan
+      dependsOn: Stage
+      pool:
+        name: 1ES-PT-Windows-2022
+        os: windows
+      variables:
+        "agent.source.skip": true
+      jobs:
+      - job: APIScan
+        steps:
+        - task: DownloadPipelineArtifact@2
+          displayName: Download Pipeline Artifacts for APIScan
+          inputs:
+            artifactName: npm
+            targetPath: '$(Agent.BuildDirectory)/npm'
+        - task: ExtractFiles@1
+          inputs:
+            archiveFilePatterns: '$(Agent.BuildDirectory)/npm/*.tgz'
+            destinationFolder: '$(Agent.BuildDirectory)/npm_extracted'
+        - task: AzureKeyVault@2
+          inputs:
+            azureSubscription: 'AC - Dev Infra & Build Pool'
+            KeyVaultName: 'mobile-center-sdk'
+            SecretsFilter: 'appcenter-sdk-managed-identity-clientid'
+            RunAsPreJob: false
+        - task: APIScan@2
+          displayName: 'Run APIScan'
+          inputs:
+            softwareFolder: '$(Agent.BuildDirectory)\npm_extracted'
+            softwareName: 'appcenter-cli'
+            softwareVersionNum: '$(Build.BuildId)'
+            isLargeApp: false
+            toolVersion: 'Latest'
+            verbosityLevel: verbose
+          condition: and(succeeded(), ne(variables['DisableAPIScan'], 'true'))
+          env:
+            AzureServicesAuthConnectionString: 'runAs=App;AppId=$(appcenter-sdk-managed-identity-clientid)'
