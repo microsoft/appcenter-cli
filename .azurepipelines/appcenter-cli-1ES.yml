@@ -166,7 +166,7 @@ extends:
           inputs:
             softwareFolder: '$(Agent.BuildDirectory)\npm_extracted'
             softwareName: 'appcenter-cli'
-            softwareVersionNum: Latest
+            softwareVersionNum: '$(Build.BuildId)'
             isLargeApp: false
             toolVersion: 'Latest'
             verbosityLevel: verbose
