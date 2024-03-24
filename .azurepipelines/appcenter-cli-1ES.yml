@@ -44,7 +44,7 @@ extends:
         steps:
         - task: NodeTool@0
           inputs:
-            versionSpec: '14.x'
+            versionSpec: '21.x'
           displayName: 'Install Node.js'
 
         - script: |
