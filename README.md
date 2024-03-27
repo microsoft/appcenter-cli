@@ -6,7 +6,7 @@ commands that they'd like to execute. You can currently login and view/configure
 
 ## Prerequisites
 
-The required Node.js version is 16 or higher, 
+The required Node.js version is 18 or higher, 
 Mono and the Android-SDK are required to run the UI test for Android and iOS.
 
 ## Installation
