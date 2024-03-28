@@ -18,8 +18,7 @@ is used to record and playback mock http traffic.
 
 ### Prerequisites
 
-Install the latest version of Node 18 from [here](https://nodejs.org). If you are on a Mac, we recommend
-a 64-bit version.
+Install the latest version of Node 18 from [here](https://nodejs.org).
 
 Also have a working git installation. The code is available from this [repo](https://github.com/microsoft/appcenter-cli).
 
