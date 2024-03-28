@@ -6,7 +6,7 @@ local CI configurations).
 
 ## Technologies Used
 
-App Center cli is written using Node.js version 14 and [TypeScript](http://typescriptlang.org).
+App Center cli is written using Node.js version 18 and [TypeScript](http://typescriptlang.org).
 Wrappers over the App Center HTTP API are generated using the [AutoRest](https://github.com/Azure/autorest) code generator.
 And the usual plethora of npm modules.
 
