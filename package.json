@@ -129,7 +129,7 @@
     "jszip": "3.8.0",
     "lodash": "4.17.21",
     "minimist": "1.2.6",
-    "mkdirp": "1.0.4",
+    "mkdirp": "3.0.1",
     "node-fetch": "^2.6.7",
     "omelette": "0.4.17",
     "opener": "1.5.2",
