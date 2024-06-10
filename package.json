@@ -145,7 +145,7 @@
     "strip-ansi": "6.0.0",
     "temp": "0.9.4",
     "through2": "4.0.2",
-    "unzipper": "0.10.11",
+    "unzipper": "0.12.1",
     "update-notifier": "6.0.2",
     "uuid": "7.0.3",
     "webpack-cli": "4.9.2",
