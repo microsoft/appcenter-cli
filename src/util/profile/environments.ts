@@ -26,7 +26,7 @@ const environmentsData: EnvironmentsFile = {
   defaultEnvironment: "prod",
   environments: {
     int: {
-      endpoint: "https://portal-server-web-int-pme.dev-pme.avalanch.es",
+      endpoint: "https://portal-server-web-int-pme.dev-pme.avalanch.es/api",
       loginEndpoint: "https://portal-server-web-int-pme.dev-pme.avalanch.es/cli-login",
       portalEndpoint: "https://portal-server-web-int-pme.dev-pme.avalanch.es",
       description: "Integration",
