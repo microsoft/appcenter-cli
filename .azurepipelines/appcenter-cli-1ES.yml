@@ -85,7 +85,7 @@ extends:
             testRunTitle: 'appcenter-file-upload-client-node unit tests'
           displayName: 'Verify appcenter-file-upload-client-node unit test result'
 
-        - task: AzureKeyVault@1
+        - task: AzureKeyVault@2
           inputs:
             azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
             KeyVaultName: '$(API_TOKEN_KEY_VAULT)'
