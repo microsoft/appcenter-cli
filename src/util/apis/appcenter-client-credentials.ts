@@ -2,7 +2,7 @@
 // Custom credentials object for talking to AppCenter
 //
 
-import { WebResource } from "@azure/ms-rest-js";
+import { PipelineRequest } from "@azure/core-rest-pipeline";
 const debug = require("debug")("appcenter-cli:util:apis:appcenter-client-credentials");
 
 export class AppCenterClientCredentials {
@@ -13,7 +13,7 @@ export class AppCenterClientCredentials {
     this.getToken = getToken;
   }
 
-  signRequest(request: WebResource, callback: { (err: Error): void }): void {
+  signRequest(request: PipelineRequest, callback: (err: Error) => void): void {
     debug("Getting token for request");
     this.getToken()
       .then((token) => {

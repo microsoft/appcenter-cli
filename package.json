@@ -107,7 +107,6 @@
   "dependencies": {
     "@azure/core-client": "^1.7.2",
     "@azure/core-rest-pipeline": "^1.10.3",
-    "@azure/ms-rest-js": "^2.7.0",
     "@azure/storage-blob": "^12.14.0",
     "@xmldom/xmldom": "0.8.7",
     "abort-controller": "3.0.0",
