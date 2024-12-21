@@ -8,11 +8,12 @@ import { telemetryPolicy } from "./telemetry-policy";
 
 import { ServiceClientOptions } from "@azure/core-client";
 
-import { ServiceCallback, RestError, HttpOperationResponse, WebResource } from "@azure/ms-rest-js";
-
 import { Profile } from "../profile";
 import { failure, ErrorCodes } from "../../util/commandline/command-result";
 import { authorizationPolicy } from "./authorization-policy";
+import { PipelineRequest, PipelineResponse, RestError } from "@azure/core-rest-pipeline";
+
+type ServiceCallback<T> = (err: Error | RestError, result?: T, request?: PipelineRequest, response?: PipelineResponse) => void;
 
 export interface AppCenterClientFactory {
   fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient;
@@ -66,7 +67,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
 // Helper function to wrap client calls into promises while maintaining some type safety.
 export function clientCall<T>(action: { (cb: ServiceCallback<any>): void }): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    action((err: Error, result: T) => {
+    action((err: Error | RestError, result: T) => {
       if (err) {
         reject(err);
       } else {
@@ -81,7 +82,7 @@ export function clientCall<T>(action: { (cb: ServiceCallback<any>): void }): Pro
 //
 export interface ClientResponse<T> {
   result: T;
-  response: HttpOperationResponse;
+  response: PipelineResponse;
 }
 
 export async function handleHttpError(
@@ -106,7 +107,7 @@ export async function handleHttpError(
 // Helper function to wrap client calls into pormises and returning both HTTP response and parsed result
 export function clientRequest<T>(action: { (cb: ServiceCallback<any>): void }): Promise<ClientResponse<T>> {
   return new Promise<ClientResponse<T>>((resolve, reject) => {
-    action((err: Error | RestError, result: T, request: WebResource, response: HttpOperationResponse) => {
+    action((err: Error | RestError, result: T, request: PipelineRequest, response: PipelineResponse) => {
       if (err) {
         reject(err);
       } else {
