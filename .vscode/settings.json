@@ -2,5 +2,6 @@
 {
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
-    "typescript.check.workspaceVersion": false
+    "typescript.check.workspaceVersion": false,
+    "sarif-viewer.connectToGithubCodeScanning": "off"
   }
