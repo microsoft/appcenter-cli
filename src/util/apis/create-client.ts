@@ -11,7 +11,6 @@ import { ServiceClientOptions } from "@azure/core-client";
 import { Profile } from "../profile";
 import { failure, ErrorCodes } from "../../util/commandline/command-result";
 import { authorizationPolicy } from "./authorization-policy";
-import { PipelineResponse } from "@azure/core-rest-pipeline";
 
 export interface AppCenterClientFactory {
   fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient;
@@ -67,7 +66,6 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
 //
 export interface ClientResponse<T> {
   result: T;
-  response: PipelineResponse;
 }
 
 export async function handleHttpError(
