@@ -11,7 +11,7 @@ import {
   success,
   defaultValue,
 } from "../../../util/commandline";
-import { AppCenterClient, models, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 import { out, supportsCsv } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -168,11 +168,11 @@ export default class ShowCommand extends AppCommand {
   ): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
-      const httpContent = await (limit(() => client.analytics.eventProperties(eventName, app.ownerName, app.appName)) as Promise<
-        ClientResponse<models.EventProperties>
-      >);
+      const httpContent = await (limit(() =>
+        client.analytics.eventProperties(eventName, app.ownerName, app.appName)
+      ) as Promise<models.EventProperties>);
 
-      propertiesNames = httpContent.result.eventProperties;
+      propertiesNames = httpContent.eventProperties;
     } catch (error) {
       debug(`Failed to get event properties of event ${eventName} - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get event properties of event ${eventName}`);
