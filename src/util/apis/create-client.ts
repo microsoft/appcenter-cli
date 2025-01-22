@@ -64,9 +64,6 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
 //
 // Response type for clientRequest<T> - returns both parsed result and the HTTP response.
 //
-export interface ClientResponse<T> {
-  result: T;
-}
 
 export async function handleHttpError(
   error: any,
