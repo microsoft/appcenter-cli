@@ -8,8 +8,6 @@ import { telemetryPolicy } from "./telemetry-policy";
 
 import { ServiceClientOptions } from "@azure/core-client";
 
-import { ServiceCallback, RestError, HttpOperationResponse, WebResource } from "@azure/ms-rest-js";
-
 import { Profile } from "../profile";
 import { failure, ErrorCodes } from "../../util/commandline/command-result";
 import { authorizationPolicy } from "./authorization-policy";
@@ -63,26 +61,9 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
   };
 }
 
-// Helper function to wrap client calls into promises while maintaining some type safety.
-export function clientCall<T>(action: { (cb: ServiceCallback<any>): void }): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    action((err: Error, result: T) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-}
-
 //
 // Response type for clientRequest<T> - returns both parsed result and the HTTP response.
 //
-export interface ClientResponse<T> {
-  result: T;
-  response: HttpOperationResponse;
-}
 
 export async function handleHttpError(
   error: any,
@@ -101,17 +82,4 @@ export async function handleHttpError(
     debug(`${messageDefault}- ${inspect(error)}`);
     throw failure(ErrorCodes.Exception, messageDefault);
   }
-}
-
-// Helper function to wrap client calls into pormises and returning both HTTP response and parsed result
-export function clientRequest<T>(action: { (cb: ServiceCallback<any>): void }): Promise<ClientResponse<T>> {
-  return new Promise<ClientResponse<T>>((resolve, reject) => {
-    action((err: Error | RestError, result: T, request: WebResource, response: HttpOperationResponse) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ result, response });
-      }
-    });
-  });
 }
