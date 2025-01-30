@@ -98,13 +98,13 @@ extends:
             pwsh: true
             workingDirectory: $(Build.SourcesDirectory)
           displayName: 'Run functional tests'
-          condition: and(succeeded(), ne(variables['SkipFunctionalTests'], 'true'))
+          condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['ForceRunFunctionalTests'], 'true')))
 
         - script: |
             [ -f './test/functional/testresult.xml' ]
           displayName: 'Verify that functional test result file exists'
-          workingDirectory: $(Build.SourcesDirectory)
-          condition: and(succeeded(), ne(variables['SkipFunctionalTests'], 'true'))
+          workingDirectory: $(Build.SourcesDirectory)          
+          condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['ForceRunFunctionalTests'], 'true')))
 
         - task: PublishTestResults@2
           inputs:
@@ -114,7 +114,7 @@ extends:
             failTaskOnFailedTests: true
             testRunTitle: 'Functional tests'
           displayName: 'Verify functional test result'
-          condition: and(succeeded(), ne(variables['SkipFunctionalTests'], 'true'))
+          condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['ForceRunFunctionalTests'], 'true')))
 
         - script: |
             npm pack
